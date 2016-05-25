@@ -46,6 +46,7 @@
   #:use-module (guix download)
   #:use-module (guix build-system trivial)
   #:use-module (gnu packages)
+  #:use-module (gnu packages perl)
   #:use-module (gnu packages statistics)
   #:use-module (umcu packages boost)
   #:use-module (umcu packages bwa)
