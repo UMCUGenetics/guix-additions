@@ -26,7 +26,7 @@ To get an overview of the packages involved in the pipelines, we can use the
 
 Example:
 ```bash
-guix graph --type=package iap
+guix graph --type=package cuppenresearch-iap
 ```
 
 To get a list of possible graphs, and a description of what they represent:
