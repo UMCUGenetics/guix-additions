@@ -46,6 +46,8 @@
   #:use-module (guix download)
   #:use-module (guix build-system trivial)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages compression)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages statistics)
   #:use-module (umcu packages boost)
@@ -70,16 +72,39 @@
 
 (define-public cuppenresearch-iap
   (package
-    (name "cuppenresearch-iap")
-    (version "2.1.0")
-    (source #f)
+    (name "cuppenresearch-iap") 
+    (version "2.2.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/CuppenResearch/IAP/archive/v"
+                    version ".tar.gz"))
+              (file-name (string-append name "-" version ".tar.gz"))
+              (sha256
+               (base32
+                "05g13lvqyxhwlzpp142h10bdd79v4yrpp4dqplj1nizv8d1yxy1m"))))
     (build-system trivial-build-system)
-    (arguments '(#:builder (mkdir %output)))
+    (arguments
+     '(#:builder
+       (begin
+         (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
+               (tarball (assoc-ref %build-inputs "source")))
+           (setenv "PATH" PATH)
+           (mkdir %output)
+           (system* tar "xvf" tarball "--strip-components=1"
+                        "--directory" %output)))))
+    (native-inputs
+     `(("source" ,source)
+       ("tar" ,tar)
+       ("gzip" ,gzip)))
     (propagated-inputs
      `(("fastqc" ,fastqc-bin-0.11.4)
        ("bwa" ,bwa-0.7.5a)
        ("sambamba" ,sambamba-0.5.9)
-       ("gatk" ,gatk-bin-3.4)
+       ;; GATK requires a manual download.
+       ;("gatk" ,gatk-bin-3.4)
+       ;("gatk-queue" ,gatk-queue-bin-3.4)
        ("picard" ,picard-bin-1.141)
        ("snpeff" ,snpeff-bin-4.1)
        ("samtools" ,samtools-1.2)
@@ -103,7 +128,7 @@
        ("r-xtable" ,r-xtable)
        ("r-brew" ,r-brew)))
     (home-page "https://github.com/CuppenResearch/IAP")
-    (synopsis "Packages in the Illumina Analysis Pipeline")
+    (synopsis "Illumina Analysis Pipeline")
     (description "Packages in the Illumina Analysis Pipeline used by the Cuppen
 research group.")
     (license #f)))
