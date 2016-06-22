@@ -1,3 +1,24 @@
+;;; GNU Guix --- Functional package management for GNU
+;;; Copyright © 2016 Roel Janssen <roel@gnu.org>
+;;;
+;;; This file is not officially part of GNU Guix.
+;;;
+;;; GNU Guix is free software; you can redistribute it and/or modify it
+;;; under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 3 of the License, or (at
+;;; your option) any later version.
+;;;
+;;; GNU Guix is distributed in the hope that it will be useful, but
+;;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with GNU Guix.  If not, see <http://www.gnu.org/licenses/>.
+
+;;;
+;;; WARNING: This is work in progress.
+;;;
 
 (define-module (umcu packages cgp-battenberg)
   #:use-module ((guix licenses) #:prefix license:)
@@ -7,13 +28,16 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system perl)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages web)
   #:use-module (umcu packages samtools)
-  #:use-module (umcu packages vcftools))
+  #:use-module (umcu packages vcftools)
+  #:use-module (srfi srfi-1))
 
 (define-public perltidy
   (package
@@ -97,10 +121,11 @@ all other UUIDs/GUIDs generated until 3400 CE.")
           (lambda* (#:key outputs #:allow-other-keys)
             (system* "perl" "Makefile.PL"
                      (string-append "PREFIX=" (assoc-ref outputs "out"))))))))
-   (inputs
-    `(("perl-data-uuid" ,perl-data-uuid)
-      ("perl-datetime" ,perl-datetime)
-      ("perl-const-fast" ,perl-const-fast)))
+   (propagated-inputs
+    `(("perl-bio-pipeline-comparison" ,perl-bio-pipeline-comparison)
+      ("perl-const-fast" ,perl-const-fast)
+      ("perl-data-uuid" ,perl-data-uuid)
+      ("perl-datetime" ,perl-datetime)))
    (native-inputs
     `(("perl-module-install" ,perl-module-install)
       ("perl-module-build" ,perl-module-build)
@@ -184,8 +209,7 @@ bammarkduplicates, bammaskflags, bamrecompress, bamsort, bamtofastq.")
                      (string-append "PREFIX=" (assoc-ref outputs "out"))))))))
    (propagated-inputs
     `(("bwa" ,bwa)
-      ("samtools" ,samtools)
-      ()))
+      ("samtools" ,samtools)))
    (native-inputs
     `(("perl-module-install" ,perl-module-install)
       ("perl-module-build" ,perl-module-build)
@@ -254,10 +278,14 @@ Pan-Cancer Analysis Project")
              (system* "perl" "Makefile.PL"
                       (string-append "PREFIX=" (assoc-ref outputs "out")))
              (system* "make"))))))
+    (propagated-inputs
+     `(("perl-const-fast" ,perl-const-fast)
+       ("perl-sub-exporter-progressive" ,perl-sub-exporter-progressive)
+       ("perl-bio-db-hts" ,perl-bio-db-hts)
+       ("bioperl-minimal" ,bioperl-minimal)
+       ))
     (inputs
      `(("htslib" ,htslib)
-       ("perl-bio-db-hts" ,perl-bio-db-hts)
-       ("perl-const-fast" ,perl-const-fast)
        ("perl-pod-coverage" ,perl-pod-coverage)
        ("perl-file-which" ,perl-file-which)
        ("perl-test-fatal" ,perl-test-fatal)
@@ -302,3 +330,209 @@ between some other projects, specifically AscatNGS and Battenburg.")
     (synopsis "")
     (description "")
     (license #f)))
+
+(define-public perl-extutils-manifest
+  (package
+    (name "perl-extutils-manifest")
+    (version "1.70")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://cpan.metacpan.org/authors/id/E/ET/ETHER/"
+                    "ExtUtils-Manifest-" version ".tar.gz"))
+              (sha256
+               (base32
+                "159bypwl8xpq1yi39prr49hl7x2xww5aj97nv169c8xja0h0dzzf"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/ExtUtils-Manifest")
+    (synopsis "Utilities to write and check a MANIFEST file")
+    (description "This package contains functions to manipulate a MANIFEST
+file.  The package exports no functions by default.  The following are exported
+on request: mkmanifest, manifind, manicheck, filecheck, fullcheck, skipcheck,
+maniread, maniskip, manicopy, maniadd.")
+    (license (package-license perl))))
+
+(define-public perl-env-path
+  (package
+    (name "perl-env-path")
+    (version "0.19")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "mirror://cpan/authors/id/D/DS/DSB/Env-Path-"
+                           version ".tar.gz"))
+       (sha256
+        (base32
+         "1qhmj15a66h90pjl2dgnxsb9jj3b1r5mpvnr87cafcl8g69z0jr4"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/Env-Path")
+    (synopsis "Advanced operations on path variables")
+    (description "")
+    (license #f)))
+
+(define-public perl-bio-pipeline-comparison
+  (package
+    (name "perl-bio-pipeline-comparison")
+    (version "1.123050")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "mirror://cpan/authors/id/A/AJ/AJPAGE/"
+                           "Bio-Pipeline-Comparison-" version ".tar.gz"))
+       (sha256
+        (base32
+         "081kn3zyi7zcwkaxrk5w52nkx7jrp0pwjcr8sai25l45711xli49"))))
+    (build-system perl-build-system)
+    ;; Only one test fails.
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+     `(("htslib" ,htslib)
+       ("which" ,which)))
+    (native-inputs
+     `(("perl-env-path" ,perl-env-path)
+       ("perl-test-most" ,perl-test-most)))
+    (inputs
+     `(("bioperl-minimal" ,bioperl-minimal)
+       ("perl-exception-class" ,perl-exception-class)
+       ("perl-file-which" ,perl-file-which)
+       ("perl-moose" ,perl-moose)
+       ("perl-try-tiny" ,perl-try-tiny)))
+    (home-page "http://search.cpan.org/dist/Bio-Pipeline-Comparison")
+    (synopsis "Comparative assesment of variant calling (CAVar)")
+    (description "")
+    (license #f)))
+
+(define-public perl-ipc-system-simple
+  (package
+    (name "perl-ipc-system-simple")
+    (version "1.25")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "mirror://cpan/authors/id/P/PJ/PJF/IPC-System-Simple-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "0fsdb81shjj4hifyyzvj7vpkhq5jrfhlcpw2xbjfi1mqz8fsmdpi"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/IPC-System-Simple")
+    (synopsis "Run commands simply, with detailed diagnostics")
+    (description "")
+    (license (package-license perl))))
+
+(define-public perl-log-message
+  (package
+  (name "perl-log-message")
+  (version "0.08")
+  (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "mirror://cpan/authors/id/B/BI/BINGOS/Log-Message-"
+                  version ".tar.gz"))
+            (sha256
+             (base32
+              "0ipyk7zbvz31kf3mj5ahwi2cbcfy54s8387hx4cd29mg5bb7ssdx"))))
+  (build-system perl-build-system)
+  (home-page "http://search.cpan.org/dist/Log-Message")
+  (synopsis "Powerful and flexible message logging mechanism")
+  (description "")
+  (license (package-license perl))))
+
+(define-public perl-log-message-simple
+  (package
+  (name "perl-log-message-simple")
+  (version "0.10")
+  (source
+   (origin
+     (method url-fetch)
+     (uri (string-append
+           "mirror://cpan/authors/id/B/BI/BINGOS/Log-Message-Simple-"
+           version ".tar.gz"))
+     (sha256
+      (base32
+       "15nxi935nfrf8dkdrgvcrf2qlai4pbz03yj8sja0n9mcq2jd24ma"))))
+  (build-system perl-build-system)
+  (inputs
+   `(("perl-log-message" ,perl-log-message)))
+  (home-page "http://search.cpan.org/dist/Log-Message-Simple")
+  (synopsis "Simplified interface to Log::Message")
+  (description "")
+  (license (package-license perl))))
+
+(define-public perl-term-ui
+  (package
+    (name "perl-term-ui")
+    (version "0.46")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "https://cpan.metacpan.org/authors/id/B/BI/BINGOS/Term-UI-"
+             version ".tar.gz"))
+       (sha256
+        (base32
+         "19p92za5cx1v7g57pg993amprcvm1az3pp7y9g5b1aplsy06r54i"))))
+    (build-system perl-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+     `(("perl-log-message-simple" ,perl-log-message-simple)))
+    (home-page "http://search.cpan.org/dist/Term-UI")
+    (synopsis "User interfaces via Term::ReadLine made easy")
+    (description "")
+    (license (package-license perl))))
+
+(define-public cgp-battenberg
+  (package
+    (name "cgp-battenberg")
+    (version "1.5.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/cancerit/cgpBattenberg/archive/"
+                    version ".tar.gz"))
+              (file-name (string-append name "-" version ".tar.gz"))
+              (sha256
+               (base32
+                "11g1ryyfi4k5cbfp25dam9kl7wx1c3pqg2247ldhczk872mbcgz6"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         (add-before 'build 'move-to-subdirectory
+           (lambda _
+             (chdir "perl")))
+         (replace 'build
+           (lambda* (#:key outputs #:allow-other-keys)
+             (system* "perl" "Makefile.PL"
+                      (string-append "PREFIX=" (assoc-ref outputs "out")))
+             (system* "make"))))))
+    (propagated-inputs
+     `(("htslib" ,htslib)
+       ("which" ,which)
+       ("pcap-core" ,pcap-core)
+       ("perl-bio-pipeline-comparison" ,perl-bio-pipeline-comparison)
+       ("impute2-bin" ,impute2-bin)
+       ("cgpvcf" ,cgpvcf)
+       ("perl-const-fast" ,perl-const-fast)
+       ("perl-sub-exporter-progressive" ,perl-sub-exporter-progressive)
+       ("perl-bio-db-hts" ,perl-bio-db-hts)
+       ("bioperl-minimal" ,bioperl-minimal)
+       ("perl-ipc-system-simple" ,perl-ipc-system-simple)
+       ("perl-file-which" ,perl-file-which)
+       ("perl-log-message" ,perl-log-message)
+       ("perl-term-ui" ,perl-term-ui)
+       ("perl-file-sharedir" ,perl-file-sharedir)
+       ("perl-capture-tiny" ,perl-capture-tiny)
+       ("perl" ,perl)))
+    (native-inputs
+     `(("perl-module-install" ,perl-module-install)
+       ("perl-module-build" ,perl-module-build)
+       ("perl-file-sharedir-install" ,perl-file-sharedir-install)))
+    (home-page "https://github.com/cancerit/cgpBattenberg")
+    (synopsis "Battenberg algorithm and associated implementation script")
+    (description "This package provides a perl wrapper and an R program for the
+Battenberg algorithm that can detect subclonality and copy number in matched
+NGS data.")
+    (license license:gpl3+)))
