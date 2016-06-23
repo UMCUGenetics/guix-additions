@@ -595,6 +595,27 @@ maniread, maniskip, manicopy, maniadd.")
    (description "")
    (license (package-license perl))))
 
+(define-public perl-archive-extract
+  (package
+  (name "perl-archive-extract")
+  (version "0.76")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (string-append
+             "https://cpan.metacpan.org/authors/id/B/BI/BINGOS/Archive-Extract-"
+             version
+             ".tar.gz"))
+      (sha256
+        (base32
+          "1z2chz7a5q6024h9rmzpq0z53x0jw7983ia5k1yxsih3lw60irws"))))
+  (build-system perl-build-system)
+  (home-page
+    "http://search.cpan.org/dist/Archive-Extract")
+  (synopsis "Generic archive extracting mechanism")
+  (description "")
+  (license (package-license perl))))
+
 (define-public cgp-battenberg
   (package
     (name "cgp-battenberg")
@@ -646,7 +667,12 @@ maniread, maniskip, manicopy, maniadd.")
        ("perl-term-ui" ,perl-term-ui)
        ("perl-file-sharedir" ,perl-file-sharedir)
        ("perl-capture-tiny" ,perl-capture-tiny)
-       ("perl-autodie" ,perl-autodie)
+       ("perl-forks" ,perl-forks)
+       ("perl-bsd-resource" ,perl-bsd-resource)
+       ("perl-ipc-system-simple" ,perl-ipc-system-simple)
+       ("perl-sub-identify" ,perl-sub-identify)
+       ;;("perl-autodie" ,perl-autodie)
+       ("perl-archive-extract" ,perl-archive-extract)
        ("perl" ,perl)))
     (native-inputs
      `(("perl-module-install" ,perl-module-install)
