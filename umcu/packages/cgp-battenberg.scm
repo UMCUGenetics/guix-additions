@@ -138,27 +138,27 @@ all other UUIDs/GUIDs generated until 3400 CE.")
 
 (define-public libmaus
   (package
-    (name "libmaus")
-    (version "0.0.196")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/gt1/libmaus/archive/"
-                    version "-release-20150326095654.tar.gz"))
-              (sha256
-               (base32
-                "0g92bl37ci8pzkgi2xnn2bck7y655jwcb1bm3mg42mj5lf5x2i5b"))))
-    (build-system gnu-build-system)
+   (name "libmaus")
+   (version "0.0.196")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/gt1/libmaus/archive/"
+                  version "-release-20150326095654.tar.gz"))
+            (sha256
+             (base32
+              "0g92bl37ci8pzkgi2xnn2bck7y655jwcb1bm3mg42mj5lf5x2i5b"))))
+   (build-system gnu-build-system)
    (native-inputs
     `(("pkg-config" ,pkg-config)))
    (inputs
     `(("zlib" ,zlib)))
-    (home-page "https://github.com/gt1/libmaus")
-    (synopsis "Collection of bioinformatics data structures and algorithms")
-    (description "This package contains a collection of bioinformatics data
+   (home-page "https://github.com/gt1/libmaus")
+   (synopsis "Collection of bioinformatics data structures and algorithms")
+   (description "This package contains a collection of bioinformatics data
 structures and algorithms.  It provides I/O classes, bitio classes, text
 indexing classes and BAM sequence alignment functionality.")
-    (license license:gpl3+)))
+   (license license:gpl3+)))
 
 (define-public biobambam
   (package
@@ -481,6 +481,120 @@ maniread, maniskip, manicopy, maniadd.")
     (description "")
     (license (package-license perl))))
 
+(define-public perl-bsd-resource
+  (package
+   (name "perl-bsd-resource")
+   (version "1.2910")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append
+           "https://cpan.metacpan.org/authors/id/J/JH/JHI/BSD-Resource-"
+           version ".tar.gz"))
+     (sha256
+      (base32 "1gvgsg558vz3b9d9fqjpl3qam6nwmpbxpn25j0vhlhwbliv3szr9"))))
+   (build-system perl-build-system)
+   (home-page "http://search.cpan.org/dist/BSD-Resource")
+   (synopsis "BSD process resource limit and priority functions")
+   (description "")
+   (license #f)))
+
+(define-public perl-acme-damn
+  (package
+  (name "perl-acme-damn")
+  (version "0.06")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (string-append
+             "https://cpan.metacpan.org/authors/id/I/IB/IBB/Acme-Damn-"
+             version
+             ".tar.gz"))
+      (sha256
+        (base32
+          "0vzf77pdlyqlshmvrmgcwj9p17l0v67gc2k82fj2r7gqp4rcj9br"))))
+  (build-system perl-build-system)
+  (inputs
+    `(("perl-test-exception" ,perl-test-exception)))
+  (home-page
+    "http://search.cpan.org/dist/Acme-Damn")
+  (synopsis "'Unbless' Perl objects.")
+  (description "")
+  (license #f)))
+
+(define-public perl-sys-sigaction
+  (package
+  (name "perl-sys-sigaction")
+  (version "0.21")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (string-append
+             "mirror://cpan/authors/id/L/LB/LBAXTER/Sys-SigAction-"
+             version
+             ".tar.gz"))
+      (sha256
+        (base32
+          "1nw0rzf5za8yd8s2sbgnw478g5bdlsz7ck2mk2gynqfjdxx20i71"))))
+  (build-system perl-build-system)
+  (home-page
+    "http://search.cpan.org/dist/Sys-SigAction")
+  (synopsis
+    "Perl extension for Consistent Signal Handling")
+  (description "")
+  (license (package-license perl))))
+
+(define-public perl-forks
+  (package
+  (name "perl-forks")
+  (version "0.36")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (string-append
+             "mirror://cpan/authors/id/R/RY/RYBSKEJ/forks-"
+             version
+             ".tar.gz"))
+      (sha256
+        (base32
+          "14srnq51n98aizdlg6lhzpzdqyjvxf5nfm431qiylvsc9zj29gk1"))))
+  (build-system perl-build-system)
+  (propagated-inputs
+    `(("perl-acme-damn" ,perl-acme-damn)
+      ("perl-devel-symdump" ,perl-devel-symdump)
+      ("perl-list-moreutils" ,perl-list-moreutils)
+      ("perl-sys-sigaction" ,perl-sys-sigaction)))
+  (home-page "http://search.cpan.org/dist/forks")
+  (synopsis "forks - emulate threads with fork")
+  (description "")
+  (license (package-license perl))))
+
+(define-public perl-autodie
+  (package
+   (name "perl-autodie")
+   (version "2.29")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append
+           "https://cpan.metacpan.org/authors/id/P/PJ/PJF/autodie-"
+           version ".tar.gz"))
+     (sha256
+      (base32
+       "1gr9ab292xxman5zfyb3vbrrv88y9j51qlgq7z4pjh80wwbpkdzm"))))
+   (build-system perl-build-system)
+   (native-inputs
+    `(("perl-import-into" ,perl-import-into)))
+   (propagated-inputs
+    `(("perl-forks" ,perl-forks)
+      ("perl-bsd-resource" ,perl-bsd-resource)
+      ("perl-ipc-system-simple" ,perl-ipc-system-simple)
+      ("perl-sub-identify" ,perl-sub-identify)))
+   (home-page "http://search.cpan.org/dist/autodie")
+   (synopsis "Replace functions with ones that succeed or die with lexical scope")
+   (description "")
+   (license (package-license perl))))
+
 (define-public cgp-battenberg
   (package
     (name "cgp-battenberg")
@@ -500,6 +614,13 @@ maniread, maniskip, manicopy, maniadd.")
        #:phases
        (modify-phases %standard-phases
          (delete 'configure)
+         ;; The Perl in Guix does not support threads.
+         ;; The forks module is a drop-in replacement for it, so it
+         ;; is easier to use that instead of recompiling Perl.
+         (add-after 'unpack 'enable-threads
+           (lambda _
+             (substitute* "perl/bin/battenberg.pl"
+               (("use strict;") "use forks;\nuse strict;"))))
          (add-before 'build 'move-to-subdirectory
            (lambda _
              (chdir "perl")))
@@ -525,6 +646,7 @@ maniread, maniskip, manicopy, maniadd.")
        ("perl-term-ui" ,perl-term-ui)
        ("perl-file-sharedir" ,perl-file-sharedir)
        ("perl-capture-tiny" ,perl-capture-tiny)
+       ("perl-autodie" ,perl-autodie)
        ("perl" ,perl)))
     (native-inputs
      `(("perl-module-install" ,perl-module-install)
