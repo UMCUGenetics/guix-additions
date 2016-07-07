@@ -25,15 +25,20 @@
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system perl)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages lua)
   #:use-module (gnu packages perl)
+  #:use-module (gnu packages python)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages tcsh)
+  #:use-module (gnu packages tcl)
   #:use-module (gnu packages web)
   #:use-module (umcu packages samtools)
   #:use-module (umcu packages vcftools)
@@ -49,32 +54,35 @@
                                   version ".tar.gz"))
               (file-name (string-append name "-" version ".tar.gz"))
               (sha256
-               (base32 "19yw63yh5s3pq7k3nkw6nsamg5b8vvwyhgbizslgxg0mqgc4xl3d"))))
+               (base32
+                "19yw63yh5s3pq7k3nkw6nsamg5b8vvwyhgbizslgxg0mqgc4xl3d"))))
     (build-system perl-build-system)
     (home-page "http://perltidy.sourceforge.net/")
-    (synopsis "")
-    (description "")
+    (synopsis "Perl script tidier")
+    (description "This package contains a Perl script which indents and
+reformats Perl scripts to make them easier to read.   The formatting can be
+controlled with command line parameters.  The default parameter settings
+approximately follow the suggestions in the Perl Style Guide.")
     (license (package-license perl))))
 
 (define-public perl-data-uuid
   (package
     (name "perl-data-uuid")
     (version "1.221")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append "mirror://cpan/authors/id/R/RJ/RJBS/"
-                           "Data-UUID-" version ".tar.gz"))
-       (sha256
-        (base32
-         "0rw60wib0mj5z0v909mplh750y40hzyzf4z0b6h4ajxplyiv5irw"))))
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "mirror://cpan/authors/id/R/RJ/RJBS/"
+                                  "Data-UUID-" version ".tar.gz"))
+              (sha256
+               (base32
+                "0rw60wib0mj5z0v909mplh750y40hzyzf4z0b6h4ajxplyiv5irw"))))
     (build-system perl-build-system)
     (home-page "http://search.cpan.org/dist/Data-UUID")
     (synopsis "Universally Unique Identifiers generator")
-    (description "Data::UUID provides a framework for generating v3 UUIDs
-(Universally Unique Identifiers, also known as GUIDs (Globally Unique
-Identifiers).  A UUID is 128 bits long, and is guaranteed to be different from
-all other UUIDs/GUIDs generated until 3400 CE.")
+    (description "Data::UUID provides a framework for generating Universally
+Unique Identifiers (UUIDs), also known as Globally Unique Identifiers (GUIDs).
+A UUID is 128 bits long, and is guaranteed to be different from all other
+UUIDs/GUIDs generated until 3400 CE.")
     (license (package-license perl))))
 
 (define-public perl-const-fast
@@ -186,6 +194,63 @@ indexing classes and BAM sequence alignment functionality.")
 bammarkduplicates, bammaskflags, bamrecompress, bamsort, bamtofastq.")
    (license license:gpl3+)))
 
+(define-public samtabix
+  (let ((commit "10fd107909c1ac4d679299908be4262a012965ba"))
+  (package
+   (name "samtabix")
+   (version (string-append "0-" (string-take commit 7)))
+   (source (origin
+            (method git-fetch)
+            (uri (git-reference
+                  (url "http://genome-source.cse.ucsc.edu/samtabix.git")
+                  (commit commit)))
+            (sha256
+             (base32 "0c1nj64l42v395sa84n7az43xiap4i6f9n9dfz4058aqiwkhkmma"))
+            (file-name (string-append name "-" version "-checkout"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There is no test suite.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure))))
+   (inputs
+    `(("zlib" ,zlib)))
+   (native-inputs
+    `(("perl" ,perl)
+      ("python" ,python)
+      ("luajit" ,luajit)))
+   (home-page "http://genome-source.cse.ucsc.edu")
+   (synopsis "")
+   (description "")
+   (license #f))))
+
+(define-public kentutils
+  (package
+   (name "kentutils")
+   (version "302.1.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/ENCODE-DCC/kentUtils/archive/v"
+                  version ".tar.gz"))
+            (sha256
+             (base32 "0g184apsva5nwldkn7fzi6rinicrnyzc2xi68dk4qkn8cs5rq0fp"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:phases
+      (modify-phases %standard-phases
+        (delete 'configure))))
+   (native-inputs
+    `(("tcsh" ,tcsh)
+      ("perl" ,perl)
+      ("python" ,python-2)
+      ("coreutils" ,coreutils)
+      ("tcl" ,tcl)))
+   (home-page "https://github.com/ENCODE-DCC/kentUtils")
+   (synopsis "Jim Kent command line bioinformatic utilities")
+   (description "Jim Kent command line bioinformatic utilities")
+   (license #f)))
+
 (define-public pcap-core
   (package
    (name "pcap-core")
@@ -209,7 +274,8 @@ bammarkduplicates, bammaskflags, bamrecompress, bamsort, bamtofastq.")
                      (string-append "PREFIX=" (assoc-ref outputs "out"))))))))
    (propagated-inputs
     `(("bwa" ,bwa)
-      ("samtools" ,samtools)))
+      ("samtools" ,samtools)
+      ("biobambam" ,biobambam)))
    (native-inputs
     `(("perl-module-install" ,perl-module-install)
       ("perl-module-build" ,perl-module-build)
@@ -587,8 +653,8 @@ maniread, maniskip, manicopy, maniadd.")
     `(("perl-import-into" ,perl-import-into)))
    (propagated-inputs
     `(("perl-forks" ,perl-forks)
-      ("perl-bsd-resource" ,perl-bsd-resource)
-      ("perl-ipc-system-simple" ,perl-ipc-system-simple)
+      ;("perl-bsd-resource" ,perl-bsd-resource)
+      ;("perl-ipc-system-simple" ,perl-ipc-system-simple)
       ("perl-sub-identify" ,perl-sub-identify)))
    (home-page "http://search.cpan.org/dist/autodie")
    (synopsis "Replace functions with ones that succeed or die with lexical scope")
@@ -669,9 +735,8 @@ maniread, maniskip, manicopy, maniadd.")
        ("perl-capture-tiny" ,perl-capture-tiny)
        ("perl-forks" ,perl-forks)
        ("perl-bsd-resource" ,perl-bsd-resource)
-       ("perl-ipc-system-simple" ,perl-ipc-system-simple)
        ("perl-sub-identify" ,perl-sub-identify)
-       ;;("perl-autodie" ,perl-autodie)
+       ("perl-autodie" ,perl-autodie)
        ("perl-archive-extract" ,perl-archive-extract)
        ("perl" ,perl)))
     (native-inputs
