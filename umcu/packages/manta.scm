@@ -16,14 +16,6 @@
 ;;; You should have received a copy of the GNU General Public License
 ;;; along with GNU Guix.  If not, see <http://www.gnu.org/licenses/>.
 
-;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
-;; mainlined in GNU Guix.  You should avoid using this package, and if you
-;; can, please write a free replacement for it.
-
-;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
-;; mainlined in GNU Guix.  You should avoid using this package, and if you
-;; can, please write a free replacement for it.
-
 (define-module (umcu packages manta)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
@@ -63,9 +55,7 @@
         ;; Therefore, the default options applied by the standard configure
         ;; phase result in a configuration failure.
         ;; The configure script should be run before running cmake, therefore,
-        ;; we delete the original configure phase, and add a custom configure
-        ;; phase before the build phase.
-        ;;(delete 'configure)
+        ;; we replace the original configure phase.
         (replace 'configure
           (lambda* (#:key inputs outputs #:allow-other-keys)
             (let ((source-dir (getcwd))
