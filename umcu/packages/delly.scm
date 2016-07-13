@@ -71,4 +71,4 @@ translocations at single-nucleotide resolution in short-read massively parallel
 sequencing data.  It uses paired-ends and split-reads to sensitively and
 accurately delineate genomic rearrangements throughout the genome.  Structural
 variants can be visualized using Delly-maze and Delly-suave.")
-    (license license:gpl3)))
+    (license license:gpl3+)))
