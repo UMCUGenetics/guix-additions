@@ -38,10 +38,10 @@
   #:use-module (gnu packages perl)
   #:use-module (gnu packages python))
 
-(define-public strelka-1.0.14
+(define-public strelka-1.0.15
   (package
     (name "strelka")
-    (version "1.0.14")
+    (version "1.0.15")
     (source (origin
       (method url-fetch)
       (uri (string-append
@@ -50,7 +50,7 @@
             "https://sites.google.com/site/strelkasomaticvariantcaller/home/"
             "download/" name "_workflow-" version ".tar.gz"))
       (sha256
-       (base32 "0f9g2pkr1f7s4r8sxl53jxr2cjpyx53zf3va0jj8fxzavxiwmbmk"))
+       (base32 "1cwad2wlhdk09702ivblfiyv921af0al7s1gm1dn2d3b0v31qrp2"))
       (patches (list (search-patch "strelka-disable-tests.patch")
                      (search-patch "strelka-disable-install.patch")))))
     (build-system gnu-build-system)
@@ -61,7 +61,9 @@
          (add-before 'install 'build-some-more
            (lambda _
              (with-directory-excursion "strelka"
-               (zero? (system* "make" "install")))))
+               (zero? (system* "make" "-j" (number->string
+                                            (parallel-job-count))
+                               "install")))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
              (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
