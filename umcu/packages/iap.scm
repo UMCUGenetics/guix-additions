@@ -101,7 +101,9 @@
     (propagated-inputs
      `(("fastqc" ,fastqc-bin-0.11.4)
        ("bwa" ,bwa-0.7.5a)
-       ("sambamba" ,sambamba-0.5.9)
+
+       ;; FIXME: LDC is broken.
+       ;("sambamba" ,sambamba-0.5.9)
        ;; GATK requires a manual download.
        ;("gatk" ,gatk-bin-3.4)
        ;("gatk-queue" ,gatk-queue-bin-3.4)
@@ -113,9 +115,11 @@
        ("contra" ,contra-2.0.6)
        ("control-freec" ,freec-8.7)
        ("varscan" ,varscan-2.4.0)
-       ("strelka" ,strelka-1.0.14)
-       ("freebayes" ,freebayes-1.0.2)
-       ("vcflib" ,vcflib-1.0.2)
+       ("strelka" ,strelka-1.0.15)
+
+       ;; FIXME: Node fails on tests.
+       ;("freebayes" ,freebayes-1.0.2)
+       ;("vcflib" ,vcflib-1.0.2)
        ("delly" ,delly-0.7.2)
        ("plink2" ,plink2-1.90b3)
        ("king" ,king-bin-1.4)

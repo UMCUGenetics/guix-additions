@@ -35,7 +35,7 @@
     (source (origin
       (method url-fetch)
       (uri (string-append
-            "mirror://sourceforge/contra-cnv/CONTRA.v" version ".tar.gz"))
+            "mirror://sourceforge/contra-cnv/CONTRA.V2.0/CONTRA.v" version ".tar.gz"))
       (sha256
        (base32
         "0agpcm2xh5f0i9n9sx1kvln6mzdksddmh11bvzj6bh76yw5pnw91"))))

@@ -32,8 +32,8 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages python)
-  #:use-module (gnu packages tcsh)
-  #:use-module (gnu packages perl))
+  #:use-module (gnu packages perl)
+  #:use-module (gnu packages shells))
 
 (define-public boost-1.57
   (package

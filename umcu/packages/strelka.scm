@@ -20,6 +20,7 @@
 ;; mainlined in GNU Guix.  You should avoid using this package, and if you
 ;; can, please write a free replacement for it.
 
+
 ;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
 ;; mainlined in GNU Guix.  You should avoid using this package, and if you
 ;; can, please write a free replacement for it.
@@ -36,6 +37,7 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages perl)
+  #:use-module (gnu packages shells)
   #:use-module (gnu packages python))
 
 (define-public strelka-1.0.15
