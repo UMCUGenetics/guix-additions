@@ -44,27 +44,6 @@
   #:use-module (umcu packages vcftools)
   #:use-module (srfi srfi-1))
 
-(define-public perltidy
-  (package
-    (name "perltidy")
-    (version "20160302")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "mirror://sourceforge/perltidy/Perl-Tidy-"
-                                  version ".tar.gz"))
-              (file-name (string-append name "-" version ".tar.gz"))
-              (sha256
-               (base32
-                "19yw63yh5s3pq7k3nkw6nsamg5b8vvwyhgbizslgxg0mqgc4xl3d"))))
-    (build-system perl-build-system)
-    (home-page "http://perltidy.sourceforge.net/")
-    (synopsis "Perl script tidier")
-    (description "This package contains a Perl script which indents and
-reformats Perl scripts to make them easier to read.   The formatting can be
-controlled with command line parameters.  The default parameter settings
-approximately follow the suggestions in the Perl Style Guide.")
-    (license (package-license perl))))
-
 (define-public perl-data-uuid
   (package
     (name "perl-data-uuid")
