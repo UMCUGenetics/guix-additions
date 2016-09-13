@@ -22,6 +22,7 @@
   #:use-module (guix download)
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages maths)
@@ -111,6 +112,8 @@ the graph algorithms contained in the BOOST library.")
     (properties
      `((upstream-name . "BiocCheck")))
     (build-system r-build-system)
+    (inputs
+     `(("which" ,which)))
     (propagated-inputs
      `(("r-graph" ,r-graph)
        ("r-knitr" ,r-knitr)
