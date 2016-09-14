@@ -98,7 +98,6 @@ narratives of views for Bioconductor packages.")
 the graph algorithms contained in the BOOST library.")
     (license license:artistic2.0)))
 
-;; FIXME: Upon installation, it tries to connect to bioconductor.org.
 (define-public r-bioccheck
   (package
     (name "r-bioccheck")
@@ -126,6 +125,26 @@ the graph algorithms contained in the BOOST library.")
     (synopsis "Executes Bioconductor-specific package checks.")
     (description "This package executes Bioconductor-specific
 package checks.")
+    (license license:artistic2.0)))
+
+(define-public r-biocstyle
+  (package
+   (name "r-biocstyle")
+   (version "2.0.3")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "BiocStyle" version))
+              (sha256
+               (base32
+                "06aaj0snj0y3bhhfh7lr949fi6cg7gz6fwf5drdm10ckbs4zp9dk"))))
+    (properties
+     `((upstream-name . "BiocStyle")))
+    (build-system r-build-system)
+    (home-page "http://bioconductor.org/packages/BiocStyle")
+    (synopsis "Bioconductor formatting styles")
+    (description "This package provides standard formatting styles for
+Bioconductor PDF and HTML documents. Package vignettes illustrate use and
+functionality.")
     (license license:artistic2.0)))
 
 (define-public r-optparse
