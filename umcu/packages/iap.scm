@@ -71,68 +71,94 @@
   #:use-module (umcu packages vcftools))
 
 (define-public cuppenresearch-iap
-  (package
-    (name "cuppenresearch-iap") 
-    (version "2.2.1")
-    (source (origin
+  (let ((commit "a7c5973f1302bb0b7286263deeca0ec74cf5170f"))
+    (package
+     (name "cuppenresearch-iap")
+     (version "2.2.1")
+     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "https://github.com/CuppenResearch/IAP/archive/v"
-                    version ".tar.gz"))
-              (file-name (string-append name "-" version ".tar.gz"))
+              (uri (string-append "https://github.com/roelj/IAP/archive/"
+                                  commit ".tar.gz"))
               (sha256
                (base32
-                "05g13lvqyxhwlzpp142h10bdd79v4yrpp4dqplj1nizv8d1yxy1m"))))
-    (build-system trivial-build-system)
-    (arguments
-     '(#:builder
-       (begin
-         (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
-               (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
-               (tarball (assoc-ref %build-inputs "source")))
-           (setenv "PATH" PATH)
-           (mkdir %output)
-           (system* tar "xvf" tarball "--strip-components=1"
-                        "--directory" %output)))))
-    (native-inputs
-     `(("source" ,source)
-       ("tar" ,tar)
-       ("gzip" ,gzip)))
-    (propagated-inputs
-     `(("fastqc" ,fastqc-bin-0.11.4)
-       ("bwa" ,bwa-0.7.5a)
-
-       ;; FIXME: LDC is broken.
-       ;("sambamba" ,sambamba-0.5.9)
-       ;; GATK requires a manual download.
-       ;("gatk" ,gatk-bin-3.4)
-       ;("gatk-queue" ,gatk-queue-bin-3.4)
-       ("picard" ,picard-bin-1.141)
-       ("snpeff" ,snpeff-bin-4.1)
-       ("samtools" ,samtools-1.2)
-       ("vcftools" ,vcftools-0.1.14)
-       ("igvtools" ,igvtools-bin-2.3.71)
-       ("contra" ,contra-2.0.6)
-       ("control-freec" ,freec-8.7)
-       ("varscan" ,varscan-2.4.0)
-       ("strelka" ,strelka-1.0.15)
-
-       ;; FIXME: Node fails on tests.
-       ;("freebayes" ,freebayes-1.0.2)
-       ;("vcflib" ,vcflib-1.0.2)
-       ("delly" ,delly-0.7.2)
-       ("plink2" ,plink2-1.90b3)
-       ("king" ,king-bin-1.4)
-       ("perl" ,perl)
-       ("r" ,r)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-knitr" ,r-knitr)
-       ("r-markdown" ,r-markdown)
-       ("r-reshape2" ,r-reshape2)
-       ("r-xtable" ,r-xtable)
-       ("r-brew" ,r-brew)))
-    (home-page "https://github.com/CuppenResearch/IAP")
-    (synopsis "Illumina Analysis Pipeline")
-    (description "Packages in the Illumina Analysis Pipeline used by the Cuppen
-research group.")
-    (license #f)))
+                "1s5sk8kxjxb3avrm7rha0ah5z6jxfflhz127iyaw1sapb3v0qq06"))))
+     (build-system trivial-build-system)
+     (arguments
+      `(#:modules ((guix build utils))
+        #:builder
+        (begin
+          (use-modules (guix build utils))
+          (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+                (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
+                (tarball (assoc-ref %build-inputs "source"))
+                (bin-dir (string-append %output "/bin"))
+                (scripts-dir (string-append %output "/share/iap-scripts"))
+                (lib-dir (string-append %output "/lib/perl5/site_perl/"
+                                        ,(package-version perl) "/IAP"))
+                (perlbin (string-append (assoc-ref %build-inputs "perl")
+                                        "/bin/perl")))
+            (setenv "PATH" PATH)
+            ;; Create the directory structure in the build output directory.
+            (mkdir-p lib-dir)
+            (mkdir-p bin-dir)
+            (mkdir-p scripts-dir)
+            ;; Extract the modules into the Perl path.
+            (chdir lib-dir)
+            (system* tar "xvf" tarball (string-append "IAP-" ,commit "/IAP")
+                                       "--strip-components=2")
+            ;; Extract scripts to their own custom directory.
+            (chdir scripts-dir)
+            (system* tar "xvf" tarball (string-append "IAP-" ,commit "/scripts")
+                                       "--strip-components=1")
+            ;; Extract the main scripts into the bin directory.
+            (chdir bin-dir)
+            (system* tar "xvf" tarball
+                     (string-append "IAP-" ,commit "/illumina_pipeline.pl")
+                     (string-append "IAP-" ,commit "/illumina_createConfig.pl")
+                     "--strip-components=1")
+            ;; Patch the scripts path.
+            (substitute* "illumina_pipeline.pl"
+              (("dirname\\(abs_path\\(\\$0\\)\\)")
+               (string-append "'" scripts-dir "'")))
+            ;; Patch the shebangs
+            (substitute* '("illumina_pipeline.pl" "illumina_createConfig.pl")
+              (("/usr/bin/perl") perlbin))))))
+     (native-inputs
+      `(("source" ,source)
+        ("tar" ,tar)
+        ("gzip" ,gzip)))
+     (propagated-inputs
+      `(("fastqc" ,fastqc-bin-0.11.4)
+        ("bwa" ,bwa-0.7.5a)
+        ("sambamba" ,sambamba-0.5.9)
+        ;; GATK requires a manual download.
+        ;("gatk" ,gatk-bin-3.4)
+        ;("gatk-queue" ,gatk-queue-bin-3.4)
+        ("picard" ,picard-bin-1.141)
+        ("snpeff" ,snpeff-bin-4.1)
+        ("samtools" ,samtools-1.2)
+        ("vcftools" ,vcftools-0.1.14)
+        ("igvtools" ,igvtools-bin-2.3.71)
+        ("contra" ,contra-2.0.6)
+        ("control-freec" ,freec-8.7)
+        ("varscan" ,varscan-2.4.0)
+        ("strelka" ,strelka-1.0.15)
+        ("freebayes" ,freebayes-1.0.2)
+        ("vcflib" ,vcflib-1.0.2)
+        ("delly" ,delly-0.7.2)
+        ("plink2" ,plink2-1.90b3)
+        ("king" ,king-bin-1.4)
+        ("perl" ,perl)
+        ("perl-file-path" ,perl-file-path)
+        ("r" ,r)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-knitr" ,r-knitr)
+        ("r-markdown" ,r-markdown)
+        ("r-reshape2" ,r-reshape2)
+        ("r-xtable" ,r-xtable)
+        ("r-brew" ,r-brew)))
+     (home-page "https://github.com/CuppenResearch/IAP")
+     (synopsis "Illumina analysis pipeline modules")
+     (description "This package contains a set of Perl modules for the Illumina
+Analysis Pipeline used by the Cuppen research group at the UMC in Utrecht.")
+     (license license:expat))))
