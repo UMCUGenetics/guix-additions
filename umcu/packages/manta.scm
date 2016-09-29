@@ -92,7 +92,7 @@
      `(("cmake" ,cmake)
        ("boost" ,boost)
        ("pyflow" ,pyflow)
-       ("python" ,python-wrapper)
+       ("python" ,python-2)
        ("cppcheck" ,cppcheck)
        ("doxygen" ,doxygen)
        ("zlib" ,zlib)))

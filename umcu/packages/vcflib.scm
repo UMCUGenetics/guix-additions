@@ -86,8 +86,7 @@ some of the details of opening and jumping in tabix-indexed files.")
          (base32 "1s06wmpgj4my4pik5kp2lc42hzzazbp5ism2y4i2ajp2y1c68g77")))))))
 
 (define-public smithwaterman
-  ;; TODO: Upgrading smithwaterman breaks FreeBayes.
-  (let ((commit "203218b47d45ac56ef234716f1bd4c741b289be1"))
+  (let ((commit "2610e259611ae4cde8f03c72499d28f03f6d38a7"))
     (package
       (name "smithwaterman")
       (version (string-append "0-1." (string-take commit 7)))
@@ -97,23 +96,29 @@ some of the details of opening and jumping in tabix-indexed files.")
                             commit ".tar.gz"))
         (file-name (string-append name "-" version "-checkout.tar.gz"))
         (sha256
-         (base32 "1lkxy4xkjn96l70jdbsrlm687jhisgw4il0xr2dm33qwcclzzm3b"))))
+         (base32 "1n21qlpzxka47whiwlwvfii0ig8fihjq1fpxrgax7ncc1smkf6wf"))))
       (build-system gnu-build-system)
       (arguments
        `(#:tests? #f ; There are no tests to run.
          #:phases
          (modify-phases %standard-phases
            (delete 'configure) ; There is no configure phase.
+           ;;(add-after 'install 'stop-it (lambda _ #f))
+           ;; Explicitly compile the library that can be used by other programs.
+           (add-after 'build 'build-library
+             (lambda* (#:key outputs #:allow-other-keys)
+               (system* "make" "libsw.a")))
            (replace 'install
              (lambda* (#:key outputs #:allow-other-keys)
-               (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
-                 (install-file "smithwaterman" bin)))))))
+               (let ((bin (string-append (assoc-ref outputs "out") "/bin"))
+                     (lib (string-append (assoc-ref outputs "out") "/lib")))
+                 (install-file "smithwaterman" bin)
+                 (install-file "libsw.a" lib)))))))
       (home-page "https://github.com/ekg/smithwaterman")
       (synopsis "Implementation of the Smith-Waterman algorithm")
-      (description "Implementation of the Smith-Waterman algorithm.")
-      ;; The project contains a license file for the GPLv2.  The source files
-      ;; do not contain a license notice, so GPLv2-only is assumed here.
-      (license license:gpl2))))
+      (description "This package provides an implementation of the
+Smith-Waterman algorithm to perform local sequence alignment.")
+      (license license:expat))))
 
 (define-public multichoose
   (package
