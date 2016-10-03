@@ -92,7 +92,8 @@
                 (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
                 (tarball (assoc-ref %build-inputs "source"))
                 (bin-dir (string-append %output "/bin"))
-                (scripts-dir (string-append %output "/share/iap-scripts"))
+                (qscripts-dir (string-append %output "/share/iap/QScripts"))
+                (scripts-dir (string-append %output "/share/iap/scripts"))
                 (lib-dir (string-append %output "/lib/perl5/site_perl/"
                                         ,(package-version perl) "/IAP"))
                 (perlbin (string-append (assoc-ref %build-inputs "perl")
@@ -102,6 +103,7 @@
             (mkdir-p lib-dir)
             (mkdir-p bin-dir)
             (mkdir-p scripts-dir)
+            (mkdir-p qscripts-dir)
             ;; Extract the modules into the Perl path.
             (chdir lib-dir)
             (system* tar "xvf" tarball (string-append "IAP-" ,commit "/IAP")
@@ -109,7 +111,11 @@
             ;; Extract scripts to their own custom directory.
             (chdir scripts-dir)
             (system* tar "xvf" tarball (string-append "IAP-" ,commit "/scripts")
-                                       "--strip-components=1")
+                                       "--strip-components=2")
+            ;; Extract QScripts to their own custom directory.
+            (chdir qscripts-dir)
+            (system* tar "xvf" tarball (string-append "IAP-" ,commit "/QScripts")
+                                       "--strip-components=2")
             ;; Extract the main scripts into the bin directory.
             (chdir bin-dir)
             (system* tar "xvf" tarball
