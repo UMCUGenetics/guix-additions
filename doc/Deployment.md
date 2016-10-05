@@ -154,6 +154,15 @@ rsync -lrt --delete /shared/mountpoint/guix/store user@restricted-host:/shared/m
 rsync -lrt --delete /shared/mountpoint/guix/state user@restricted-host:/shared/mountpoint
 ```
 
+### Steps to perform on the restricted environment
+
+Create the directory you've configured with `--with-store-dir` and
+`--localstatedir`:
+
+```bash
+mkdir -p /shared/mountpoint/guix
+```
+
 After synchronizing your build host's copy with the target host's copy,
 you must fix the permissions of the file system structure to enable
 multiple users to be able to run the deployed programs.  Perform these 
@@ -168,12 +177,3 @@ chmod g+rx `ls -lh | grep ^d | awk '{ print $9 }'`
 *Note:* Do not give _write_ permissions to the store, as this allows anyone
 to change the programs inside, and therefore tamper with the integrity of
 the store.
-
-### Steps to perform on the restricted environment
-
-Create the directory you've configured with `--with-store-dir` and
-`--localstatedir`:
-
-```bash
-mkdir -p /shared/mountpoint/guix
-```
