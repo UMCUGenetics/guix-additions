@@ -16,8 +16,8 @@ see [Restricted environment installation][Restricted environment installation].
 Table of Contents
 -----------------
 
-* [Basic installation][#basic-installation]
-* [Restricted environment installation][#restricted-environment-installation]
+* [Basic installation](#basic-installation)
+* [Restricted environment installation](#restricted-environment-installation)
 
 Basic installation
 ------------------
