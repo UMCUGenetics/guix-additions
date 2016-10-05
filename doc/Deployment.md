@@ -16,8 +16,8 @@ see [Restricted environment installation][Restricted environment installation].
 Table of Contents
 -----------------
 
-* [Basic installation][Basic installation]
-* [Restricted environment installation][Restricted environment installation]
+* [Basic installation][#basic-installation]
+* [Restricted environment installation][#restricted-environment-installation]
 
 Basic installation
 ------------------
@@ -153,6 +153,21 @@ could use the following commands:
 rsync -lrt --delete /shared/mountpoint/guix/store user@restricted-host:/shared/mountpoint
 rsync -lrt --delete /shared/mountpoint/guix/state user@restricted-host:/shared/mountpoint
 ```
+
+After synchronizing your build host's copy with the target host's copy,
+you must fix the permissions of the file system structure to enable
+multiple users to be able to run the deployed programs.  Perform these 
+steps on the restricted environment's host.
+
+```bash
+cd /shared/mountpoint/guix/store
+chmod o+rx `ls -lh | grep ^d | awk '{ print $9 }'`
+chmod g+rx `ls -lh | grep ^d | awk '{ print $9 }'`
+```
+
+*Note:* Do not give _write_ permissions to the store, as this allows anyone
+to change the programs inside, and therefore tamper with the integrity of
+the store.
 
 ### Steps to perform on the restricted environment
 
