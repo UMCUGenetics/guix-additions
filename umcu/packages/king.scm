@@ -40,7 +40,7 @@
       (uri "http://people.virginia.edu/~wc9c/KING/Linux-king.tar.gz")
       (file-name (string-append name "-" version "-bin.tar.gz"))
       (sha256
-       (base32 "0y5ghnkxirhdbi12csj7kqxz60ci206lfpr5ynwwjcw5l7pzbn8j"))))
+       (base32 "0h8mh7dawmp6vwz4znq74rqh01xq319cynbpac6a4b3lxkcfflx2"))))
     (build-system gnu-build-system)
     ;; The executable is linked to 64-bit libraries.
     (supported-systems '("x86_64-linux"))
