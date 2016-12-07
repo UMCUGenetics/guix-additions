@@ -195,6 +195,43 @@
     (description "")
     (license (package-license perl))))
 
+(define-public perl-set-intspan
+  (package
+    (name "perl-set-intspan")
+    (version "1.19")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "mirror://cpan/authors/id/S/SW/SWMCD/Set-IntSpan-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1l6znd40ylzvfwl02rlqzvakv602rmvwgm2xd768fpgc2fdm9dqi"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/Set-IntSpan")
+    (synopsis "Manages sets of integers, newsrc style")
+    (description "")
+    (license #f)))
+
+(define-public perl-math-bezier
+  (package
+    (name "perl-math-bezier")
+    (version "0.01")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "mirror://cpan/authors/id/A/AB/ABW/Math-Bezier-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1f5qwrb7vvf8804myb2pcahyxffqm9zvfal2n6myzw7x8py1ba0i"))))
+    (build-system perl-build-system)
+    (home-page
+     "http://search.cpan.org/dist/Math-Bezier")
+    (synopsis "solution of Bezier Curves")
+    (description "")
+    (license #f)))
+
 (define-public circos
   (package
     (name "circos")
@@ -206,24 +243,33 @@
                (base32 "0cdf9pbp7din531lpqa9asa507jv7jnxshrwvhaqvr08rzilzn93"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:phases
+     `(#:tests? #f ; There are no tests.
+       #:phases
        (modify-phases %standard-phases
          (delete 'configure)
          (delete 'build)
          (replace 'install
-           (lambda (#:key inputs outputs #:allow-other-keys)
+           (lambda* (#:key outputs #:allow-other-keys)
              (let* ((out (assoc-ref outputs "out"))
                     (bin (string-append out "/bin"))
-                    (perl-lib (string-append out "/lib/perl5/site_perl/"
-                                             ,(package-version perl))))
-               (mkdir-p perl-lib)
+                    (error (string-append out "/share/Circos/error"))
+                    (fonts (string-append out "/share/Circos/fonts"))
+                    (data (string-append out "/share/Circos/data"))
+                    (tiles (string-append out "/share/Circos/tiles"))
+                    (etc (string-append out "/share/Circos/etc"))
+                    (lib (string-append out "/lib/perl5/site_perl/"
+                                        ,(package-version perl)))
+                    (install-directory (lambda (source target)
+                                         (mkdir-p target)
+                                         (copy-recursively source target))))
+               (for-each install-directory
+                         (list "error" "fonts" "data" "tiles" "etc" "lib")
+                         (list error fonts data tiles etc lib))
                (install-file "bin/circos" bin)
-               (copy-recursively "lib" perl-lib))
-             #t)))))
-    (inputs
-     `(("perl" ,perl)))
+             #t))))))
     (propagated-inputs
-     `(("perl-carp" ,perl-carp)
+     `(("perl" ,perl)
+       ("perl-carp" ,perl-carp)
        ("perl-clone" ,perl-clone)
        ("perl-config-general" ,perl-config-general)
        ("perl-digest-md5" ,perl-digest-md5)
@@ -232,13 +278,17 @@
        ("perl-gd" ,perl-gd)
        ("perl-getopt-long" ,perl-getopt-long)
        ("perl-list-allutils" ,perl-list-allutils)
+       ("perl-math-bezier" ,perl-math-bezier)
        ("perl-math-round" ,perl-math-round)
        ("perl-math-vecstat" ,perl-math-vecstat)
        ("perl-memoize" ,perl-memoize)
+       ("perl-number-format" ,perl-number-format)
        ("perl-params-validate" ,perl-params-validate)
        ("perl-readonly" ,perl-readonly)
        ("perl-regexp-common" ,perl-regexp-common)
+       ("perl-set-intspan" ,perl-set-intspan)
        ("perl-statistics-basic" ,perl-statistics-basic)
+       ("perl-svg" ,perl-svg)
        ("perl-text-balanced" ,perl-text-balanced)
        ("perl-text-format" ,perl-text-format)
        ("perl-time-hires" ,perl-time-hires)))
