@@ -191,3 +191,80 @@ using instead the packages optparse or argparse which add extra features
 like automatically generated help option and usage, support for default
 values, positional argument support, etc.")                                                                     
     (license license:gpl2+)))
+
+(define-public r-ggthemes
+  (package
+    (name "r-ggthemes")
+    (version "3.3.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "ggthemes" version))
+       (sha256
+        (base32
+         "1qdxg2siwsiq32fmgcxn4vihgxad9v8q0aqigl7a94c26bwxs7y2"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-assertthat" ,r-assertthat)
+       ("r-colorspace" ,r-colorspace)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-scales" ,r-scales)))
+    (home-page "http://github.com/jrnold/ggthemes")
+    (synopsis "Extra Themes, Scales and Geoms for 'ggplot2'")
+    (description "Some extra themes, geoms, and scales for 'ggplot2'.  Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others.  Provides 'geoms' for Tufte's box plot and range frame.")
+    (license license:gpl2)))
+
+(define-public r-rmisc
+  (package
+  (name "r-rmisc")
+  (version "1.5")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "Rmisc" version))
+      (sha256
+        (base32
+          "1ijjhfy3v91fspid77rrkc5dkcb2lav37wc3f4k5lwrn24wzy5y8"))))
+  (properties `((upstream-name . "Rmisc")))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-plyr" ,r-plyr)
+     ("r-rcpp" ,r-rcpp)))
+  (home-page
+    "http://cran.r-project.org/web/packages/Rmisc")
+  (synopsis "Rmisc: Ryan Miscellaneous")
+  (description
+    "The Rmisc library contains many functions useful for data analysis and utility operations.")
+  (license license:gpl3)))
+
+(define-public r-txdb-mmusculus-ucsc-mm10-knowngene
+  (package
+    (name "r-txdb-mmusculus-ucsc-mm10-knowngene")
+    (version "3.4.0")
+    (source (origin
+              (method url-fetch)
+              ;; We cannot use bioconductor-uri here because this tarball is
+              ;; located under "data/annotation/" instead of "bioc/".
+              (uri (string-append "http://www.bioconductor.org/packages/"
+                                  "release/data/annotation/src/contrib/"
+                                  "TxDb.Mmusculus.UCSC.mm10.knownGene_"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "08gava9wsvpcqz51k2sni3pj03n5155v32d9riqbf305nbirqbkb"))))
+    (properties
+     `((upstream-name . "TxDb.Mmusculus.UCSC.mm10.knownGene")))
+    (build-system r-build-system)
+    ;; As this package provides little more than a very large data file it
+    ;; doesn't make sense to build substitutes.
+    (arguments `(#:substitutable? #f))
+    (propagated-inputs
+     `(("r-bsgenome" ,r-bsgenome)
+       ("r-genomicfeatures" ,r-genomicfeatures)
+       ("r-annotationdbi" ,r-annotationdbi)))
+    (home-page
+     "http://bioconductor.org/packages/TxDb.Mmusculus.UCSC.mm10.knownGene/")
+    (synopsis "Known genes set for Mouse")
+    (description
+     "This package provides the known genes for Mus musculus (Mouse).")
+    (license license:artistic2.0)))
