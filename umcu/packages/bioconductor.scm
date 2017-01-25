@@ -26,193 +26,8 @@
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages maths)
+  #:use-module (gnu packages web)
   #:use-module (gnu packages statistics))
-
-(define-public r-biocinstaller
-  (package
-    (name "r-biocinstaller")
-    (version "1.22.3")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "BiocInstaller" version))
-              (sha256
-               (base32
-                "02qkfq6f2b7v9klri6d1nv21r54bywv1zd5x47ka0jhhp946cqpr"))))
-    (properties
-     `((upstream-name . "BiocInstaller")))
-    (build-system r-build-system)
-    (home-page "http://bioconductor.org/packages/BiocInstaller")
-    (synopsis "Bioconductor installer package.")
-    (description "This package is used to install and update Bioconductor,
-CRAN, and (some) github packages.")
-    (license license:artistic2.0)))
-
-(define-public r-biocviews
-  (package
-    (name "r-biocviews")
-    (version "1.40.1")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "biocViews" version))
-              (sha256
-               (base32
-                "1d1g06zwx3xhc07mdhs5x31730xw08fg3x73xyfj0qdy2ykww3f9"))))
-    (properties
-     `((upstream-name . "biocViews")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biobase" ,r-biobase)
-       ("r-graph" ,r-graph)
-       ("r-rbgl" ,r-rbgl)
-       ("r-rcurl" ,r-rcurl)
-       ("r-xml" ,r-xml)
-       ("r-knitr" ,r-knitr)
-       ("r-runit" ,r-runit)))
-    (home-page "http://bioconductor.org/packages/Biocviews")
-    (synopsis "Bioconductor structures for vocabularies and narratives of views")
-    (description "This package provides structures for vocabularies and
-narratives of views for Bioconductor packages.")
-    (license license:artistic2.0)))
-
-(define-public r-rbgl
-  (package
-    (name "r-rbgl")
-    (version "1.49.3")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://bioconductor.org/packages/3.4/bioc/src/contrib/"
-                    "RBGL_" version ".tar.gz"))
-              (sha256
-               (base32
-                "0rpiqpalbxk82jkwv3l0fimq9y2hrdi0f7ca4v21318541vfsncs"))))
-    (properties
-     `((upstream-name . "RBGL")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-graph" ,r-graph)))
-    (home-page "http://bioconductor.org/packages/RBGL")
-    (synopsis "Interface to the graph algorithms from BOOST.")
-    (description
-     "This package provides a fairly extensive and comprehensive interface to
-the graph algorithms contained in the BOOST library.")
-    (license license:artistic2.0)))
-
-(define-public r-bioccheck
-  (package
-    (name "r-bioccheck")
-    (version "1.8.2")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "BiocCheck" version))
-              (sha256
-               (base32
-                "0bvkhxmr25nb0gkncifbc3x48i5zgls3737g3xais6jx16wd4q35"))))
-    (properties
-     `((upstream-name . "BiocCheck")))
-    (build-system r-build-system)
-    (inputs
-     `(("which" ,which)))
-    (propagated-inputs
-     `(("r-graph" ,r-graph)
-       ("r-knitr" ,r-knitr)
-       ("r-httr" ,r-httr)
-       ("r-optparse" ,r-optparse)
-       ("r-devtools" ,r-devtools)
-       ("r-biocinstaller" ,r-biocinstaller)
-       ("r-biocviews" ,r-biocviews)))
-    (home-page "http://bioconductor.org/packages/BiocCheck")
-    (synopsis "Executes Bioconductor-specific package checks.")
-    (description "This package executes Bioconductor-specific
-package checks.")
-    (license license:artistic2.0)))
-
-(define-public r-biocstyle
-  (package
-   (name "r-biocstyle")
-   (version "2.0.3")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "BiocStyle" version))
-              (sha256
-               (base32
-                "06aaj0snj0y3bhhfh7lr949fi6cg7gz6fwf5drdm10ckbs4zp9dk"))))
-    (properties
-     `((upstream-name . "BiocStyle")))
-    (build-system r-build-system)
-    (home-page "http://bioconductor.org/packages/BiocStyle")
-    (synopsis "Bioconductor formatting styles")
-    (description "This package provides standard formatting styles for
-Bioconductor PDF and HTML documents. Package vignettes illustrate use and
-functionality.")
-    (license license:artistic2.0)))
-
-(define-public r-optparse
-  (package
-    (name "r-optparse")
-    (version "1.3.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "optparse" version))
-       (sha256
-        (base32
-         "1g8as89r91xxi5j5azsd6vrfrhg84mnfx2683j7pacdp8s33radw"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-getopt" ,r-getopt)))
-    (home-page
-     "https://github.com/trevorld/optparse")
-    (synopsis "Command Line Option Parser")
-    (description
-     "This package provides a command line parser inspired by Python's
-'optparse' library to be used with Rscript to write \"#!\" shebang
-scripts that accept short and long flag/options.")
-    (license license:gpl2+)))
-
-(define-public r-getopt
-  (package
-    (name "r-getopt")
-    (version "1.20.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "getopt" version))
-       (sha256
-        (base32
-         "00f57vgnzmg7cz80rjmjz1556xqcmx8nhrlbbhaq4w7gl2ibl87r"))))
-    (build-system r-build-system)
-    (home-page "https://github.com/trevorld/getopt")
-    (synopsis "C-like getopt behavior.")
-    (description
-     "Package designed to be used with Rscript to write ``#!'' shebang
-scripts that accept short and long flags/options.  Many users will prefer
-using instead the packages optparse or argparse which add extra features
-like automatically generated help option and usage, support for default
-values, positional argument support, etc.")                                                                     
-    (license license:gpl2+)))
-
-(define-public r-ggthemes
-  (package
-    (name "r-ggthemes")
-    (version "3.3.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "ggthemes" version))
-       (sha256
-        (base32
-         "1qdxg2siwsiq32fmgcxn4vihgxad9v8q0aqigl7a94c26bwxs7y2"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-assertthat" ,r-assertthat)
-       ("r-colorspace" ,r-colorspace)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-scales" ,r-scales)))
-    (home-page "http://github.com/jrnold/ggthemes")
-    (synopsis "Extra Themes, Scales and Geoms for 'ggplot2'")
-    (description "Some extra themes, geoms, and scales for 'ggplot2'.  Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others.  Provides 'geoms' for Tufte's box plot and range frame.")
-    (license license:gpl2)))
 
 (define-public r-rmisc
   (package
@@ -237,34 +52,193 @@ values, positional argument support, etc.")
     "The Rmisc library contains many functions useful for data analysis and utility operations.")
   (license license:gpl3)))
 
-(define-public r-txdb-mmusculus-ucsc-mm10-knowngene
+(define-public r-shiny
   (package
-    (name "r-txdb-mmusculus-ucsc-mm10-knowngene")
-    (version "3.4.0")
+    (name "r-shiny")
+    (version "1.0.0")
     (source (origin
               (method url-fetch)
-              ;; We cannot use bioconductor-uri here because this tarball is
-              ;; located under "data/annotation/" instead of "bioc/".
-              (uri (string-append "http://www.bioconductor.org/packages/"
-                                  "release/data/annotation/src/contrib/"
-                                  "TxDb.Mmusculus.UCSC.mm10.knownGene_"
-                                  version ".tar.gz"))
+              (uri (cran-uri "shiny" version))
               (sha256
                (base32
-                "08gava9wsvpcqz51k2sni3pj03n5155v32d9riqbf305nbirqbkb"))))
-    (properties
-     `((upstream-name . "TxDb.Mmusculus.UCSC.mm10.knownGene")))
+                "152v2z1cyg6893b0qd5rs12a2m9dbzk7ak04qvbcym0s9y4l0kf4"))))
     (build-system r-build-system)
-    ;; As this package provides little more than a very large data file it
-    ;; doesn't make sense to build substitutes.
-    (arguments `(#:substitutable? #f))
     (propagated-inputs
-     `(("r-bsgenome" ,r-bsgenome)
+     `(("r-digest" ,r-digest)
+       ("r-htmltools" ,r-htmltools)
+       ("r-httpuv" ,r-httpuv)
+       ("r-jsonlite" ,r-jsonlite)
+       ("r-mime" ,r-mime)
+       ("r-r6" ,r-r6)
+       ("r-sourcetools" ,r-sourcetools)
+       ("r-xtable" ,r-xtable)))
+    (home-page "http://shiny.rstudio.com")
+    (synopsis "Web application framework for R")
+    (description "Makes it incredibly easy to build interactive web
+applications with R.  Automatic reactive binding between inputs and
+outputs and extensive pre-built widgets make it possible to build
+beautiful, responsive, and powerful applications with minimal effort.")
+    (license license:gpl3+)))
+
+(define-public r-interactivedisplaybase
+  (package
+    (name "r-interactivedisplaybase")
+    (version "1.12.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "interactiveDisplayBase" version))
+              (sha256
+               (base32
+                "1gxa1sc2sk7xvxc4p74cwjkxdk3ns7igl51jg7a7086k729k3m8j"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biocgenerics" ,r-biocgenerics)
+       ("r-shiny" ,r-shiny)))
+    (home-page "http://bioconductor.org/packages/interactiveDisplayBase")
+    (synopsis "Base package for enabling web displays of Bioconductor objects")
+    (description "This package contains the the basic methods needed to
+generate interactive Shiny based display methods for Bioconductor objects.")
+    (license license:artistic2.0)))
+    
+(define-public r-annotationhub
+  (package
+    (name "r-annotationhub")
+    (version "2.6.4")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "AnnotationHub" version))
+              (sha256
+               (base32
+                "1kciqhdd0s447hqhlg1dy603fi1l26acyny1qk2iigpwhvdry9cr"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-rsqlite" ,r-rsqlite)
+       ("r-biocinstaller" ,r-biocinstaller)
+       ("r-annotationdbi" ,r-annotationdbi)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-interactivedisplaybase" ,r-interactivedisplaybase)
+       ("r-httr" ,r-httr)
+       ("r-yaml" ,r-yaml)))
+    (home-page "http://bioconductor.org/packages/AnnotationHub")
+    (synopsis "Client to access AnnotationHub resources")
+    (description "This package provides a client for the Bioconductor 
+AnnotationHub web resource.  The AnnotationHub web resource provides a central
+location where genomic files (e.g., VCF, bed, wig) and other resources from
+standard locations (e.g., UCSC, Ensembl) can be discovered.  The resource
+includes metadata about each resource, e.g., a textual description, tags, and
+date of modification.  The client creates and manages a local cache of files
+retrieved by the user, helping with quick and reproducible access.")
+    (license license:lgpl3)))
+
+(define-public r-ensembldb
+  (package
+    (name "r-ensembldb")
+    (version "1.6.2")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "ensembldb" version))
+              (sha256
+               (base32
+                "1hxvjplkgkibjfzrbi6whqr7czf5digh96j7ww6szdyxy86gbf3r"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biocgenerics" ,r-biocgenerics)
        ("r-genomicfeatures" ,r-genomicfeatures)
-       ("r-annotationdbi" ,r-annotationdbi)))
-    (home-page
-     "http://bioconductor.org/packages/TxDb.Mmusculus.UCSC.mm10.knownGene/")
-    (synopsis "Known genes set for Mouse")
-    (description
-     "This package provides the known genes for Mus musculus (Mouse).")
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-rsqlite" ,r-rsqlite)
+       ("r-dbi" ,r-dbi)
+       ("r-biobase" ,r-biobase)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-annotationdbi" ,r-annotationdbi)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-annotationhub" ,r-annotationhub)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-iranges" ,r-iranges)))
+    (home-page "http://bioconductor.org/packages/ensembldb")
+    (synopsis "Utilities to create and use Ensembl based annotation databases")
+    (description "This package provides functions to create and use transcript
+centric annotation databases/packages.  The annotation for the databases are
+directly fetched from Ensembl using their Perl API.  The functionality and data
+is similar to that of the TxDb packages from the GenomicFeatures package, but,
+in addition to retrieve all gene/transcript models and annotations from the
+database, the ensembldb package provides also a filter framework allowing to
+retrieve annotations for specific entries like genes encoded on a chromosome
+region or transcript models of lincRNA genes.")
+    (license license:lgpl3)))
+
+(define-public r-biovizbase
+  (package
+    (name "r-biovizbase")
+    (version "1.22.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "biovizBase" version))
+              (sha256
+               (base32
+                "0f3zwn0g0rc3ld8dd5sgpr14l9aff57j766h4grkiyazyyb46bnh"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-scales" ,r-scales)
+       ("r-hmisc" ,r-hmisc)
+       ("r-dichromat" ,r-dichromat)
+       ("r-summarizedexperiment" ,r-summarizedexperiment)
+       ("r-variantannotation" ,r-variantannotation)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-iranges" ,r-iranges)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-annotationdbi" ,r-annotationdbi)
+       ("r-genomicfeatures" ,r-genomicfeatures)
+       ("r-biostrings" ,r-biostrings)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-ensembldb" ,r-ensembldb)))
+    (home-page "http://bioconductor.org/packages/biovizBase")
+    (synopsis "Basic graphic utilities for visualization of genomic data")
+    (description "This package is designed to provide a set of utilities, color
+schemes and conventions for genomic data.  It serves as the base for various
+high-level packages for biological data visualization.  This saves development
+effort and encourages consistency.")
+    (license license:artistic2.0)))
+
+(define-public r-gviz
+  (package
+    (name "r-gviz")
+    (version "1.18.1")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "Gviz" version))
+              (sha256
+               (base32
+                "1dk5cww1w2zqxc7p98d4kgzvy3drsj60va5zlvr14r4wgs5dwqvj"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-s4vectors" ,r-s4vectors)
+       ("r-iranges" ,r-iranges)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-xvector" ,r-xvector)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-biomart" ,r-biomart)
+       ("r-annotationdbi" ,r-annotationdbi)
+       ("r-biobase" ,r-biobase)
+       ("r-genomicfeatures" ,r-genomicfeatures)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-biostrings" ,r-biostrings)
+       ("r-biovizbase" ,r-biovizbase)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-latticeextra" ,r-latticeextra)
+       ("r-matrixstats" ,r-matrixstats)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-digest" ,r-digest)))
+    (home-page "http://bioconductor.org/packages/Gviz")
+    (synopsis "Plotting data and annotations along genomic coordinates")
+    (description "This package uses the biomaRt and the rtracklayer packages to
+perform live annotation queries to Ensembl and UCSC and translates this to e.g.
+gene/transcript structures in viewports of the grid graphics package.  This
+results in genomic information plotted together with your data.")
     (license license:artistic2.0)))
