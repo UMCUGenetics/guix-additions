@@ -242,3 +242,33 @@ perform live annotation queries to Ensembl and UCSC and translates this to e.g.
 gene/transcript structures in viewports of the grid graphics package.  This
 results in genomic information plotted together with your data.")
     (license license:artistic2.0)))
+
+(define-public r-deseq
+  (package
+    (name "r-deseq")
+    (version "1.26.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "DESeq" version))
+       (sha256
+        (base32
+         "18f0400pcmla88kc2prscw0skkf7bww0mnkrj6hhxyy79dhzdy86"))))
+    (properties `((upstream-name . "DESeq")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biobase" ,r-biobase)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-locfit" ,r-locfit)
+       ("r-lattice" ,r-lattice)
+       ("r-genefilter" ,r-genefilter)
+       ("r-geneplotter" ,r-geneplotter)
+       ("r-rcolorbrewer" , r-rcolorbrewer)))
+    (home-page "http://bioconductor.org/packages/DESeq")
+    (synopsis "Differential gene expression analysis")
+    (description
+     "This package provides functions to estimate variance-mean dependence in
+count data from high-throughput nucleotide sequencing assays and test for
+differential expression based on a model using the negative binomial
+distribution.")
+    (license license:lgpl3+)))
