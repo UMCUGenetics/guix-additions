@@ -23,6 +23,7 @@
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages compression)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages maths)
@@ -271,4 +272,64 @@ results in genomic information plotted together with your data.")
 count data from high-throughput nucleotide sequencing assays and test for
 differential expression based on a model using the negative binomial
 distribution.")
+    (license license:lgpl3+)))
+
+(define-public r-amap
+  (package
+    (name "r-amap")
+    (version "0.8-14")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "amap" version))
+              (sha256
+               (base32
+                "1dz37z9v4zvyvqrs4xvpfv468jwvpxav60qn2w0049bw8llj6xdl"))))
+    (build-system r-build-system)
+    (inputs
+     `(("gfortran" ,gfortran)))
+    (home-page "http://mulcyber.toulouse.inra.fr/projects/amap/")
+    (synopsis "Another multidimensional analysis package")
+    (description "Tools for clustering and principal component analysis (with
+robust methods, and parallelized functions).")
+    (license license:gpl2+)))
+
+(define-public r-diffbind
+  (package
+    (name "r-diffbind")
+    (version "2.2.8")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "DiffBind" version))
+       (sha256
+        (base32
+         "1p0wfq847czn3san9i41wa0kmj759g2g73bfgzwfnjj165n9kc03"))))
+    (properties `((upstream-name . "DiffBind")))
+    (build-system r-build-system)
+    (inputs
+     `(("zlib" ,zlib)))
+    (propagated-inputs
+     `(("r-rcolorbrewer" , r-rcolorbrewer)
+       ("r-amap" ,r-amap)
+       ("r-edger" ,r-edger)
+       ("r-gplots" ,r-gplots)
+       ("r-limma" ,r-limma)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-locfit" ,r-locfit)
+       ("r-iranges" ,r-iranges)
+       ("r-zlibbioc" ,r-zlibbioc)
+       ("r-lattice" ,r-lattice)
+       ("r-systempiper" ,r-systempiper)
+       ("r-rcpp" ,r-rcpp)
+       ("r-dplyr" ,r-dplyr)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-deseq2" ,r-deseq2)))
+    (home-page "http://bioconductor.org/packages/DiffBind")
+    (synopsis "Differential binding analysis of ChIP-Seq peak data")
+    (description
+     "This package computes differentially bound sites from multiple
+ChIP-seq experiments using affinity (quantitative) data.  Also enables
+occupancy (overlap) analysis and plotting functions.")
     (license license:lgpl3+)))
