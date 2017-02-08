@@ -366,3 +366,160 @@ a suite of bioinformatics tools integrated within this self-contained software
 package comprehensively addressing issues ranging from post-alignments
 processing to visualization and annotation.")
     (license license:gpl2+)))
+
+(define-public r-multtest
+  (package
+    (name "r-multtest")
+    (version "2.30.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "multtest" version))
+       (sha256
+        (base32
+         "0q302f3yf9v7mlq2kib7ynq015d5f94jrsk9drkp5vq0z5j0h3sw"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-survival" ,r-survival)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-biobase" ,r-biobase)))
+    (home-page "http://bioconductor.org/packages/multtest")
+    (synopsis "Resampling-based multiple hypothesis testing")
+    (description
+     "Non-parametric bootstrap and permutation resampling-based multiple
+testing procedures (including empirical Bayes methods) for controlling the
+family-wise error rate (FWER), generalized family-wise error rate (gFWER),
+tail probability of the proportion of false positives (TPPFP), and false
+discovery rate (FDR).  Several choices of bootstrap-based null distribution
+are implemented (centered, centered and scaled, quantile-transformed).  
+Single-step and step-wise methods are available.  Tests based on a variety of
+t- and F-statistics (including t-statistics based on regression parameters
+from linear and survival models as well as those based on correlation
+parameters) are included.  When probing hypotheses with t-statistics, users
+may also select a potentially faster null distribution which is multivariate
+normal with mean zero and variance covariance matrix derived from the vector
+influence function.  Results are reported in terms of adjusted p-values,
+confidence regions and test statistic cutoffs.  The procedures are directly
+applicable to identifying differentially expressed genes in DNA microarray
+experiments.")
+    (license license:lgpl3)))
+
+(define-public r-regioner
+  (package
+    (name "r-regioner")
+    (version "1.6.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "regioneR" version))
+       (sha256
+        (base32
+         "0mvwk2yjsdxda7w6f82dbj91i0zrr95ipglfyw9ndhl2ki8dka0i"))))
+    (properties `((upstream-name . "regioneR")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-memoise" ,r-memoise)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-iranges" ,r-iranges)))
+    (home-page "http://bioconductor.org/packages/regioneR")
+    (synopsis
+     "Association analysis of genomic regions based on permutation tests")
+    (description
+     "This package offers a statistical framework based on customizable
+permutation tests to assess the association between genomic region sets
+and other genomic features.")
+    (license license:artistic2.0)))
+
+(define-public r-idr
+  (package
+    (name "r-idr")
+    (version "1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "idr" version))
+              (sha256
+               (base32
+                "05nvgw1xdg670bsjjrxkgd1mrdkciccpw4krn0zcgdf2r21dzgwb"))))
+    (build-system r-build-system)
+    (home-page "http://cran.r-project.org/web/packages/idr")
+    (synopsis "Irreproducible discovery rate")
+    (description
+     "This is a package for estimating the copula mixture model and plotting
+correspondence curves in \"Measuring reproducibility of high-throughput
+experiments\" (2011), Annals of Applied Statistics, Vol. 5, No. 3, 1752-1779,
+by Li, Brown, Huang, and Bickel")
+    (license license:gpl2+)))
+
+(define-public r-venndiagram
+  (package
+    (name "r-venndiagram")
+    (version "1.6.17")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "VennDiagram" version))
+              (sha256
+               (base32
+                "14cahgxm5kq133j5wv6p7ivlmcmym5r39v4dpj69wnq6w9rjqki8"))))
+    (properties `((upstream-name . "VennDiagram")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-futile-logger" ,r-futile-logger)))
+    (home-page "http://cran.r-project.org/web/packages/VennDiagram")
+    (synopsis "Generate High-Resolution Venn and Euler Plots")
+    (description
+     "This package provides a set of functions to generate high-resolution
+Venn and Euler plots.  Includes handling for several special cases, including
+two-case scaling, and extensive customization of plot shape and structure.")
+    (license license:gpl2+)))
+
+(define-public r-chippeakanno
+  (package
+    (name "r-chippeakanno")
+    (version "3.8.9")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "ChIPpeakAnno" version))
+       (sha256
+        (base32
+         "1wykx52xqnz9pcxgfzf5i0ckrw41jg0piwynx1v1ldjxajbdh904"))))
+    (properties `((upstream-name . "ChIPpeakAnno")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biocgenerics" ,r-biocgenerics)
+       ("r-go-db" ,r-go-db)
+       ("r-biomart" ,r-biomart)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-genomicfeatures" ,r-genomicfeatures)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-matrixstats" ,r-matrixstats)
+       ("r-annotationdbi" ,r-annotationdbi)
+       ("r-limma" ,r-limma)
+       ("r-multtest" ,r-multtest)
+       ("r-rbgl" ,r-rbgl)
+       ("r-graph" ,r-graph)
+       ("r-biocinstaller" ,r-biocinstaller)
+       ("r-regioner" ,r-regioner)
+       ("r-dbi" ,r-dbi)
+       ("r-ensembldb" ,r-ensembldb)
+       ("r-biobase" ,r-biobase)
+       ("r-seqinr" ,r-seqinr)
+       ("r-idr" ,r-idr)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-summarizedexperiment" ,r-summarizedexperiment)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-venndiagram" ,r-venndiagram)))
+    (home-page "http://bioconductor.org/packages/RIPSeeker")
+    (synopsis "Identifying protein-associated transcripts from RIP-seq
+experiments")
+    (description
+     "This package infers and discriminates RIP peaks from RIP-seq alignments
+using two-state HMM with negative binomial emission probability.  While
+RIPSeeker is specifically tailored for RIP-seq data analysis, it also provides
+a suite of bioinformatics tools integrated within this self-contained software
+package comprehensively addressing issues ranging from post-alignments
+processing to visualization and annotation.")
+    (license license:gpl2+)))
