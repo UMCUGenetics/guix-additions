@@ -28,3 +28,25 @@
 
 (define-public python2-pyvcf
   (package-with-python2 python-pyvcf))
+
+(define-public python-flask-restful
+  (package
+    (name "python-flask-restful")
+    (version "0.3.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "Flask-RESTful" version))
+       (sha256
+        (base32
+         "0hjcmdb56b7z4bkw848lxfkyrpnkwzmqn2dgnlv12mwvjpzsxr6c"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-sphinx" ,python-sphinx)))
+    (home-page "https://www.github.com/flask-restful/flask-restful/")
+    (synopsis "Simple framework for creating REST APIs")
+    (description "Simple framework for creating REST APIs")
+    (license license:bsd-3)))
+
+(define-public python2-flask-restful
+  (package-with-python2 python-flask-restful))
