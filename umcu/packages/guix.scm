@@ -54,7 +54,7 @@ set -e
 
 #Configuration
 socketfile=\"${HOME}/.guix-daemon-socket-forwarder-$$\"
-remote=\"10.100.3.226:9999\"
+remote=\"10.100.7.226:9999\"
 guix_root=\"/gnu\"
 guix_additional=\"/gnu/repositories/guix-additions\"
 guix_pin=\"/gnu/repositories/guix\"
