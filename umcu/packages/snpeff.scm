@@ -82,3 +82,14 @@ It annotates and predicts the effects of variants on genes (such as amino
 acid changes).")
    ;; No license specified.
    (license license:non-copyleft)))
+
+(define-public snpeff-bin-4.1h
+ (package (inherit snpeff-bin-4.1)
+  (name "snpeff")
+  (version "4.1h")
+  (source (origin
+      (method url-fetch)
+      (uri "mirror://sourceforge/snpeff/snpEff_v4_1h_core.zip")
+      (sha256
+        (base32 "1j45jp4y8wj0q01clxsx46w1f4jm2wh85yl1mbrha7qbqs8c1qn3"))))
+  ))
