@@ -70,6 +70,26 @@ capable of taking on projects of any size.")
    ;; There are additional restrictions, so it's nonfree.
    (license license:expat)))
 
+(define-public gatk-bin-3.4-46
+  (package (inherit gatk-bin-3.4)
+   (name "gatk")
+   (version "3.4-46")
+   (source (origin
+             (method url-fetch)
+             ;; FIXME: You need to be logged in on a web page to download
+             ;; this release.  Please download the file manually and change
+             ;; the path below accordingly.
+            (uri (string-append
+                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/GenomeAnalysisTK-"
+                  version ".tar.bz2"))
+            (sha256
+             (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
+   (build-system gnu-build-system)
+   (propagated-inputs
+    `(("icedtea" ,icedtea-7)
+      ("gatk-queue" ,gatk-queue-bin-3.4-46)))
+    )))
+
 (define-public gatk-queue-bin-3.4
   (package
    (name "gatk-queue")
@@ -110,3 +130,19 @@ powerful processing engine and high-performance computing features make it
 capable of taking on projects of any size.")
    ;; There are additional restrictions, so it's nonfree.
    (license license:expat)))
+
+(define-public gatk-queue-bin-3.4-46
+  (package (inherit gatk-queue-bin-3.4)
+   (name "gatk-queue")
+   (version "3.4-46")
+   (source (origin
+             (method url-fetch)
+             ;; FIXME: You need to be logged in on a web page to download
+             ;; this release.  Please download the file manually and change
+             ;; the path below accordingly.
+            (uri (string-append
+                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/Queue-"
+                  version ".tar.bz2"))
+            (sha256
+             (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))
+  ))
