@@ -34,7 +34,7 @@
 ;;  WARNING: This package is a work-in-progess.  It does not work.
 ;;
 
-(define-public manta
+(define-public manta-0.29.6
   (package
    (name "manta")
    (version "0.29.6")
@@ -104,3 +104,17 @@ in small sets of individuals and somatic variation in tumor/normal sample pairs.
 Manta discovers, assembles and scores large-scale SVs, medium-sized indels and
 large insertions within a single efficient workflow.")
    (license license:gpl3)))
+
+(define-public manta-0.29.5
+  (package (inherit  manta-0.29.6)
+   (name "manta")
+   (version "0.29.5")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/Illumina/manta/releases/download/v"
+                  version "/manta-" version ".release_src.tar.bz2"))
+            (file-name (string-append name "-" version ".tar.bz2"))
+            (sha256
+             (base32 "1svansz8m5z481454mh206b6f60qimvgwm17nqnazbr5s3x9yb66")
+            )))))
