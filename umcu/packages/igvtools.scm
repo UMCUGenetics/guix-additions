@@ -63,3 +63,16 @@ datasets.  It supports a wide variety of data types, including array-based and
 next-generation sequence data, and genomic annotations.")
    ;; No license specified.
    (license license:non-copyleft)))
+
+(define-public igvtools-bin-2.3.60
+  (package (inherit igvtools-bin-2.3.71)
+   (name "igvtools")
+   (version "2.3.60")
+   (source (origin
+     (method url-fetch)
+     (uri (string-append
+           "http://data.broadinstitute.org/igv/projects/downloads/igvtools_"
+           version ".zip"))
+      (sha256
+        (base32 "11k713nip68j06mzk7zkbsyajwrlprix7j38ybfrxblp666g3jm2")
+      )))))
