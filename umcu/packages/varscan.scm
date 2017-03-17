@@ -28,18 +28,17 @@
   #:use-module (guix build-system ant)
   #:use-module (gnu packages))
 
-(define-public varscan-2.4.0
-  (let ((commit "91f116629b2addce523a2eabe118b1cd7a538444"))
+(define (varscan version commit hash)
+  (let ((jar-file (string-append "varscan-" version ".jar")))
     (package
       (name "varscan")
-      (version "2.4.0")
+      (version version)
       (source (origin
-        (method url-fetch)
-        (uri (string-append
-              "https://github.com/dkoboldt/varscan/raw/" commit "/VarScan.v"
-              version ".source.jar"))
-        (sha256
-         (base32 "1qyl93awj31qg4pbwaicm5vgq4zv5b9aqa10dpna9qrvbcqfdz90"))))
+                (method url-fetch)
+                (uri (string-append
+                      "https://github.com/dkoboldt/varscan/raw/"
+                      commit "/VarScan.v" version ".source.jar"))
+                (sha256 (base32 hash))))
       (build-system ant-build-system)
       (arguments
        `(#:tests? #f ; No test target.
@@ -79,16 +78,28 @@
                                   ".class"))))))
                      (find-files "." #:directories? #f)))
                   ;; Construct the Java archive.
-                  (let ((params (append '("jar" "cfm" "varscan-2.4.0.jar") out-files)))
+                  (let ((params (append '("jar" "cfm" ,jar-file) out-files)))
                     (zero? (apply system* params)))))))
            (replace 'install
              (lambda _
                (let ((out (string-append (assoc-ref %outputs "out")
                                          "/share/java/varscan/")))
-                 (install-file "varscan-2.4.0.jar" out)))))))
+                 (install-file ,jar-file out)))))))
       (home-page "http://dkoboldt.github.io/varscan/")
       (synopsis "Variant detection in massively parallel sequencing data")
       (description "")
       ;; Free for non-commercial use by academic, government, and
       ;; non-profit/not-for-profit institutions
       (license license:non-copyleft))))
+
+(define-public varscan-2.4.0
+  (varscan "2.4.0" "ed3227992f31725548d6106dc7fcd0bd8879ff1e"
+           "1qyl93awj31qg4pbwaicm5vgq4zv5b9aqa10dpna9qrvbcqfdz90"))
+
+(define-public varscan-2.4.1
+  (varscan "2.4.1" "91f116629b2addce523a2eabe118b1cd7a538444"
+           "0y45ympkza7qwcbcisg006286pwjbr5978n03hx5nvl09f0mapk8"))
+
+(define-public varscan-2.4.2
+  (varscan "2.4.2" "18425ce00e3ced8afc624bd86de142b1cd1e0eb0"
+           "14f7fp0yaj3lsif1dpjdci7kz3b2fd9qic3299a2bvgk3rv3lp6n"))
