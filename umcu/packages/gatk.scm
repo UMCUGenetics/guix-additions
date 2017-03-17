@@ -24,7 +24,7 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages java))
 
-(define-public gatk-bin-3.4
+(define-public gatk-bin-3.4-0
   (package
    (name "gatk")
    (version "3.4")
@@ -34,7 +34,7 @@
              ;; this release.  Please download the file manually and change
              ;; the path below accordingly.
             (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK-"
+                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/GenomeAnalysisTK-"
                   version ".tar.bz2"))
             (sha256
              (base32 "022wi4d64myp8nb4chpypb3pi8vnx1gsjhkncpjyd8pdks0p72sv"))))
@@ -90,7 +90,7 @@ capable of taking on projects of any size.")
       ("gatk-queue" ,gatk-queue-bin-3.4-46)))
     )))
 
-(define-public gatk-queue-bin-3.4
+(define-public gatk-queue-bin-3.4-
   (package
    (name "gatk-queue")
    (version "3.4")
@@ -100,10 +100,10 @@ capable of taking on projects of any size.")
              ;; this release.  Please download the file manually and change
              ;; the path below accordingly.
             (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/Queue-"
+                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/Queue-"
                   version ".tar.bz2"))
             (sha256
-             (base32 "103gns8f427h0b944d7v6aci7lzq1c8g3pngjn271m3p0j5cd7mj"))))
+             (base32 "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73"))))
    (build-system gnu-build-system)
    (propagated-inputs
     `(("icedtea" ,icedtea-7)))
