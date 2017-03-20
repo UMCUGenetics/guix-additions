@@ -98,4 +98,5 @@ indels from the aligned sequencing reads of matched tumor-normal samples")
         version "/strelka_workflow-" version ".tar.gz"))
       (sha256
         (base32 "0f9g2pkr1f7s4r8sxl53jxr2cjpyx53zf3va0jj8fxzavxiwmbmk"))
-        ))))
+      (patches (list (search-patch "strelka-disable-tests.patch")
+                     (search-patch "strelka-disable-install.patch")))))))
