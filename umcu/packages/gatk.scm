@@ -71,7 +71,7 @@ capable of taking on projects of any size.")
    (license license:expat)))
 
 (define-public gatk-bin-3.4-46
-  (package (inherit gatk-bin-3.4)
+  (package (inherit gatk-bin-3.4-0)
    (name "gatk")
    (version "3.4-46")
    (source (origin
@@ -87,10 +87,9 @@ capable of taking on projects of any size.")
    (build-system gnu-build-system)
    (propagated-inputs
     `(("icedtea" ,icedtea-7)
-      ("gatk-queue" ,gatk-queue-bin-3.4-46)))
-    )))
+      ("gatk-queue" ,gatk-queue-bin-3.4-46)))))
 
-(define-public gatk-queue-bin-3.4-
+(define-public gatk-queue-bin-3.4-0
   (package
    (name "gatk-queue")
    (version "3.4")
@@ -132,7 +131,7 @@ capable of taking on projects of any size.")
    (license license:expat)))
 
 (define-public gatk-queue-bin-3.4-46
-  (package (inherit gatk-queue-bin-3.4)
+  (package (inherit gatk-queue-bin-3.4-0)
    (name "gatk-queue")
    (version "3.4-46")
    (source (origin
@@ -144,5 +143,4 @@ capable of taking on projects of any size.")
                   "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/Queue-"
                   version ".tar.bz2"))
             (sha256
-             (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))
-  ))
+             (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))))
