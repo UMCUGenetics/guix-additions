@@ -41,7 +41,7 @@
    (build-system gnu-build-system)
    (propagated-inputs
     `(("icedtea" ,icedtea-7)
-      ("gatk-queue" ,gatk-queue-bin-3.4)))
+      ("gatk-queue" ,gatk-queue-bin-3.4-0)))
    (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
