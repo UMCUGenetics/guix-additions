@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2016, 2017 Roel Janssen <roel@gnu.org>
 ;;;
 ;;; This file is not officially part of GNU Guix.
 ;;;
@@ -72,3 +72,51 @@ genome sequencing data but mandatory for whole exome or targeted sequencing
 data.  For whole genome sequencing data analysis, the program can also use
 mappability data (files created by GEM). ")
     (license license:gpl2+)))
+
+(define-public freec-10.4
+  (package
+    (name "freec")
+    (version "10.4")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://github.com/BoevaLab/FREEC/archive/v"
+                           version ".tar.gz"))
+       (file-name (string-append "freec-" version ".tar.gz"))
+       (sha256
+        (base32 "1a7wfr18hljw9xlzpy3920vf29s4cbpn9f0p8z153whq4g2487yh"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         (add-before 'build 'move-to-src-dir
+           (lambda _
+             (chdir "src")))
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+               (install-file "freec" bin)))))))
+    (home-page "http://bioinfo-out.curie.fr/projects/freec/")
+    (synopsis "Tool for detection of copy-number changes and allelic imbalances
+(including LOH) using deep-sequencing data")
+    (description "Control-FREEC automatically computes, normalizes, segments
+copy number and beta allele frequency (BAF) profiles, then calls copy number
+alterations and LOH.  The control (matched normal) sample is optional for whole
+genome sequencing data but mandatory for whole exome or targeted sequencing
+data.  For whole genome sequencing data analysis, the program can also use
+mappability data (files created by GEM).")
+    (license license:gpl2+)))
+
+(define-public freec-10.5
+  (package (inherit freec-10.4)
+    (version "10.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://github.com/BoevaLab/FREEC/archive/v"
+                           version ".tar.gz"))
+       (file-name (string-append "freec-" version ".tar.gz"))
+       (sha256
+        (base32 "0z657hbpnc76pkli7g1ka07q4bpl41zarjhq6fwh6g9s368id15j"))))))
