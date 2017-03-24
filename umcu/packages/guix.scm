@@ -92,7 +92,7 @@ export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_P
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=${socketfile}
-${guix} $@"
+${guix} $@~%"
                          (assoc-ref inputs "guix")
                          (assoc-ref inputs "socat"))))))
          (replace 'install
