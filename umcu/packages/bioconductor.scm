@@ -126,13 +126,13 @@ generate interactive Shiny based display methods for Bioconductor objects.")
 (define-public r-annotationhub
   (package
     (name "r-annotationhub")
-    (version "2.6.4")
+    (version "2.6.5")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AnnotationHub" version))
               (sha256
                (base32
-                "1kciqhdd0s447hqhlg1dy603fi1l26acyny1qk2iigpwhvdry9cr"))))
+                "0ff2by5bw5ywxwasiq7z5zc5w7wwwjsvwkj26mjv35zvy7d33kd2"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-rsqlite" ,r-rsqlite)
