@@ -661,3 +661,104 @@ filtered to remove spurious regions in the genome.  Downstream steps of
 segmentation and calling are also implemented via packages DNAcopy and CGHcall,
 respectively.")
    (license license:gpl2+)))
+
+(define-public r-reshape
+  (package
+   (name "r-reshape")
+   (version "0.8.6")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "reshape" version))
+            (sha256
+             (base32
+              "1f1ngalc22knhdm9djv1m6abnjqpv1frdzxfkpakhph2l67bk7fq"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-plyr" ,r-plyr)
+     ("r-rcpp" ,r-rcpp)))
+  (home-page "http://had.co.nz/reshape")
+  (synopsis "Flexibly Reshape Data")
+  (description "Flexibly restructure and aggregate data using just two
+functions: melt and cast.")
+  (license license:expat)))
+
+(define-public r-snpstats
+  (package
+   (name "r-snpstats")
+   (version "1.24.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "snpStats" version))
+            (sha256
+             (base32 "1hkgjd12cz6rfm7w51dgc7cxvrsrqgc2byfinbp0d42rnc3600n2"))))
+   (properties `((upstream-name . "Snpstats")))
+   (build-system r-build-system)
+   (inputs
+    `(("zlib" ,zlib)))
+   (propagated-inputs
+    `(("r-survival" ,r-survival)
+      ("r-matrix" ,r-matrix)
+      ("r-biocgenerics" ,r-biocgenerics)
+      ("r-zlibbioc" ,r-zlibbioc)))
+   (home-page "http://bioconductor.org/packages/snpStats")
+   (synopsis "SnpMatrix and XSnpMatrix classes and methods")
+   (description "This package provides classes and statistical methods for
+large SNP association studies.  This extends the earlier snpMatrix package,
+allowing for uncertainty in genotypes.")
+   (license license:gpl3+)))
+
+(define-public r-funcisnp
+  (package
+   (name "r-funcisnp")
+   (version "1.18.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "FunciSNP" version))
+            (sha256
+             (base32 "03wzrrdhnp6svf4vy907h6bbnpfgrbqhqabsah37qzld15qm2xs2"))))
+   (properties `((upstream-name . "FunciSNP")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-ggplot2" ,r-ggplot2)
+      ("r-txdb-hsapiens-ucsc-hg19-knowngene" ,r-txdb-hsapiens-ucsc-hg19-knowngene)
+      ("r-funcisnp-data" ,r-funcisnp-data)
+      ("r-biocgenerics" ,r-biocgenerics)
+      ("r-biobase" ,r-biobase)
+      ("r-s4vectors" ,r-s4vectors)
+      ("r-iranges" ,r-iranges)
+      ("r-genomicranges" ,r-genomicranges)
+      ("r-rsamtools" ,r-rsamtools)
+      ("r-rtracklayer" ,r-rtracklayer)
+      ("r-chippeakanno" ,r-chippeakanno)
+      ("r-variantannotation" ,r-variantannotation)
+      ("r-plyr" ,r-plyr)
+      ("r-snpstats" ,r-snpstats)
+      ("r-reshape" ,r-reshape)
+      ("r-scales" ,r-scales)))
+   (home-page "http://bioconductor.org/packages/FunciSNP")
+   (synopsis "Identification of candidate regulatory SNPs")
+   (description "This package integrates information from GWAS, 1000genomes
+and chromatin feature to identify functional SNP in coding or non-coding
+regions.")
+   (license license:gpl3+)))
+
+(define-public r-funcisnp-data
+  (package
+   (name "r-funcisnp-data")
+   (version "1.10.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "FunciSNP.data" version))
+            (sha256
+             (base32 "0r0iv8hp25ld9vpyij9lrk0xphaxcz4j4panyc83i18d6s9jw51s"))))
+   (properties `((upstream-name . "FunciSNP.data")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-iranges" ,r-iranges)
+      ("r-rtracklayer" ,r-rtracklayer)))
+   (home-page "http://bioconductor.org/packages/FunciSNP.data")
+   (synopsis "Various data sets for use with the FunciSNP package")
+   (description "This package provides data sets needed for FunciSNP to
+integrate information from GWAS, 1000genomes and chromatin feature, in
+order to identify functional SNP in coding or non-coding regions.")
+   (license license:gpl3+)))
