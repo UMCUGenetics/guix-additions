@@ -404,7 +404,8 @@ processing to visualization and annotation.")
     (propagated-inputs
      `(("r-survival" ,r-survival)
        ("r-biocgenerics" ,r-biocgenerics)
-       ("r-biobase" ,r-biobase)))
+       ("r-biobase" ,r-biobase)
+       ("r-mass" ,r-mass)))
     (home-page "http://bioconductor.org/packages/multtest")
     (synopsis "Resampling-based multiple hypothesis testing")
     (description
