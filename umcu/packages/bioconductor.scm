@@ -748,7 +748,9 @@ regions.")
    (version "1.10.0")
    (source (origin
             (method url-fetch)
-            (uri (bioconductor-uri "FunciSNP.data" version))
+            (uri (string-append "http://bioconductor.org/packages/release/"
+                                "data/experiment/src/contrib/FunciSNP.data_"
+                                version ".tar.gz"))
             (sha256
              (base32 "0r0iv8hp25ld9vpyij9lrk0xphaxcz4j4panyc83i18d6s9jw51s"))))
    (properties `((upstream-name . "FunciSNP.data")))
