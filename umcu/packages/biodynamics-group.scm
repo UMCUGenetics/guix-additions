@@ -24,6 +24,7 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages perl)
   #:use-module (gnu packages python))
 
 (define-public spades
@@ -52,9 +53,10 @@
    ;; boost.  These packages are also available in GNU Guix, so we should
    ;; unbundle them.
    (inputs
-    `(("zlib" ,zlib)))
-   (propagated-inputs
-    `(("python" ,python)))
+    `(("bzip2" ,bzip2)
+      ("zlib" ,zlib)
+      ("perl" ,perl)
+      ("python-2" ,python-2)))
    (home-page "http://cab.spbu.ru/software/spades")
    (synopsis "Genome assembly toolkit")
    (description "SPAdes is an assembly toolkit containing various assembly
