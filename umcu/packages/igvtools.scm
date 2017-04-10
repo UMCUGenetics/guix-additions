@@ -25,6 +25,61 @@
   #:use-module (gnu packages java)
   #:use-module (gnu packages zip))
 
+(define-public igv
+  (package
+    (name "igv")
+    (version "2.3.92")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "http://data.broadinstitute.org/igv/projects/downloads/IGV_"
+             version ".zip"))
+       (sha256
+        (base32 "0jrdqfkjb8ygb7rsw2ibwbqz6slfq7y3qbv5i0dyzh41drq9qjaf"))))
+    (build-system gnu-build-system)
+    (propagated-inputs
+     `(("icedtea" ,icedtea-7)))
+    (native-inputs
+     `(("unzip" ,unzip)))
+    (arguments
+     `(#:tests? #f  ; No tests available.
+       #:phases
+       (modify-phases %standard-phases 
+         (delete 'configure) ; Nothing to configure.
+         (delete 'build) ; This is a binary package only.
+         (replace 'install
+           (lambda _
+             (let* ((out (assoc-ref %outputs "out"))
+                    (bin (string-append out "/bin")))
+               (install-file "igv.jar" bin)
+               (install-file "igv.sh" bin)
+               (install-file "batik-codec__V1.7.jar" bin)
+               (install-file "goby-io-igv__V1.0.jar" bin)))))))
+   (home-page "http://www.broadinstitute.org/software/igv/")
+   (synopsis "Integrative Genomics Viewer")
+   (description "The Integrative Genomics Viewer (IGV) is a high-performance
+visualization tool for interactive exploration of large, integrated genomic
+datasets.  It supports a wide variety of data types, including array-based and
+next-generation sequence data, and genomic annotations.")
+   ;; No license specified.
+   (license license:non-copyleft)))
+
+(define-public igv-3.0-beta
+  (package (inherit igv)
+    (name "igv")
+    (version "3.0-beta")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "http://data.broadinstitute.org/igv/projects/downloads/"
+             "3.0_beta/IGV_3.0_beta.zip"))
+       (sha256
+        (base32 "0v4cjaxrgv8bmn5a8z1q5fkqynrck4xwgybi3blm2h6mrwrqd5rr"))))
+    (propagated-inputs
+     `(("icedtea" ,icedtea-8)))))
+    
 (define-public igvtools-bin-2.3.71
   (package
    (name "igvtools")
