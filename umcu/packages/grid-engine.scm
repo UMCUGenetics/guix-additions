@@ -109,9 +109,12 @@
              ;; over manually.
              (chdir "LINUXAMD64")
              (let ((bin (string-append (assoc-ref outputs "out") "/bin"))
-                   (lib (string-append (assoc-ref outputs "out") "/lib")))
+                   (lib (string-append (assoc-ref outputs "out") "/lib"))
+                   (include (string-append (assoc-ref outputs "out")
+                                           "/include")))
                (mkdir-p bin)
                (mkdir-p lib)
+               (mkdir-p include)
 
                ;; Binaries
                (for-each (lambda (file)
@@ -149,6 +152,10 @@
                (system* "ln" "--symbolic"
                         (string-append lib "/libdrmaa.so")
                         (string-append lib "/libdrmaa.so.1"))
+
+               ;; Headers
+               (install-file "../libs/japi/drmaa.h" include)
+               (install-file "../libs/sched/sge_pqs_api.h" include)
                #t))))))
     (home-page "")
     (synopsis "")
