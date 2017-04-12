@@ -981,6 +981,8 @@ NGS data.")
              (system* "make"))))))
     (propagated-inputs
      `(("perl" ,perl)
+       ("pcap-core" ,pcap-core)
+       ("cgpvcf" ,cgpvcf)
        ("perl-bio-db-hts" ,perl-bio-db-hts)
        ("perl-const-fast" ,perl-const-fast)
        ("perl-file-which" ,perl-file-which)
