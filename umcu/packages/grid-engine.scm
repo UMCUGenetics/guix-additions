@@ -140,8 +140,8 @@
                         (string-append bin "/qstat")
                         (string-append bin "/qselect"))
                (system* "ln" "--symbolic"
-                        (string-append bin "/qlogin")
-                        (string-append bin "/qsh"))
+                        (string-append bin "/qsh")
+                        (string-append bin "/qlogin"))
 
                ;; Libraries
                (for-each (lambda (file)
