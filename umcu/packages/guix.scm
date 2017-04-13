@@ -53,7 +53,7 @@ set -u
 set -e
 
 #Configuration
-socketfile=\"${HOME}/.guix-daemon-socket-forwarder-$$\"
+socketfile=\"/tmp/${RANDOM}-guix-daemon-socket-forwarder-$$\"
 remote=\"10.100.7.235:9999\"
 guix_root=\"/gnu\"
 guix_additional=\"/gnu/repositories/guix-additions\"
