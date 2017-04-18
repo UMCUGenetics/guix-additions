@@ -318,14 +318,14 @@ robust methods, and parallelized functions).")
 (define-public r-diffbind
   (package
     (name "r-diffbind")
-    (version "2.2.8")
+    (version "2.2.12")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "DiffBind" version))
        (sha256
         (base32
-         "1p0wfq847czn3san9i41wa0kmj759g2g73bfgzwfnjj165n9kc03"))))
+         "0w3dwhjkf0sc7bd3m13gwym03j3pyli3xy2y7dqsqn8mhm64bqcy"))))
     (properties `((upstream-name . "DiffBind")))
     (build-system r-build-system)
     (inputs
