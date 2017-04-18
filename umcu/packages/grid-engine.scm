@@ -152,6 +152,9 @@
                (system* "ln" "--symbolic"
                         (string-append lib "/libdrmaa.so")
                         (string-append lib "/libdrmaa.so.1"))
+               (system* "ln" "--symbolic"
+                        (string-append lib "/libdrmaa.so")
+                        (string-append lib "/libdrmaa.so.1.0"))
 
                ;; Headers
                (install-file "../libs/japi/drmaa.h" include)
