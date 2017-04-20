@@ -159,6 +159,12 @@
                ;; Headers
                (install-file "../libs/japi/drmaa.h" include)
                (install-file "../libs/sched/sge_pqs_api.h" include)
+
+               ;; Pkg-config file
+               (mkdir-p (string-append lib "/pkgconfig"))
+               (with-output-to-file (string-append lib "/pkgconfig/drmaa.pc")
+                 (lambda _
+                   (format #t "Name: drmaa~%Description: DRMAA interface~%Version: 8.1.9~%Requires:~%Libs: -L~a -ldrmaa~%Cflags: -I~a" lib include)))
                #t))))))
     (home-page "")
     (synopsis "")
