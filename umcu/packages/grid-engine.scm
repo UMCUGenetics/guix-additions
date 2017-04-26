@@ -29,10 +29,12 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages databases)
   #:use-module (gnu packages gawk)
+  #:use-module (gnu packages guile)
   #:use-module (gnu packages java)
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages perl)
+  #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages shells)
@@ -170,3 +172,45 @@
     (synopsis "")
     (description "")
     (license (list license:asl2.0 license:gpl2+))))
+
+(define-public guile-drmaa
+  (let ((commit "4ceb4093821ce8fca794e723dc50e03c3f2b33c3"))
+    (package
+      (name "guile-drmaa")
+      (version "0.0.1")
+      (source
+       (origin
+         (method url-fetch)
+         (uri (string-append
+               "https://github.com/UMCUGenetics/guile-drmaa/releases/download/v"
+               version "/guile-drmaa-" version ".tar.gz"))
+         (sha256
+          (base32 "1xny2iynspd94i2ps84w177s2iy1ylp08h3dm9bw3crc295889y0"))))
+      (build-system gnu-build-system)
+      (arguments
+       `(#:tests? #f ; There are no tests.
+         #:phases
+         (modify-phases %standard-phases
+           (add-after 'install 'install-scheme-module
+             (lambda* (#:key outputs #:allow-other-keys)
+               (let ((module-dir (string-append (assoc-ref outputs "out")
+                                                "/share/guile/site/2.0")))
+                 (mkdir-p module-dir)
+                 (substitute* "drmaa.scm"
+                   (("libguile_drmaa.so") (string-append
+                                           (assoc-ref outputs "out")
+                                           "/lib/libguile_drmaa.so")))
+                 (install-file "drmaa.scm" module-dir)
+
+                 ;; Remove unneeded copy of drmaa.scm in /share/.
+                 (delete-file (string-append (assoc-ref outputs "out")
+                                             "/share/drmaa.scm"))))))))
+      (native-inputs
+       `(("pkg-config" ,pkg-config)))
+      (inputs
+       `(("guile" ,guile-2.0)
+         ("grid-engine-core" ,grid-engine-core)))
+      (home-page #f)
+      (synopsis #f)
+      (description #f)
+      (license license:gpl3+))))
