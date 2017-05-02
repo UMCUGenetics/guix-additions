@@ -95,9 +95,32 @@ export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_P
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=${socketfile}
-${guix} $@~%"
+if [ \"$1\" == \"package\" ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
+                             [ \"$2\" == \"-i\" ]        || [ \"$2\" == \"-u\" ]); then
+  ${guix} $@
+  echo \"You will need this versioning information in your paper:\";
+  echo \"GNU Guix upstream repository:\";
+  echo -n \"  \"; git -C /gnu/repositories/guix describe --always;
+  echo \"UMCU additional package repository:\";
+  echo -n \"  \"; git -C /gnu/repositories/guix-additions describe --always;
+elif [ \"$1\" == \"pull\" ]; then
+  echo \"This feature has been disabled.\";
+elif [ \"$1\" == \"load-profile\" ]; then
+  if [ $# -gt 1 ]; then
+    if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
+      ~a/bin/bash --init-file <(${guix} package --search-paths -p $2)
+    else
+      printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
+    fi
+  else
+    printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
+  fi
+else
+  ${guix} $@
+fi~%"
                          (assoc-ref inputs "guix")
-                         (assoc-ref inputs "socat"))))))
+                         (assoc-ref inputs "socat")
+                         (assoc-ref inputs "bash"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
              (let ((out (string-append (assoc-ref outputs "out") "/bin")))
