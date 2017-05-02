@@ -28,7 +28,8 @@
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages linux)
-  #:use-module (gnu packages networking))
+  #:use-module (gnu packages networking)
+  #:use-module (gnu packages version-control))
 
 (define-public guixr
   (package
@@ -39,7 +40,8 @@
     (propagated-inputs
      `(("socat" ,socat)
        ("bash" ,bash)
-       ("guix" ,guix)))
+       ("guix" ,guix)
+       ("git" ,git)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -63,6 +65,7 @@ guix_additional=\"/gnu/repositories/guix-additions\"
 guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
 guix=\"~a/bin/guix\"
+git=\"~a/bin/git\"
 socat=\"~a/bin/socat\"
 
 # Avoid locale warnings.
@@ -95,14 +98,16 @@ export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_P
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=${socketfile}
-if [ \"$1\" == \"package\" ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
-                             [ \"$2\" == \"-i\" ]        || [ \"$2\" == \"-u\" ]); then
+if [ $# -lt 1 ]; then
+  ${guix}
+elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
+         [ \"$2\" == \"-i\" ] || [ \"$2\" == \"-u\" ]); then
   ${guix} $@
   echo \"You will need this versioning information in your paper:\";
   echo \"GNU Guix upstream repository:\";
-  echo -n \"  \"; git -C /gnu/repositories/guix describe --always;
+  echo -n \"  \"; ${git} -C /gnu/repositories/guix describe --always;
   echo \"UMCU additional package repository:\";
-  echo -n \"  \"; git -C /gnu/repositories/guix-additions describe --always;
+  echo -n \"  \"; ${git} -C /gnu/repositories/guix-additions describe --always;
 elif [ \"$1\" == \"pull\" ]; then
   echo \"This feature has been disabled.\";
 elif [ \"$1\" == \"load-profile\" ]; then
@@ -119,6 +124,7 @@ else
   ${guix} $@
 fi~%"
                          (assoc-ref inputs "guix")
+                         (assoc-ref inputs "git")
                          (assoc-ref inputs "socat")
                          (assoc-ref inputs "bash"))))))
          (replace 'install
