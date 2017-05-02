@@ -103,7 +103,8 @@ if [ $# -lt 1 ]; then
 elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
          [ \"$2\" == \"-i\" ] || [ \"$2\" == \"-u\" ]); then
   ${guix} $@
-  echo \"You will need this versioning information in your paper:\";
+  echo ""
+  echo \"You may need the following versioning information for your paper:\";
   echo \"GNU Guix upstream repository:\";
   echo -n \"  \"; ${git} -C /gnu/repositories/guix describe --always;
   echo \"UMCU additional package repository:\";
@@ -113,7 +114,7 @@ elif [ \"$1\" == \"pull\" ]; then
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
-      ~a/bin/bash --init-file <(${guix} package --search-paths -p $2)
+      ~a/bin/bash --init-file <(${guix} package --search-paths -p $2) -i \"${@:3}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
