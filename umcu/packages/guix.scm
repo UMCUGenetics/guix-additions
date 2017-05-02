@@ -103,7 +103,7 @@ if [ $# -lt 1 ]; then
 elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
          [ \"$2\" == \"-i\" ] || [ \"$2\" == \"-u\" ]); then
   ${guix} $@
-  echo ""
+  echo \"\"
   echo \"You may need the following versioning information for your paper:\";
   echo \"GNU Guix upstream repository:\";
   echo -n \"  \"; ${git} -C /gnu/repositories/guix describe --always;
