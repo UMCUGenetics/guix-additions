@@ -31,7 +31,8 @@
   #:use-module (guix build-system python)
   #:use-module (gnu packages)
   #:use-module (gnu packages python)
-  #:use-module (gnu packages bioinformatics))
+  #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages compression))
 
 (define-public python-py2bit
   (package
@@ -92,3 +93,28 @@
     (synopsis "Model Based Analysis for ChIP-Seq data")
     (description "Model Based Analysis for ChIP-Seq data")
     (license #f)))
+
+(define-public python-pytabix
+  (package
+    (name "python-pytabix")
+    (version "0.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             (pypi-uri "pytabix" version)))
+       (sha256
+        (base32
+         "1ldp5r4ggskji6qx4bp2qxy2vrvb3fam03ksn0gq2hdxgrlg2x07"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f))
+    (inputs
+     `(("zlib" ,zlib)))
+    (home-page "https://github.com/slowkow/pytabix")
+    (synopsis "Python interface for tabix")
+    (description "Python interface for tabix")
+    (license license:expat)))
+
+(define-public python2-pytabix
+  (package-with-python2 python-pytabix))
