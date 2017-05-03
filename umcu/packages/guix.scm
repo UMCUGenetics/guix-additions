@@ -34,7 +34,7 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.0")
+    (version "1.1.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -133,7 +133,13 @@ fi~%"
              (let ((out (string-append (assoc-ref outputs "out") "/bin")))
                (mkdir-p out)
                (install-file "guixr" out)
-               (chmod (string-append out "/guixr") #o555)))))))
+               (chmod (string-append out "/guixr") #o555)
+               ;; It seems that Dutch people expect a 'q' before a 'u', which
+               ;; leads to a typo of the 'guixr' command.  For the maximum
+               ;; convenience level for users, we provide an alias.
+               (system* "ln" "--symbolic"
+                        (string-append out "/guixr")
+                        (string-append out "/quixr"))))))))
     (home-page #f)
     (synopsis "GNU Guix remote")
     (description "This wrapper around GNU Guix enables remote guix-daemon
