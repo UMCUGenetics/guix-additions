@@ -118,3 +118,49 @@
 
 (define-public python2-pytabix
   (package-with-python2 python-pytabix))
+
+(define-public python-logutils
+  (package
+  (name "python-logutils")
+  (version "0.3.4.1")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "logutils" version))
+      (sha256
+        (base32
+          "0ayycc1988cjdzr3i085gxwrj6l1scamjl79mv7cw4cj6sbn47qh"))))
+  (build-system python-build-system)
+  (home-page "http://code.google.com/p/logutils/")
+  (synopsis "Logging utilities")
+  (description "Logging utilities")
+  (license #f)))
+
+(define-public python2-logutils
+  (package-with-python2 python-logutils))
+
+(define-public python-helper
+  (package
+    (name "python-helper")
+    (version "2.4.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "helper" version))
+       (sha256
+        (base32
+         "0p56dvjpaz9wnr0ik2wmvgqjf9ji180bhjky7q272l5dan94lgd6"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-logutils" ,python-logutils)
+       ("python-pyyaml" ,python-pyyaml)
+       ("python-mock" ,python-mock)))
+    (home-page "https://github.com/gmr/helper")
+    (synopsis
+     "Development library for quickly writing configurable applications and daemons")
+    (description
+     "Development library for quickly writing configurable applications and daemons")
+    (license license:bsd-3)))
+
+(define-public python2-helper
+  (package-with-python2 python-helper))
