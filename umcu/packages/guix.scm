@@ -23,8 +23,10 @@
   #:use-module (guix build utils)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
+  #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
+  #:use-module (gnu packages guile)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages linux)
@@ -219,3 +221,39 @@ writes to the disk for various processes.")
 performance measurement data like CPU, memory, disk and network performance
 numbers.")
    (license license:artistic2.0)))
+
+;; XXX: The web interface does not work because the static files are not
+;; distributed in the output.  This needs additional code changes to GWL
+;; to work.
+(define-public gwl
+  (package
+    (name "gwl")
+    (version "0.0.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://git.roelj.com/guix/gwl/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1icz598wh902r4iv3wb08vf5w582lgg06zw1bxdx8n8m12lagwkz"))))
+    (build-system gnu-build-system)
+    (native-inputs
+     `(("autoconf" ,autoconf)
+       ("automake" ,automake)
+       ("libtool" ,libtool)))
+    (inputs
+     `(("guix" ,guix)
+       ("guile" ,guile-2.0)))
+    (arguments
+     `(#:tests? #f ; There are no tests.
+       #:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'autoconf
+           (lambda _ (zero? (system* "autoreconf" "-vif")))))))
+    (home-page "https://gwl.roelj.com")
+    (synopsis "Guix workflow extension")
+    (description "This package provides a workflow management extension for
+GNU Guix.  It can be used to build pipelines and execute them locally, or on
+a computing cluster.  GWL currently only supports Sun Grid Engine.")
+    (license license:agpl3+)))
