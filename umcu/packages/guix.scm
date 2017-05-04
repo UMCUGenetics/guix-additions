@@ -116,7 +116,7 @@ elif [ \"$1\" == \"pull\" ]; then
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
-      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; ${guix} package --search-paths -p $2; echo \"PS1=\\\"\\u@\\h [env] \\W\\\\$ \\\"\") -i \"${@:3}\"
+      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; ${guix} package --search-paths -p $2; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:3}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
