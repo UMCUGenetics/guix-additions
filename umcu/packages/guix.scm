@@ -83,6 +83,13 @@ function cleanup {
 }
 trap cleanup EXIT
 
+# Ensure the latest Guix packages are used.  Do not override
+# the user's customizations (if any).
+if [ ! -L $HOME/.config/guix/latest ]; then
+  mkdir -p $HOME/.config/guix
+  ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+fi
+
 # The socket file may not exist, or else socat will complain.
 rm -f ${socketfile}
 
