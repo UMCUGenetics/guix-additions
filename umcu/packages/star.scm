@@ -187,26 +187,27 @@ sequences.")
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "https://github.com/STAR-Fusion/STAR-Fusion/archive/v"
-                  version ".tar.gz"))
+                  "https://github.com/STAR-Fusion/STAR-Fusion/releases/"
+                  "download/v" version "/STAR-Fusion-v" version
+                  ".FULL.tar.gz"))
             (sha256
-             (base32 "1ksl5v5bzvx99y86cs3j9s9h2crw8hdfg3yd09zhn7ppfs54nsj0"))))
+             (base32 "19p5lwq2f95hgii7fdidz03845nkhf3pjfvp8v3midrsb0s6p7df"))))
    (build-system gnu-build-system)
    (arguments
-    `(#:phases
+    `(#:tests? #f ; There is no test phase.
+      #:phases
       (modify-phases %standard-phases
         (delete 'configure) ; There is nothing to configure.
         (delete 'build) ; There is nothing to compile/build.
-        ;; FIXME: We are missing the FusionFilter sources in this build.
-        ;; There seem to be many duplicated fiels in 'PerlLib' and 'util',
-        ;; so I am unsure about the overlap and the need for FusionFilter.
         (replace 'install
           (lambda* (#:key inputs outputs #:allow-other-keys)
             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
               (mkdir-p bin)
               (install-file "STAR-Fusion" bin)
               (copy-recursively "PerlLib" (string-append bin "/PerlLib"))
-              (copy-recursively "util" (string-append bin "/util"))))))))
+              (copy-recursively "util" (string-append bin "/util"))
+              (copy-recursively "FusionFilter"
+                                (string-append bin "/FusionFilter"))))))))
    (inputs
     `(("perl" ,perl)))
    (propagated-inputs
@@ -216,7 +217,7 @@ sequences.")
       ("perl-uri" ,perl-uri)
       ("perl-storable" ,perl-storable)
       ("perl-set-intervaltree" ,perl-set-intervaltree)))
-   (home-page "")
+   (home-page "https://github.com/STAR-Fusion/STAR-Fusion/")
    (synopsis "")
    (description "")
    (license #f)))
