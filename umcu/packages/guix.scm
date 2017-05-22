@@ -60,8 +60,6 @@ set -u
 set -e
 
 #Configuration
-socketfile=\"/tmp/${RANDOM}-guix-daemon-socket-forwarder-$$\"
-remote=\"10.100.7.235:9999\"
 guix_root=\"/gnu\"
 guix_additional=\"/gnu/repositories/guix-additions\"
 guix_pin=\"/gnu/repositories/guix\"
@@ -76,13 +74,6 @@ export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
 # Use /gnu as state directory.
 export NIX_STATE_DIR=$guix_root
 
-# Ensure that the forwarding process is terminated on exit
-function cleanup {
-    ps -p ${SOCAT_PID} >/dev/null && kill -TERM ${SOCAT_PID}
-    rm -f ${socketfile}
-}
-trap cleanup EXIT
-
 # Ensure the latest Guix packages are used.  Do not override
 # the user's customizations (if any).
 if [ ! -L $HOME/.config/guix/latest ]; then
@@ -90,23 +81,11 @@ if [ ! -L $HOME/.config/guix/latest ]; then
   ln -s /gnu/repositories/guix $HOME/.config/guix/latest
 fi
 
-# The socket file may not exist, or else socat will complain.
-rm -f ${socketfile}
-
-# Start forwarding
-${socat} UNIX-LISTEN:${socketfile} TCP4:${remote} &
-SOCAT_PID=$!
-
-# Abort if socat is not running.
-ps -p ${SOCAT_PID} >/dev/null || \
-    (echo \"Socat failed to start.  Aborting.
-\"; exit 1)
-
 # Include our non-standard package repository
 export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_PATH}\"
 
 # Use guix with the given arguments
-export GUIX_DAEMON_SOCKET=${socketfile}
+export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
 if [ $# -lt 1 ]; then
   ${guix}
 elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
