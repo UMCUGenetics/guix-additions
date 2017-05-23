@@ -22,22 +22,22 @@
   #:use-module (guix download)
   #:use-module (guix build-system cmake)
   #:use-module (gnu packages)
+  #:use-module (gnu packages bash)
+  #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages boost)
   #:use-module (gnu packages check)
   #:use-module (gnu packages cmake)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages documentation)
+  #:use-module (gnu packages graphviz)
+  #:use-module (gnu packages pth)
   #:use-module (gnu packages python)
   #:use-module (umcu packages pyflow))
-
-;;
-;;  WARNING: This package is a work-in-progess.  It does not work.
-;;
 
 (define-public manta
   (package
    (name "manta")
-   (version "0.29.6")
+   (version "1.1.0")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -45,49 +45,49 @@
                   version "/manta-" version ".release_src.tar.bz2"))
             (file-name (string-append name "-" version ".tar.bz2"))
             (sha256
-             (base32 "05nwr57nhjcshviqy8bf4hlfhl01nzis1rc71m694y0g54rwnvzh"))))
+             (base32 "0d4fp0jq3b3d97jz81hv0kd3av12ycbjk28mirhbmwh32zm2d54k"))
+            (patches (list (search-patch "manta-use-system-zlib.patch")
+                           (search-patch "manta-use-system-htslib.patch")
+                           (search-patch "manta-use-system-samtools.patch")))))
    (build-system cmake-build-system)
    (arguments
-    `(#:tests? #f ; TODO: Temporarily disabled.
+    `(#:tests? #f
       #:phases
       (modify-phases %standard-phases
-        ;; This configure script is not an autotools configure script.
-        ;; Therefore, the default options applied by the standard configure
-        ;; phase result in a configuration failure.
-        ;; The configure script should be run before running cmake, therefore,
-        ;; we replace the original configure phase.
-        (replace 'configure
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (let ((source-dir (getcwd))
-                  (boost-path (assoc-ref inputs "boost"))
-                  (cmake-path (string-append (assoc-ref inputs "cmake")
-                                             "/bin/cmake")))
-              (mkdir "../build")
-              (chdir "../build")
-              (setenv "BOOST_ROOT" (string-append boost-path))
-              (zero? (system* (string-append source-dir "/configure")
-                              (string-append "--with-cmake=" cmake-path)
-                              (format #f "--jobs=~a" (parallel-job-count))
-                              (string-append "--prefix=" (assoc-ref %outputs "out"))
-                              "--build-type=Release")))))
+        ;; The unit tests are written in a way that need the bundled
+        ;; dependencies.  We took those out, so the unit tests fail.
+        (add-before 'configure 'disable-failing-unit-tests
+          (lambda _
+            (for-each (lambda (directory-name)
+                        (with-output-to-file (string-append
+                                              "src/c++/lib/"
+                                              directory-name
+                                              "/test/CMakeLists.txt")
+                          (lambda _ "# Disabled by the package recipe.")))
+                      '("alignment"
+                        "applications/GenerateSVCandidates"
+                        "assembly"
+                        "blt_util"
+                        "common"
+                        "htsapi"
+                        "manta"
+                        "svgraph"))))
+        ;; The 'manta-use-system-samtools.patch' sets the samtools path to
+        ;; '/usr/bin'.  This allows us to substitute it for the actual path
+        ;; of samtools in the store.
+        (add-before 'configure 'patch-samtools-path
+          (lambda* (#:key inputs #:allow-other-keys)
+            (substitute* "redist/CMakeLists.txt"
+                (("set\\(SAMTOOLS_DIR \"/usr/bin\"\\)")
+                 (string-append "set(SAMTOOLS_DIR \""
+                                (assoc-ref inputs "samtools") "/bin\")")))))
         (add-before 'configure 'use-dynamic-boost
           (lambda* (#:key inputs outputs #:allow-other-keys)
             ;; By default, it looks for static libraries.  This substitution
             ;; makes sure it looks for dynamically linked versions of Boost.
             (substitute* "src/cmake/boost.cmake"
               (("Boost_USE_STATIC_LIBS ON")
-               "Boost_USE_STATIC_LIBS OFF"))
-            ;;(substitute* "redist/CMakeLists.txt"
-            ;;  (("superset(ZLIB_DIR")
-            ;;   (format #f "superset(ZLIB_DIR ~s) #" (assoc-ref inputs "zlib"))))
-            ))
-        (replace 'build
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (let ((zlib-path (assoc-ref inputs "zlib")))
-              (system* "cmake"
-               (string-append "-DZLIB_INCLUDE_DIR=" zlib-path "/include")
-               (string-append "-DZLIB_LIBRARY=" zlib-path "/lib"))
-              (system* "make" (format #f "-j~a" (parallel-job-count)))))))))
+               "Boost_USE_STATIC_LIBS OFF")))))))
     (inputs
      `(("cmake" ,cmake)
        ("boost" ,boost)
@@ -95,7 +95,12 @@
        ("python" ,python-2)
        ("cppcheck" ,cppcheck)
        ("doxygen" ,doxygen)
-       ("zlib" ,zlib)))
+       ("graphviz" ,graphviz)
+       ("htslib" ,htslib)
+       ("samtools" ,samtools)
+       ("zlib" ,zlib)
+       ("pth" ,pth)
+       ("bash" ,bash)))
     (home-page "https://github.com/Illumina/manta")
    (synopsis "Structural variant and indel caller for mapped sequencing data")
    (description "Manta calls structural variants (SVs) and indels from mapped
