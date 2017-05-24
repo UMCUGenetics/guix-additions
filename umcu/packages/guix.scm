@@ -243,3 +243,31 @@ numbers.")
 GNU Guix.  It can be used to build pipelines and execute them locally, or on
 a computing cluster.  GWL currently only supports Sun Grid Engine.")
     (license license:agpl3+)))
+
+(define-public vmtouch
+  (package
+   (name "vmtouch")
+   (version "1.3.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/hoytech/vmtouch/archive/v"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32 "1src2byjwgjsbq3sd29r9qgmjwfb1f4c03p5cjqqwk42iw5rh5a6"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:make-flags `("CC=gcc"
+                     ,(string-append "PREFIX=" (assoc-ref %outputs "out")))
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure))))
+   (inputs
+    `(("perl" ,perl)))
+   (home-page "https://github.com/hoytech/vmtouch")
+   (synopsis "Virtual memory toucher")
+   (description "vmtouch is a tool for learning about and controlling the file
+system cache of unix and unix-like systems.")
+   (license license:bsd-3)))
