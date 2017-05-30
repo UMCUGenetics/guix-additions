@@ -32,7 +32,8 @@
   #:use-module (gnu packages graphviz)
   #:use-module (gnu packages pth)
   #:use-module (gnu packages python)
-  #:use-module (umcu packages pyflow))
+  #:use-module (umcu packages pyflow)
+  #:use-module (umcu packages boost))
 
 (define-public manta
   (package
@@ -109,3 +110,32 @@ in small sets of individuals and somatic variation in tumor/normal sample pairs.
 Manta discovers, assembles and scores large-scale SVs, medium-sized indels and
 large insertions within a single efficient workflow.")
    (license license:gpl3)))
+
+(define-public manta-0.29.5
+  (package (inherit  manta)
+    (name "manta")
+    (version "0.29.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "https://github.com/Illumina/manta/releases/download/v"
+             version "/manta-" version ".release_src.tar.bz2"))
+       (file-name (string-append name "-" version ".tar.bz2"))
+       (sha256
+        (base32 "1svansz8m5z481454mh206b6f60qimvgwm17nqnazbr5s3x9yb66"))
+       (patches (list (search-patch "manta-use-system-zlib.patch")
+                      (search-patch "manta-use-system-htslib.patch")))))
+    ;; This version of manta does not build with the latest version of Boost.
+    (inputs
+     `(("cmake" ,cmake)
+       ("boost" ,boost-1.57)
+       ("pyflow" ,pyflow)
+       ("python" ,python-2)
+       ("cppcheck" ,cppcheck)
+       ("doxygen" ,doxygen)
+       ("graphviz" ,graphviz)
+       ("htslib" ,htslib)
+       ("samtools" ,samtools)
+       ("zlib" ,zlib)
+       ("bash" ,bash)))))
