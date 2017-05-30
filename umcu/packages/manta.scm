@@ -100,7 +100,6 @@
        ("htslib" ,htslib)
        ("samtools" ,samtools)
        ("zlib" ,zlib)
-       ("pth" ,pth)
        ("bash" ,bash)))
     (home-page "https://github.com/Illumina/manta")
    (synopsis "Structural variant and indel caller for mapped sequencing data")
