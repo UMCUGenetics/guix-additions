@@ -6,5 +6,5 @@ Patch by Roel Janssen <roel@gnu.org>
 +++ b/version.json	2016-03-16 15:10:23.933578071 +0100
 @@ -0,0 +1,3 @@
 +{
-+    "version": "3.3.8-guix-"
++    "version": "3.5.8-guix-"
 +}

@@ -22,31 +22,54 @@
   #:use-module (guix utils)
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system python)
   #:use-module (gnu packages)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python))
 
+(define-public python-typing
+  (package
+    (name "python-typing")
+    (version "3.6.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "typing" version))
+       (sha256
+        (base32 "1kns1s6j5l1mx190cy7mf9wm0fpnbr5hvmfw2d14drrq08kfqvf3"))))
+    (build-system python-build-system)
+    (home-page "https://docs.python.org/3/library/typing.html")
+    (synopsis "Type Hints for Python")
+    (description "Type Hints for Python")
+    (license #f)))
+
+(define-public python2-typing
+  (package-with-python2 python-typing))
+
 (define-public mongodb
   (package
     (name "mongodb")
-    (version "3.4.1")
+    (version "3.5.8")
     (source (origin
               (method url-fetch)
               (uri (string-append "https://github.com/mongodb/mongo/archive/r"
                                   version ".tar.gz"))
               (file-name (string-append name "-" version ".tar.gz"))
               (sha256
-               (base32 "1jnn6ml7h00yk98995gib7wq14z18aa2s43vsfkb5ymifld3a6h5"))
-              (patches (list (search-patch "mongodb-add-version-file.patch")))))
+               (base32 "0y6kryyz1inkmz8mmw8bfdfk33rpqm5gyda2ydqnaxkvbr065rca"))
+              (patches (list (search-patch "mongodb-add-version-file.patch")
+                             (search-patch "mongodb-fix-glibc-error.patch")))
+              ))
     (build-system gnu-build-system)
     (native-inputs
      `(("scons" ,scons)
        ("python" ,python-2)
+       ("python2-typing" ,python2-typing)
+       ("python2-pyyaml" ,python2-pyyaml)
        ("perl" ,perl)
-       ;; MongoDB requires GCC 5.3.0 or later.
-       ("gcc" ,gcc-5)))
+       ("gcc" ,gcc)))
     (arguments
      `(#:tests? #f ; There is no 'check' target.
        #:phases
