@@ -21,6 +21,7 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix build-system cmake)
+  #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages compression)
@@ -62,3 +63,39 @@
    (description "SPAdes is an assembly toolkit containing various assembly
 pipelines.")
    (license license:gpl2)))
+
+(define-public kaiju
+  (package
+   (name "kaiju")
+   (version "1.5.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/bioinformatics-centre/kaiju/archive/v"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32 "0afbfalfw9y39bkwnqjrh9bghs118ws1pzj5h8l0nblgn3mbjdks"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure)
+        (add-before 'build 'move-to-src-dir
+          (lambda _ (chdir "src") #t))
+        (replace 'install
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+              (mkdir-p bin)
+              (chdir "..")
+              (copy-recursively "bin" bin)
+              (copy-recursively "util" bin)))))))
+   (inputs
+    `(("perl" ,perl)))
+   (home-page "http://kaiju.binf.ku.dk/")
+   (synopsis "Fast and sensitive taxonomic classification for metagenomics")
+   (description "Kaiju is a program for sensitive taxonomic classification
+of high-throughput sequencing reads from metagenomic whole genome sequencing
+experiments.")
+   (license license:gpl3+)))
