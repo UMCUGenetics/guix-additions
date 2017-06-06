@@ -208,13 +208,10 @@ performance measurement data like CPU, memory, disk and network performance
 numbers.")
    (license license:artistic2.0)))
 
-;; XXX: The web interface does not work because the static files are not
-;; distributed in the output.  This needs additional code changes to GWL
-;; to work.
 (define-public gwl
   (package
     (name "gwl")
-    (version "0.0.2")
+    (version "0.0.4")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -222,7 +219,7 @@ numbers.")
                     version ".tar.gz"))
               (sha256
                (base32
-                "135nlph77i24n9psficil56ih1jqsrwfqkdaxjf71dvijxlj10k8"))))
+                "0waxvsk0ngb5i1f345sl6iamlz4w899yc7idbpbsc0c8jpahj8zd"))))
     (build-system gnu-build-system)
     (native-inputs
      `(("autoconf" ,autoconf)
@@ -230,13 +227,26 @@ numbers.")
        ("libtool" ,libtool)))
     (inputs
      `(("guix" ,guix)
-       ("guile" ,guile-2.0)))
+       ("guile" ,guile-2.2)))
     (arguments
      `(#:tests? #f ; There are no tests.
        #:phases
        (modify-phases %standard-phases
          (add-after 'unpack 'autoconf
-           (lambda _ (zero? (system* "autoreconf" "-vif")))))))
+           (lambda _ (zero? (system* "autoreconf" "-vif"))))
+         (add-after 'unpack 'change-static-path
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((dist-dir (string-append (assoc-ref outputs "out")
+                                            "/share/gwl")))
+               ;; Create the directory for static data.
+               (mkdir-p dist-dir)
+
+               (copy-recursively "static" dist-dir)
+               
+               ;; Update the code's static-root variable.
+               (substitute* "www/config.scm"
+                 (("\\(define %www-static-root %www-root\\)")
+                  (format #f "(define %www-static-root ~s)" dist-dir)))))))))
     (home-page "https://gwl.roelj.com")
     (synopsis "Guix workflow extension")
     (description "This package provides a workflow management extension for
