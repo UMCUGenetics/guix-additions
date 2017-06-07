@@ -87,8 +87,8 @@ fi
 export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_PATH}\"
 
 # Set the Guile environment for GWL
-export GUILE_LOAD_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_PATH:+:}$GUILE_LOAD_PATH\"
-export GUILE_LOAD_COMPILED_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_COMPILED_PATH:+:}$GUILE_LOAD_COMPILED_PATH\"
+export GUILE_LOAD_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
+export GUILE_LOAD_COMPILED_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
