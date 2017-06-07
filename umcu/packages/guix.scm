@@ -44,7 +44,8 @@
      `(("socat" ,socat)
        ("bash" ,bash)
        ("guix" ,guix)
-       ("git" ,git)))
+       ("git" ,git)
+       ("gwl" ,gwl)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -85,6 +86,10 @@ fi
 # Include our non-standard package repository
 export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_PATH}\"
 
+# Set the Guile environment for GWL
+export GUILE_LOAD_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_PATH:+:}$GUILE_LOAD_PATH\"
+export GUILE_LOAD_COMPILED_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_COMPILED_PATH:+:}$GUILE_LOAD_COMPILED_PATH\"
+
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
 if [ $# -lt 1 ]; then
@@ -116,6 +121,8 @@ fi~%"
                          (assoc-ref inputs "guix")
                          (assoc-ref inputs "git")
                          (assoc-ref inputs "socat")
+                         (assoc-ref inputs "gwl")
+                         (assoc-ref inputs "gwl")
                          (assoc-ref inputs "bash"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
@@ -226,8 +233,7 @@ numbers.")
      `(("autoconf" ,autoconf)
        ("automake" ,automake)
        ("libtool" ,libtool)
-       ("pkg-config" ,pkg-config)
-       ("guix" ,guix)))
+       ("pkg-config" ,pkg-config)))
     (inputs
      `(("guix" ,guix)
        ("guile" ,guile-2.2)))
