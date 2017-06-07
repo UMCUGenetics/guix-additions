@@ -212,7 +212,7 @@ numbers.")
 (define-public gwl
   (package
     (name "gwl")
-    (version "0.0.5")
+    (version "0.0.6")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -220,7 +220,7 @@ numbers.")
                     version ".tar.gz"))
               (sha256
                (base32
-                "0cp7ms6xz2az3wzdkz7yai2cyinibl99asr0573sqkl8f70rk7w6"))))
+                "0c5ynkvadjvxvabyhawgzrhniahj78n92jfnrbsq9alfrirc474r"))))
     (build-system gnu-build-system)
     (native-inputs
      `(("autoconf" ,autoconf)
@@ -248,7 +248,7 @@ numbers.")
                
                ;; Update the code's static-root variable.
                (substitute* "www/config.scm"
-                 (("\\(define %www-static-root %www-root\\)")
+                 (("\\(define %www-static-root \\(string-append %www-root \\\"/static\\\"\\)\\)")
                   (format #f "(define %www-static-root ~s)" dist-dir)))
                #t)))
          (add-before 'build 'silence-guile
