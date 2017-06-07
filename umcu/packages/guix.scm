@@ -29,6 +29,7 @@
   #:use-module (gnu packages guile)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages perl)
+  #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages networking)
   #:use-module (gnu packages version-control))
@@ -211,7 +212,7 @@ numbers.")
 (define-public gwl
   (package
     (name "gwl")
-    (version "0.0.4")
+    (version "0.0.5")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -219,12 +220,14 @@ numbers.")
                     version ".tar.gz"))
               (sha256
                (base32
-                "0waxvsk0ngb5i1f345sl6iamlz4w899yc7idbpbsc0c8jpahj8zd"))))
+                "0cp7ms6xz2az3wzdkz7yai2cyinibl99asr0573sqkl8f70rk7w6"))))
     (build-system gnu-build-system)
     (native-inputs
      `(("autoconf" ,autoconf)
        ("automake" ,automake)
-       ("libtool" ,libtool)))
+       ("libtool" ,libtool)
+       ("pkg-config" ,pkg-config)
+       ("guix" ,guix)))
     (inputs
      `(("guix" ,guix)
        ("guile" ,guile-2.2)))
@@ -246,7 +249,13 @@ numbers.")
                ;; Update the code's static-root variable.
                (substitute* "www/config.scm"
                  (("\\(define %www-static-root %www-root\\)")
-                  (format #f "(define %www-static-root ~s)" dist-dir)))))))))
+                  (format #f "(define %www-static-root ~s)" dist-dir)))
+               #t)))
+         (add-before 'build 'silence-guile
+           (lambda _
+             (setenv "GUILE_WARN_DEPRECATED" "no")
+             (setenv "GUILE_AUTO_COMPILE" "0")
+             #t)))))
     (home-page "https://gwl.roelj.com")
     (synopsis "Guix workflow extension")
     (description "This package provides a workflow management extension for
