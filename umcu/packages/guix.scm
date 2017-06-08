@@ -219,7 +219,7 @@ numbers.")
 (define-public gwl
   (package
     (name "gwl")
-    (version "0.0.6")
+    (version "0.0.7")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -227,7 +227,7 @@ numbers.")
                     version ".tar.gz"))
               (sha256
                (base32
-                "0c5ynkvadjvxvabyhawgzrhniahj78n92jfnrbsq9alfrirc474r"))))
+                "1p5wkm7vh6a2ska5wm5r4g3vfa00ffzfpb43jy7rjldkhnr0bkzb"))))
     (build-system gnu-build-system)
     (native-inputs
      `(("autoconf" ,autoconf)
