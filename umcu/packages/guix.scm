@@ -105,6 +105,8 @@ elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] |
   echo -n \"  \"; ${git} -C /gnu/repositories/guix-additions describe --always;
 elif [ \"$1\" == \"pull\" ]; then
   echo \"This feature has been disabled.\";
+elif [ \"$1\" == \"gc\" ]; then
+  echo \"This feature has been disabled.\";
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
