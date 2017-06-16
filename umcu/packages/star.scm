@@ -199,6 +199,34 @@ sequences.")
       (modify-phases %standard-phases
         (delete 'configure) ; There is nothing to configure.
         (delete 'build) ; There is nothing to compile/build.
+        (add-before 'install 'patch-external-tools
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (let ((samtools (string-append (assoc-ref inputs "samtools") "/bin/samtools"))
+                  (gunzip (string-append (assoc-ref inputs "gzip") "/bin/gunzip"))
+                  (zcat (string-append (assoc-ref inputs "gzip") "/bin/zcat"))
+                  (cat (string-append (assoc-ref inputs "coreutils") "/bin/cat"))
+                  (wc (string-append (assoc-ref inputs "coreutils") "/bin/wc"))
+                  (sort (string-append (assoc-ref inputs "coreutils") "/bin/sort"))
+                  (mkdir (string-append (assoc-ref inputs "coreutils") "/bin/mkdir")))
+              (substitute* "util/append_breakpoint_junction_info.pl"
+                (("samtools") samtools))
+              (substitute* "util/incorporate_FFPM_into_final_report.pl"
+                (("gunzip") gunzip))
+              (substitute* "util/STAR-Fusion.predict" (("gunzip") gunzip))
+              (substitute* "util/incorporate_FFPM_into_final_report.pl" (("wc") wc))
+              (substitute* "util/convert_to_FFPM.pl" (("wc") wc))
+              (substitute* "util/incorporate_FFPM_into_final_report.pl"
+                (("cat \\$fq_file") (string-append cat " $fq_file")))
+              (substitute* "util/partition_FUSION_EVIDENCE_fastqs_by_fusion.pl"
+                (("sort \\$tmp_paired") (string-append sort " $tmp_paired")))
+              (substitute* "util/convert_to_FFPM.pl"
+                (("\"cat \\$fq_filename") (string-append "\"" cat " $fq_filename")))
+              (substitute* "util/convert_to_FFPM.pl"
+                (("zcat \\$fq_filename") (string-append zcat " $fq_filename")))
+              (substitute* "util/partition_FUSION_EVIDENCE_fastqs_by_fusion.pl"
+                (("mkdir") mkdir))
+              (substitute* "util/STAR-Fusion.filter" (("mkdir") mkdir))
+              (substitute* "util/STAR-Fusion.predict" (("mkdir") mkdir)))))
         (replace 'install
           (lambda* (#:key inputs outputs #:allow-other-keys)
             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
@@ -209,7 +237,10 @@ sequences.")
               (copy-recursively "FusionFilter"
                                 (string-append bin "/FusionFilter"))))))))
    (inputs
-    `(("perl" ,perl)))
+    `(("perl" ,perl)
+      ("samtools" ,samtools)
+      ("coreutils" ,coreutils)
+      ("gzip" ,gzip)))
    (propagated-inputs
     `(("perl-carp" ,perl-carp)
       ("perl-pathtools" ,perl-pathtools)
