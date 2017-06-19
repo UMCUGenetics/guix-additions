@@ -99,11 +99,11 @@ elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] |
          [ \"$2\" == \"-i\" ] || [ \"$2\" == \"-u\" ]); then
   ${guix} $@
   echo \"\"
-  echo \"You may need the following versioning information for your paper:\";
-  echo \"GNU Guix upstream repository:\";
-  echo -n \"  \"; ${git} -C /gnu/repositories/guix describe --always;
-  echo \"UMCU additional package repository:\";
-  echo -n \"  \"; ${git} -C /gnu/repositories/guix-additions describe --always;
+  echo \"The following repositories and versions were used:\";
+  echo -n \" * GNU Guix upstream:         \";
+  ${git} -C /gnu/repositories/guix rev-parse HEAD;
+  echo -n \" * UMCU additional packages:  \";
+  ${git} -C /gnu/repositories/guix-additions rev-parse HEAD;
 elif [ \"$1\" == \"pull\" ]; then
   echo \"This feature has been disabled.\";
 elif [ \"$1\" == \"gc\" ]; then
