@@ -111,7 +111,10 @@ elif [ \"$1\" == \"gc\" ]; then
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
-      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; ${guix} package --search-paths -p $2; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:3}\"
+      arguments=(\"$@\")
+      profile_arguments=(\"${arguments[@]:1}\")
+      profiles=${profile_arguments[@]/#/-p }
+      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; ${guix} package --search-paths $profiles; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
