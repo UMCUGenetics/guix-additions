@@ -41,9 +41,8 @@
     (version "1.1.0")
     (source #f)
     (build-system gnu-build-system)
-    (propagated-inputs
-     `(("socat" ,socat)
-       ("bash" ,bash)
+    (inputs
+     `(("bash" ,bash)
        ("guix" ,guix)
        ("git" ,git)
        ("gwl" ,gwl)))
@@ -69,7 +68,7 @@ guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
 guix=\"~a/bin/guix\"
 git=\"~a/bin/git\"
-socat=\"~a/bin/socat\"
+GWL_PATH=\"~a\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
@@ -88,8 +87,8 @@ fi
 export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_PATH}\"
 
 # Set the Guile environment for GWL
-export GUILE_LOAD_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
-export GUILE_LOAD_COMPILED_PATH=\"~a/share/guile/site/2.2${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
+export GUILE_LOAD_PATH=\"${GWL_PATH}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
+export GUILE_LOAD_COMPILED_PATH=\"${GWL_PATH}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
@@ -126,8 +125,6 @@ else
 fi~%"
                          (assoc-ref inputs "guix")
                          (assoc-ref inputs "git")
-                         (assoc-ref inputs "socat")
-                         (assoc-ref inputs "gwl")
                          (assoc-ref inputs "gwl")
                          (assoc-ref inputs "bash"))))))
          (replace 'install
