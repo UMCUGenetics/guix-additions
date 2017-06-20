@@ -81,6 +81,11 @@ export NIX_STATE_DIR=$guix_root
 if [ ! -L $HOME/.config/guix/latest ]; then
   mkdir -p $HOME/.config/guix
   ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+# Renew the link as repository updates are managed centrally.
+# This will avoid the warning of an outdated version of Guix.
+elif [ \"$(readlink -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
+  rm -f $HOME/.config/guix/latest
+  ln -s /gnu/repositories/guix $HOME/.config/guix/latest
 fi
 
 # Include our non-standard package repository
