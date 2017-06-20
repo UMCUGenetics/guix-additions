@@ -38,7 +38,7 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.1.0")
+    (version "1.2.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
