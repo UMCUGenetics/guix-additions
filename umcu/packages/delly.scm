@@ -28,6 +28,7 @@
   #:use-module (umcu packages boost)
   #:use-module (gnu packages)
   #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages boost)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages python))
 
@@ -72,3 +73,30 @@ sequencing data.  It uses paired-ends and split-reads to sensitively and
 accurately delineate genomic rearrangements throughout the genome.  Structural
 variants can be visualized using Delly-maze and Delly-suave.")
     (license license:gpl3+)))
+
+(define-public delly-0.7.7
+  (package (inherit delly-0.7.2)
+    (version "0.7.7")
+    (source (origin
+      (method url-fetch)
+      (uri (string-append "https://github.com/tobiasrausch/delly/archive/v"
+            version ".tar.gz"))
+      (sha256
+       (base32 "0dkwy3pyxmi6dhh1lpsr3698ri5sslw9qz67hfys0bz8dgrqwabj"))
+      (patches (list (search-patch "delly-0.7.7-use-system-libraries.patch")))))
+    (arguments
+     `(#:tests? #f ; There are no tests to run.
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure) ; There is no configure phase.
+         (replace 'install
+           (lambda _
+             (let ((bin (string-append (assoc-ref %outputs "out") "/bin")))
+               (install-file "src/cov" bin)
+               (install-file "src/delly" bin)
+               (install-file "src/dpe" bin)))))))
+    (inputs
+     `(("boost" ,boost)
+       ("htslib" ,htslib)
+       ("zlib" ,zlib)
+       ("bzip2" ,bzip2)))))
