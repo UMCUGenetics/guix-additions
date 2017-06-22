@@ -32,8 +32,7 @@
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages python)
-  #:use-module (gnu packages statistics)
-  #:use-module (gnu packages zip))
+  #:use-module (gnu packages statistics))
 
 (define-public snpeff-bin-4.1
   (package

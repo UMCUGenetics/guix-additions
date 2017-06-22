@@ -33,8 +33,7 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
-  #:use-module (gnu packages gcc)
-  #:use-module (gnu packages zip))
+  #:use-module (gnu packages gcc))
 
 (define-public python-py2bit
   (package

@@ -25,8 +25,7 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gcc)
-  #:use-module (gnu packages maths)
-  #:use-module (gnu packages zip))
+  #:use-module (gnu packages maths))
 
 (define-public plink2-1.90b3
   (package
