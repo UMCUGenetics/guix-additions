@@ -33,6 +33,7 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages statistics)
   #:use-module (gnu packages gcc))
 
 (define-public python-py2bit
@@ -190,13 +191,20 @@
          (add-after 'unpack 'fix-compiler-invocation
            (lambda* (#:key inputs #:allow-other-keys)
              (substitute* "BETA/misp/Makefile"
-               (("CC = cc") (string-append "CC = " (assoc-ref inputs "gcc") "/bin/gcc"))))))))
+                          (("CC = cc") (string-append "CC = " (assoc-ref inputs "gcc") "/bin/gcc")))))
+         (add-after 'unpack 'fix-rscript-path
+           (lambda* (#:key inputs #:allow-other-keys)
+             (substitute* "BETA/Up_Down_score.py"
+               (("Rscript") (string-append (assoc-ref inputs "r") "/bin/Rscript")))
+             (substitute* "BETA/Up_Down_distance.py"
+               (("Rscript") (string-append (assoc-ref inputs "r") "/bin/Rscript"))))))))
     (native-inputs
      `(("unzip" ,unzip)
        ("gcc" ,gcc)))
     (inputs
      `(("python2-numpy" ,python2-numpy)
-       ("zlib" ,zlib)))
+       ("zlib" ,zlib)
+       ("r" ,r-minimal)))
     (home-page "http://cistrome.org/BETA")
     (synopsis "Binding and Expression Target Analysis")
     (description "Binding and Expression Target Analysis (BETA) is a software
