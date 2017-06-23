@@ -23,7 +23,7 @@
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages java)
-  #:use-module (gnu packages zip))
+  #:use-module (gnu packages compression))
 
 (define-public picard-bin-1.141
   (package

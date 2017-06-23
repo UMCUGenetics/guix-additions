@@ -24,7 +24,7 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
-  #:use-module (gnu packages zip))
+  #:use-module (gnu packages compression))
 
 (define-public fastqc-bin-0.11.4
   (package
