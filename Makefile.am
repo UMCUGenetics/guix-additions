@@ -63,6 +63,7 @@ SOURCES =                                       \
   umcu/packages/vcf-explorer.scm                \
   umcu/packages/vcflib.scm                      \
   umcu/packages/vcftools.scm                    \
+  umcu/packages/virtuoso.scm                    \
   umcu/packages/vt.scm
 
 EXTRA_DIST += env.in
