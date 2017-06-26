@@ -37,6 +37,8 @@
        (sha256
         (base32 "12dqam1gc1v93l0bj0vlpvjqppki6y1hqrlznywxnw0rrz9pb002"))))
     (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f)) ; Tests require a network connection.
     (inputs
      `(("openssl" ,openssl)
        ("net-tools" ,net-tools)))
