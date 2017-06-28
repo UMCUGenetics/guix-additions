@@ -28,7 +28,9 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix build-system python)
+  #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages python)
   #:use-module (gnu packages bioinformatics)
@@ -217,3 +219,98 @@ modulate the factor’s activating or repressive function. Here we describe the
 implementation and features of BETA to demonstrate its application to several
 datasets.  BETA requires ~2GB RAM and 1h for the whole procedure.")
     (license #f)))
+
+(define-public python-easywebdav
+  (package
+    (name "python-easywebdav")
+    (version "1.2.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "easywebdav" version))
+       (sha256
+        (base32
+         "11azylc4b8gp6nrrpbn096qymn4rzvd43nryn7p59wv0w45y5k5i"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-requests" ,python-requests)))
+    (home-page "http://github.com/amnong/easywebdav")
+    (synopsis "Straight-forward WebDAV client, implemented using Requests")
+    (description "This package provides a straight-forward WebDAV client,
+implemented using Requests")
+    (license #f)))
+
+(define-public python2-easywebdav
+  (package-with-python2 python-easywebdav))
+
+(define-public python2-wsgiref
+  (package
+    (name "python2-wsgiref")
+    (version "0.1.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "https://files.pythonhosted.org/packages/41/9e/309259ce8dff8c596"
+             "e8c26df86dbc4e848b9249fd36797fd60be456f03fc/wsgiref-0.1.2.zip"))
+       (sha256
+        (base32
+         "0y8fyjmpq7vwwm4x732w97qbkw78rjwal5409k04cw4m03411rn7"))))
+    (arguments
+     `(#:python ,python-2
+       #:phases
+       (modify-phases %standard-phases
+         (replace 'unpack
+           (lambda* (#:key inputs #:allow-other-keys)
+             (let ((unzip (string-append (assoc-ref inputs "unzip")
+                                         "/bin/unzip")))
+               (when (zero? (system* unzip (assoc-ref %build-inputs "source")))
+                 (chdir "wsgiref-0.1.2"))))))))
+    (native-inputs
+     `(("unzip" ,unzip)))
+    (build-system python-build-system)
+    (home-page "http://cheeseshop.python.org/pypi/wsgiref")
+    (synopsis "WSGI (PEP 333) Reference Library")
+    (description "WSGI (PEP 333) Reference Library")
+    (license #f)))
+
+(define-public clarity-utils
+  (let ((commit "108942f7d1f951f03ea4ec0631a2f22d7a97ba2c"))
+    (package
+      (name "clarity-utils")
+      (version "0.0")
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/UMCUGenetics/clarity_utils.git")
+                      (commit commit)))
+                (file-name (string-append name "-" version "-checkout"))
+                (sha256
+                 (base32
+                  "1km6v7zl39zk2hl8b14dllsz867n4dyclx71p97pf7n9sjwl4p9a"))))
+      (build-system gnu-build-system)
+      (arguments
+       `(#:tests? #f
+         #:phases
+         (modify-phases %standard-phases
+           (delete 'configure)
+           (delete 'build)
+           (replace 'install
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+               (let ((scripts-location (string-append
+                                        (assoc-ref outputs "out")
+                                        "/share/clarity-utils")))
+                 (mkdir-p scripts-location)
+                 ;; This file is a duplicate of the one in the root directory.
+                 (delete-file "epp_scripts/glsapiutil.py")
+                 (for-each (lambda (file)
+                             (install-file file scripts-location))
+                           (find-files "." "\\.py$" #:directories? #f)))
+               #t)))))
+      (propagated-inputs
+       `(("python2-easywebdav" ,python2-easywebdav)
+         ("python2-wsgiref" ,python2-wsgiref)))
+      (home-page "https://github.com/UMCUGenetics/clarity_utils")
+      (synopsis "Utility scripts to work with Genologics Clarity LIMS")
+      (description "Utility scripts to work with Genologics Clarity LIMS")
+      (license #f))))
