@@ -225,7 +225,7 @@ numbers.")
    (license license:artistic2.0)))
 
 (define-public gwl
-  (let ((commit "e9b7f80c06a6bb08fe0a4dd491fa8f140d40cd5c"))
+  (let ((commit "c4b7c142ab97012b0597274324ae1e93d0a5cd47"))
     (package
      (name "gwl")
      (version (string-append "0.0.9-" (string-take commit 8)))
@@ -237,7 +237,7 @@ numbers.")
                (file-name (string-append name "-" version "-checkout"))
                (sha256
                 (base32
-                 "0hrg8njqz3xa2s69cncjfd8bgx3s38lmaiqxsa88cp4gisblfqqs"))))
+                 "1fz7hk73pcccq88892i2p5jkwdkpsxzapqj5vnxargwzr8qdm5ny"))))
      (build-system gnu-build-system)
      (native-inputs
       `(("autoconf" ,autoconf)
