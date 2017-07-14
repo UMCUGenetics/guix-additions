@@ -322,13 +322,18 @@ Pan-Cancer Analysis Project")
            (lambda* (#:key outputs #:allow-other-keys)
              (system* "perl" "Makefile.PL"
                       (string-append "PREFIX=" (assoc-ref outputs "out")))
-             (system* "make"))))))
+             (system* "make")))
+         (add-after 'install 'add-allelecounter-symlink
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((out (string-append (assoc-ref outputs "out") "/bin")))
+               (system* "ln" "--symbolic"
+                        (string-append out "/alleleCounter.pl")
+                        (string-append out "/alleleCounter"))))))))
     (propagated-inputs
      `(("perl-const-fast" ,perl-const-fast)
        ("perl-sub-exporter-progressive" ,perl-sub-exporter-progressive)
        ("perl-bio-db-hts" ,perl-bio-db-hts)
-       ("bioperl-minimal" ,bioperl-minimal)
-       ))
+       ("bioperl-minimal" ,bioperl-minimal)))
     (inputs
      `(("htslib" ,htslib)
        ("perl-pod-coverage" ,perl-pod-coverage)
