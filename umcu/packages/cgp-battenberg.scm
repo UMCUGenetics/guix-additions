@@ -699,7 +699,21 @@ maniread, maniskip, manicopy, maniadd.")
            (lambda* (#:key outputs #:allow-other-keys)
              (system* "perl" "Makefile.PL"
                       (string-append "PREFIX=" (assoc-ref outputs "out")))
-             (system* "make"))))))
+             (system* "make")))
+         (add-before 'reset-gzip-timestamps 'fix-permissions
+           (lambda* (#:key outputs #:allow-other-keys)
+             (chmod (string-append
+                     (assoc-ref outputs "out")
+                     "/lib/perl5/site_perl/5.24.0/"
+                     "auto/share/module/Sanger-CGP-Battenberg-Implement"
+                     "/battenberg/probloci.txt.gz") #o644)))
+         (add-after 'reset-gzip-timestamps 'fix-permissions-after
+           (lambda* (#:key outputs #:allow-other-keys)
+             (chmod (string-append
+                     (assoc-ref outputs "out")
+                     "/lib/perl5/site_perl/5.24.0/"
+                     "auto/share/module/Sanger-CGP-Battenberg-Implement"
+                     "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
      `(("allelecount" ,allelecount)
        ("htslib" ,htslib)
