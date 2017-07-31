@@ -319,23 +319,32 @@ Pan-Cancer Analysis Project")
            (lambda _
              (chdir "perl")))
          (replace 'build
-           (lambda* (#:key outputs #:allow-other-keys)
+           (lambda* (#:key inputs outputs #:allow-other-keys)
              (system* "perl" "Makefile.PL"
                       (string-append "PREFIX=" (assoc-ref outputs "out")))
-             (system* "make")))
-         (add-after 'install 'add-allelecounter-symlink
+             (system* "make")
+             ;; Build the C alleleCounter program.
+             (chdir "../c")
+             (mkdir-p "bin")
+             (substitute* "src/bam_access.c"
+               (("\\#include <cram\\/cram.h>") "#include <htslib/cram.h>"))
+             (system* "make")
+             ;; Don't interfere with the "make install" command for the Perl
+             ;; version.
+             (chdir "../perl")))
+         (add-after 'install 'install-allelecounter
            (lambda* (#:key outputs #:allow-other-keys)
              (let ((out (string-append (assoc-ref outputs "out") "/bin")))
-               (system* "ln" "--symbolic"
-                        (string-append out "/alleleCounter.pl")
-                        (string-append out "/alleleCounter"))))))))
+               (format #t "Current location: ~s~%" (getcwd))
+               (install-file "../c/bin/alleleCounter" out)))))))
     (propagated-inputs
      `(("perl-const-fast" ,perl-const-fast)
        ("perl-sub-exporter-progressive" ,perl-sub-exporter-progressive)
        ("perl-bio-db-hts" ,perl-bio-db-hts)
        ("bioperl-minimal" ,bioperl-minimal)))
     (inputs
-     `(("htslib" ,htslib)
+     `(("zlib" ,zlib)
+       ("htslib" ,htslib)
        ("perl-pod-coverage" ,perl-pod-coverage)
        ("perl-file-which" ,perl-file-which)
        ("perl-test-fatal" ,perl-test-fatal)
