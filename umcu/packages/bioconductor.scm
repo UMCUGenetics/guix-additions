@@ -356,6 +356,63 @@ ChIP-seq experiments using affinity (quantitative) data.  Also enables
 occupancy (overlap) analysis and plotting functions.")
     (license license:lgpl3+)))
 
+(define-public r-hwriter
+  (package
+    (name "r-hwriter")
+    (version "1.3.2")
+    (source (origin
+             (method url-fetch)
+             (uri (cran-uri "hwriter" version))
+             (sha256
+              (base32
+               "0arjsz854rfkfqhgvpqbm9lfni97dcjs66isdsfvwfd2wz932dbb"))))
+    (build-system r-build-system)
+    (home-page "http://cran.r-project.org/web/packages/hwriter")
+    (synopsis "HTML Writer - Outputs R objects in HTML format")
+    (description "Easy-to-use and versatile functions to output R objects in
+HTML format")
+    (license license:lgpl2.1)))
+
+(define-public r-dexseq
+  (package
+   (name "r-dexseq")
+   (version "1.22.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "DEXSeq" version))
+            (sha256
+             (base32 "085aqk1wlzzqcqcqhvz74y099kr2ln5dwdxd3rl6zan806mgwahg"))))
+   (properties `((upstream-name . "DEXSeq")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biocparallel" ,r-biocparallel)
+      ("r-biobase" ,r-biobase)
+      ("r-summarizedexperiment" ,r-summarizedexperiment)
+      ("r-iranges" ,r-iranges)
+      ("r-genomicranges" ,r-genomicranges)
+      ("r-deseq2" ,r-deseq2)
+      ("r-annotationdbi" ,r-annotationdbi)
+      ("r-rcolorbrewer" ,r-rcolorbrewer)
+      ("r-s4vectors" ,r-s4vectors)
+      ("r-biocgenerics" ,r-biocgenerics)
+      ("r-biomart" ,r-biomart)
+      ("r-hwriter" ,r-hwriter)
+      ("r-stringr" ,r-stringr)
+      ("r-rsamtools" ,r-rsamtools)
+      ("r-statmod" ,r-statmod)
+      ("r-geneplotter" ,r-geneplotter)
+      ("r-genefilter" ,r-genefilter)))
+   (home-page "https://bioconductor.org/packages/DEXSeq/")
+   (synopsis "Inference of differential exon usage in RNA-Seq")
+   (description "The package is focused on finding differential exon usage
+using RNA-seq exon counts between samples with different experimental designs.
+It provides functions that allows the user to make the necessary statistical
+tests based on a model that uses the negative binomial distribution to estimate
+the variance between biological replicates and generalized linear models for
+testing.  The package also provides functions for the visualization and
+exploration of the results.")
+   (license license:gpl3+)))
+
 (define-public r-ripseeker
   (package
     (name "r-ripseeker")
