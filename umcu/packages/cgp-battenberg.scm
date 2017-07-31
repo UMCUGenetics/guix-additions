@@ -335,7 +335,6 @@ Pan-Cancer Analysis Project")
          (add-after 'install 'install-allelecounter
            (lambda* (#:key outputs #:allow-other-keys)
              (let ((out (string-append (assoc-ref outputs "out") "/bin")))
-               (format #t "Current location: ~s~%" (getcwd))
                (install-file "../c/bin/alleleCounter" out)))))))
     (propagated-inputs
      `(("perl-const-fast" ,perl-const-fast)
