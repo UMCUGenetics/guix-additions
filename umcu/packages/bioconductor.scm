@@ -854,7 +854,9 @@ agnes cluster diagrams.")
     (version "1.4.0")
     (source (origin
               (method url-fetch)
-              (uri (bioconductor-uri "pasilla" version))
+              (uri (string-append
+                    "http://bioconductor.org/packages/release/data/experiment"
+                    "/src/contrib/pasilla_" version ".tar.gz"))
               (sha256
                (base32
                 "0nz7s5sdd58bml8bb0c7c2vp8f0pxjl67kijaryncnqq3d2klc1l"))))
