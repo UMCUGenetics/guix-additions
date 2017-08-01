@@ -847,3 +847,27 @@ this by making available functions that extract the dendrogram plot data.
 The package provides implementations for tree, rpart, as well as diana and
 agnes cluster diagrams.")    
     (license license:gpl2+)))
+
+(define-public r-pasilla
+  (package
+    (name "r-pasilla")
+    (version "1.4.0")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "pasilla" version))
+              (sha256
+               (base32
+                "0nz7s5sdd58bml8bb0c7c2vp8f0pxjl67kijaryncnqq3d2klc1l"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-dexseq" ,r-dexseq)
+       ("r-biocstyle" ,r-biocstyle)
+       ("r-rmarkdown" ,r-rmarkdown)
+       ("r-knitr" ,r-knitr)))
+    (home-page "http://bioconductor.org/packages/pasilla/")
+    (synopsis "Data package with per-exon and per-gene read counts")
+    (description "This package provides per-exon and per-gene read counts
+computed for selected genes from RNA-seq data that were presented in the
+article 'Conservation of an RNA regulatory map between Drosophila and mammals'
+by Brooks et al., Genome Research 2011.")
+    (license license:lgpl2.1+)))
