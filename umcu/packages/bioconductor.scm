@@ -891,3 +891,24 @@ by Brooks et al., Genome Research 2011.")
 core R features like the condition system, and core 'Tidyverse' features like
 tidy evaluation.")
    (license license:gpl3+)))
+
+(define-public r-blob
+  (package
+   (name "r-blob")
+   (version "1.1.0")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "blob" version))
+     (sha256
+      (base32
+       "05pazzcyz3c3vd2l70zq9cf172cgjff4dnf419zigfnxycyn1mhn"))))
+   (build-system r-build-system)
+   (propagated-inputs `(("r-tibble" ,r-tibble)))
+   (home-page "https://github.com/hadley/blob")
+   (synopsis "Simple S3 class for representing vectors of binary data")
+   (description "R's raw vector is useful for storing a single binary
+object.  What if you want to put a vector of them in a data frame?  The
+blob package provides the blob object, a list of raw vectors, suitable
+for use as a column in data frame.")
+   (license license:gpl3+)))
