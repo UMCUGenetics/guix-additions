@@ -27,6 +27,7 @@
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
+  #:use-module (gnu packages gawk)
   #:use-module (gnu packages guile)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages perl)
@@ -38,13 +39,14 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.2.0")
+    (version "1.3.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
      `(("bash" ,bash)
        ("guix" ,guix)
        ("git" ,git)
+       ("gawk" ,gawk)
        ("gwl" ,gwl)))
     (arguments
      `(#:tests? #f
@@ -68,6 +70,9 @@ guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
 guix=\"~a/bin/guix\"
 git=\"~a/bin/git\"
+gawk=\"~a/bin/gawk\"
+cut=\"~a/bin/cut\"
+grep=\"~a/bin/grep\"
 GWL_PATH=\"~a\"
 
 # Avoid locale warnings.
@@ -117,8 +122,10 @@ elif [ \"$1\" == \"load-profile\" ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
       arguments=(\"$@\")
       profile_arguments=(\"${arguments[@]:1}\")
-      profiles=${profile_arguments[@]/#/-p }
-      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; ${guix} package --search-paths $profiles; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      profiles=${profile_arguments[@]/%/\"/etc/profile\"}
+      unset_output=$(${grep} \"^export\" $profiles | ${cut} -d '=' -f1 | ${gawk} '{ print \"unset \" $2 }')
+      set_output=$(${grep} \"^export\" $profiles)
+      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; echo \"$unset_output\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
@@ -130,6 +137,9 @@ else
 fi~%"
                          (assoc-ref inputs "guix")
                          (assoc-ref inputs "git")
+                         (assoc-ref inputs "gawk")
+                         (assoc-ref inputs "coreutils")
+                         (assoc-ref inputs "grep")
                          (assoc-ref inputs "gwl")
                          (assoc-ref inputs "bash"))))))
          (replace 'install
