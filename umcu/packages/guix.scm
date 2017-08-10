@@ -123,8 +123,8 @@ elif [ \"$1\" == \"load-profile\" ]; then
       arguments=(\"$@\")
       profile_arguments=(\"${arguments[@]:1}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
-      unset_output=$(${grep} \"^export\" $profiles | ${cut} -d '=' -f1 | ${gawk} '{ print \"unset \" $2 }')
-      set_output=$(${grep} \"^export\" $profiles)
+      unset_output=$(${grep} -h \"^export\" $profiles | ${cut} -d '=' -f1 | ${gawk} '{ print \"unset \" $2 }')
+      set_output=$(${grep} -h \"^export\" $profiles)
       ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH; unset LD_LIBRARY_PATH;\"; echo \"$unset_output\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
