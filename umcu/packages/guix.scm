@@ -122,6 +122,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
       arguments=(\"$@\")
       profile_arguments=(\"${arguments[@]:1}\")
+      profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
       unset_output=$(${grep} -h \"^export\" $profiles | ${cut} -d '=' -f1 | ${gawk} '{ print \"unset \" $2 }')
       set_output=$(${grep} -h \"^export\" $profiles)
