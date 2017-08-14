@@ -102,7 +102,7 @@ export GUILE_LOAD_COMPILED_PATH=\"${GWL_PATH}/lib/guile/2.2/ccache${GUILE_LOAD_C
 
 # Set the X.509 certificates
 export SSL_CERT_DIR=\"${guix_profile}/etc/ssl/certs\"
-export SSL_CERT_DIR=\"${SSL_CERT_DIR}/ca-certificates.crt\"
+export SSL_CERT_FILE=\"${SSL_CERT_DIR}/ca-certificates.crt\"
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
