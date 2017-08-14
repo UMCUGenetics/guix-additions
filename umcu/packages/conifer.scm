@@ -70,3 +70,6 @@
    (description "CoNIFER uses exome sequencing data to find copy number variants (CNVs) and genotype the copy-number of duplicated genes")
 
    (license license:expat)))
+
+(define-public python2-conifer
+  (package-with-python2 python-conifer))
