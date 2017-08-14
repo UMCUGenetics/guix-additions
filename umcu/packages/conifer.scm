@@ -54,7 +54,7 @@
 
    (native-inputs
     `(("gzip" ,gzip)
-      ("tar" ,tar))
+      ("tar" ,tar)))
 
    (propagated-inputs
     `(("python-matplotlib" ,python-matplotlib)
