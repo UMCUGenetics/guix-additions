@@ -22,7 +22,8 @@
   #:use-module (guix download)
   #:use-module (guix build-system python)
   #:use-module (gnu packages)
-  #:use-module (gnu packages python))
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages bioinformatics))
 
 (define-public python-conifer
   (package
