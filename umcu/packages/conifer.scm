@@ -20,7 +20,7 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
-  #:use-module (guix build-system python)
+  #:use-module (guix build-system trivial)
   #:use-module (gnu packages)
   #:use-module (gnu packages python)
   #:use-module (gnu packages bioinformatics))
@@ -35,7 +35,27 @@
           (sha256
            (base32 "03hij9gw8l9669q3ghhpw7spr00v6hscky7da7k0a7fnsyn0c4qn"))))
 
-   (build-system python-build-system)
+   (build-system trivial-build-system)
+   (arguments
+    `(#:modules ((guix build utils))
+      #:builder
+      (begin
+        (use-modules (guix build utils))
+        (let* ((out (assoc-ref %outputs "out"))
+               (script-dir (string-append out "/lib/python2.7/site-packages/"))
+               (tar  (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin")))
+          (mkdir-p script-dir)
+          (setenv "PATH" PATH)
+          (system* tar "xvf" (assoc-ref %build-inputs "source"))
+          (install-file "conifer_v0.2.2/conifer_functions.py" script-dir)
+          (install-file "conifer_v0.2.2/conifer.py" script-dir)
+   ))))
+
+   (native-inputs
+    `(("gzip" ,gzip)
+      ("tar" ,tar))
+
    (propagated-inputs
     `(("python-matplotlib" ,python-matplotlib)
       ("python-numpy" ,python-numpy)
