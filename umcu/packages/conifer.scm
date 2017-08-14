@@ -46,13 +46,15 @@
         (use-modules (guix build utils))
         (let* ((out (assoc-ref %outputs "out"))
                (script-dir (string-append out "/lib/python2.7/site-packages/"))
+               (bin-dir (string-append out "/bin/"))
                (tar  (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
                (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin")))
           (mkdir-p script-dir)
+          (mkdir-p bin-dir)
           (setenv "PATH" PATH)
           (system* tar "xvf" (assoc-ref %build-inputs "source"))
           (install-file "conifer_v0.2.2/conifer_functions.py" script-dir)
-          (install-file "conifer_v0.2.2/conifer.py" script-dir)
+          (install-file "conifer_v0.2.2/conifer.py" bin-dir)
    ))))
 
    (native-inputs
