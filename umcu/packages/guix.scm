@@ -39,7 +39,7 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.3.0")
+    (version "1.3.1")
     (source #f)
     (build-system gnu-build-system)
     (inputs
@@ -99,6 +99,10 @@ export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_P
 # Set the Guile environment for GWL
 export GUILE_LOAD_PATH=\"${GWL_PATH}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
 export GUILE_LOAD_COMPILED_PATH=\"${GWL_PATH}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
+
+# Set the X.509 certificates
+export SSL_CERT_DIR=\"${guix_profile}/etc/ssl/certs\"
+export SSL_CERT_DIR=\"${SSL_CERT_DIR}/ca-certificates.crt\"
 
 # Use guix with the given arguments
 export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
