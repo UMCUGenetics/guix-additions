@@ -24,13 +24,13 @@
   #:use-module (guix build-system trivial)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
-  #:use-module (gnu packages python)
+;  #:use-module (gnu packages python)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages bioinformatics))
 
-(define-public python-conifer
+(define-public python2-conifer
   (package
-   (name "python-conifer")
+   (name "python2-conifer")
    (version "0.2.2")
    (source (origin
             (method url-fetch)
@@ -60,17 +60,17 @@
       ("tar" ,tar)))
 
    (propagated-inputs
-    `(("python-matplotlib" ,python-matplotlib)
-      ("python-numpy" ,python-numpy)
-      ("python-pysam" ,python-pysam)
-      ("python-tables" ,python-tables)
-      ("python-scipy" ,python-scipy)))
+    `(("python2-matplotlib" ,python2-matplotlib)
+      ("python2-numpy" ,python2-numpy)
+      ("python2-pysam" ,python2-pysam)
+      ("python2-tables" ,python2-tables)
+      ("python2-scipy" ,python2-scipy)))
 
    (home-page "http://conifer.sourceforge.net/")
    (synopsis "Copy Number Inference From Exome Reads")
    (description "CoNIFER uses exome sequencing data to find copy number variants (CNVs) and genotype the copy-number of duplicated genes")
 
-   (license license:expat)))
+   (license license:gpl3)))
 
-(define-public python2-conifer
-  (package-with-python2 python-conifer))
+;(define-public python2-conifer
+;  (package-with-python2 python-conifer))
