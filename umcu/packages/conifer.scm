@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2017 Joep de Ligt <j.deligt@umcutrecht.nl>
 ;;;
 ;;; This file is not officially part of GNU Guix.
 ;;;
@@ -15,14 +15,6 @@
 ;;;
 ;;; You should have received a copy of the GNU General Public License
 ;;; along with GNU Guix.  If not, see <http://www.gnu.org/licenses/>.
-
-;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
-;; mainlined in GNU Guix.  You should avoid using this package, and if you
-;; can, please write a free replacement for it.
-
-;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
-;; mainlined in GNU Guix.  You should avoid using this package, and if you
-;; can, please write a free replacement for it.
 
 (define-module (umcu packages conifer)
   #:use-module ((guix licenses) #:prefix license:)
