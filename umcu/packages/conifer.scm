@@ -40,7 +40,7 @@
     `(("python-matplotlib" ,python-matplotlib)
       ("python-numpy" ,python-numpy)
       ("python-pysam" ,python-pysam)
-      ("python-pytables" ,python-pytables)
+      ("python-tables" ,python-tables)
       ("python-scipy" ,python-scipy)))
 
    (home-page "http://conifer.sourceforge.net/")
