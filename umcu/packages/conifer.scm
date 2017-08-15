@@ -65,6 +65,7 @@
     `(("python2-matplotlib" ,python2-matplotlib)
       ("python2-numpy" ,python2-numpy)
       ("python2-pysam" ,python2-pysam)
+      ("python2-numexpr" ,python2-numexpr)
       ("python2-tables" ,python2-tables)
       ("python2-scipy" ,python2-scipy)))
 
