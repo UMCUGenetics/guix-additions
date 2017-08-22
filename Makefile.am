@@ -27,6 +27,7 @@ SOURCES =                                       \
   umcu/packages/caveman.scm                     \
   umcu/packages/cgp-battenberg.scm              \
   umcu/packages/circos.scm                      \
+  umcu/packages/conifer.scm                     \
   umcu/packages/contra.scm                      \
   umcu/packages/databases.scm                   \
   umcu/packages/delly.scm                       \
@@ -55,8 +56,8 @@ SOURCES =                                       \
   umcu/packages/python.scm                      \
   umcu/packages/sambamba.scm                    \
   umcu/packages/samtools.scm                    \
-  umcu/packages/snpeff.scm                      \
   umcu/packages/snp-fingerprinting.scm          \
+  umcu/packages/snpeff.scm                      \
   umcu/packages/star.scm                        \
   umcu/packages/strelka.scm                     \
   umcu/packages/varscan.scm                     \
