@@ -32,11 +32,12 @@
   #:use-module (guix build-system python)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
-  #:use-module (gnu packages python)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
-  #:use-module (gnu packages statistics)
-  #:use-module (gnu packages gcc))
+  #:use-module (gnu packages gcc)
+  #:use-module (gnu packages maths)
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages statistics))
 
 (define-public python-py2bit
   (package
@@ -314,3 +315,35 @@ implemented using Requests")
       (synopsis "Utility scripts to work with Genologics Clarity LIMS")
       (description "Utility scripts to work with Genologics Clarity LIMS")
       (license #f))))
+
+
+(define-public python-scikit-rebate
+  (package
+    (name "python-scikit-rebate")
+    (version "0.3.4")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "skrebate" version))
+       (sha256
+        (base32
+         "0xa3smiah1q0wmmq8krfvc3mgk5fq0cb968xydsgh75ykrpp5zij"))))
+    (build-system python-build-system)
+    (propagated-inputs
+     `(("python-numpy" ,python-numpy)
+       ("python-scipy" ,python-scipy)
+       ("python-scikit-learn" ,python-scikit-learn)))
+    (home-page "https://epistasislab.github.io/scikit-rebate/")
+    (synopsis "Relief-based feature selection algorithms for Python")
+    (description
+     "Scikit-rebate is a scikit-learn-compatible Python implementation of
+ReBATE, a suite of Relief-based feature selection algorithms for Machine
+Learning.  These algorithms excel at identifying features that are predictive
+of the outcome in supervised learning problems, and are especially good at
+identifying feature interactions that are normally overlooked by standard
+feature selection algorithms.")
+    (license license:bsd-3)))
+
+(define-public python2-scikit-rebate
+  (package-with-python2 python-scikit-rebate))
+
