@@ -123,28 +123,6 @@ elif [ \"$1\" == \"pull\" ]; then
   echo \"This feature has been disabled.\";
 elif [ \"$1\" == \"gc\" ]; then
   echo \"This feature has been disabled.\";
-elif [ \"$1\" == \"package\" ]; then
-  echo \"\";
-  echo \"Sorry for the inconvenience.  Guix is in maintenance mode.\";
-  echo \"We are currently working on a major performance improvement\";
-  echo \"for which various tests have to be conducted on the running\";
-  echo \"system.\";
-  echo \"\";
-  echo \"The 'guixr load-profile' command is still available, as well\";
-  echo \"as all previously installed programs.  Installing new programs\";
-  echo \"has been disabled in the maintenance mode.\";
-  echo \"\";
-elif [ \"$1\" == \"environment\" ]; then
-  echo \"\";
-  echo \"Sorry for the inconvenience.  Guix is in maintenance mode.\";
-  echo \"We are currently working on a major performance improvement\";
-  echo \"for which various tests have to be conducted on the running\";
-  echo \"system.\";
-  echo \"\";
-  echo \"The 'guixr load-profile' command is still available, as well\";
-  echo \"as all previously installed programs.  Installing new programs\";
-  echo \"has been disabled in the maintenance mode.\";
-  echo \"\";
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
