@@ -70,7 +70,9 @@ guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
 guix=\"~a/bin/guix\"
 git=\"~a/bin/git\"
-gawk=\"~a/bin/gawk\"
+coreutils=\"~a\"
+gawk=\"${coreutils}/bin/gawk\"
+readlink=\"${coreutils}/bin/readlink\"
 cut=\"~a/bin/cut\"
 grep=\"~a/bin/grep\"
 GWL_PATH=\"~a\"
@@ -88,7 +90,7 @@ if [ ! -L $HOME/.config/guix/latest ]; then
   ln -s /gnu/repositories/guix $HOME/.config/guix/latest
 # Renew the link as repository updates are managed centrally.
 # This will avoid the warning of an outdated version of Guix.
-elif [ \"$(readlink -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
+elif [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
   rm -f $HOME/.config/guix/latest
   ln -s /gnu/repositories/guix $HOME/.config/guix/latest
 fi
