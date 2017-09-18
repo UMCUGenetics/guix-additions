@@ -41,6 +41,7 @@ SOURCES =                                       \
   umcu/packages/github.scm                      \
   umcu/packages/grid-engine.scm                 \
   umcu/packages/guix.scm                        \
+  umcu/packages/hmf.scm                         \
   umcu/packages/iap.scm                         \
   umcu/packages/igvtools.scm                    \
   umcu/packages/king.scm                        \
