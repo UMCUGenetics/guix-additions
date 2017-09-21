@@ -27,6 +27,7 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages gcc)
+  #:use-module (gnu packages ghostscript)
   #:use-module (gnu packages maths)
   #:use-module (gnu packages web)
   #:use-module (gnu packages statistics))
@@ -124,46 +125,16 @@ functionalities to R.")
 generate interactive Shiny based display methods for Bioconductor objects.")
     (license license:artistic2.0)))
     
-(define-public r-annotationhub
-  (package
-    (name "r-annotationhub")
-    (version "2.6.5")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "AnnotationHub" version))
-              (sha256
-               (base32
-                "0ff2by5bw5ywxwasiq7z5zc5w7wwwjsvwkj26mjv35zvy7d33kd2"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-rsqlite" ,r-rsqlite)
-       ("r-biocinstaller" ,r-biocinstaller)
-       ("r-annotationdbi" ,r-annotationdbi)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-interactivedisplaybase" ,r-interactivedisplaybase)
-       ("r-httr" ,r-httr)
-       ("r-yaml" ,r-yaml)))
-    (home-page "http://bioconductor.org/packages/AnnotationHub")
-    (synopsis "Client to access AnnotationHub resources")
-    (description "This package provides a client for the Bioconductor 
-AnnotationHub web resource.  The AnnotationHub web resource provides a central
-location where genomic files (e.g., VCF, bed, wig) and other resources from
-standard locations (e.g., UCSC, Ensembl) can be discovered.  The resource
-includes metadata about each resource, e.g., a textual description, tags, and
-date of modification.  The client creates and manages a local cache of files
-retrieved by the user, helping with quick and reproducible access.")
-    (license license:lgpl3)))
-
 (define-public r-ensembldb
   (package
     (name "r-ensembldb")
-    (version "1.6.2")
+    (version "2.0.4")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "ensembldb" version))
               (sha256
                (base32
-                "1hxvjplkgkibjfzrbi6whqr7czf5digh96j7ww6szdyxy86gbf3r"))))
+                "1np96nry1hba8lk4bg3grf8w3k6xz9lgd2jcl3vrj6wsl184c3fr"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-biocgenerics" ,r-biocgenerics)
@@ -178,7 +149,9 @@ retrieved by the user, helping with quick and reproducible access.")
        ("r-s4vectors" ,r-s4vectors)
        ("r-annotationhub" ,r-annotationhub)
        ("r-rsamtools" ,r-rsamtools)
-       ("r-iranges" ,r-iranges)))
+       ("r-iranges" ,r-iranges)
+       ("r-annotationfilter" ,r-annotationfilter)
+       ("r-protgenerics" ,r-protgenerics)))
     (home-page "http://bioconductor.org/packages/ensembldb")
     (synopsis "Utilities to create and use Ensembl based annotation databases")
     (description "This package provides functions to create and use transcript
@@ -194,13 +167,13 @@ region or transcript models of lincRNA genes.")
 (define-public r-biovizbase
   (package
     (name "r-biovizbase")
-    (version "1.22.0")
+    (version "1.24.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "biovizBase" version))
               (sha256
                (base32
-                "0f3zwn0g0rc3ld8dd5sgpr14l9aff57j766h4grkiyazyyb46bnh"))))
+                "1pfyhjwlxw9p2q5ip0irxpwndgakvn6z6ay5ahgz2gkkk8x8i29w"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-scales" ,r-scales)
@@ -230,13 +203,13 @@ effort and encourages consistency.")
 (define-public r-gviz
   (package
     (name "r-gviz")
-    (version "1.18.1")
+    (version "1.20.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "Gviz" version))
               (sha256
                (base32
-                "1dk5cww1w2zqxc7p98d4kgzvy3drsj60va5zlvr14r4wgs5dwqvj"))))
+                "161mf1lwqcgl8058xsypbcy48p8jhc93gbg9x375p721ccfdxrps"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-s4vectors" ,r-s4vectors)
@@ -913,3 +886,180 @@ object.  What if you want to put a vector of them in a data frame?  The
 blob package provides the blob object, a list of raw vectors, suitable
 for use as a column in data frame.")
    (license license:gpl3+)))
+
+(define-public r-grimport
+  (package
+    (name "r-grimport")
+    (version "0.9-0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "grImport" version))
+       (sha256
+        (base32
+         "1d8fd7502qj7cirjqdkr1qj51rylw2fz5hs06avfvc2dxs2xwfw1"))))
+    (properties `((upstream-name . "grImport")))
+    (build-system r-build-system)
+    (inputs
+     `(("ghostscript" ,ghostscript)))
+    (propagated-inputs
+     `(("r-xml" ,r-xml)))
+    (home-page "http://cran.r-project.org/web/packages/grImport")
+    (synopsis "Importing Vector Graphics")
+    (description "Functions for converting, importing, and drawing PostScript
+pictures in R plots.")
+    (license license:gpl2+)))
+
+(define-public r-tfmpvalue
+  (package
+    (name "r-tfmpvalue")
+    (version "0.0.6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "TFMPvalue" version))
+       (sha256
+        (base32
+         "1892jmgqywm0jp5l5k88brp4h8szkbi9bxi0v1jni1929qnsmqyf"))))
+    (properties
+     `((upstream-name . "TFMPvalue")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-rcpp" ,r-rcpp)))
+    (home-page "https://github.com/ge11232002/TFMPvalue")
+    (synopsis
+     "Efficient and Accurate P-Value Computation for Position Weight Matrices")
+    (description "In putative Transcription Factor Binding Sites (TFBSs)
+identification from sequence/alignments, we are interested in the significance
+of certain match score.  TFMPvalue provides the accurate calculation of P-value
+with score threshold for Position Weight Matrices, or the score with given
+P-value.  This package is an interface to code originally made available by
+Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
+    (license license:gpl2)))
+
+(define-public r-motifdb
+  (package
+   (name "r-motifdb")
+   (version "1.18.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "MotifDb" version))
+            (sha256
+             (base32 "0vnigpb23vnc8jfg2smz9bqr0kkfvksyckwpg5glc4pmvpygjh4k"))))
+   (properties `((upstream-name . "MotifDb")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biocgenerics" ,r-biocgenerics)
+      ("r-s4vectors" ,r-s4vectors)
+      ("r-biostrings" ,r-biostrings)
+      ("r-iranges" ,r-iranges)
+      ("r-rtracklayer" ,r-rtracklayer)))
+   (home-page "http://bioconductor.org/packages/MotifDb/")
+   (synopsis "")
+   (description "")
+   (license license:artistic2.0)))
+
+(define-public r-motifbreakr
+  (package
+   (name "r-motifbreakr")
+   (version "1.6.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "motifbreakR" version))
+            (sha256
+             (base32 "1q14kjrbfvsqdllfqxdgibdv33jzal4yn0dzvr38jz0xwd00yvqv"))))
+   (properties `((upstream-name . "motifbreakR")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-grimport" ,r-grimport)
+      ("r-stringr" ,r-stringr)
+      ("r-biocgenerics" ,r-biocgenerics)
+      ("r-s4vectors" ,r-s4vectors)
+      ("r-iranges" ,r-iranges)
+      ("r-genomeinfodb" ,r-genomeinfodb)
+      ("r-genomicranges" ,r-genomicranges)
+      ("r-biostrings" ,r-biostrings)
+      ("r-bsgenome" ,r-bsgenome)
+      ("r-rtracklayer" ,r-rtracklayer)
+      ("r-variantannotation" ,r-variantannotation)
+      ("r-biocparallel" ,r-biocparallel)
+      ("r-motifstack" ,r-motifstack)
+      ("r-gviz" ,r-gviz)
+      ("r-matrixstats" ,r-matrixstats)
+      ("r-tfmpvalue" ,r-tfmpvalue)
+      ("r-motifdb" ,r-motifdb)))
+   (home-page "http://bioconductor.org/packages/snpStats")
+   (synopsis "SnpMatrix and XSnpMatrix classes and methods")
+   (description "This package provides classes and statistical methods for
+large SNP association studies.  This extends the earlier snpMatrix package,
+allowing for uncertainty in genotypes.")
+   (license license:gpl3+)))
+
+(define-public r-rgadem
+  (package
+   (name "r-rgadem")
+   (version "2.24.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "rGADEM" version))
+            (sha256
+             (base32 "0wxmmcmcj9jn90w4z1mxafwx9gj92akn47m79wqc1v8x4qcqkb2p"))))
+   (properties `((upstream-name . "rGADEM")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biostrings" ,r-biostrings)
+      ("r-iranges" ,r-iranges)
+      ("r-bsgenome" ,r-bsgenome)
+      ("r-seqlogo" ,r-seqlogo)))
+   (home-page "http://bioconductor.org/packages/rGADEM/")
+   (synopsis "")
+   (description "")
+   (license license:artistic2.0)))
+
+(define-public r-motiv
+  (package
+   (name "r-motiv")
+   (version "1.32.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "MotIV" version))
+            (sha256
+             (base32 "1j3ffvr1bgd6a3r7yiv57mfbyy8c7af037s4xicfmakf6f1f4bw9"))))
+   (properties `((upstream-name . "MotIV")))
+   (build-system r-build-system)
+   (inputs
+    `(("gsl" ,gsl)))
+   (propagated-inputs
+    `(("r-s4vectors" ,r-s4vectors)
+      ("r-iranges" ,r-iranges)
+      ("r-biostrings" ,r-biostrings)
+      ("r-rgadem" ,r-rgadem)
+      ("r-lattice" ,r-lattice)))
+   (home-page "http://bioconductor.org/packages/MotIV/")
+   (synopsis "")
+   (description "")
+   (license license:gpl2)))
+
+(define-public r-motifstack
+  (package
+   (name "r-motifstack")
+   (version "1.20.1")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "motifStack" version))
+            (sha256
+             (base32 "1kv9qbzqa0xiaal43xlfgab3c8v81czrr7m29nv6pmv34csllgs1"))))
+   (properties `((upstream-name . "motifStack")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-grimport" ,r-grimport)
+      ("r-motiv" ,r-motiv)
+      ("r-ade4" ,r-ade4)
+      ("r-scales" ,r-scales)
+      ("r-htmlwidgets" ,r-htmlwidgets)
+      ("r-xml" ,r-xml)
+      ("r-biostrings" ,r-biostrings)))
+   (home-page "http://bioconductor.org/packages/motifStack/")
+   (synopsis "")
+   (description "")
+   (license license:gpl2+)))
