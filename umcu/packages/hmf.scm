@@ -203,7 +203,9 @@ build, reporting and documentation from a central piece of information.")
       `(("maven-deps"
           ,(origin
              (method url-fetch)
-             (uri "file:///home/cog/rjanssen2/maven/hmftools-mvn-dependencies.tar.gz")
+             (uri (string-append "https://raw.githubusercontent.com/"
+                                 "UMCUGenetics/guix-additions/master/blobs/"
+                                 "hmftools-mvn-dependencies.tar.gz"))
              (sha256
               (base32
                "1c4hqah8qs14h8mpvj5z7kq4q0d8s0fa3p3f6gvmsmizkrblidv5"))))))
