@@ -1063,3 +1063,37 @@ allowing for uncertainty in genotypes.")
    (synopsis "")
    (description "")
    (license license:gpl2+)))
+
+(define-public r-snplocs.hsapiens.dbsnp144.grch37
+  (package
+    (name "r-snplocs.hsapiens.dbsnp144.grch37")
+    (version "0.99.20")
+    (source (origin
+              (method url-fetch)
+              ;; We cannot use bioconductor-uri here because this tarball is
+              ;; located under "data/annotation/" instead of "bioc/".
+              (uri (string-append "http://bioconductor.org/packages/"
+                                  "release/data/annotation/src/contrib"
+                                  "/SNPlocs.Hsapiens.dbSNP144.GRCh37_"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "1z8kx43ki1jvj7ms7pcybakcdimfwr6zpjvspkjmma97bdz093iz"))))
+    (properties
+     `((upstream-name . "TxDb.Hsapiens.UCSC.hg19.knownGene")))
+    (build-system r-build-system)
+    ;; As this package provides little more than a very large data file it
+    ;; doesn't make sense to build substitutes.
+    (arguments `(#:substitutable? #f))
+    (propagated-inputs
+     `(("r-biocgenerics" ,r-biocgenerics)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-iranges" ,r-iranges)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-biostrings" ,r-biostrings)))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    (license license:artistic2.0)))
