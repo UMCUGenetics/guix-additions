@@ -26,12 +26,14 @@
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages bash)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages version-control)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages)
   #:use-module (umcu packages bioconductor)
@@ -388,50 +390,71 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
               (sha256
                (base32 "0yd00hkh774lh4gql77s17im3m2xzcmai4a46n0ww2hx5zgpxd4q"))))
     (build-system trivial-build-system)
-   (arguments
-    `(#:modules ((guix build utils))
-      #:builder
-      (begin
-        (use-modules (guix build utils))
-        (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
-              (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
-              (tarball (assoc-ref %build-inputs "source"))
-              (current-dir (getcwd))
-              (bin-dir (string-append %output "/bin"))
-              (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
-              (scripts-dir (string-append %output "/share/hmf-pipeline/scripts"))
-              (lib-dir (string-append %output "/lib/perl5/site_perl/"
-                                      ,(package-version perl)))
-              (perlbin (string-append (assoc-ref %build-inputs "perl")
-                                      "/bin/perl")))
-          (setenv "PATH" PATH)
-          ;; Create the directory structure in the build output directory.
-          (mkdir-p lib-dir)
-          (mkdir-p scripts-dir)
-          (mkdir-p qscripts-dir)
-          ;; Extract the modules into the Perl path.
-          (chdir lib-dir)
-          (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
-                   "--strip-components=2")
-          ;; Extract scripts to their own custom directory.
-          (chdir scripts-dir)
-          (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
-                   "--strip-components=2")
-          ;; Extract QScripts to their own custom directory.
-          (chdir qscripts-dir)
-          (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
-                   "--strip-components=2")
-          ;; Extract the main scripts into the bin directory.
-          (chdir %output)
-          (system* tar "xvf" tarball
-                   (string-append "pipeline-" ,version "/bin/pipeline.pl")
-                   (string-append "pipeline-" ,version "/bin/create_config.pl")
-                   "--strip-components=1")
-          (chdir bin-dir)
-          (substitute* '("pipeline.pl" "create_config.pl")
-                       (("/usr/bin/env perl") perlbin))))))
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
+               (tarball (assoc-ref %build-inputs "source"))
+               (current-dir (getcwd))
+               (bin-dir (string-append %output "/bin"))
+               (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
+               (scripts-dir (string-append %output "/share/hmf-pipeline/scripts"))
+               (lib-dir (string-append %output "/lib/perl5/site_perl/"
+                                       ,(package-version perl)))
+               (perlbin (string-append (assoc-ref %build-inputs "perl")
+                                       "/bin/perl")))
+           (setenv "PATH" PATH)
+           ;; Create the directory structure in the build output directory.
+           (mkdir-p lib-dir)
+           (mkdir-p scripts-dir)
+           (mkdir-p qscripts-dir)
+           ;; Extract the modules into the Perl path.
+           (chdir lib-dir)
+           (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
+                    "--strip-components=2")
+
+           ;; Patch the use of external tools
+           (substitute* (list (string-append lib-dir "/HMF/Pipeline/Config.pm")
+                              (string-append lib-dir "/HMF/Pipeline/Config/Validate.pm"))
+             ;; Patch 'git'.
+             (("qx\\(git ")
+              (string-append "qx(" (assoc-ref %build-inputs "git") "/bin/git "))
+             ;; Patch 'samtools'
+             (("qx\\(\\$samtools ")
+              (string-append "qx(" (assoc-ref %build-inputs "samtools")
+                             "/bin/samtools "))
+             ;; Patch 'bash'
+             (("qx\\(bash ")
+              (string-append "qx(" (assoc-ref %build-inputs "bash") "/bin/bash "))
+             ;; Patch 'cat'
+             (("qx\\(cat ")
+              (string-append "qx(" (assoc-ref %build-inputs "coreutils") "/bin/cat ")))
+
+           ;; Extract scripts to their own custom directory.
+           (chdir scripts-dir)
+           (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
+                    "--strip-components=2")
+           ;; Extract QScripts to their own custom directory.
+           (chdir qscripts-dir)
+           (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
+                    "--strip-components=2")
+           ;; Extract the main scripts into the bin directory.
+           (chdir %output)
+           (system* tar "xvf" tarball
+                    (string-append "pipeline-" ,version "/bin/pipeline.pl")
+                    (string-append "pipeline-" ,version "/bin/create_config.pl")
+                    "--strip-components=1")
+           (chdir bin-dir)
+           (substitute* '("pipeline.pl" "create_config.pl")
+             (("/usr/bin/env perl") perlbin))))))
    (inputs
-    `(("perl" ,perl)))
+    `(("perl" ,perl)
+      ("git" ,git)
+      ("bash" ,bash)
+      ("coreutils" ,coreutils)))
    (native-inputs
     `(("source" ,source)
       ("tar" ,tar)
