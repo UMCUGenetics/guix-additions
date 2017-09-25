@@ -20,20 +20,25 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system trivial)
+  #:use-module (guix build-system perl)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages xml)
   #:use-module (gnu packages)
   #:use-module (umcu packages bioconductor)
   #:use-module (umcu packages boost)
   #:use-module (umcu packages bwa)
   #:use-module (umcu packages contra)
+  #:use-module (umcu packages circos)
   #:use-module (umcu packages delly)
   #:use-module (umcu packages fastqc)
   #:use-module (umcu packages freebayes)
@@ -218,3 +223,236 @@ build, reporting and documentation from a central piece of information.")
      (description "This package provides various tools for working with
 genomics data developed by the Hartwig Medical Foundation.")
      (license license:expat))))
+
+(define-public perl-findbin-libs
+  (package
+    (name "perl-findbin-libs")
+    (version "2.15")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "mirror://cpan/authors/id/L/LE/LEMBARK/FindBin-libs-"
+             version ".tar.gz"))
+       (sha256
+        (base32
+         "0306g1lpxfpv0r6491y6njjc312jx01zh2qqqa4cwkc0ya4jpdpn"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/FindBin-libs")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
+(define-public perl-strictures-2
+  (package
+    (name "perl-strictures")
+    (version "2.000003")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "mirror://cpan/authors/id/H/HA/HAARG/"
+                           "strictures-" version ".tar.gz"))
+       (sha256
+        (base32
+         "08mgvf1d2651gsg3jgjfs13878ndqa4ji8vfsda9f7jjd84ymy17"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/strictures")
+    (synopsis "Turn on strict and make all warnings fatal")
+    (description "Strictures turns on strict and make all warnings fatal when
+run from within a source-controlled directory.")
+    (license (package-license perl))))
+
+(define-public perl-indirect
+  (package
+    (name "perl-indirect")
+    (version "0.37")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "mirror://cpan/authors/id/V/VP/VPIT/indirect-"
+             version ".tar.gz"))
+       (sha256
+        (base32
+         "197vk0kvbz17xwvqrixg35f3i7yw4hilynvbzf1dizq4vcz2madd"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/indirect")
+    (synopsis "Lexically warn about using the indirect method call syntax.")
+    (description "This package provides a pragma that warns about indirect
+method calls that are present in your code.  The indirect syntax is now
+considered harmful, since its parsing has many quirks and its use is error
+prone: when the subroutine @code{foo} has not been declared in the current
+package, @code{foo $x} actually compiles to @code{$x->foo}, and
+@code{foo { key => 1 }} to @code{'key'->foo(1)}.")
+    (license (package-license perl))))
+
+(define-public perl-b-hooks-op-check
+  (package
+    (name "perl-b-hooks-op-check")
+    (version "0.22")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "mirror://cpan/authors/id/E/ET/ETHER/B-Hooks-OP-Check-"
+             version
+             ".tar.gz"))
+       (sha256
+        (base32
+         "1kfdv25gn6yik8jrwik4ajp99gi44s6idcvyyrzhiycyynzd3df7"))))
+    (build-system perl-build-system)
+    (propagated-inputs
+     `(("perl-extutils-depends" ,perl-extutils-depends)))
+    (home-page "http://search.cpan.org/dist/B-Hooks-OP-Check")
+    (synopsis "Wrap OP check callbacks")
+    (description "")
+    (license (package-license perl))))
+
+(define-public perl-lexical-sealrequirehints
+  (package
+    (name "perl-lexical-sealrequirehints")
+    (version "0.011")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "mirror://cpan/authors/id/Z/ZE/ZEFRAM/Lexical-SealRequireHints-"
+             version
+             ".tar.gz"))
+       (sha256
+        (base32
+         "0fh1arpr0hsj7skbn97yfvbk22pfcrpcvcfs15p5ss7g338qx4cy"))))
+    (build-system perl-build-system)
+    (native-inputs
+     `(("perl-module-build" ,perl-module-build)))
+    (home-page
+     "http://search.cpan.org/dist/Lexical-SealRequireHints")
+    (synopsis "Prevent leakage of lexical hints")
+    (description "")
+    (license (package-license perl))))
+
+(define-public perl-multidimensional
+  (package
+    (name "perl-multidimensional")
+    (version "0.013")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "mirror://cpan/authors/id/I/IL/ILMARI/multidimensional-"
+             version ".tar.gz"))
+       (sha256
+        (base32
+         "02p5zv68i39hnkmzzxsk1fi7xy56pfcsslrd7yqwzhq74czcw81x"))))
+    (build-system perl-build-system)
+    (propagated-inputs
+     `(("perl-b-hooks-op-check" ,perl-b-hooks-op-check)
+       ("perl-lexical-sealrequirehints" ,perl-lexical-sealrequirehints)))
+    (home-page
+     "http://search.cpan.org/dist/multidimensional")
+    (synopsis "Perl package to disable multidimensional array emulation")
+    (description "")
+    (license (package-license perl))))
+
+(define-public perl-bareword-filehandles
+  (package
+    (name "perl-bareword-filehandles")
+    (version "0.005")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append
+             "mirror://cpan/authors/id/I/IL/ILMARI/bareword-filehandles-"
+             version ".tar.gz"))
+       (sha256
+        (base32
+         "0fdirls2pg7d6ymvlzzz59q3dy6hgh08k0qpr2mw51w127s8rav6"))))
+    (build-system perl-build-system)
+    (inputs
+     `(("perl-b-hooks-op-check" ,perl-b-hooks-op-check)
+       ("perl-lexical-sealrequirehints" ,perl-lexical-sealrequirehints)))
+    (home-page "http://search.cpan.org/dist/bareword-filehandles")
+    (synopsis "Disables bareword filehandles")
+    (description "")
+    (license (package-license perl))))
+
+(define-public hmf-pipeline
+  (package
+    (name "hmf-pipeline")
+    (version "3.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/hartwigmedical/pipeline/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32 "0yd00hkh774lh4gql77s17im3m2xzcmai4a46n0ww2hx5zgpxd4q"))))
+    (build-system trivial-build-system)
+   (arguments
+    `(#:modules ((guix build utils))
+      #:builder
+      (begin
+        (use-modules (guix build utils))
+        (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+              (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin"))
+              (tarball (assoc-ref %build-inputs "source"))
+              (current-dir (getcwd))
+              (bin-dir (string-append %output "/bin"))
+              (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
+              (scripts-dir (string-append %output "/share/hmf-pipeline/scripts"))
+              (lib-dir (string-append %output "/lib/perl5/site_perl/"
+                                      ,(package-version perl)))
+              (perlbin (string-append (assoc-ref %build-inputs "perl")
+                                      "/bin/perl")))
+          (setenv "PATH" PATH)
+          ;; Create the directory structure in the build output directory.
+          (mkdir-p lib-dir)
+          (mkdir-p scripts-dir)
+          (mkdir-p qscripts-dir)
+          ;; Extract the modules into the Perl path.
+          (chdir lib-dir)
+          (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
+                   "--strip-components=2")
+          ;; Extract scripts to their own custom directory.
+          (chdir scripts-dir)
+          (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
+                   "--strip-components=2")
+          ;; Extract QScripts to their own custom directory.
+          (chdir qscripts-dir)
+          (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
+                   "--strip-components=2")
+          ;; Extract the main scripts into the bin directory.
+          (chdir %output)
+          (system* tar "xvf" tarball
+                   (string-append "pipeline-" ,version "/bin/pipeline.pl")
+                   (string-append "pipeline-" ,version "/bin/create_config.pl")
+                   "--strip-components=1")
+          (chdir bin-dir)
+          (substitute* '("pipeline.pl" "create_config.pl")
+                       (("/usr/bin/env perl") perlbin))))))
+   (inputs
+    `(("perl" ,perl)))
+   (native-inputs
+    `(("source" ,source)
+      ("tar" ,tar)
+      ("gzip" ,gzip)))
+   (propagated-inputs
+    `(("samtools" ,samtools)
+      ("perl-findbin-libs" ,perl-findbin-libs)
+      ("perl-strictures" ,perl-strictures-2)
+      ("perl-indirect" ,perl-indirect)
+      ("perl-file-find-rule" ,perl-file-find-rule)
+      ("perl-json" ,perl-json)
+      ("perl-sort-key" ,perl-sort-key)
+      ("perl-bareword-filehandles" ,perl-bareword-filehandles)
+      ("perl-autovivification" ,perl-autovivification)
+      ("perl-file-copy-recursive" ,perl-file-copy-recursive)
+      ("perl-list-moreutils" ,perl-list-moreutils)
+      ("perl-template-toolkit" ,perl-template-toolkit)
+      ("perl-time-hires" ,perl-time-hires)
+      ("perl-multidimensional" ,perl-multidimensional)))
+   (home-page "https://github.com/hartwigmedical/pipeline")
+   (synopsis "Default Hartwig Medical Data processing pipeline")
+   (description "Pipeline of tools to process raw fastq data and
+produce meaningful genomic data from Hartwig Medical.")
+   (license license:expat)))
