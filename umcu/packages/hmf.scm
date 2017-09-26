@@ -401,6 +401,7 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
                (current-dir (getcwd))
                (bin-dir (string-append %output "/bin"))
                (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
+               (templates-dir (string-append %output "/share/hmf-pipeline/templates"))
                (scripts-dir (string-append %output "/share/hmf-pipeline/scripts"))
                (lib-dir (string-append %output "/lib/perl5/site_perl/"
                                        ,(package-version perl)))
@@ -411,6 +412,7 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
            (mkdir-p lib-dir)
            (mkdir-p scripts-dir)
            (mkdir-p qscripts-dir)
+
            ;; Extract the modules into the Perl path.
            (chdir lib-dir)
            (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
@@ -437,16 +439,26 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
            (chdir scripts-dir)
            (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
                     "--strip-components=2")
+
            ;; Extract QScripts to their own custom directory.
            (chdir qscripts-dir)
            (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
                     "--strip-components=2")
+
+           ;; Extract the template scripts to their own custom directory.
+           (chdir templates-dir)
+           (system* tar "xvf" tarball
+                    (string-append "pipeline-" ,version "/templates")
+                    "--strip-components=2")
+
            ;; Extract the main scripts into the bin directory.
            (chdir %output)
            (system* tar "xvf" tarball
                     (string-append "pipeline-" ,version "/bin/pipeline.pl")
                     (string-append "pipeline-" ,version "/bin/create_config.pl")
                     "--strip-components=1")
+
+           ;; Patch the shebang of the main scripts.
            (chdir bin-dir)
            (substitute* '("pipeline.pl" "create_config.pl")
              (("/usr/bin/env perl") perlbin))))))
