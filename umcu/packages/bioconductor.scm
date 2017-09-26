@@ -581,12 +581,12 @@ processing to visualization and annotation.")
 (define-public r-marray
   (package
    (name "r-marray")
-   (version "1.52.0")
+   (version "1.54.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "marray" version))
             (sha256
-             (base32 "1d242pjas4vqqcgj2cb3p66n1n9va3bqph62nyg0kr95fy2y7nf7"))))
+             (base32 "1mg7svy1cxv72fqsckqlsm6pv3fy4k1rril3v7g6d60wqfdnm68f"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-biobase" ,r-biobase)
@@ -601,12 +601,12 @@ quality checking.")
 (define-public r-cghbase
   (package
    (name "r-cghbase")
-   (version "1.34.0")
+   (version "1.36.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "CGHbase" version))
             (sha256
-             (base32 "1pb1paby9n9map71jk971qfpni2m23hcwrssqqjb7byjc9flnmf5"))))
+             (base32 "1za4128wjhfb45qq9q01y2lpm23zl0pkppfxnw9qai8y3hca1sq7"))))
    (properties `((upstream-name . "CGHbase")))
    (build-system r-build-system)
    (propagated-inputs
