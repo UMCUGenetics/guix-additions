@@ -40,8 +40,8 @@
   #:use-module (umcu packages bioconductor)
   #:use-module (umcu packages boost)
   #:use-module (umcu packages bwa)
-  #:use-module (umcu packages contra)
   #:use-module (umcu packages circos)
+  #:use-module (umcu packages contra)
   #:use-module (umcu packages delly)
   #:use-module (umcu packages fastqc)
   #:use-module (umcu packages freebayes)
@@ -50,6 +50,7 @@
   #:use-module (umcu packages genenetwork)
   #:use-module (umcu packages igvtools)
   #:use-module (umcu packages king)
+  #:use-module (umcu packages manta)
   #:use-module (umcu packages picard)
   #:use-module (umcu packages plink)
   #:use-module (umcu packages samtools)
@@ -446,6 +447,7 @@ BAM files using @code{sambamba}.")
            (mkdir-p lib-dir)
            (mkdir-p scripts-dir)
            (mkdir-p qscripts-dir)
+           (mkdir-p templates-dir)
 
            ;; Extract the modules into the Perl path.
            (chdir lib-dir)
@@ -506,7 +508,30 @@ BAM files using @code{sambamba}.")
       ("tar" ,tar)
       ("gzip" ,gzip)))
    (propagated-inputs
-    `(("samtools" ,samtools)
+    `(;; External tools
+      ("coreutils" ,coreutils) ; For 'mv', 'mkdir', and so on..
+      ("samtools" ,samtools)
+      ("sambamba" ,sambamba)
+      ("icedtea" ,icedtea)
+      ("bio-vcf" ,bio-vcf)
+      ("r" ,r)
+      ("vcftools" ,vcftools)
+      ("delly" ,delly-0.7.7)
+      ("manta" ,manta)
+      ("bcftools" ,bcftools)
+      ("bwa" ,bwa-0.7.15)
+      ("fastqc" ,fastqc-bin-0.11.4)
+      ("picard-bin-1.141" ,picard-bin-1.141)
+      ("circos" ,circos)
+      ("strelka" ,strelka-1.0.14)
+      ("freec" ,freec-10.4)
+      ("r-qdnaseq" ,r-qdnaseq)
+      ("hmftools" ,hmftools) ; Provides:
+                             ; - strelka-post-process,
+                             ; - break-point-detector,
+                             ; - healthchecker
+      ("gatk" ,gatk-bin-3.4-46)
+      ;; Perl libraries
       ("perl-findbin-libs" ,perl-findbin-libs)
       ("perl-strictures" ,perl-strictures-2)
       ("perl-indirect" ,perl-indirect)
