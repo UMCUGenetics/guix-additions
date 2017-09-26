@@ -642,12 +642,12 @@ the cluster management tool sfCluster, but can also used without it.")
 (define-public r-cghcall
   (package
    (name "r-cghcall")
-   (version "2.36.0")
+   (version "2.38.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "CGHcall" version))
             (sha256
-             (base32 "0wnyslj7yn0yc57q60w2y644lmvvvih6rzm55rrad34lz2h39bsz"))))
+             (base32 "0ymlixv357jvkw16x9bp34kki3lvxga2akjcr2lmwgzxzjr9nllg"))))
    (properties `((upstream-name . "CGHcall")))
    (build-system r-build-system)
    (propagated-inputs
