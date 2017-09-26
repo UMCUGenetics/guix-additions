@@ -32,6 +32,7 @@
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
+  #:use-module (gnu packages python)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages xml)
@@ -51,7 +52,6 @@
   #:use-module (umcu packages king)
   #:use-module (umcu packages picard)
   #:use-module (umcu packages plink)
-  #:use-module (umcu packages sambamba)
   #:use-module (umcu packages samtools)
   #:use-module (umcu packages snpeff)
   #:use-module (umcu packages strelka)
@@ -377,6 +377,40 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
     (synopsis "Disables bareword filehandles")
     (description "")
     (license (package-license perl))))
+
+(define-public exoncov
+  (package
+    (name "exoncov")
+    (version "2.2.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/UMCUGenetics/ExonCov/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1d3w2yjvbhjxvyly5a0db1fm3nnasx0p4ijz9fgg2ai02gda9qpb"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f ; There are no tests.
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure) ; There is no configure phase.
+         (delete 'build) ; There is nothing to build.
+         (replace 'install
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((bindir (string-append (assoc-ref outputs "out") "/bin")))
+               (mkdir-p bindir)
+               (install-file "ExonCov.py" bindir)))))))
+    (inputs
+     `(("python" ,python-2)))
+    (propagated-inputs
+     `(("sambamba" ,sambamba)))
+    (home-page "https://github.com/UMCUGenetics/ExonCov")
+    (synopsis "Exon coverage statistics from BAM files")
+    (description "This package can generate exon coverage statistics from
+BAM files using @code{sambamba}.")
+    (license license:expat)))
 
 (define-public hmf-pipeline
   (package
