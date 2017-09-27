@@ -49,6 +49,7 @@ SOURCES =                                       \
   umcu/packages/mongodb.scm                     \
   umcu/packages/nanosvc.scm                     \
   umcu/packages/neo4j.scm                       \
+  umcu/packages/pbgzip.scm                      \
   umcu/packages/picard.scm                      \
   umcu/packages/pindel.scm                      \
   umcu/packages/plink.scm                       \
