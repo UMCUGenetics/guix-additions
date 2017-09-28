@@ -48,6 +48,7 @@
   #:use-module (umcu packages freec)
   #:use-module (umcu packages gatk)
   #:use-module (umcu packages genenetwork)
+  #:use-module (umcu packages grid-engine)
   #:use-module (umcu packages igvtools)
   #:use-module (umcu packages king)
   #:use-module (umcu packages manta)
@@ -411,6 +412,68 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
     (synopsis "Exon coverage statistics from BAM files")
     (description "This package can generate exon coverage statistics from
 BAM files using @code{sambamba}.")
+    (license license:expat)))
+
+(define-public bammetrics
+  (package
+    (name "bammetrics")
+    (version "2.1.4")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/UMCUGenetics/bamMetrics/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32 "0nbm5ll91p3slbjz7a3wmk02k621mcyha5mlr75gkh1l51dwc69d"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         (replace 'build
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (substitute* "bamMetrics.pl"
+               ;; The following hardcoded paths must be patched.
+               (("my \\$picard_path = \"/hpc/local/CentOS7/cog_bioinf/picard-tools-1.141\";")
+                (string-append "my $picard_path = \"" (assoc-ref inputs "picard") "\";"))
+               (("my \\$sambamba_path = \"/hpc/local/CentOS7/cog_bioinf/sambamba_v0.6.1\";")
+                (string-append "my \\$sambamba_path = \"" (assoc-ref inputs "sambamba") "\";"))
+               ;; The following programs should be patched.
+               (("java -Xmx")
+                (string-append (assoc-ref inputs "icedtea") "/bin/java -Xmx"))
+               (("Rscript")
+                (string-append (assoc-ref inputs "r") "/bin/Rscript"))
+               ;(("qsub")
+               ; (string-append (assoc-ref inputs "grid-engine-core") "/bin/qsub"))
+               )))
+         (replace 'install
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((bindir (string-append (assoc-ref outputs "out") "/bin")))
+               (mkdir-p bindir)
+               (map delete-file '("LICENSE" ".gitignore" "README.md"))
+               ;; TODO: Only copy bamMetrics.pl to the bindir, and other stuff
+               ;; to its appropriate location.
+               (copy-recursively "." bindir)))))))
+    (inputs
+     `(("sambamba" ,sambamba)
+       ("perl" ,perl)
+       ("r" ,r)
+       ("picard" ,picard-bin-1.141)
+       ("icedtea" ,icedtea)
+       ;("grid-engine-core" ,grid-engine-core)
+       ))
+    (propagated-inputs
+     `(("r-ggplot2" ,r-ggplot2)
+       ("r-knitr" ,r-knitr)
+       ("r-markdown" ,r-markdown)
+       ("r-reshape" ,r-reshape)
+       ("r-xtable" ,r-xtable)
+       ("r-brew" ,r-brew)))
+    (home-page "https://github.com/UMCUGenetics/bamMetrics")
+    (synopsis "Generate BAM statistics and PDF/HTML reports")
+    (description "This package provides a tool to generate BAM statistics and
+PDF/HTML reports.  It has been developed to run on the Utrecht HPC.")
     (license license:expat)))
 
 (define-public hmf-pipeline
