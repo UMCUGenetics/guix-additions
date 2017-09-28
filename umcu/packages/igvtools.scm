@@ -87,7 +87,7 @@ next-generation sequence data, and genomic annotations.")
    (source (origin
      (method url-fetch)
      (uri (string-append
-           "http://data.broadinstitute.org/igv/projects/downloads/igvtools_"
+           "http://data.broadinstitute.org/igv/projects/downloads/2.3/igvtools_"
            version ".zip"))
      (sha256
       (base32 "1z7fx79jfsqm0ry89mchifxxrj7vl1h9f98x6p2r2vcbx8f4zvi8"))))
@@ -126,8 +126,7 @@ next-generation sequence data, and genomic annotations.")
    (source (origin
      (method url-fetch)
      (uri (string-append
-           "http://data.broadinstitute.org/igv/projects/downloads/igvtools_"
+           "http://data.broadinstitute.org/igv/projects/downloads/2.3/igvtools_"
            version ".zip"))
       (sha256
-        (base32 "11k713nip68j06mzk7zkbsyajwrlprix7j38ybfrxblp666g3jm2")
-      )))))
+        (base32 "11k713nip68j06mzk7zkbsyajwrlprix7j38ybfrxblp666g3jm2"))))))
