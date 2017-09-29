@@ -533,6 +533,7 @@ single executable called @code{bam}.")
                (tarball (assoc-ref %build-inputs "source"))
                (current-dir (getcwd))
                (bin-dir (string-append %output "/bin"))
+               (pipeline-dir (string-append %output "/share/hmf-pipeline"))
                (settings-dir (string-append %output "/share/hmf-pipeline/settings"))
                (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
                (templates-dir (string-append %output "/share/hmf-pipeline/templates"))
@@ -694,6 +695,16 @@ REPORT_STATUS	~a"
            (substitute* "create_config.pl"
              (("my \\$settingsDir = catfile\\(dirname\\(abs_path\\(\\$0\\)\\), updir\\(\\), \"settings\"\\);")
               (string-append "my $settingsDir = \"" settings-dir "\";")))
+
+           ;; Make sure the templates can be found.
+           (substitute* (string-append lib-dir "/HMF/Pipeline/Template.pm")
+             (("my \\$source_template_dir = catfile\\(HMF::Pipeline::Config::pipelinePath\\(\\), \"templates\"\\);")
+              (string-append "my $source_template_dir = \"" templates-dir "\";")))
+
+           ;; Make sure the other subdirectories can be found.
+           (substitute* (string-append lib-dir "/HMF/Pipeline/Config.pm")
+             (("my \\$pipeline_path = pipelinePath\\(\\);")
+              (string-append "my $pipeline_path = \"" pipeline-dir "\";")))
 
            ;; Replace the 'java' command with the full path to the input 'java'
            ;; in each template file.
