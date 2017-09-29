@@ -693,7 +693,7 @@ REPORT_STATUS	~a"
              (("/usr/bin/env perl") perlbin))
            (substitute* "create_config.pl"
              (("my \\$settingsDir = catfile\\(dirname\\(abs_path\\(\\$0\\)\\), updir\\(\\), \"settings\"\\);")
-              (string-append "my $settingsDir = \"" settings-dir "\"")))
+              (string-append "my $settingsDir = \"" settings-dir "\";")))
 
            ;; Replace the 'java' command with the full path to the input 'java'
            ;; in each template file.
