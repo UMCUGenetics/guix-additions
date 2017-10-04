@@ -589,12 +589,13 @@ single executable called @code{bam}.")
                (perlbin (string-append (assoc-ref %build-inputs "perl")
                                        "/bin/perl")))
            (setenv "PATH" PATH)
+
            ;; Create the directory structure in the build output directory.
-           (mkdir-p lib-dir)
-           (mkdir-p scripts-dir)
-           (mkdir-p qscripts-dir)
-           (mkdir-p settings-dir)
-           (mkdir-p templates-dir)
+           (map mkdir-p (list lib-dir
+                              scripts-dir
+                              qscripts-dir
+                              settings-dir
+                              templates-dir))
 
            ;; Extract the modules into the Perl path.
            (chdir lib-dir)
