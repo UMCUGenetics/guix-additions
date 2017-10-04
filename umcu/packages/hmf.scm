@@ -740,7 +740,7 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "manta") "/bin")
                          (string-append (assoc-ref %build-inputs "delly") "/bin")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "igvtools") "/bin")
+                         (string-append (assoc-ref %build-inputs "igvtools") "/share/java/igvtools")
                          (string-append (assoc-ref %build-inputs "samtools") "/bin")
                          (string-append (assoc-ref %build-inputs "htslib") "/bin")
                          (string-append (assoc-ref %build-inputs "plink2") "/bin")
