@@ -678,7 +678,7 @@ FASTQC_PATH	~a
 PICARD_PATH	~a
 BAMMETRICS_PATH	~a
 EXONCALLCOV_PATH	~a
-DAMAGE_ESTIMATOR_PATH	MISSING
+DAMAGE_ESTIMATOR_PATH	~a
 
 QUEUE_PATH	~a
 QUEUE_LOW_GZIP_COMPRESSION_PATH	~a
@@ -721,10 +721,10 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "bwa") "/bin")
                          (string-append (assoc-ref %build-inputs "sambamba") "/bin")
                          (string-append (assoc-ref %build-inputs "fastqc") "/bin")
-                         (string-append (assoc-ref %build-inputs "picard") "/bin")
+                         (string-append (assoc-ref %build-inputs "picard") "/share/java/picard")
                          (string-append (assoc-ref %build-inputs "bammetrics") "/bin")
                          (string-append (assoc-ref %build-inputs "exoncov") "/bin")
-                         ;; DAMAGE-ESTIMATOR
+                         (string-append (assoc-ref %build-inputs "damage-estimator") "/share/damage-estimator")
                          (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
                          (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
                          (string-append (assoc-ref %build-inputs "gatk") "/share/java/gatk")
@@ -805,6 +805,7 @@ REPORT_STATUS	~a"
       ("bammetrics" ,bammetrics)
       ("bamutils" ,bamutils)
       ("exoncov" ,exoncov)
+      ("damage-estimator" ,damage-estimator)
       ("r" ,r)))
    (native-inputs
     `(("source" ,source)
