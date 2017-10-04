@@ -170,9 +170,7 @@ build, reporting and documentation from a central piece of information.")
 </settings>" m2-dir)))
 
                 ;; Compile using maven's compile command.
-                (let ((command (format #f "mvn compile --offline --global-settings ~s" settings)))
-                  (format #t "Running: ~a" command)
-                  (zero? (system command))))))
+                (zero? (system (format #f "mvn compile --offline --global-settings ~s" settings))))))
           (replace 'install
             (lambda* (#:key outputs #:allow-other-keys)
               (let* ((build-dir (getcwd))
@@ -219,7 +217,7 @@ build, reporting and documentation from a central piece of information.")
                                  "hmftools-mvn-dependencies.tar.gz"))
              (sha256
               (base32
-               "1c4hqah8qs14h8mpvj5z7kq4q0d8s0fa3p3f6gvmsmizkrblidv5"))))))
+               "1r1hmqsahz30q668jbfmdfg7vs3kr6rlfysw63vcm905nlbk2y4k"))))))
      (native-search-paths
       (list (search-path-specification
              (variable "GUIX_JARPATH")
