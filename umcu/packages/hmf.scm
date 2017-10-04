@@ -509,6 +509,52 @@ operations on SAM/BAM files.  All of these programs are built into a
 single executable called @code{bam}.")
     (license license:gpl3+)))
 
+(define-public damage-estimator
+  (let ((commit "5dc25d51509ee0349c31756903bd6a373a57c299"))
+    (package
+     (name "damage-estimator")
+     (version "1.0")
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/Ettwiller/Damage-estimator.git")
+                    (commit commit)))
+              (file-name (string-append name "-" version))
+              (sha256
+               (base32 "05mkcd1cbvg7rf92a310dixv5f38l6bz0hnilhp9i87cmfxl2632"))))
+     (build-system trivial-build-system)
+     (arguments
+      `(#:modules ((guix build utils))
+        #:builder
+        (begin
+          (use-modules (guix build utils))
+          (let ((source-dir (assoc-ref %build-inputs "source"))
+                (output-dir (string-append %output "/share/damage-estimator")))
+            (mkdir-p output-dir)
+            (map (lambda (file)
+                   (install-file (string-append source-dir "/" file)
+                                 output-dir))
+                 '("estimate_damage.pl"
+                   "estimate_damage_location.pl"
+                   "estimate_damage_location_context.pl"
+                   "plot_damage.R"
+                   "plot_damage_location.R"
+                   "plot_damage_location_context.R"
+                   "plot_random_sampling_damage.R"
+                   "random_sampling_and_estimate_damage.pl"
+                   "randomized2"
+                   "split_mapped_reads.pl"))))))
+     (native-inputs
+      `(("source" ,source)))
+     (propagated-inputs
+      `(("samtools" ,samtools)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-reshape2" ,r-reshape2)))
+     (home-page "https://github.com/Ettwiller/Damage-estimator")
+     (synopsis "")
+     (description "")
+     (license license:agpl3))))
+
 (define-public hmf-pipeline
   (package
     (name "hmf-pipeline")
