@@ -846,10 +846,10 @@ REPORT_STATUS	~a"
                 (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
                (("my \\$output_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
                 (string-append "my $output_fh = IO::Pipe->new()->writer(\""
-                               (assoc-ref inputs "coreutils") "/bin/tee"))
+                               (assoc-ref %build-inputs "coreutils") "/bin/tee"))
                (("my \\$error_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
                 (string-append "my $error_fh = IO::Pipe->new()->writer(\""
-                               (assoc-ref inputs "coreutils") "/bin/tee"))))))))
+                               (assoc-ref %build-inputs "coreutils") "/bin/tee"))))))))
    (inputs
     `(("perl" ,perl)
       ("git" ,git)
