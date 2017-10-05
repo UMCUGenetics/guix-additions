@@ -64,7 +64,7 @@
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 match))
 
-(define-public mysql
+(define-public mysql-5.6.25
   (package
     (name "mysql")
     (version "5.6.25")

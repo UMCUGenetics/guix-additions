@@ -30,6 +30,7 @@
   #:use-module (gnu packages bash)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages databases)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
@@ -53,6 +54,7 @@
   #:use-module (umcu packages igvtools)
   #:use-module (umcu packages king)
   #:use-module (umcu packages manta)
+  #:use-module (umcu packages mysql)
   #:use-module (umcu packages pbgzip)
   #:use-module (umcu packages picard)
   #:use-module (umcu packages plink)
@@ -120,25 +122,72 @@ build, reporting and documentation from a central piece of information.")
         #:phases
         (modify-phases %standard-phases
           (delete 'configure) ; Nothing to configure
-          (add-after 'unpack 'disable-database-modules
-            (lambda* (#:key inputs outputs #:allow-other-keys)
+           (add-after 'unpack 'disable-database-modules
+             (lambda* (#:key inputs outputs #:allow-other-keys)
               (substitute* "pom.xml"
-                ;; Disable the patient-db module because it needs a running
-                ;; MySQL database.
-                (("<module>patient-db</module>")
-                 "<!-- <module>patient-db</module> -->")
-                ;; Disable purity-ploidy-estimator because it needs patient-db.
-                (("<module>purity-ploidy-estimator</module>")
-                 "<!-- <module>purity-ploidy-estimator</module> -->")
                 ;; The following modules fail to build due to a dependency
                 ;; on itself.
-                (("<module>health-checker</module>")
-                 "<!-- <module>health-checker</module> -->")
-                (("<module>patient-reporter</module>")
-                 "<!-- <module>patient-reporter</module> -->"))))
+                 (("<module>health-checker</module>")
+                  "<!-- <module>health-checker</module> -->")
+                 (("<module>patient-reporter</module>")
+                  "<!-- <module>patient-reporter</module> -->"))))
+
+           ;; To build the purity-ploidy-estimator, we need to build patient-db
+           ;; first.  This needs a running MySQL database.  So, we need to set
+           ;; this up before attempting to build the Java archives.
+           (add-before 'build 'start-mysql-server
+            (lambda* (#:key inputs #:allow-other-keys)
+              (let ((mysqld (string-append (assoc-ref inputs "mysql") "/bin/mysqld"))
+                    (mysql (string-append (assoc-ref inputs "mysql") "/bin/mysql"))
+                    (mysql-run-dir (string-append (getcwd) "/mysql")))
+                (mkdir-p "mysql/data")
+                (with-directory-excursion "mysql"
+                  ;; Initialize the MySQL data store.  The mysql_install_db
+                  ;; script uses relative paths to find things, so we need to
+                  ;; change to the right directory.
+                  (with-directory-excursion (assoc-ref inputs "mysql")
+                    (system* "bin/mysql_install_db"
+                             (string-append "--datadir=" mysql-run-dir "/data")
+                             "--user=root"))
+
+                  ;; Run the MySQL server.
+                  (system (string-append
+                           mysqld
+                           " --datadir=" mysql-run-dir "/data "
+                           "--user=root "
+                           "--socket=" mysql-run-dir "/socket "
+                           "--port=3306 "
+                           "--explicit_defaults_for_timestamp "
+                           "&> " mysql-run-dir "/mysqld.log &"))
+
+                  (format #t "Waiting for MySQL server to start.")
+                  (sleep 5)
+
+                  ;; Create 'build' user.
+                  (system* mysql
+                           "--host=127.0.0.1"
+                           "--port=3306"
+                           "--user=root"
+                           "-e" "CREATE USER build@localhost IDENTIFIED BY 'build'")
+
+                  ;; Grant permissions to 'build' user.
+                  (system* mysql
+                           "--host=127.0.0.1"
+                           "--port=3306"
+                           "--user=root"
+                           "-e" "GRANT ALL ON *.* TO 'build'@'localhost'")
+
+                  ;; Create a database.
+                  (system* mysql
+                           "--host=127.0.0.1"
+                           "--port=3306"
+                           "--user=build"
+                           "--password=build"
+                           "-e" "CREATE DATABASE hmfpatients")))))
           (replace 'build
             (lambda* (#:key inputs outputs #:allow-other-keys)
               (let* ((build-dir (getcwd))
+                     (home-dir (string-append build-dir "/home"))
                      (settings-dir (string-append build-dir "/mvn"))
                      (settings (string-append settings-dir "/settings.xml"))
                      (m2-dir (string-append build-dir "/m2/repository")))
@@ -146,9 +195,17 @@ build, reporting and documentation from a central piece of information.")
                 ;; Set JAVA_HOME to help maven find the JDK.
                 (setenv "JAVA_HOME" (string-append (assoc-ref inputs "icedtea")
                                                    "/jre"))
+                (mkdir-p home-dir)
+                (setenv "HOME" home-dir)
 
                 (mkdir-p m2-dir)
                 (mkdir-p settings-dir)
+
+                ;; Create credentials file.
+                (with-output-to-file (string-append home-dir "/mysql.login")
+                  (lambda _
+                    (format #t "[client]~%database=~a~%user=~a~%password=~a~%socket=~a/mysql/socket"
+                            "hmfpatients" "build" "build" build-dir)))
 
                 ;; Unpack the dependencies downloaded using maven.
                 (with-directory-excursion m2-dir
@@ -168,6 +225,11 @@ build, reporting and documentation from a central piece of information.")
           xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\">
 <localRepository>~a</localRepository>
 </settings>" m2-dir)))
+
+                ;; Remove assumptious/breaking code
+                (substitute* "patient-db/src/main/resources/setup_database.sh"
+                  (("if \\[ \\$\\{SCRIPT_EPOCH\\} -gt \\$\\{DB_EPOCH\\} \\];")
+                   "if true;"))
 
                 ;; Compile using maven's compile command.
                 (zero? (system (format #f "mvn compile --offline --global-settings ~s" settings))))))
@@ -201,6 +263,10 @@ build, reporting and documentation from a central piece of information.")
                         "fastq-stats-1.0.jar")
                        ("break-point-inspector/target/break-point-inspector-1.2-jar-with-dependencies.jar" .
                         "break-point-inspector-1.2.jar")
+                       ("patient-db/target/patient-db-1.0-jar-with-dependencies.jar" .
+                        "patient-db-1.0.jar")
+                       ("purity-ploidy-estimator/target/purity-ploidy-estimator-1.2-jar-with-dependencies.jar" .
+                        "purity-ploidy-estimator-1.2.jar")
                        ("bam-slicer/target/bam-slicer-1.0-jar-with-dependencies.jar" .
                         "bam-slicer-1.0.jar")
                        ("strelka-post-process/target/strelka-post-process-1.0-jar-with-dependencies.jar" .
@@ -217,7 +283,8 @@ build, reporting and documentation from a central piece of information.")
                                  "hmftools-mvn-dependencies.tar.gz"))
              (sha256
               (base32
-               "1r1hmqsahz30q668jbfmdfg7vs3kr6rlfysw63vcm905nlbk2y4k"))))))
+               "1iflrwff51ll8vzcpb1dmh3hs2qsbb9h0rbys4gdw584xpdvcz0z"))))
+        ("mysql" ,mysql-5.6.25)))
      (native-search-paths
       (list (search-path-specification
              (variable "GUIX_JARPATH")
@@ -688,7 +755,7 @@ STRELKA_POST_PROCESS_PATH	~a
 
 AMBER_PATH	~a
 COBALT_PATH	~a
-PURPLE_PATH	MISSING
+PURPLE_PATH	~a
 CIRCOS_PATH	~a
 
 FREEC_PATH	~a
@@ -731,7 +798,7 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
-                         ;; PURPLE
+                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "circos") "/bin")
                          (string-append (assoc-ref %build-inputs "freec") "/bin")
                          (string-append (assoc-ref %build-inputs "r-qdnaseq") "/site-library/QDNAseq")
@@ -776,7 +843,13 @@ REPORT_STATUS	~a"
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
                (("my \\$pipeline_path = pipelinePath\\(\\);")
-                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))))))))
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
+               (("my \\$output_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
+                (string-append "my $output_fh = IO::Pipe->new()->writer(\""
+                               (assoc-ref inputs "coreutils") "/bin/tee"))
+               (("my \\$error_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
+                (string-append "my $error_fh = IO::Pipe->new()->writer(\""
+                               (assoc-ref inputs "coreutils") "/bin/tee"))))))))
    (inputs
     `(("perl" ,perl)
       ("git" ,git)
@@ -784,7 +857,7 @@ REPORT_STATUS	~a"
       ("coreutils" ,coreutils)
       ("bcftools" ,bcftools)
       ("bio-vcf" ,bio-vcf)
-      ("bwa" ,bwa-0.7.15)
+      ("bwa" ,bwa)
       ("circos" ,circos)
       ("coreutils" ,coreutils)
       ("delly" ,delly-0.7.7)
