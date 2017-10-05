@@ -47,6 +47,7 @@ SOURCES =                                       \
   umcu/packages/king.scm                        \
   umcu/packages/manta.scm                       \
   umcu/packages/mongodb.scm                     \
+  umcu/packages/mysql.scm                       \
   umcu/packages/nanosvc.scm                     \
   umcu/packages/neo4j.scm                       \
   umcu/packages/pbgzip.scm                      \
