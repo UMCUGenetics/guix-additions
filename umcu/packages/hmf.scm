@@ -505,7 +505,7 @@ BAM files using @code{sambamba}.")
                (("my \\$picard_path = \"/hpc/local/CentOS7/cog_bioinf/picard-tools-1.141\";")
                 (string-append "my $picard_path = \"" (assoc-ref inputs "picard") "\";"))
                (("my \\$sambamba_path = \"/hpc/local/CentOS7/cog_bioinf/sambamba_v0.6.1\";")
-                (string-append "my \\$sambamba_path = \"" (assoc-ref inputs "sambamba") "\";"))
+                (string-append "my $sambamba_path = \"" (assoc-ref inputs "sambamba") "\";"))
                ;; The following programs should be patched.
                (("java -Xmx")
                 (string-append (assoc-ref inputs "icedtea") "/bin/java -Xmx"))
