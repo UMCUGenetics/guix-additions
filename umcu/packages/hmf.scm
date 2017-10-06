@@ -845,7 +845,8 @@ REPORT_STATUS	~a"
                (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
                 (string-append "$opt->{VERSION} = \"" ,version "\";"))
                (("my \\$pipeline_path = pipelinePath\\(\\);")
-                (string-append "my $pipeline_path = \"" pipeline-dir "\";")))
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
+               (("rcopy \\$") "#rcopy $"))
 
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
