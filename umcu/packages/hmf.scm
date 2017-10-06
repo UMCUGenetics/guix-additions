@@ -668,9 +668,6 @@ single executable called @code{bam}.")
            ;; Patch the use of external tools
            (substitute* (list (string-append lib-dir "/HMF/Pipeline/Config.pm")
                               (string-append lib-dir "/HMF/Pipeline/Config/Validate.pm"))
-             ;; Patch 'git'.
-             (("qx\\(git ")
-              (string-append "qx(" (assoc-ref %build-inputs "git") "/bin/git "))
              ;; Patch 'samtools'
              (("qx\\(\\$samtools ")
               (string-append "qx(" (assoc-ref %build-inputs "samtools")
@@ -840,9 +837,13 @@ REPORT_STATUS	~a"
 
              ;; Patch the "qsub" command.
              (substitute* "HMF/Pipeline/Sge.pm"
-                          (("qsub -P")
-                           (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -P")))
+               (("qsub -P")
+                (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -P")))
 
+             ;; The pipeline uses Git to record the version.
+             (substitute* "HMF/Pipeline/Config.pm"
+               (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
+                (string-append "$opt->{VERSION} = \"" ,version "\";")))
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
                (("my \\$pipeline_path = pipelinePath\\(\\);")
@@ -855,7 +856,6 @@ REPORT_STATUS	~a"
                                (assoc-ref %build-inputs "coreutils") "/bin/tee"))))))))
    (inputs
     `(("perl" ,perl)
-      ("git" ,git)
       ("bash" ,bash)
       ("coreutils" ,coreutils)
       ("bcftools" ,bcftools)
