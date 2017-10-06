@@ -709,16 +709,6 @@ single executable called @code{bam}.")
                       (string-append "pipeline-" ,version "/settings")
                       "--strip-components=2")
 
-             ;; The pipeline copies files from the store location for each run.
-             ;; It seems that the copy process isn't all too smart, because it
-             ;; creates the directories with the same permissions as they can
-             ;; be found in the store -- read-only.  We must make sure that
-             ;; the files and directories are writeable for the pipeline to
-             ;; run succesfully.
-             (system (string-append
-                      (assoc-ref %build-inputs "coreutils")
-                      "/bin/chmod +w -R settings"))
-
              ;; Add a prefix to the 'INIFILE' directory specification.
              (substitute*
                (scandir "."
@@ -855,7 +845,8 @@ REPORT_STATUS	~a"
                (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
                 (string-append "$opt->{VERSION} = \"" ,version "\";"))
                (("my \\$pipeline_path = pipelinePath\\(\\);")
-                (string-append "my $pipeline_path = \"" pipeline-dir "\";")))
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
+               (("rcopy \\$") "#rcopy $"))
 
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
