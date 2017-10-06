@@ -47,9 +47,14 @@
     (version "8.1.9")
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "http://arc.liv.ac.uk/downloads/SGE/releases/"
-                    version "/sge-" version ".tar.gz"))
+              ;; The link for the tarballs is down.
+              ;; So we have to (temporarily) host this ourselves.
+              (uri ;; (string-append
+                   ;;  "http://arc.liv.ac.uk/downloads/SGE/releases/"
+                   ;;  version "/sge-" version ".tar.gz")
+               (string-append "https://github.com/UMCUGenetics/guix-additions/"
+                              "raw/master/missing-tarballs/sge-"
+                              version ".tar.gz"))
               (sha256
                (base32
                 "0ra7m9mf09zzcf815y3zqzqkj95v9zm24nhhvzmdh2bsqgdmk59w"))))
@@ -59,7 +64,7 @@
      `(("bdb" ,bdb)
        ("tcsh" ,tcsh)
        ("inetutils" ,inetutils)
-       ("hwloc" ,hwloc)
+       ("hwloc" ,hwloc "lib")
        ("openssl" ,openssl)
        ("coreutils" ,coreutils)
        ("tcl" ,tcl)

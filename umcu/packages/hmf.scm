@@ -511,9 +511,8 @@ BAM files using @code{sambamba}.")
                 (string-append (assoc-ref inputs "icedtea") "/bin/java -Xmx"))
                (("Rscript")
                 (string-append (assoc-ref inputs "r") "/bin/Rscript"))
-               ;(("qsub")
-               ; (string-append (assoc-ref inputs "grid-engine-core") "/bin/qsub"))
-               )))
+               (("qsub")
+                (string-append (assoc-ref inputs "grid-engine-core") "/bin/qsub")))))
          (replace 'install
            (lambda* (#:key inputs outputs #:allow-other-keys)
              (let ((bindir (string-append (assoc-ref outputs "out") "/bin")))
@@ -528,8 +527,7 @@ BAM files using @code{sambamba}.")
        ("r" ,r)
        ("picard" ,picard-bin-1.141)
        ("icedtea" ,icedtea)
-       ;("grid-engine-core" ,grid-engine-core)
-       ))
+       ("grid-engine-core" ,grid-engine-core)))
     (propagated-inputs
      `(("r-ggplot2" ,r-ggplot2)
        ("r-knitr" ,r-knitr)
@@ -840,6 +838,11 @@ REPORT_STATUS	~a"
                (("my \\$source_template_dir = catfile\\(HMF::Pipeline::Config::pipelinePath\\(\\), \"templates\"\\);")
                 (string-append "my $source_template_dir = \"" templates-dir "\";")))
 
+             ;; Patch the "qsub" command.
+             (substitute* "HMF/Pipeline/Sge.pm"
+                          (("qsub -P")
+                           (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -P")))
+
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
                (("my \\$pipeline_path = pipelinePath\\(\\);")
@@ -878,6 +881,7 @@ REPORT_STATUS	~a"
       ("bamutils" ,bamutils)
       ("exoncov" ,exoncov)
       ("damage-estimator" ,damage-estimator)
+      ("grid-engine" ,grid-engine-core)
       ("r" ,r)))
    (native-inputs
     `(("source" ,source)
