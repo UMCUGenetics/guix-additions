@@ -843,7 +843,10 @@ REPORT_STATUS	~a"
              ;; The pipeline uses Git to record the version.
              (substitute* "HMF/Pipeline/Config.pm"
                (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
-                (string-append "$opt->{VERSION} = \"" ,version "\";")))
+                (string-append "$opt->{VERSION} = \"" ,version "\";"))
+               (("my \\$pipeline_path = pipelinePath\\(\\);")
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";")))
+
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
                (("my \\$pipeline_path = pipelinePath\\(\\);")
