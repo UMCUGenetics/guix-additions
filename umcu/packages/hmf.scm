@@ -840,14 +840,6 @@ REPORT_STATUS	~a"
                (("qsub -P")
                 (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -P")))
 
-             ;; The pipeline uses Git to record the version.
-             (substitute* "HMF/Pipeline/Config.pm"
-               (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
-                (string-append "$opt->{VERSION} = \"" ,version "\";"))
-               (("my \\$pipeline_path = pipelinePath\\(\\);")
-                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
-               (("rcopy \\$") "#rcopy $"))
-
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
                (("my \\$pipeline_path = pipelinePath\\(\\);")
@@ -857,7 +849,12 @@ REPORT_STATUS	~a"
                                (assoc-ref %build-inputs "coreutils") "/bin/tee"))
                (("my \\$error_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
                 (string-append "my $error_fh = IO::Pipe->new()->writer(\""
-                               (assoc-ref %build-inputs "coreutils") "/bin/tee"))))))))
+                               (assoc-ref %build-inputs "coreutils") "/bin/tee"))
+               (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
+                (string-append "$opt->{VERSION} = \"" ,version "\";"))
+               (("my \\$pipeline_path = pipelinePath\\(\\);")
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
+               (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir")))))))
    (inputs
     `(("perl" ,perl)
       ("bash" ,bash)
