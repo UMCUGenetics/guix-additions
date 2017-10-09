@@ -173,9 +173,18 @@
                  (lambda _
                    (format #t "Name: drmaa~%Description: DRMAA interface~%Version: 8.1.9~%Requires:~%Libs: -L~a -ldrmaa~%Cflags: -I~a" lib include)))
                #t))))))
-    (home-page "")
-    (synopsis "")
-    (description "")
+    (native-search-paths
+     (list (search-path-specification
+            (variable "LD_LIBRARY_PATH")
+            (files '("lib")))
+           (search-path-specification
+            (variable "DRMAA_LIBRARY_PATH")
+            (files '("lib/libdrmaa.so")))))
+    (home-page "https://arc.liv.ac.uk/trac/SGE")
+    (synopsis "Implementation of a grid engine")
+    (description "The Son of Grid Engine is a community project to continue
+Sun's old gridengine project after Oracle shut down the site and stopped
+contributing code.")
     (license (list license:asl2.0 license:gpl2+))))
 
 (define-public guile-drmaa
