@@ -835,11 +835,6 @@ REPORT_STATUS	~a"
                (("my \\$source_template_dir = catfile\\(HMF::Pipeline::Config::pipelinePath\\(\\), \"templates\"\\);")
                 (string-append "my $source_template_dir = \"" templates-dir "\";")))
 
-             ;; Patch the "qsub" command.
-             (substitute* "HMF/Pipeline/Sge.pm"
-               (("qsub -P")
-                (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -P")))
-
              ;; Make sure the other subdirectories can be found.
              (substitute* "HMF/Pipeline/Config.pm"
                (("my \\$pipeline_path = pipelinePath\\(\\);")
@@ -871,7 +866,6 @@ REPORT_STATUS	~a"
        ("freec" ,freec-10.4)
        ("gatk" ,gatk-bin-3.4-46)
        ("gatk-queue" ,gatk-queue-bin-3.4-46)
-       ("grid-engine" ,grid-engine-core)
        ("hmftools" ,hmftools)
        ("htslib" ,htslib)
        ("icedtea" ,icedtea)
@@ -906,7 +900,8 @@ REPORT_STATUS	~a"
        ("samtools" ,samtools)
        ("snpeff" ,snpeff-bin-4.1)
        ("strelka" ,strelka-1.0.14)
-       ("vcftools" ,vcftools)))
+       ("vcftools" ,vcftools)
+       ("grid-engine" ,grid-engine-core)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
     ;; make sure that the environment variables for these interpreters are
