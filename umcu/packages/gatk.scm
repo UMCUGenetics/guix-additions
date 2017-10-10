@@ -40,7 +40,7 @@
              (base32 "022wi4d64myp8nb4chpypb3pi8vnx1gsjhkncpjyd8pdks0p72sv"))))
    (build-system gnu-build-system)
    (propagated-inputs
-    `(("icedtea" ,icedtea-7)
+    `(("icedtea" ,icedtea-8)
       ("gatk-queue" ,gatk-queue-bin-3.4-0)))
    (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
@@ -86,7 +86,7 @@ capable of taking on projects of any size.")
              (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
    (build-system gnu-build-system)
    (propagated-inputs
-    `(("icedtea" ,icedtea-7)
+    `(("icedtea" ,icedtea-8)
       ("gatk-queue" ,gatk-queue-bin-3.4-46)))))
 
 (define-public gatk-queue-bin-3.4-0
@@ -105,7 +105,7 @@ capable of taking on projects of any size.")
              (base32 "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73"))))
    (build-system gnu-build-system)
    (propagated-inputs
-    `(("icedtea" ,icedtea-7)))
+    `(("icedtea" ,icedtea-8)))
    (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
