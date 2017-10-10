@@ -179,7 +179,8 @@
             (files '("lib")))
            (search-path-specification
             (variable "DRMAA_LIBRARY_PATH")
-            (files '("lib/libdrmaa.so")))))
+            (files '("lib/libdrmaa.so"))
+            (file-type 'regular))))
     (home-page "https://arc.liv.ac.uk/trac/SGE")
     (synopsis "Implementation of a grid engine")
     (description "The Son of Grid Engine is a community project to continue
