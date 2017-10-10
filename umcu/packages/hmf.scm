@@ -270,7 +270,13 @@ build, reporting and documentation from a central piece of information.")
                        ("bam-slicer/target/bam-slicer-1.0-jar-with-dependencies.jar" .
                         "bam-slicer-1.0.jar")
                        ("strelka-post-process/target/strelka-post-process-1.0-jar-with-dependencies.jar" .
-                        "strelka-post-process-1.0.jar")))))))))
+                        "strelka-post-process-1.0.jar")))
+
+                ;; The HMF pipeline expects the following filenames to exist.
+                (chdir output-dir)
+                (symlink "amber-1.0.jar" "amber.jar")
+                (symlink "count-bam-lines-1.0.jar" "cobalt.jar")
+                (symlink "purity-ploidy-estimator-1.2.jar" "purple.jar")))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
         ("maven" ,maven-bin)))
