@@ -47,41 +47,14 @@
   (build-system r-build-system)
   (propagated-inputs
    `(("r-plyr" ,r-plyr)
-     ("r-rcpp" ,r-rcpp)))
+     ("r-rcpp" ,r-rcpp)
+     ("r-lattice" ,r-lattice)))
   (home-page
     "http://cran.r-project.org/web/packages/Rmisc")
   (synopsis "Rmisc: Ryan Miscellaneous")
-  (description
-    "The Rmisc library contains many functions useful for data analysis and utility operations.")
+  (description "The Rmisc library contains functions for data analysis and
+utility operations.")
   (license license:gpl3)))
-
-(define-public r-shiny
-  (package
-    (name "r-shiny")
-    (version "1.0.0")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "shiny" version))
-              (sha256
-               (base32
-                "152v2z1cyg6893b0qd5rs12a2m9dbzk7ak04qvbcym0s9y4l0kf4"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-digest" ,r-digest)
-       ("r-htmltools" ,r-htmltools)
-       ("r-httpuv" ,r-httpuv)
-       ("r-jsonlite" ,r-jsonlite)
-       ("r-mime" ,r-mime)
-       ("r-r6" ,r-r6)
-       ("r-sourcetools" ,r-sourcetools)
-       ("r-xtable" ,r-xtable)))
-    (home-page "http://shiny.rstudio.com")
-    (synopsis "Web application framework for R")
-    (description "Makes it incredibly easy to build interactive web
-applications with R.  Automatic reactive binding between inputs and
-outputs and extensive pre-built widgets make it possible to build
-beautiful, responsive, and powerful applications with minimal effort.")
-    (license license:gpl3+)))
 
 (define-public r-pastecs
   (package
@@ -105,26 +78,6 @@ pastecs library is a PNEC-Art4 and IFREMER initiative to bring PASSTEC
 functionalities to R.")
     (license license:gpl2+)))
 
-(define-public r-interactivedisplaybase
-  (package
-    (name "r-interactivedisplaybase")
-    (version "1.12.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "interactiveDisplayBase" version))
-              (sha256
-               (base32
-                "1gxa1sc2sk7xvxc4p74cwjkxdk3ns7igl51jg7a7086k729k3m8j"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biocgenerics" ,r-biocgenerics)
-       ("r-shiny" ,r-shiny)))
-    (home-page "http://bioconductor.org/packages/interactiveDisplayBase")
-    (synopsis "Base package for enabling web displays of Bioconductor objects")
-    (description "This package contains the the basic methods needed to
-generate interactive Shiny based display methods for Bioconductor objects.")
-    (license license:artistic2.0)))
-    
 (define-public r-ensembldb
   (package
     (name "r-ensembldb")
@@ -240,36 +193,6 @@ gene/transcript structures in viewports of the grid graphics package.  This
 results in genomic information plotted together with your data.")
     (license license:artistic2.0)))
 
-(define-public r-deseq
-  (package
-    (name "r-deseq")
-    (version "1.26.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "DESeq" version))
-       (sha256
-        (base32
-         "18f0400pcmla88kc2prscw0skkf7bww0mnkrj6hhxyy79dhzdy86"))))
-    (properties `((upstream-name . "DESeq")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biobase" ,r-biobase)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-locfit" ,r-locfit)
-       ("r-lattice" ,r-lattice)
-       ("r-genefilter" ,r-genefilter)
-       ("r-geneplotter" ,r-geneplotter)
-       ("r-rcolorbrewer" , r-rcolorbrewer)))
-    (home-page "http://bioconductor.org/packages/DESeq")
-    (synopsis "Differential gene expression analysis")
-    (description
-     "This package provides functions to estimate variance-mean dependence in
-count data from high-throughput nucleotide sequencing assays and test for
-differential expression based on a model using the negative binomial
-distribution.")
-    (license license:lgpl3+)))
-
 (define-public r-amap
   (package
     (name "r-amap")
@@ -289,39 +212,63 @@ distribution.")
 robust methods, and parallelized functions).")
     (license license:gpl2+)))
 
+(define-public r-ggrepel
+  (package
+    (name "r-ggrepel")
+    (version "0.7.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "ggrepel" version))
+       (sha256
+        (base32
+         "0g0qfm6g71rv27423c1x846ipilnj213knyzrcr09vrpxc87l618"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-ggplot2" ,r-ggplot2)
+       ("r-rcpp" ,r-rcpp)
+       ("r-scales" ,r-scales)))
+    (home-page "http://github.com/slowkow/ggrepel")
+    (synopsis "Repulsive text and label geoms for ggplot2")
+    (description "This package provides text and label geoms for ggplot2 that
+help to avoid overlapping text labels.  Labels repel away from each other and
+away from the data points.")
+    (license license:gpl3)))
+
 (define-public r-diffbind
   (package
     (name "r-diffbind")
-    (version "2.2.12")
+    (version "2.4.8")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "DiffBind" version))
        (sha256
         (base32
-         "0w3dwhjkf0sc7bd3m13gwym03j3pyli3xy2y7dqsqn8mhm64bqcy"))))
+         "19x1vmhm64xsm4wrl8gygjqwld20i5ikvw1d77p05gajj2d6f325"))))
     (properties `((upstream-name . "DiffBind")))
     (build-system r-build-system)
     (inputs
      `(("zlib" ,zlib)))
     (propagated-inputs
-     `(("r-rcolorbrewer" , r-rcolorbrewer)
-       ("r-amap" ,r-amap)
-       ("r-edger" ,r-edger)
-       ("r-gplots" ,r-gplots)
-       ("r-limma" ,r-limma)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-locfit" ,r-locfit)
-       ("r-iranges" ,r-iranges)
-       ("r-zlibbioc" ,r-zlibbioc)
-       ("r-lattice" ,r-lattice)
-       ("r-systempiper" ,r-systempiper)
-       ("r-rcpp" ,r-rcpp)
-       ("r-dplyr" ,r-dplyr)
+     `(("r-amap" ,r-amap)
        ("r-biocparallel" ,r-biocparallel)
-       ("r-s4vectors" ,r-s4vectors)
+       ("r-deseq2" ,r-deseq2)
+       ("r-dplyr" ,r-dplyr)
+       ("r-edger" ,r-edger)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-ggrepel" ,r-ggrepel)
+       ("r-gplots" ,r-gplots)
+       ("r-iranges" ,r-iranges)
+       ("r-lattice" ,r-lattice)
+       ("r-limma" ,r-limma)
+       ("r-locfit" ,r-locfit)
+       ("r-rcolorbrewer" , r-rcolorbrewer)
+       ("r-rcpp" ,r-rcpp)
        ("r-rsamtools" ,r-rsamtools)
-       ("r-deseq2" ,r-deseq2)))
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-systempiper" ,r-systempiper)
+       ("r-zlibbioc" ,r-zlibbioc)))
     (home-page "http://bioconductor.org/packages/DiffBind")
     (synopsis "Differential binding analysis of ChIP-Seq peak data")
     (description
@@ -330,74 +277,17 @@ ChIP-seq experiments using affinity (quantitative) data.  Also enables
 occupancy (overlap) analysis and plotting functions.")
     (license license:lgpl3+)))
 
-(define-public r-hwriter
-  (package
-    (name "r-hwriter")
-    (version "1.3.2")
-    (source (origin
-             (method url-fetch)
-             (uri (cran-uri "hwriter" version))
-             (sha256
-              (base32
-               "0arjsz854rfkfqhgvpqbm9lfni97dcjs66isdsfvwfd2wz932dbb"))))
-    (build-system r-build-system)
-    (home-page "http://cran.r-project.org/web/packages/hwriter")
-    (synopsis "HTML Writer - Outputs R objects in HTML format")
-    (description "Easy-to-use and versatile functions to output R objects in
-HTML format")
-    (license license:lgpl2.1)))
-
-(define-public r-dexseq
-  (package
-   (name "r-dexseq")
-   (version "1.22.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "DEXSeq" version))
-            (sha256
-             (base32 "085aqk1wlzzqcqcqhvz74y099kr2ln5dwdxd3rl6zan806mgwahg"))))
-   (properties `((upstream-name . "DEXSeq")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biocparallel" ,r-biocparallel)
-      ("r-biobase" ,r-biobase)
-      ("r-summarizedexperiment" ,r-summarizedexperiment)
-      ("r-iranges" ,r-iranges)
-      ("r-genomicranges" ,r-genomicranges)
-      ("r-deseq2" ,r-deseq2)
-      ("r-annotationdbi" ,r-annotationdbi)
-      ("r-rcolorbrewer" ,r-rcolorbrewer)
-      ("r-s4vectors" ,r-s4vectors)
-      ("r-biocgenerics" ,r-biocgenerics)
-      ("r-biomart" ,r-biomart)
-      ("r-hwriter" ,r-hwriter)
-      ("r-stringr" ,r-stringr)
-      ("r-rsamtools" ,r-rsamtools)
-      ("r-statmod" ,r-statmod)
-      ("r-geneplotter" ,r-geneplotter)
-      ("r-genefilter" ,r-genefilter)))
-   (home-page "https://bioconductor.org/packages/DEXSeq/")
-   (synopsis "Inference of differential exon usage in RNA-Seq")
-   (description "The package is focused on finding differential exon usage
-using RNA-seq exon counts between samples with different experimental designs.
-It provides functions that allows the user to make the necessary statistical
-tests based on a model that uses the negative binomial distribution to estimate
-the variance between biological replicates and generalized linear models for
-testing.  The package also provides functions for the visualization and
-exploration of the results.")
-   (license license:gpl3+)))
-
 (define-public r-ripseeker
   (package
     (name "r-ripseeker")
-    (version "1.14.0")
+    (version "1.16.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "RIPSeeker" version))
        (sha256
         (base32
-         "1yvn9d4psifkipv1mp42qi5h09a5023cbf7mhw6nmyqpkcw4bwjd"))))
+         "0bwrp4fhagjzb8cv06naqaxknvnbv1247lsplsm3hym4zpm99cz0"))))
     (properties `((upstream-name . "RIPSeeker")))
     (build-system r-build-system)
     (propagated-inputs
@@ -409,8 +299,8 @@ exploration of the results.")
        ("r-genomicalignments" ,r-genomicalignments)
        ("r-rtracklayer" ,r-rtracklayer)))
     (home-page "http://bioconductor.org/packages/RIPSeeker")
-    (synopsis "Identifying protein-associated transcripts from RIP-seq
-experiments")
+    (synopsis
+     "Identifying protein-associated transcripts from RIP-seq experiments")
     (description
      "This package infers and discriminates RIP peaks from RIP-seq alignments
 using two-state HMM with negative binomial emission probability.  While
@@ -423,14 +313,14 @@ processing to visualization and annotation.")
 (define-public r-multtest
   (package
     (name "r-multtest")
-    (version "2.30.0")
+    (version "2.32.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "multtest" version))
        (sha256
         (base32
-         "0q302f3yf9v7mlq2kib7ynq015d5f94jrsk9drkp5vq0z5j0h3sw"))))
+         "1ghks2x8anccfkf3jibzrs1s3p45081f5z63kkf6a7vpc5i4a9g8"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-survival" ,r-survival)
@@ -461,14 +351,14 @@ experiments.")
 (define-public r-regioner
   (package
     (name "r-regioner")
-    (version "1.6.2")
+    (version "1.8.1")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "regioneR" version))
        (sha256
         (base32
-         "0mvwk2yjsdxda7w6f82dbj91i0zrr95ipglfyw9ndhl2ki8dka0i"))))
+         "1gqs637jv9wsl6qwz98ah9dpvg4rp6bd7kxcwdvd93mcsm4jnpv2"))))
     (properties `((upstream-name . "regioneR")))
     (build-system r-build-system)
     (propagated-inputs
@@ -532,14 +422,14 @@ two-case scaling, and extensive customization of plot shape and structure.")
 (define-public r-chippeakanno
   (package
     (name "r-chippeakanno")
-    (version "3.8.9")
+    (version "3.10.2")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "ChIPpeakAnno" version))
        (sha256
         (base32
-         "1wykx52xqnz9pcxgfzf5i0ckrw41jg0piwynx1v1ldjxajbdh904"))))
+         "0q9k38r1l8qfvmjhqg4n4rs63wsc3bx0m1ir31h2y4bmjaz1vp7p"))))
     (properties `((upstream-name . "ChIPpeakAnno")))
     (build-system r-build-system)
     (propagated-inputs
@@ -566,16 +456,19 @@ two-case scaling, and extensive customization of plot shape and structure.")
        ("r-summarizedexperiment" ,r-summarizedexperiment)
        ("r-rsamtools" ,r-rsamtools)
        ("r-venndiagram" ,r-venndiagram)))
-    (home-page "http://bioconductor.org/packages/RIPSeeker")
-    (synopsis "Identifying protein-associated transcripts from RIP-seq
-experiments")
+    (home-page "http://bioconductor.org/packages/ChIPpeakAnno")
+    (synopsis
+     "Batch annotation of peaks identified from ChIP-seq and ChIP-chip experiments")
     (description
-     "This package infers and discriminates RIP peaks from RIP-seq alignments
-using two-state HMM with negative binomial emission probability.  While
-RIPSeeker is specifically tailored for RIP-seq data analysis, it also provides
-a suite of bioinformatics tools integrated within this self-contained software
-package comprehensively addressing issues ranging from post-alignments
-processing to visualization and annotation.")
+     "The package includes functions to retrieve the sequences around the peak,
+obtain enriched Gene Ontology (GO) terms, find the nearest gene, exon, miRNA or
+custom features such as most conserved elements and other transcription factor
+binding sites supplied by users.  Starting 2.0.5, new functions have been added
+for finding the peaks with bi-directional promoters with summary statistics
+(peaksNearBDP), for summarizing the occurrence of motifs in peaks 
+(summarizePatternInPeaks) and for adding other IDs to annotated peaks or
+enrichedGO (addGeneIDs). This package leverages the biomaRt, IRanges, Biostrings,
+BSgenome, GO.db, multtest and stat packages.")
     (license license:gpl2+)))
 
 (define-public r-marray
@@ -693,35 +586,15 @@ segmentation and calling are also implemented via packages DNAcopy and CGHcall,
 respectively.")
    (license license:gpl2+)))
 
-(define-public r-reshape
-  (package
-   (name "r-reshape")
-   (version "0.8.6")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "reshape" version))
-            (sha256
-             (base32
-              "1f1ngalc22knhdm9djv1m6abnjqpv1frdzxfkpakhph2l67bk7fq"))))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-plyr" ,r-plyr)
-     ("r-rcpp" ,r-rcpp)))
-  (home-page "http://had.co.nz/reshape")
-  (synopsis "Flexibly Reshape Data")
-  (description "Flexibly restructure and aggregate data using just two
-functions: melt and cast.")
-  (license license:expat)))
-
 (define-public r-snpstats
   (package
    (name "r-snpstats")
-   (version "1.24.0")
+   (version "1.26.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "snpStats" version))
             (sha256
-             (base32 "1hkgjd12cz6rfm7w51dgc7cxvrsrqgc2byfinbp0d42rnc3600n2"))))
+             (base32 "1f8i8pj741h8539lqj508ji27p5ljghyvmdrh3qcfx5jwn9jq8bj"))))
    (properties `((upstream-name . "Snpstats")))
    (build-system r-build-system)
    (inputs
@@ -738,15 +611,38 @@ large SNP association studies.  This extends the earlier snpMatrix package,
 allowing for uncertainty in genotypes.")
    (license license:gpl3+)))
 
+(define-public r-funcisnp-data
+  (package
+   (name "r-funcisnp-data")
+   (version "1.12.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append "http://bioconductor.org/packages/release/"
+                                "data/experiment/src/contrib/FunciSNP.data_"
+                                version ".tar.gz"))
+            (sha256
+             (base32 "1y37cgqnbzcddg3v2gl4832s0l7ncm7p7p4dyk0kz29bl62j8g2i"))))
+   (properties `((upstream-name . "FunciSNP.data")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-iranges" ,r-iranges)
+      ("r-rtracklayer" ,r-rtracklayer)))
+   (home-page "http://bioconductor.org/packages/FunciSNP.data")
+   (synopsis "Various data sets for use with the FunciSNP package")
+   (description "This package provides data sets needed for FunciSNP to
+integrate information from GWAS, 1000genomes and chromatin feature, in
+order to identify functional SNP in coding or non-coding regions.")
+   (license license:gpl3+)))
+
 (define-public r-funcisnp
   (package
    (name "r-funcisnp")
-   (version "1.18.0")
+   (version "1.20.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "FunciSNP" version))
             (sha256
-             (base32 "03wzrrdhnp6svf4vy907h6bbnpfgrbqhqabsah37qzld15qm2xs2"))))
+             (base32 "19pd2mn79lncavl18i5pxb1d7r0hfbb21ak2wbynmfx4kspw9vpa"))))
    (properties `((upstream-name . "FunciSNP")))
    (build-system r-build-system)
    (propagated-inputs
@@ -771,29 +667,6 @@ allowing for uncertainty in genotypes.")
    (description "This package integrates information from GWAS, 1000genomes
 and chromatin feature to identify functional SNP in coding or non-coding
 regions.")
-   (license license:gpl3+)))
-
-(define-public r-funcisnp-data
-  (package
-   (name "r-funcisnp-data")
-   (version "1.10.0")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append "http://bioconductor.org/packages/release/"
-                                "data/experiment/src/contrib/FunciSNP.data_"
-                                version ".tar.gz"))
-            (sha256
-             (base32 "0r0iv8hp25ld9vpyij9lrk0xphaxcz4j4panyc83i18d6s9jw51s"))))
-   (properties `((upstream-name . "FunciSNP.data")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-iranges" ,r-iranges)
-      ("r-rtracklayer" ,r-rtracklayer)))
-   (home-page "http://bioconductor.org/packages/FunciSNP.data")
-   (synopsis "Various data sets for use with the FunciSNP package")
-   (description "This package provides data sets needed for FunciSNP to
-integrate information from GWAS, 1000genomes and chromatin feature, in
-order to identify functional SNP in coding or non-coding regions.")
    (license license:gpl3+)))
 
 (define-public r-ggdendro
@@ -848,45 +721,6 @@ article 'Conservation of an RNA regulatory map between Drosophila and mammals'
 by Brooks et al., Genome Research 2011.")
     (license license:lgpl2.1+)))
 
-(define-public r-rlang
-  (package
-   (name "r-rlang")
-   (version "0.1.1")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "rlang" version))
-            (sha256
-             (base32
-              "0grwqy3zkvz96mvpwfbfyqid4jkfrqh3ldy2n6dpv2kjd1fzj0ar"))))
-   (build-system r-build-system)
-   (home-page "http://rlang.tidyverse.org")
-   (synopsis "Functions for base types, core R and 'Tidyverse' features")
-   (description "This package provides a toolbox for working with base types,
-core R features like the condition system, and core 'Tidyverse' features like
-tidy evaluation.")
-   (license license:gpl3+)))
-
-(define-public r-blob
-  (package
-   (name "r-blob")
-   (version "1.1.0")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "blob" version))
-     (sha256
-      (base32
-       "05pazzcyz3c3vd2l70zq9cf172cgjff4dnf419zigfnxycyn1mhn"))))
-   (build-system r-build-system)
-   (propagated-inputs `(("r-tibble" ,r-tibble)))
-   (home-page "https://github.com/hadley/blob")
-   (synopsis "Simple S3 class for representing vectors of binary data")
-   (description "R's raw vector is useful for storing a single binary
-object.  What if you want to put a vector of them in a data frame?  The
-blob package provides the blob object, a list of raw vectors, suitable
-for use as a column in data frame.")
-   (license license:gpl3+)))
-
 (define-public r-grimport
   (package
     (name "r-grimport")
@@ -906,8 +740,8 @@ for use as a column in data frame.")
      `(("r-xml" ,r-xml)))
     (home-page "http://cran.r-project.org/web/packages/grImport")
     (synopsis "Importing Vector Graphics")
-    (description "Functions for converting, importing, and drawing PostScript
-pictures in R plots.")
+    (description "This package provides functions for converting, importing,
+and drawing PostScript pictures in R plots.")
     (license license:gpl2+)))
 
 (define-public r-tfmpvalue
@@ -928,11 +762,11 @@ pictures in R plots.")
      `(("r-rcpp" ,r-rcpp)))
     (home-page "https://github.com/ge11232002/TFMPvalue")
     (synopsis
-     "Efficient and Accurate P-Value Computation for Position Weight Matrices")
+     "Efficient and accurate P-value computation for position weight matrices")
     (description "In putative Transcription Factor Binding Sites (TFBSs)
 identification from sequence/alignments, we are interested in the significance
 of certain match score.  TFMPvalue provides the accurate calculation of P-value
-with score threshold for Position Weight Matrices, or the score with given
+with score threshold for position weight matrices, or the score with given
 P-value.  This package is an interface to code originally made available by
 Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
     (license license:gpl2)))
@@ -954,9 +788,10 @@ Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
       ("r-biostrings" ,r-biostrings)
       ("r-iranges" ,r-iranges)
       ("r-rtracklayer" ,r-rtracklayer)))
-   (home-page "http://bioconductor.org/packages/MotifDb/")
-   (synopsis "")
-   (description "")
+   (home-page "http://bioconductor.org/packages/MotifDb")
+   (synopsis "Annotated collection of protein-DNA binding sequence motifs")
+   (description "This package provides more than 2000 annotated position
+frequency matrices from nine public sources, for multiple organisms.")
    (license license:artistic2.0)))
 
 (define-public r-motifbreakr
@@ -988,11 +823,19 @@ Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
       ("r-matrixstats" ,r-matrixstats)
       ("r-tfmpvalue" ,r-tfmpvalue)
       ("r-motifdb" ,r-motifdb)))
-   (home-page "http://bioconductor.org/packages/snpStats")
-   (synopsis "SnpMatrix and XSnpMatrix classes and methods")
-   (description "This package provides classes and statistical methods for
-large SNP association studies.  This extends the earlier snpMatrix package,
-allowing for uncertainty in genotypes.")
+   (home-page "http://bioconductor.org/packages/motifbreakR")
+   (synopsis "Predicting disruptiveness of single nucleotide polymorphisms on transcription factor binding sites")
+   (description "This package allows biologists to judge in the first place
+whether the sequence surrounding the polymorphism is a good match, and in
+the second place how much information is gained or lost in one allele of
+the polymorphism relative to another.  This package is both flexible and
+extensible over previous offerings; giving a choice of algorithms for
+interrogation of genomes with motifs from public sources that users can choose
+from; these are 1) a weighted-sum probability matrix, 2) log-probabilities,
+and 3) weighted by relative entropy.  This package can predict effects for
+novel or previously described variants in public databases, making it suitable
+for tasks beyond the scope of its original design.  Lastly, it can be used to
+interrogate any genome curated within Bioconductor (currently there are 22).")
    (license license:gpl3+)))
 
 (define-public r-rgadem
@@ -1011,9 +854,10 @@ allowing for uncertainty in genotypes.")
       ("r-iranges" ,r-iranges)
       ("r-bsgenome" ,r-bsgenome)
       ("r-seqlogo" ,r-seqlogo)))
-   (home-page "http://bioconductor.org/packages/rGADEM/")
-   (synopsis "")
-   (description "")
+   (home-page "http://bioconductor.org/packages/rGADEM")
+   (synopsis "De novo motif discovery")
+   (description "This package is an efficient de novo motif discovery tool for
+large-scale genomic sequence data.")
    (license license:artistic2.0)))
 
 (define-public r-motiv
@@ -1036,8 +880,10 @@ allowing for uncertainty in genotypes.")
       ("r-rgadem" ,r-rgadem)
       ("r-lattice" ,r-lattice)))
    (home-page "http://bioconductor.org/packages/MotIV/")
-   (synopsis "")
-   (description "")
+   (synopsis "Motif Identification and validation")
+   (description "This package makes use of STAMP for comparing a set of motifs
+to a given database (e.g. JASPAR).  It can also be used to visualize motifs,
+motif distributions, modules and filter motifs.")
    (license license:gpl2)))
 
 (define-public r-motifstack
@@ -1060,8 +906,12 @@ allowing for uncertainty in genotypes.")
       ("r-xml" ,r-xml)
       ("r-biostrings" ,r-biostrings)))
    (home-page "http://bioconductor.org/packages/motifStack/")
-   (synopsis "")
-   (description "")
+   (synopsis "Plot stacked logos for DNA, RNA, and amino acid sequence")
+   (description "This package is designed for graphic representation of
+multiple motifs with different similarity scores.  It works with both DNA/RNA
+sequence motif and amino acid sequence motif.  In addition, it provides the
+flexibility for users to customize the graphic parameters such as the font type
+and symbol colors.")
    (license license:gpl2+)))
 
 (define-public r-snplocs.hsapiens.dbsnp144.grch37
@@ -1080,7 +930,7 @@ allowing for uncertainty in genotypes.")
                (base32
                 "1z8kx43ki1jvj7ms7pcybakcdimfwr6zpjvspkjmma97bdz093iz"))))
     (properties
-     `((upstream-name . "TxDb.Hsapiens.UCSC.hg19.knownGene")))
+     `((upstream-name . "SNPlocs.Hsapiens.dbSNP144.GRCh37")))
     (build-system r-build-system)
     ;; As this package provides little more than a very large data file it
     ;; doesn't make sense to build substitutes.
@@ -1093,7 +943,17 @@ allowing for uncertainty in genotypes.")
        ("r-genomicranges" ,r-genomicranges)
        ("r-bsgenome" ,r-bsgenome)
        ("r-biostrings" ,r-biostrings)))
-    (home-page "")
-    (synopsis "")
-    (description "")
+    (home-page
+     "http://bioconductor.org/packages/SNPlocs.Hsapiens.dbSNP144.GRCh37")
+    (synopsis "SNP locations for Homo sapiens (dbSNP Build 144)")
+    (description "This package provides SNP locations and alleles for Homo
+sapiens extracted from NCBI dbSNP Build 144.  The source data files used for
+this package were created by NCBI on May 29-30, 2015, and contain SNPs mapped
+to reference genome GRCh37.p13.  WARNING: Note that the GRCh37.p13 genome is a
+patched version of GRCh37.  However the patch doesn't alter chromosomes 1-22,
+X, Y, MT. GRCh37 itself is the same as the hg19 genome from UCSC *except* for
+the mitochondrion chromosome.  Therefore, the SNPs in this package can be
+injected in @code{BSgenome.Hsapiens.UCSC.hg19} and they will land at the
+correct position but this injection will exclude chrM (i.e. nothing will be
+injected in that sequence).")
     (license license:artistic2.0)))
