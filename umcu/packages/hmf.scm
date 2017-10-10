@@ -30,6 +30,7 @@
   #:use-module (gnu packages bash)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages cran)
   #:use-module (gnu packages databases)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
@@ -702,12 +703,39 @@ single executable called @code{bam}.")
                       "--strip-components=2")
 
              ;; Replace the 'java' command with the full path to the input 'java'
-             ;; in each template file.
-             (substitute* (scandir "." (lambda (item)
-                                         (not (eq? (string-ref item 0) #\.))))
+             ;; in each template file.  Some need Java 8, and some need Java 7,
+             ;; so we need to be specific in these cases.
+
+             ;; Java 8
+             (substitute* '("Amber.sh.tt" "Cobalt.sh.tt" "Purple.sh.tt"
+                            "HealthCheck.sh.tt" "BreakpointInspector.sh.tt")
                (("java -Xmx")
-                (string-append (assoc-ref %build-inputs "icedtea")
-                               "/bin/java -Xmx"))))
+                (string-append (assoc-ref %build-inputs "icedtea-8")
+                               "/bin/java -Xmx")))
+
+             ;; Java 7
+             (substitute* '("Realignment.sh.tt" "BAF.sh.tt" "CallableLoci.sh.tt"
+                            "GermlineCalling.sh.tt" "GermlineAnnotation.sh.tt"
+                            "GermlineFiltering.sh.tt" "PostStats.sh.tt" "Strelka.sh.tt")
+               (("java -Xmx")
+                (string-append (assoc-ref %build-inputs "icedtea-7")
+                               "/bin/java -Xmx")))
+
+             ;; Mixed Java 7 and Java 8
+             (substitute* '("StrelkaPostProcess.sh.tt")
+               (("java -jar \"\\[% opt.STRELKA_POST_PROCESS_PATH %\\]/strelka-post-process.jar\"")
+                (string-append (assoc-ref %build-inputs "icedtea-8")
+                               "/bin/java -jar "
+                               "\"[% opt.STRELKA_POST_PROCESS_PATH %]"
+                               "/strelka-post-process.jar\""))
+               (("java -Xmx\\[% opt.STRELKAPOSTPROCESS_MEM %\\]G")
+                (string-append (assoc-ref %build-inputs "icedtea-7")
+                               "/bin/java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G")))
+
+             ;; Patch the 'make' command.
+             (substitute* "Strelka.sh.tt"
+               (("make -j") (string-append (assoc-ref %build-inputs "make")
+                                           "/bin/make -j"))))
 
            ;; Extract the settings files to their own custom directory.
            (with-directory-excursion settings-dir
@@ -864,7 +892,6 @@ REPORT_STATUS	~a"
        ("bio-vcf" ,bio-vcf)
        ("bwa" ,bwa)
        ("circos" ,circos)
-       ("coreutils" ,coreutils)
        ("damage-estimator" ,damage-estimator)
        ("delly" ,delly-0.7.7)
        ("exoncov" ,exoncov)
@@ -874,7 +901,8 @@ REPORT_STATUS	~a"
        ("gatk-queue" ,gatk-queue-bin-3.4-46)
        ("hmftools" ,hmftools)
        ("htslib" ,htslib)
-       ("icedtea" ,icedtea)
+       ("icedtea-8" ,icedtea-8)
+       ("icedtea-7" ,icedtea-7)
        ("igvtools" ,igvtools-bin-2.3.60)
        ("king" ,king-bin-1.4)
        ("manta" ,manta)
@@ -882,6 +910,7 @@ REPORT_STATUS	~a"
        ("perl" ,perl)
        ("picard" ,picard-bin-1.141)
        ("plink2" ,plink2-1.90b3)
+       ("make" ,gnu-make)
        ("r" ,r)))
     (native-inputs
      `(("gzip" ,gzip)
@@ -907,6 +936,7 @@ REPORT_STATUS	~a"
        ("snpeff" ,snpeff-bin-4.1)
        ("strelka" ,strelka-1.0.14)
        ("vcftools" ,vcftools)
+       ("coreutils" ,coreutils)
        ("grid-engine" ,grid-engine-core)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
