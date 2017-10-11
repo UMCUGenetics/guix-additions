@@ -107,7 +107,11 @@
               (("samtoolsBin=joinFile\\(libexecDir,exeFile\\(\"samtools\"\\)\\)")
                (string-append "samtoolsBin=\"" (string-append
                                               (assoc-ref inputs "samtools")
-                                              "/bin/samtools" "\"")))))))))
+                                              "/bin/samtools" "\""))))
+            (substitute* "src/python/lib/makeRunScript.py"
+                         (("/usr/bin/env python") (string-append
+                                                   (assoc-ref inputs "python")
+                                                   "/bin/python"))))))))
     (inputs
      `(("cmake" ,cmake)
        ("boost" ,boost)
