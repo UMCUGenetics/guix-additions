@@ -914,9 +914,8 @@ REPORT_STATUS	~a"
                (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir"))
 
              (substitute* "HMF/Pipeline/Sge.pm"
-               (("# my \\$h_vmem = \\(4") "my $h_vmem = (2")
                (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
-                "my $qsub = generic($opt, $function) . \" -m a -l h_vmem=$h_vmem")))))))
+                "my $h_vmem = (2 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m a -l h_vmem=$h_vmem")))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
