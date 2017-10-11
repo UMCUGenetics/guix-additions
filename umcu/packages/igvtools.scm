@@ -76,7 +76,7 @@ next-generation sequence data, and genomic annotations.")
              "http://data.broadinstitute.org/igv/projects/downloads/"
              "3.0_beta/IGV_3.0_beta.zip"))
        (sha256
-        (base32 "1g4wis3h3r9v13pc1kn4s5xlcn3my0ipighn603aja0pdf7dg6hy"))))
+        (base32 "1vpaj4zpa77pzix2dplrc1lz398bdv8yvg2p48f4i8px14qpdlvn"))))
     (propagated-inputs
      `(("icedtea" ,icedtea-8)))))
     
