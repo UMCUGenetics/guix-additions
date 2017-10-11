@@ -18,6 +18,7 @@
 (define-module (umcu packages genenetwork)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (gnu packages)
+  #:use-module (gnu packages ruby)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix utils)
@@ -35,6 +36,8 @@
               "1007bn0w8l11q867lxsyqnk0vgvv12skvk9gyglv7g44knr5vh4j"))))
    (build-system ruby-build-system)
    (arguments `(#:tests? #f)) ; There are no tests.
+   (native-search-paths
+    (package-native-search-paths ruby))
    (synopsis "Smart lazy multi-threaded parser for VCF format with useful
 filtering and output rewriting (JSON, RDF etc.)")
    (description "Smart lazy multi-threaded parser for VCF format with useful
