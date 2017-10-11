@@ -911,7 +911,12 @@ REPORT_STATUS	~a"
                 (string-append "$opt->{VERSION} = \"" ,version "\";"))
                (("my \\$pipeline_path = pipelinePath\\(\\);")
                 (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
-               (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir")))))))
+               (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir"))
+
+             (substitute* "HMF/Pipeline/Sge.pm"
+               (("# my \\$h_vmem = \\(4") "my $h_vmem = (2")
+               (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
+                "my $qsub = generic($opt, $function) . \" -m a -l h_vmem=$h_vmem")))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
