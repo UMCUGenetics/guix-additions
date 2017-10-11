@@ -88,7 +88,26 @@
             ;; makes sure it looks for dynamically linked versions of Boost.
             (substitute* "src/cmake/boost.cmake"
               (("Boost_USE_STATIC_LIBS ON")
-               "Boost_USE_STATIC_LIBS OFF")))))))
+               "Boost_USE_STATIC_LIBS OFF"))))
+        (add-before 'configure 'fix-tool-paths
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (substitute* "src/python/lib/mantaOptions.py"
+              (("bgzipBin=joinFile\\(libexecDir,exeFile\\(\"bgzip\"\\)\\)")
+               (string-append "bgzipBin=\"" (string-append
+                                             (assoc-ref inputs "htslib")
+                                             "/bin/bgzip") "\""))
+              (("htsfileBin=joinFile\\(libexecDir,exeFile\\(\"htsfile\"\\)\\)")
+               (string-append "htsfileBin=\"" (string-append
+                                               (assoc-ref inputs "htslib")
+                                               "/bin/htsfile") "\""))
+              (("tabixBin=joinFile\\(libexecDir,exeFile\\(\"tabix\"\\)\\)")
+               (string-append "tabixBin=\"" (string-append
+                                           (assoc-ref inputs "htslib")
+                                           "/bin/tabix" "\"")))
+              (("samtoolsBin=joinFile\\(libexecDir,exeFile\\(\"samtools\"\\)\\)")
+               (string-append "samtoolsBin=\"" (string-append
+                                              (assoc-ref inputs "samtools")
+                                              "/bin/samtools" "\"")))))))))
     (inputs
      `(("cmake" ,cmake)
        ("boost" ,boost)
