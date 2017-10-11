@@ -58,7 +58,6 @@
   #:use-module (umcu packages mysql)
   #:use-module (umcu packages pbgzip)
   #:use-module (umcu packages picard)
-  #:use-module (umcu packages plink)
   #:use-module (umcu packages samtools)
   #:use-module (umcu packages snpeff)
   #:use-module (umcu packages strelka)
@@ -735,7 +734,28 @@ single executable called @code{bam}.")
              ;; Patch the 'make' command.
              (substitute* "Strelka.sh.tt"
                (("make -j") (string-append (assoc-ref %build-inputs "make")
-                                           "/bin/make -j"))))
+                                           "/bin/make -j")))
+
+             (substitute* (scandir "." (lambda (item)
+                                         (not (eq? (string-ref item 0) #\.))))
+               (("rm ")
+                (string-append (assoc-ref %build-inputs "coreutils")
+                               "/bin/rm "))
+               (("mv ")
+                (string-append (assoc-ref %build-inputs "coreutils")
+                               "/bin/mv "))
+               (("mkdir ")
+                (string-append (assoc-ref %build-inputs "coreutils")
+                               "/bin/mkdir "))
+               (("mkfifo ")
+                (string-append (assoc-ref %build-inputs "coreutils")
+                               "/bin/mkfifo "))
+               (("Rscript ")
+                (string-append (assoc-ref %build-inputs "r") "/bin/Rscript ")))
+
+             (substitute* "Kinship.sh.tt"
+               (("cp ")
+                (string-append (assoc-ref %build-inputs "coreutils") "/bin/cp "))))
 
            ;; Extract the settings files to their own custom directory.
            (with-directory-excursion settings-dir
@@ -745,12 +765,12 @@ single executable called @code{bam}.")
 
              ;; Add a prefix to the 'INIFILE' directory specification.
              (substitute*
-                 (scandir "."
-                          (lambda (item)
-                            (and (> (string-length item) 3)
-                                 (string= (string-take-right item 3) "ini"))))
-               (("INIFILE	settings")
-                (string-append "INIFILE	" settings-dir)))
+              (scandir "."
+                       (lambda (item)
+                         (and (> (string-length item) 3)
+                              (string= (string-take-right item 3) "ini"))))
+              (("INIFILE	settings")
+               (string-append "INIFILE	" settings-dir)))
 
              (with-directory-excursion "include"
                (substitute*
@@ -837,7 +857,7 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "igvtools") "/share/java/igvtools")
                          (string-append (assoc-ref %build-inputs "samtools") "/bin")
                          (string-append (assoc-ref %build-inputs "htslib") "/bin")
-                         (string-append (assoc-ref %build-inputs "plink2") "/bin")
+                         (string-append (assoc-ref %build-inputs "plink") "/bin")
                          (string-append (assoc-ref %build-inputs "king") "/bin")
                          (string-append (assoc-ref %build-inputs "bio-vcf") "/bin")
                          (string-append (assoc-ref %build-inputs "bamutils") "/bin")
@@ -909,7 +929,7 @@ REPORT_STATUS	~a"
        ("pbgzip" ,pbgzip)
        ("perl" ,perl)
        ("picard" ,picard-bin-1.141)
-       ("plink2" ,plink2-1.90b3)
+       ("plink" ,plink)
        ("make" ,gnu-make)
        ("r" ,r)))
     (native-inputs
@@ -931,6 +951,12 @@ REPORT_STATUS	~a"
        ("perl-template-toolkit" ,perl-template-toolkit)
        ("perl-time-hires" ,perl-time-hires)
        ("r-qdnaseq" ,r-qdnaseq)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gtools" ,r-gtools)
+       ("r-pastecs" ,r-pastecs)
+       ("r-getoptlong" ,r-getoptlong)
+       ("r-devtools" ,r-devtools)
+       ("r-biobase" ,r-biobase)
        ("sambamba" ,sambamba)
        ("samtools" ,samtools)
        ("snpeff" ,snpeff-bin-4.1)
