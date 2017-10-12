@@ -600,23 +600,36 @@ single executable called @code{bam}.")
         (begin
           (use-modules (guix build utils))
           (let ((source-dir (assoc-ref %build-inputs "source"))
-                (output-dir (string-append %output "/share/damage-estimator")))
+                (output-dir (string-append %output "/share/damage-estimator"))
+                (files '("estimate_damage.pl"
+                         "estimate_damage_location.pl"
+                         "estimate_damage_location_context.pl"
+                         "plot_damage.R"
+                         "plot_damage_location.R"
+                         "plot_damage_location_context.R"
+                         "plot_random_sampling_damage.R"
+                         "random_sampling_and_estimate_damage.pl"
+                         "randomized2"
+                         "split_mapped_reads.pl")))
             (mkdir-p output-dir)
             (map (lambda (file)
                    (install-file (string-append source-dir "/" file)
                                  output-dir))
-                 '("estimate_damage.pl"
-                   "estimate_damage_location.pl"
-                   "estimate_damage_location_context.pl"
-                   "plot_damage.R"
-                   "plot_damage_location.R"
-                   "plot_damage_location_context.R"
-                   "plot_random_sampling_damage.R"
-                   "random_sampling_and_estimate_damage.pl"
-                   "randomized2"
-                   "split_mapped_reads.pl"))))))
+                 files)
+            ;; Patch samtools for Guix's samtools.
+            (substitute* (string-append output-dir "/split_mapped_reads.pl")
+              ((" = \"samtools")
+               (string-append " = \"" (assoc-ref %build-inputs "samtools")
+                              "/bin/samtools")))
+            (substitute* (map (lambda (file)
+                                (string-append output-dir "/" file)) files)
+              (("#!/usr/bin/perl")
+               (string-append "#!" (assoc-ref %build-inputs "perl")
+                              "/bin/perl")))))))
      (native-inputs
       `(("source" ,source)))
+     (inputs
+      `(("perl" ,perl)))
      (propagated-inputs
       `(("samtools" ,samtools)
         ("r-ggplot2" ,r-ggplot2)
@@ -625,6 +638,18 @@ single executable called @code{bam}.")
      (synopsis "")
      (description "")
      (license license:agpl3))))
+
+(define-public damage-estimator-hmf
+  (package (inherit damage-estimator)
+    (name "damage-estimator")
+    (version "1.0-hmf")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://www.roelj.com/damage_estimator-"
+                    version ".tar.gz"))
+              (sha256
+               (base32 "1fbyrmb2kzfbsw92agy715wqpkci2nkqwxlz7pb4qh5psk6crslg"))))))
 
 (define-public hmf-pipeline
   (package
@@ -924,7 +949,7 @@ REPORT_STATUS	~a"
        ("bio-vcf" ,bio-vcf)
        ("bwa" ,bwa)
        ("circos" ,circos)
-       ("damage-estimator" ,damage-estimator)
+       ("damage-estimator" ,damage-estimator-hmf)
        ("delly" ,delly-0.7.7)
        ("exoncov" ,exoncov)
        ("fastqc" ,fastqc-bin-0.11.4)
