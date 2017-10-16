@@ -347,3 +347,67 @@ feature selection algorithms.")
 (define-public python2-scikit-rebate
   (package-with-python2 python-scikit-rebate))
 
+(define-public python-logging
+  (package
+    (name "python-logging")
+    (version "0.4.9.6")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "logging" version))
+              (sha256
+               (base32
+                "05r4iz1qb2vdrv0kg7yv0ibp7wyryldvv18h60nh91ghfc3vbxi6"))))
+    (build-system python-build-system)
+    (home-page "http://www.red-dove.com/python_logging.html")
+    (synopsis "A logging module for Python")
+    (description "A logging module for Python")
+    (license #f)))
+
+(define-public python2-logging
+  (package-with-python2 python-logging))
+
+(define-public icgc-get
+  (let ((commit "656e48704a6dd5fd0e03572d3027983a0fd40fe9"))
+    (package
+      (name "icgc-get")
+      (version (string-append "0.0.0-" (string-take commit 7)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/icgc/icgc-get.git")
+                      (commit commit)))
+                (file-name (string-append name "-" version "-checkout"))
+                (sha256
+                 (base32
+                  "16dm0a9nfhcw26mkjw7f0vv2cv05caj6rf40g9yhkknfc3ypnkr8"))))
+      (build-system python-build-system)
+      (arguments
+       `(#:python ,python-2
+         #:tests? #f))
+      (inputs
+       `(("python2-pytest" ,python2-pytest)
+         ("python2-pytest-runner" ,python2-pytest-runner)
+         ("python2-certifi" ,python2-certifi)
+         ("python2-subprocess32" ,python2-subprocess32)
+         ("python2-tabulate" ,python2-tabulate)
+         ("python2-psutil" ,python2-psutil)
+         ("python2-requests" ,python2-requests)
+         ("python2-click" ,python2-click)
+         ("python2-logging" ,python2-logging)
+         ("python2-pyyaml" ,python2-pyyaml)
+         ("python2-idna" ,python2-idna)
+         ("python2-cryptography" ,python2-cryptography)
+         ("python2-pyopenssl" ,python2-pyopenssl)
+         ("python2-jinja2" ,python2-jinja2)))
+      (home-page "https://github.com/icgc/icgc-get")
+      (synopsis "Universal download client for ICGC data")
+      (description "The data for ICGC resides in many data repositories around
+the world.  These repositories each have their own environment (public cloud,
+private cloud, on-premise file systems, etc.), access controls (DACO, OAuth,
+asymmetric keys, IP filtering), download clients and configuration mechanisms.
+Thus, there is much for a user to learn and perform before actually acquiring
+the data.  This is compounded by the fact that the number of environments are
+increasing over time and their characteristics are frequently changing.  A
+coordinated mechanism to bootstrap and streamline this process is highly
+desirable.  This is the problem the icgc-get tool helps to solve.")
+      (license license:gpl3))))
