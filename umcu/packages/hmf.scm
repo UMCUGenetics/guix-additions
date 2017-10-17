@@ -1003,11 +1003,10 @@ REPORT_STATUS	~a"
                ;; Over-allocate by 2G for each job, because some SGE
                ;; implementations have memory overhead on each job.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
-                "my $h_vmem = (2 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m a -l h_vmem=$h_vmem")
+                "my $h_vmem = (2 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m a -V -l h_vmem=$h_vmem")
                ;; Make sure that environment variables are passed along
                ;; to the jobs correctly.
-               (("qsub -P") "qsub -V -P")
-               (("-m a -M") "-m a -V -M")))))))
+               (("qsub -P") "qsub -V -P")))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
