@@ -518,7 +518,7 @@ BAM files using @code{sambamba}.")
                (("java -Xmx")
                 (string-append (assoc-ref inputs "icedtea") "/bin/java -Xmx"))
                (("Rscript")
-                (string-append (assoc-ref inputs "r") "/bin/Rscript"))
+                (string-append (assoc-ref inputs "r-minimal") "/bin/Rscript"))
                (("qsub")
                 (string-append (assoc-ref inputs "grid-engine-core") "/bin/qsub"))
                (("use POSIX qw\\(tmpnam\\);") "use File::Temp qw/ :POSIX /;")
@@ -536,7 +536,7 @@ BAM files using @code{sambamba}.")
     (inputs
      `(("sambamba" ,sambamba)
        ("perl" ,perl)
-       ("r" ,r)
+       ("r-minimal" ,r-minimal)
        ("picard" ,picard-bin-1.141)
        ("icedtea" ,icedtea)
        ("grid-engine-core" ,grid-engine-core)))
@@ -845,7 +845,7 @@ single executable called @code{bam}.")
                 (string-append (assoc-ref %build-inputs "coreutils")
                                "/bin/wc "))
                (("Rscript ")
-                (string-append (assoc-ref %build-inputs "r") "/bin/Rscript ")))
+                (string-append (assoc-ref %build-inputs "r-minimal") "/bin/Rscript ")))
 
              (substitute* "Kinship.sh.tt"
                (("cp ")
@@ -1000,8 +1000,14 @@ REPORT_STATUS	~a"
                (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir"))
 
              (substitute* "HMF/Pipeline/Sge.pm"
+               ;; Over-allocate by 2G for each job, because some SGE
+               ;; implementations have memory overhead on each job.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
-                "my $h_vmem = (2 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m a -l h_vmem=$h_vmem")))))))
+                "my $h_vmem = (2 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m a -l h_vmem=$h_vmem")
+               ;; Make sure that environment variables are passed along
+               ;; to the jobs correctly.
+               (("qsub -P") "qsub -V -P")
+               (("-m a -M") "-m a -V -M")))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
@@ -1029,7 +1035,7 @@ REPORT_STATUS	~a"
        ("picard" ,picard-bin-1.141)
        ("plink" ,plink)
        ("make" ,gnu-make)
-       ("r" ,r)))
+       ("r-minimal" ,r-minimal)))
     (native-inputs
      `(("gzip" ,gzip)
        ("source" ,source)
