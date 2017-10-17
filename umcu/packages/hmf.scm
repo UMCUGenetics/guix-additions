@@ -38,6 +38,8 @@
   #:use-module (gnu packages perl)
   #:use-module (gnu packages python)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages tex)
+  #:use-module (gnu packages texinfo)
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages)
@@ -548,7 +550,9 @@ BAM files using @code{sambamba}.")
        ("r-reshape" ,r-reshape)
        ("r-xtable" ,r-xtable)
        ("r-getoptlong" ,r-getoptlong)
-       ("r-brew" ,r-brew)))
+       ("r-brew" ,r-brew)
+       ("texlive" ,texlive-bin)
+       ("texinfo" ,texinfo)))
     (home-page "https://github.com/UMCUGenetics/bamMetrics")
     (synopsis "Generate BAM statistics and PDF/HTML reports")
     (description "This package provides a tool to generate BAM statistics and
@@ -1062,7 +1066,6 @@ REPORT_STATUS	~a"
        ("r-getoptlong" ,r-getoptlong)
        ("r-devtools" ,r-devtools)
        ("r-biobase" ,r-biobase)
-       ,@(package-propagated-inputs bammetrics)
        ("sambamba" ,sambamba)
        ("samtools" ,samtools)
        ("snpeff" ,snpeff-bin-4.1)
@@ -1072,7 +1075,8 @@ REPORT_STATUS	~a"
        ("grep" ,grep)
        ("sed" ,sed)
        ("gawk" ,gawk)
-       ("grid-engine" ,grid-engine-core)))
+       ("grid-engine" ,grid-engine-core)
+       ,@(package-propagated-inputs bammetrics)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
     ;; make sure that the environment variables for these interpreters are
