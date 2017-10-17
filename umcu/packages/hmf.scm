@@ -1060,6 +1060,7 @@ REPORT_STATUS	~a"
        ("r-getoptlong" ,r-getoptlong)
        ("r-devtools" ,r-devtools)
        ("r-biobase" ,r-biobase)
+       ,@(package-propagated-inputs bammetrics)
        ("sambamba" ,sambamba)
        ("samtools" ,samtools)
        ("snpeff" ,snpeff-bin-4.1)
