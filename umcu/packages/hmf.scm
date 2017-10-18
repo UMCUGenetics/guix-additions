@@ -984,7 +984,7 @@ REPORT_STATUS	~a"
                (("/usr/bin/env perl") perlbin))
              (substitute* "create_config.pl"
                (("my \\$settingsDir = catfile\\(dirname\\(abs_path\\(\\$0\\)\\), updir\\(\\), \"settings\"\\);")
-                (string-append "my $settingsDir = \"" settings-dir "\";"))))
+                (string-append "my $settingsDir = \"\";"))))
 
            ;; Make sure the templates can be found.
            (with-directory-excursion lib-dir
