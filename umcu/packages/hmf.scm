@@ -1086,7 +1086,6 @@ REPORT_STATUS	~a"
        ("gawk" ,gawk)
        ("inetutils" ,inetutils)
        ("util-linux" ,util-linux)
-       ("icedtea" ,icedtea-8)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
        ,@(package-propagated-inputs gatk-bin-3.4-46)))
