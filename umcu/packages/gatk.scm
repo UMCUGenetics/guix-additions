@@ -21,8 +21,72 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system r)
   #:use-module (gnu packages)
-  #:use-module (gnu packages java))
+  #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages cran)
+  #:use-module (gnu packages java)
+  #:use-module (gnu packages statistics))
+
+(define-public r-gsalib
+  (package
+   (name "r-gsalib")
+   (version "2.1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "gsalib" version))
+     (sha256
+      (base32
+       "1k3zjdydzb0dfh1ihih08d4cw6rdamgb97cdqna9mf0qdjc3pcp1"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/gsalib")
+   (synopsis "Utility Functions For GATK")
+   (description "This package contains utility functions used by the Genome
+Analysis Toolkit (GATK) to load tables and plot data.  The GATK is a toolkit
+for variant discovery in high-throughput sequencing data.")
+   (license license:expat)))
+
+(define-public r-naturalsort
+  (package
+   (name "r-naturalsort")
+   (version "0.1.3")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "naturalsort" version))
+            (sha256
+             (base32
+              "0mz801y9mzld9ypp3xmsjw2d8l9q97sdnv09wrci9xi3yg2sjf6d"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/naturalsort")
+   (synopsis "Natural Ordering")
+   (description "This package provides functions related to human natural
+ordering.  It handles adjacent digits in a character sequence as a number
+so that natural sort function arranges a character vector by their numbers,
+not digit characters.  It is typically seen when operating systems lists
+file names.  For example, a sequence a-1.png, a-2.png, a-10.png looks
+naturally ordered because 1 < 2 < 10 and natural sort algorithm arranges
+so whereas general sort algorithms arrange it into a-1.png, a-10.png,
+a-2.png owing to their third and fourth characters.")
+   (license license:bsd-3)))
+
+(define-public r-hmm
+  (package
+   (name "r-hmm")
+   (version "1.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "HMM" version))
+            (sha256
+             (base32
+              "0z0hcqfixx1l2a6d3lpy5hmh0n4gjgs0jnck441akpp3vh37glzw"))))
+   (properties `((upstream-name . "HMM")))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/HMM")
+   (synopsis "Hidden Markov Models (HMM)")
+   (description "Easy to use library to setup, apply and make inference with
+discrete time and discrete space Hidden Markov Models")
+   (license license:gpl2+)))
 
 (define-public gatk-bin-3.4-0
   (package
@@ -40,8 +104,16 @@
              (base32 "022wi4d64myp8nb4chpypb3pi8vnx1gsjhkncpjyd8pdks0p72sv"))))
    (build-system gnu-build-system)
    (propagated-inputs
-    `(("icedtea" ,icedtea-7)
-      ("gatk-queue" ,gatk-queue-bin-3.4-0)))
+    `(("r-gsalib" ,r-gsalib)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-gplots" ,r-gplots)
+      ("r-reshape" ,r-reshape)
+      ("r-optparse" ,r-optparse)
+      ("r-dnacopy" ,r-dnacopy)
+      ("r-naturalsort" ,r-naturalsort)
+      ("r-dplyr" ,r-dplyr)
+      ("r-data-table" ,r-data-table)
+      ("r-hmm" ,r-hmm)))
    (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
@@ -84,10 +156,7 @@ capable of taking on projects of any size.")
                   version ".tar.bz2"))
             (sha256
              (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
-   (build-system gnu-build-system)
-   (propagated-inputs
-    `(("icedtea" ,icedtea-7)
-      ("gatk-queue" ,gatk-queue-bin-3.4-46)))))
+   (build-system gnu-build-system)))
 
 (define-public gatk-queue-bin-3.4-0
   (package
@@ -104,8 +173,6 @@ capable of taking on projects of any size.")
             (sha256
              (base32 "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73"))))
    (build-system gnu-build-system)
-   (propagated-inputs
-    `(("icedtea" ,icedtea-7)))
    (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
