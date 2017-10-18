@@ -37,6 +37,7 @@
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages pcre)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages python)
   #:use-module (gnu packages statistics)
@@ -69,6 +70,11 @@
   #:use-module (umcu packages varscan)
   #:use-module (umcu packages vcflib)
   #:use-module (umcu packages vcftools))
+
+(define-public grep-with-pcre
+  (package (inherit grep)
+    (name "grep-with-pcre")
+    (inputs `(("pcre" ,pcre)))))
 
 (define-public maven-bin
   ;; XXX: This package is only a binary inclusion of Maven.  It is different
@@ -1075,7 +1081,7 @@ REPORT_STATUS	~a"
        ("strelka" ,strelka-1.0.14)
        ("vcftools" ,vcftools)
        ("coreutils" ,coreutils)
-       ("grep" ,grep)
+       ("grep" ,grep-with-pcre)
        ("sed" ,sed)
        ("gawk" ,gawk)
        ("inetutils" ,inetutils)
