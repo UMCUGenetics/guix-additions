@@ -1078,7 +1078,7 @@ REPORT_STATUS	~a"
        ("gawk" ,gawk)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs gatk)))
+       ,@(package-propagated-inputs gatk-bin-3.4-46)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
     ;; make sure that the environment variables for these interpreters are
