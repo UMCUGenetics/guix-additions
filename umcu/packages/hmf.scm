@@ -834,8 +834,8 @@ single executable called @code{bam}.")
                 (string-append (assoc-ref %build-inputs "icedtea-7")
                                "/bin/java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G")))
 
-             ;; Fix a path mistake in BAF.sh.tt
-             (substitute* "BAF.sh.tt"
+             ;; Fix a path mistake in BAF.sh.tt and CallableLoci.sh.tt
+             (substitute* '("BAF.sh.tt" "CallableLoci.sh.tt")
                (("-jar \"\\[% opt.QUEUE_PATH %\\]/GenomeAnalysisTK.jar\"")
                 "-jar \"[% opt.GATK_PATH %]/GenomeAnalysisTK.jar\""))
 
