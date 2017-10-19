@@ -24,20 +24,19 @@
   #:use-module (guix build-system python)
   #:use-module (gnu packages python))
 
-(define-public python-neo4j-driver
+(define-public python2-neo4j-driver
   (package
-    (name "python-neo4j-driver")
-    (version "1.2.0")
+    (name "python2-neo4j-driver")
+    (version "1.4.0")
     (source (origin
               (method url-fetch)
               (uri (pypi-uri "neo4j-driver" version))
               (sha256
                (base32
-                "0cxyamw9kwfg91hklz9gl4gkcml9ajxx3302ggx93prf3qx32q5h"))))
+                "011r1vh182p8mm83d8dz9rfnc3l7rf7fd00cyrbyfzi71jmc4g98"))))
     (build-system python-build-system)
-    (arguments `(#:python ,python-2))
-    (inputs
-     `(("python2-tox" ,python2-tox)))
+    (arguments
+     `(#:python ,python-2))
     (home-page "https://neo4j.com/developer/python/")
     (synopsis "Neo4j driver code written in Python")
     (description "The Neo4j Python driver is officially supported by
@@ -45,17 +44,19 @@ Neo4j and connects to the database using the binary protocol.  It aims to
 be minimal, while being idiomatic to Python.")
     (license license:asl2.0)))
 
-(define-public python-py2neo
+(define-public python2-py2neo
   (package
-    (name "python-py2neo")
-    (version "1.2.0")
+    (name "python2-py2neo")
+    (version "3.1.2")
     (source (origin
               (method url-fetch)
               (uri (pypi-uri "py2neo" version))
               (sha256
                (base32
-                "0iahzfryiqa7xbb5cgrsg90ida8i9iwy2bs277xw4h1nk1y7y5wd"))))
+                "1f1q95vqcvlc3nsc33p841swnjdcjazddlq2dzi3qfnjqjrajxw1"))))
     (build-system python-build-system)
+    (arguments
+     `(#:python ,python-2))
     (home-page "http://py2neo.org")
     (synopsis "Library and toolkit for working with Neo4j in Python")
     (description "This package provides a client library and toolkit for
@@ -63,6 +64,3 @@ working with Neo4j from within Python applications and from the command
 line.  The core library has no external dependencies and has been carefully
 designed to be easy and intuitive to use.")
     (license license:asl2.0)))
-
-(define-public python2-py2neo
-  (package-with-python2 python-py2neo))
