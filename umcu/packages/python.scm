@@ -32,6 +32,7 @@
   #:use-module (guix build-system python)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
+  #:use-module (gnu packages admin)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gcc)
@@ -411,3 +412,281 @@ increasing over time and their characteristics are frequently changing.  A
 coordinated mechanism to bootstrap and streamline this process is highly
 desirable.  This is the problem the icgc-get tool helps to solve.")
       (license license:gpl3))))
+
+(define-public python2-pyopenssl-17.1.0
+  (package (inherit python2-pyopenssl)
+    (version "17.1.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "pyOpenSSL" version))
+              (sha256
+               (base32
+                "0qwmqhfsq84ydir9dz273ypmlcvs7v71m1jns0sd4k0h6lfsa82s"))))))
+
+(define-public python2-pyyaml-3.11
+  (package (inherit python2-pyyaml)
+    (version "3.11")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "http://pyyaml.org/download/pyyaml/PyYAML-"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "1s26125vfnskng58ym37xhwv8v0mm95b2cwbjfag8prfhy596v63"))))))
+
+(define-public python2-lxml-3.5.0b1
+  (package (inherit python2-lxml)
+    (version "3.5.0b1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "lxml" version))
+              (sha256
+               (base32
+                "12z24m5gkn8i0fszzdixbdkwvyq6ysf9ajhsqfdj8ibchggzli12"))))))
+
+(define-public python-pyperclip
+  (package
+    (name "python-pyperclip")
+    (version "1.5.27")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/asweigart/pyperclip.git")
+                    (commit "7deec0b6464bbda18ce2f700980edba2d6c51e10")))
+              (sha256
+               (base32
+                "1w17szqv1dlfhwwfss66afld4s7xz8yv65q9xaspfdarqrxyp19f"))))
+    (arguments `(#:tests? #f))
+    (build-system python-build-system)
+    (home-page "https://github.com/asweigart/pyperclip")
+    (synopsis "Cross-platform clipboard module for Python.")
+    (description "This package provides a cross-platform clipboard module for
+Python. It currently only handles plain text.")
+    (license license:bsd-3)))
+
+(define-public python2-pyperclip
+  (package-with-python2 python-pyperclip))
+
+(define-public python-cmd2
+  (package
+    (name "python-cmd2")
+    (version "0.7.7")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "cmd2" version))
+              (sha256
+               (base32
+                "0widbir8ay1fd4zm8l0rjq78j1cvbammbz8xs32crbanqsgzpqml"))))
+    (build-system python-build-system)
+    (inputs
+     `(("python-pytest" ,python-pytest)
+       ("python-mock" ,python-mock)))
+    (propagated-inputs
+     `(("python-six" ,python-six)
+       ("python-pyperclip" ,python-pyperclip)
+       ("python-pyparsing" ,python-pyparsing)))
+    (home-page "https://github.com/python-cmd2/cmd2")
+    (synopsis "Building interactive command line applications in Python")
+    (description "This package provides a tool for building interactive command
+line applications in Python")
+    (license license:expat)))
+
+(define-public python2-cmd2
+  (package-with-python2 python-cmd2))
+
+(define-public python-cmd2-0.6.8
+  (package (inherit python-cmd2)
+    (version "0.6.8")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "cmd2" version))
+              (sha256
+               (base32
+                "1a346zcd46c8gwbbp2cxsmvgfkyy26kwxjzdnkv7n47w6660sy5c"))))
+    (arguments `(#:tests? #f))))
+
+(define-public python2-cmd2-0.6.8
+  (package-with-python2 python-cmd2-0.6.8))
+
+(define-public python-sortedcontainers
+  (package
+    (name "python-sortedcontainers")
+    (version "1.5.7")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "sortedcontainers" version))
+       (sha256
+        (base32
+         "1sjh8lccbmvwna91mlhl5m3z4320p07h063b8x8br4p4cll49w0g"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+     `(("python-tox" ,python-tox)))
+    (home-page "http://www.grantjenks.com/docs/sortedcontainers/")
+    (synopsis "Python Sorted Container Types: SortedList, SortedDict, and SortedSet")
+    (description "Python Sorted Container Types: SortedList, SortedDict, and SortedSet")
+    (license license:asl2.0)))
+
+(define-public python-intervaltree
+  (package
+    (name "python-intervaltree")
+    (version "2.1.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "intervaltree" version))
+              (sha256
+               (base32
+                "02w191m9zxkcjqr1kv2slxvhymwhj3jnsyy3a28b837pi15q19dc"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (inputs
+     `(("python-pytest" ,python-pytest)))
+    (propagated-inputs
+     `(("python-sortedcontainers" ,python-sortedcontainers)))
+    (home-page "https://github.com/chaimleib/intervaltree")
+    (synopsis "Editable interval tree data structure for Python 2 and 3")
+    (description "Editable interval tree data structure for Python 2 and 3")
+    (license license:asl2.0)))
+
+(define-public python-intervaltree-2.0.4
+  (package (inherit python-intervaltree)
+    (version "2.0.4")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/chaimleib/intervaltree/archive/"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1vrsnqfj2japh8p9pmh0g7q4a2d1pj3khy8fjbhjrzbapnhqilb9"))))))
+
+(define-public python2-intervaltree-2.0.4
+  (package-with-python2 python-intervaltree-2.0.4))
+
+(define-public python-flask-0.10.1
+  (package (inherit python-flask)
+    (version "0.10.1")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append
+                   "https://github.com/pallets/flask/archive/"
+                   version ".tar.gz"))
+             (sha256
+              (base32
+               "15mndapc57jj8pq9g8x2p5vs488s0974c1wz8xyrkmnj9cdk5qdm"))))))
+
+(define-public python2-flask-0.10.1
+  (package-with-python2 python-flask-0.10.1))
+
+(define-public python2-progressbar
+  (package
+    (name "python-progressbar")
+    (version "2.3")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "progressbar" version))
+              (sha256
+               (base32
+                "0m0j93yfvbd8pw8cz2vdb9hyk9d0zkkd509k69jrw545jxr8mlxj"))))
+    (build-system python-build-system)
+    (arguments `(#:python ,python-2))
+    (home-page "http://code.google.com/p/python-progressbar")
+    (synopsis "Text progress bar library for Python.")
+    (description "Text progress bar library for Python.")
+    (license #f)))
+
+(define-public python2-requests-2.5.1
+  (package (inherit python2-requests)
+    (version "2.5.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/requests/requests/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "135maxpvkajvak715r9akzyfrcl10h99haxfvj8bwwwjsh1s4phy"))))))
+
+(define-public python2-parcel
+  (package
+    (name "python2-parcel")
+    (version "0.2.2")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/LabAdvComp/parcel.git")
+                    (commit "50d6124a3e3fcd2a234b3373831075390b886a15")))
+              (sha256
+               (base32
+                "05cpd6kzky60gwfn40vw5r8spgfa9ycr5x7v8q159pv6szxqy5yg"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f
+       #:python ,python-2
+       #:phases
+       (modify-phases %standard-phases
+         (add-before 'build 'patch-version-number
+           (lambda* (#:key inputs #:allow-other-keys)
+             (substitute* "setup.py"
+               (("Flask==0.10.1") "Flask==0.10.1.post20171020"))
+             #t))
+         (add-before 'build 'set-home
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (setenv "HOME" (getcwd))))
+         (add-before 'install 'set-pythonpath
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let* ((out (assoc-ref outputs "out"))
+                    (python-version "2.7")
+                    (libdir (string-append out "/lib/python"
+                                           python-version "/site-packages"))
+                    (bindir (string-append out "/bin")))
+               (mkdir-p bindir)
+               (mkdir-p libdir)
+               (setenv "PYTHONPATH"
+                       (string-append (getenv "PYTHONPATH") ":" libdir))))))))
+    (propagated-inputs
+     `(("fabric" ,fabric)
+       ("python2-termcolor" ,python2-termcolor)
+       ("python2-intervaltree" ,python2-intervaltree-2.0.4)
+       ("python2-flask" ,python2-flask-0.10.1)
+       ("python2-cmd2" ,python2-cmd2-0.6.8)
+       ("python2-progressbar" ,python2-progressbar)
+       ("python2-requests-2.5.1" ,python2-requests-2.5.1)))
+    (home-page "https://bitbucket.org/andrewmacgregor/parcel")
+    (synopsis "Python Webapp Deployment Made Easier.")
+    (description "Python Webapp Deployment Made Easier.")
+    (license #f)))
+
+(define-public gdc-client
+  (package
+   (name "gdc-client")
+   (version "1.3.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/NCI-GDC/gdc-client/archive/"
+                  version ".tar.gz"))
+            (sha256
+             (base32 "07vmhim36yn1m0fpj5sz1xs2wxdsqsnvjqzihsgyc7s9k1s7z11a"))))
+   (build-system python-build-system)
+   (arguments `(#:python ,python-2))
+   ;; python2-ndg-httpsclient uses pyOpenSSL 17.3.0.  We can't propagate
+   ;; both.
+   (inputs
+    `(("python2-pytest" ,python2-pytest)))
+   (propagated-inputs
+    `(("python2-pyopenssl" ,python2-pyopenssl-17.1.0)
+      ("python2-cryptography" ,python2-cryptography)
+      ("python2-jsonschema" ,python2-jsonschema)
+      ("python2-lxml" ,python2-lxml-3.5.0b1)
+      ("python2-pyyaml" ,python2-pyyaml-3.11)
+      ("python2-parcel" ,python2-parcel)
+      ("python2-pyasn1" ,python2-pyasn1)
+      ("python2-ndg-httpsclient" ,python2-ndg-httpsclient)
+      ,@(package-propagated-inputs python2-parcel)))
+   (home-page "https://gdc.nci.nih.gov/access-data/gdc-data-transfer-tool")
+   (synopsis "GDC Data Transfer Tool")
+   (description "This package provides several convenience functions over the
+GDC API which provides general download/upload via HTTPS.")
+   (license license:asl2.0)))
