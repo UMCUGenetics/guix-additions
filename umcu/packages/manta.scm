@@ -108,7 +108,22 @@
                (string-append "samtoolsBin=\"" (string-append
                                               (assoc-ref inputs "samtools")
                                               "/bin/samtools" "\""))))
-            (substitute* "src/python/lib/makeRunScript.py"
+            (substitute* '("src/python/lib/makeRunScript.py"
+                           "src/demo/runMantaWorkflowDemo.py"
+                           "src/python/bin/configManta.py"
+                           "src/python/libexec/filterBam.py"
+                           "src/python/libexec/sortVcf.py"
+                           "src/python/libexec/mergeBam.py"
+                           "src/python/libexec/extractSmallIndelCandidates.py"
+                           "src/python/libexec/sortEdgeLogs.py"
+                           "src/python/libexec/vcfCmdlineSwapper.py"
+                           "src/python/libexec/denovo_scoring.py"
+                           "src/python/libexec/cat.py"
+                           "src/python/libexec/mergeChromDepth.py"
+                           "src/python/libexec/ploidyFilter.py"
+                           "src/python/libexec/sortBam.py"
+                           "src/python/lib/makeRunScript.py"
+                           "src/srcqc/run_cppcheck.py")
                          (("/usr/bin/env python") (string-append
                                                    (assoc-ref inputs "python")
                                                    "/bin/python"))))))))
