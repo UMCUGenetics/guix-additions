@@ -674,10 +674,10 @@ line applications in Python")
    ;; python2-ndg-httpsclient uses pyOpenSSL 17.3.0.  We can't propagate
    ;; both.
    (inputs
-    `(("python2-pytest" ,python2-pytest)))
-   (propagated-inputs
     `(("python2-pyopenssl" ,python2-pyopenssl-17.1.0)
-      ("python2-cryptography" ,python2-cryptography)
+      ("python2-pytest" ,python2-pytest)))
+   (propagated-inputs
+    `(("python2-cryptography" ,python2-cryptography)
       ("python2-jsonschema" ,python2-jsonschema)
       ("python2-lxml" ,python2-lxml-3.5.0b1)
       ("python2-pyyaml" ,python2-pyyaml-3.11)
