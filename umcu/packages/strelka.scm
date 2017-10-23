@@ -75,9 +75,23 @@
                     (bin (string-append out "/bin"))
                     (lib (string-append out "/lib"))
                     (libexec (string-append out "/libexec")))
+
+               ;; Substitute the binary directories for samtools and bgzip.
+               (substitute* '("src/perl/bin/configureStrelkaWorkflow.pl"
+                              "src/perl/libexec/callSomaticVariants.pl"
+                              "src/perl/libexec/consolidateResults.pl")
+                            (("my \\$samtoolsDir = File::Spec->catdir\\(\\$optDir,'samtools'\\);")
+                             (string-append "my $samtoolsDir = \""
+                                            (assoc-ref inputs "samtools") "/bin\";")))
+
+               (substitute* "src/perl/libexec/consolidateResults.pl"
+                 (("my \\$bgzipBin = File::Spec->catfile\\(\\$optDir,'tabix','bgzip'\\);")
+                  (string-append "my $bgzipBin = \"" (assoc-ref inputs "htslib") "/bin\";")))
+
                (mkdir-p perl-lib-dir)
                (mkdir-p lib)
                (mkdir-p libexec)
+
                (install-file "src/c++/libexec/countFastaBases" libexec)
                (install-file "src/perl/bin/configureStrelkaWorkflow.pl" bin)
                (install-file "src/perl/libexec/consolidateResults.pl" libexec)
@@ -86,16 +100,24 @@
                (install-file "src/perl/lib/Utils.pm" perl-lib-dir)
                (install-file "strelka/src/bin/strelka2" bin)
                (install-file "strelka/src/bin/starling2" bin)
-               (install-file "strelka/src/bin/strelkaSiteSimulator" bin)))))))
+               (install-file "strelka/src/bin/strelkaSiteSimulator" bin)
+
+               ;; The configureStrelkaWorkflow.pl script looks for the
+               ;; strelka2 binary in the libexec directory.
+               (system* "ln" "--symbolic"
+                        (string-append bin "/strelka2")
+                        (string-append libexec "/strelka2"))))))))
     (inputs
      `(("boost" ,boost)
        ("perl" ,perl)
-       ("zlib" ,zlib)))
+       ("zlib" ,zlib)
+       ("samtools" ,samtools)))
     (native-inputs
      `(("bash" ,bash)
        ("python" ,python-2)))
     (propagated-inputs
-     `(("vcftools" ,vcftools)))
+     `(("vcftools" ,vcftools)
+       ("htslib" ,htslib)))
     (native-search-paths (package-native-search-paths perl))
     (home-page "https://sites.google.com/site/strelkasomaticvariantcaller/")
     (synopsis "Somatic variant calling workflow for matched tumor-normal samples")
