@@ -92,6 +92,11 @@
                (mkdir-p lib)
                (mkdir-p libexec)
 
+               ;; Instead of patching out $optDir throughout the code, we can create
+               ;; an empty directory so that these checks pass.  We already patched the
+               ;; path to samtools and bgzip, so this should be fine.
+               (mkdir-p (string-append out "/opt/samtools"))
+
                (install-file "src/c++/libexec/countFastaBases" libexec)
                (install-file "src/perl/bin/configureStrelkaWorkflow.pl" bin)
                (install-file "src/perl/libexec/consolidateResults.pl" libexec)
