@@ -82,11 +82,17 @@
                               "src/perl/libexec/consolidateResults.pl")
                             (("my \\$samtoolsDir = File::Spec->catdir\\(\\$optDir,'samtools'\\);")
                              (string-append "my $samtoolsDir = \""
-                                            (assoc-ref inputs "samtools") "/bin\";")))
+                                            (assoc-ref inputs "samtools") "/bin\";"))
+                            (("my \\$samtoolsBin = File::Spec->catfile\\(\\$optDir,'samtools','samtools'\\);")
+                             (string-append "my $samtoolsBin = \""
+                                            (assoc-ref inputs "samtools")
+                                            "/bin/samtools\";")))
 
                (substitute* "src/perl/libexec/consolidateResults.pl"
                  (("my \\$bgzipBin = File::Spec->catfile\\(\\$optDir,'tabix','bgzip'\\);")
-                  (string-append "my $bgzipBin = \"" (assoc-ref inputs "htslib") "/bin\";")))
+                  (string-append "my $bgzipBin = \"" (assoc-ref inputs "htslib") "/bin\";"))
+                 (("my \\$getHeaderCmd = \"bash")
+                  (string-append "my $getHeaderCmd = \"" (assoc-ref inputs "bash") "/bin/bash")))
 
                (mkdir-p perl-lib-dir)
                (mkdir-p lib)
@@ -115,6 +121,7 @@
     (inputs
      `(("boost" ,boost)
        ("perl" ,perl)
+       ("bash" ,bash)
        ("zlib" ,zlib)
        ("samtools" ,samtools)))
     (native-inputs
