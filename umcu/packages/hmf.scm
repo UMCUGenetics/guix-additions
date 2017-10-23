@@ -966,7 +966,7 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
                          (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
                          (string-append (assoc-ref %build-inputs "gatk") "/share/java/gatk")
-                         (string-append (assoc-ref %build-inputs "strelka") "/bin")
+                         (assoc-ref %build-inputs "strelka")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
