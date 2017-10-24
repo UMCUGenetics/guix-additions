@@ -90,7 +90,7 @@
 
                (substitute* "src/perl/libexec/consolidateResults.pl"
                  (("my \\$bgzipBin = File::Spec->catfile\\(\\$optDir,'tabix','bgzip'\\);")
-                  (string-append "my $bgzipBin = \"" (assoc-ref inputs "htslib") "/bin\";"))
+                  (string-append "my $bgzipBin = \"" (assoc-ref inputs "htslib") "/bin/bgzip\";"))
                  (("my \\$getHeaderCmd = \"bash")
                   (string-append "my $getHeaderCmd = \"" (assoc-ref inputs "bash") "/bin/bash")))
 
