@@ -44,6 +44,51 @@
             (sha256
              (base32 "1vjgj6aacjsw6iczy09h18q5kx8ppxrrcq8w38g159zq7y3732kb"))))
    (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (let* ((out (assoc-ref %outputs "out"))
+                   (bin (string-append out "/share/java/" ,name))
+                   (share (string-append out "/share/snpeff"))
+                   (clinvar-dir (string-append share "/data/clinvar"))
+                   (clinvar-target (string-append clinvar-dir "/clinvar.vcf.gz"))
+                   (clinvar (assoc-ref inputs "clinvar"))
+                   (dbsnp-dir (string-append share "/data/dbsnp"))
+                   (dbsnp-target (string-append dbsnp-dir "/dbSnp.vcf.gz"))
+                   (dbsnp (assoc-ref inputs "dbsnp"))
+                   (create-and-copy
+                    (lambda (dir)
+                      (mkdir (string-append bin "/" dir))
+                      (copy-recursively dir (string-append bin "/" dir)))))
+              (mkdir-p bin)
+              (mkdir-p clinvar-dir)
+              (mkdir-p dbsnp-dir)
+              (substitute* "snpEff.config"
+                (("data.dir = ./data/")
+                 (string-append "data.dir = " share "/data"))
+                (("database.local.clinvar      = ./db/GRCh38/clinvar/clinvar-latest.vcf.gz")
+                 (string-append "database.local.clinvar      = "
+                                clinvar-dir "/clinvar.vcf.gz"))
+                (("database.local.dbsnp        = ./db/GRCh38/dbSnp/dbSnp.vcf.gz")
+                 (string-append "database.local.dbsnp        = "
+                                dbsnp-dir "/dbSnp.vcf.gz")))
+              (copy-file clinvar clinvar-target)
+              (copy-file dbsnp dbsnp-target)
+
+              ;; To be able to reset the timestamps of these files, Guix must
+              ;; temporarily have write-access.
+              (chmod clinvar-target #o644)
+              (chmod dbsnp-target #o644)
+
+              (install-file "snpEff.config" bin)
+              (install-file "snpEff.jar" bin)
+              (install-file "SnpSift.jar" bin)
+              (map create-and-copy '("scripts" "galaxy"))))))))
    (propagated-inputs
     `(("icedtea" ,icedtea-7)
       ("perl" ,perl)
@@ -56,24 +101,25 @@
       ("python" ,python-2)
       ("bash" ,bash)
       ("r" ,r)))
-   (arguments
-    `(#:tests? #f ; This is a binary package only, so no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; Nothing to configure.
-        (delete 'build) ; This is a binary package only.
-         (replace 'install
-           (lambda _
-             (let* ((out (assoc-ref %outputs "out"))
-                    (bin (string-append out "/share/java/" ,name))
-                    (create-and-copy
-                     (lambda (dir)
-                       (mkdir (string-append bin "/" dir))
-                       (copy-recursively dir (string-append bin "/" dir)))))
-               (install-file "snpEff.config" bin)
-               (install-file "snpEff.jar" bin)
-               (install-file "SnpSift.jar" bin)
-               (map create-and-copy '("scripts" "galaxy"))))))))
+   (inputs
+    `(("clinvar"
+       ,(origin
+          (method url-fetch)
+          (uri (string-append
+                "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38"
+                "/clinvar.vcf.gz"))
+          (sha256
+           (base32
+            "016wj03d5i4mrks0zw2bm7ir5fp08w2h894d7zxips3z0hlzw88r"))))
+      ("dbsnp"
+       ,(origin
+          (method url-fetch)
+          (uri (string-append
+                "ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/"
+                "VCF/00-All.vcf.gz"))
+          (sha256
+           (base32
+            "023z4i4bjs3g1ma37vjphwr3by6j93mbnib6rh09g3ww4pqgl8av"))))))
    (home-page "http://snpeff.sourceforge.net/")
    (synopsis "Genetic variant annotation and effect prediction toolbox.")
    (description "Genetic variant annotation and effect prediction toolbox.
@@ -90,5 +136,4 @@ acid changes).")
       (method url-fetch)
       (uri "mirror://sourceforge/snpeff/snpEff_v4_1h_core.zip")
       (sha256
-        (base32 "1j45jp4y8wj0q01clxsx46w1f4jm2wh85yl1mbrha7qbqs8c1qn3"))))
-  ))
+        (base32 "1j45jp4y8wj0q01clxsx46w1f4jm2wh85yl1mbrha7qbqs8c1qn3"))))))
