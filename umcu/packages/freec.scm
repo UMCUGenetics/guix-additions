@@ -21,7 +21,10 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
-  #:use-module (gnu packages))
+  #:use-module (guix build-system trivial)
+  #:use-module (gnu packages)
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages compression))
 
 (define-public freec-8.7
   (package
@@ -120,3 +123,37 @@ mappability data (files created by GEM).")
        (file-name (string-append "freec-" version ".tar.gz"))
        (sha256
         (base32 "0z657hbpnc76pkli7g1ka07q4bpl41zarjhq6fwh6g9s368id15j"))))))
+
+(define-public freec-mappability-tracks
+  (package
+    (name "freec-mappability-tracks")
+    (version "hg19_100bp")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://xfer.curie.fr/get/nil/7hZIk1C63h0/"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1qp05na2lb7w35nqii9gzv4clmppi3hnk5w3kzfpz5sz27fw1lym"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((source-file (assoc-ref %build-inputs "source"))
+               (output-dir (string-append %output "/share/freec"))
+               (tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin")))
+           (setenv "PATH" PATH)
+           (mkdir-p output-dir)
+           (with-directory-excursion output-dir
+             (system* tar "-xvf" source-file))))))
+    (inputs
+     `(("tar" ,tar)
+       ("gzip" ,gzip)))
+    (home-page "http://boevalab.com/FREEC")
+    (synopsis "")
+    (description "")
+    (license #f)))

@@ -22,7 +22,12 @@
   #:use-module (guix utils)
   #:use-module (guix download)
   #:use-module (guix build-system trivial)
-  #:use-module (gnu packages))
+  #:use-module (gnu packages)
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages compression)
+  #:use-module (gnu packages java)
+  #:use-module (umcu packages igvtools))
 
 (define-public clinvar
   (package
@@ -112,4 +117,211 @@ as efficiently and effectively as possible.")
     (home-page "https://www.ncbi.nlm.nih.gov/projects/SNP/")
     (synopsis "Short genetic variations")
     (description "")
+    (license #f)))
+
+(define-public 1000genomes-phase1-indels
+  (package
+    (name "1000genomes-phase1-indels")
+    (version "b37")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "ftp://"
+                                  "gsapubftp-anonymous@"
+                                  "ftp.broadinstitute.org/bundle/b37/"
+                                  "1000G_phase1.indels.b37.vcf.gz"))
+              (sha256
+               (base32 "173kkmyvyvfa55v2rbpywsrp7159yyl1sx30y243jkxzkjrgc7bc"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let* ((source-file (assoc-ref %build-inputs "source"))
+                (output-dir (string-append %output "/share/1000G"))
+                (output-file-uncompressed (string-append output-dir
+                                            "/1000G_phase1.indels.b37.vcf"))
+                (output-file (string-append output-file-uncompressed ".gz"))
+                (java (string-append (assoc-ref %build-inputs "icedtea")
+                                     "/bin/java"))
+                (igvtools (string-append (assoc-ref %build-inputs "igvtools")
+                                         "/share/java/igvtools/igvtools.jar"))
+                (path (string-append (assoc-ref %build-inputs "htslib") "/bin:"
+                                     (assoc-ref %build-inputs "gzip") "/bin")))
+           ;; The gunzip command needs to find gzip in PATH.
+           (setenv "PATH" path)
+           (mkdir-p output-dir)
+           (copy-file source-file output-file)
+
+           ;; To create the index, we need to compress the VCF file with
+           ;; bgzip, instead of the regular gzip.
+           (system* "gunzip" output-file)
+           (system* "bgzip" output-file-uncompressed)
+
+           ;; Finally, we can index the file using igvtools.
+           (system* java "-jar" igvtools "index" output-file)))))
+    (inputs
+     `(("icedtea" ,icedtea-7)
+       ("igvtools" ,igvtools-bin-2.3.71)
+       ("htslib" ,htslib)
+       ("gzip" ,gzip)))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
+(define-public mills-1000G-gold-standard-indels
+  (package
+    (name "1000genomes-mills-gold-standard-indels")
+    (version "b37")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "ftp://"
+                                  "gsapubftp-anonymous@"
+                                  "ftp.broadinstitute.org/bundle/b37/"
+                                  "Mills_and_1000G_gold_standard.indels.b37.vcf.gz"))
+              (sha256
+               (base32 "1n9bf6chfr9pxhk0mfiiqy28pmkyb0xpxz0rwvwrw031cw39dc1l"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let* ((source-file (assoc-ref %build-inputs "source"))
+                (output-dir (string-append %output "/share/1000G"))
+                (output-file-wo-ext
+                 (string-append output-dir
+                                "/Mills_and_1000G_gold_standard.indels.b37"))
+                (bcf-output-file (string-append output-file-wo-ext ".bcf"))
+                (output-file-uncompressed (string-append output-file-wo-ext ".vcf"))
+                (output-file (string-append output-file-uncompressed ".gz"))
+                (java (string-append (assoc-ref %build-inputs "icedtea")
+                                     "/bin/java"))
+                (igvtools (string-append (assoc-ref %build-inputs "igvtools")
+                                         "/share/java/igvtools/igvtools.jar"))
+                (path (string-append (assoc-ref %build-inputs "htslib") "/bin:"
+                                     (assoc-ref %build-inputs "gzip") "/bin:"
+                                     (assoc-ref %build-inputs "bcftools") "/bin:"
+                                     (assoc-ref %build-inputs "grep") "/bin")))
+
+           ;; The gunzip command needs to find gzip in PATH.
+           (setenv "PATH" path)
+           (mkdir-p output-dir)
+           (copy-file source-file output-file)
+
+           ;; To create the index, we need to compress the VCF file with
+           ;; bgzip, instead of the regular gzip.
+           (system* "gunzip" output-file)
+           (chmod output-file-uncompressed #o644)
+
+           ;; The "vcf" file seems to be actually a "bcf" file.  We can use bcftools to
+           ;; convert it to a VCF file.
+           (rename-file output-file-uncompressed bcf-output-file)
+           (system (string-append "bcftools view "
+                                  bcf-output-file
+                                  " | grep -v bcftools_view > "
+                                  output-file-uncompressed))
+
+           (system* "bgzip" output-file-uncompressed)
+           (delete-file bcf-output-file)
+
+           ;; Finally, we can index the file using igvtools.
+           (system* java "-jar" igvtools "index" output-file)))))
+    (inputs
+     `(("icedtea" ,icedtea-7)
+       ("igvtools" ,igvtools-bin-2.3.71)
+       ("htslib" ,htslib)
+       ("gzip" ,gzip)
+       ("bcftools" ,bcftools)
+       ("grep" ,grep)))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
+(define-public dbsnp-138
+  (package
+    (name "dbsnp")
+    (version "138-b37")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "ftp://"
+                                  "gsapubftp-anonymous@"
+                                  "ftp.broadinstitute.org/bundle/b37/"
+                                  "dbsnp_138.b37.vcf.gz"))
+              (sha256
+               (base32 "0c7i6qw6j6chhqni826jr98b4kfjg72mql36wdfydiiv7679zx5n"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let* ((source-file (assoc-ref %build-inputs "source"))
+                (output-dir (string-append %output "/share/1000G"))
+                (output-file-uncompressed (string-append output-dir
+                                            "/dbsnp_138.b37.vcf"))
+                (output-file (string-append output-file-uncompressed ".gz"))
+                (java (string-append (assoc-ref %build-inputs "icedtea")
+                                     "/bin/java"))
+                (igvtools (string-append (assoc-ref %build-inputs "igvtools")
+                                         "/share/java/igvtools/igvtools.jar"))
+                (path (string-append (assoc-ref %build-inputs "htslib") "/bin:"
+                                     (assoc-ref %build-inputs "gzip") "/bin")))
+           ;; The gunzip command needs to find gzip in PATH.
+           (setenv "PATH" path)
+           (mkdir-p output-dir)
+           (copy-file source-file output-file)
+
+           ;; To create the index, we need to compress the VCF file with
+           ;; bgzip, instead of the regular gzip.
+           (system* "gunzip" output-file)
+           (system* "bgzip" output-file-uncompressed)
+
+           ;; Finally, we can index the file using igvtools.
+           (system* java "-jar" igvtools "index" output-file)))))
+    (inputs
+     `(("icedtea" ,icedtea-7)
+       ("igvtools" ,igvtools-bin-2.3.71)
+       ("htslib" ,htslib)
+       ("gzip" ,gzip)))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
+(define-public dx-tracks
+  (package
+    (name "dx-tracks")
+    (version "1.2.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/UMCUGenetics/Dx_tracks/releases/"
+                    "download/v" version "/v" version ".tar.gz"))
+              (sha256
+               (base32 "0vcyd888yq6qqal5n9l5g361nzx3wq70zlbn9bhza2qkhfd3n5pp"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((tar (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (input-file (assoc-ref %build-inputs "source"))
+               (output-dir (string-append %output "/share/data/dx-tracks"))
+               (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin")))
+           (setenv "PATH" PATH)
+           (mkdir-p output-dir)
+           (with-directory-excursion output-dir
+             (system* tar "-xvf" input-file "--strip-components=1"))))))
+    (inputs
+     `(("tar" ,tar)
+       ("gzip" ,gzip)))
+    (home-page "https://github.com/UMCUGenetics/Dx_tracks")
+    (synopsis "")
+    (description "")
+    ;; The files are licensed CC-BY-ND.  The NoDerivatives clause makes it
+    ;; non-free, and therefore, the license cannot be added to Guix upstream.
     (license #f)))
