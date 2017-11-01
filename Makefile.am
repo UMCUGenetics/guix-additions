@@ -30,6 +30,7 @@ SOURCES =                                       \
   umcu/packages/conifer.scm                     \
   umcu/packages/contra.scm                      \
   umcu/packages/databases.scm                   \
+  umcu/packages/datasets.scm                    \
   umcu/packages/delly.scm                       \
   umcu/packages/fast5.scm                       \
   umcu/packages/fastqc.scm                      \
