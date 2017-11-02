@@ -92,7 +92,7 @@ next-generation sequence data, and genomic annotations.")
      (sha256
       (base32 "1z7fx79jfsqm0ry89mchifxxrj7vl1h9f98x6p2r2vcbx8f4zvi8"))))
    (build-system gnu-build-system)
-   (propagated-inputs
+   (inputs
     `(("icedtea" ,icedtea-7)))
    (native-inputs
     `(("unzip" ,unzip)))
@@ -102,14 +102,20 @@ next-generation sequence data, and genomic annotations.")
       (modify-phases %standard-phases
         (delete 'configure) ; Nothing to configure.
         (delete 'build) ; This is a binary package only.
-         (replace 'install
-           (lambda _
-             (let* ((out (assoc-ref %outputs "out"))
-                    (bin (string-append out "/share/java/" ,name)))
-               (install-file "igvtools.jar" bin)
-               (install-file "igvtools" bin)
-               (mkdir (string-append bin "/genomes"))
-               (copy-recursively "genomes" (string-append bin "/genomes"))))))))
+        (add-before 'install 'fix-java-command
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (substitute* "igvtools"
+              (("java -D") (string-append
+                            (assoc-ref inputs "icedtea")
+                            "/bin/java -D")))))
+        (replace 'install
+          (lambda _
+            (let* ((out (assoc-ref %outputs "out"))
+                   (bin (string-append out "/share/java/" ,name)))
+              (install-file "igvtools.jar" bin)
+              (install-file "igvtools" bin)
+              (mkdir (string-append bin "/genomes"))
+              (copy-recursively "genomes" (string-append bin "/genomes"))))))))
    (home-page "http://www.broadinstitute.org/software/igv/")
    (synopsis "Integrative Genomics Viewer")
    (description "The Integrative Genomics Viewer (IGV) is a high-performance
