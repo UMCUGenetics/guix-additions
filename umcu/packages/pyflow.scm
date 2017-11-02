@@ -50,3 +50,6 @@
     (description "This package is a Python module to manage tasks in the context
 of a task dependency graph.  It has some similarities to make.")
     (license license:bsd-2)))
+
+(define-public pyflow-2
+  (package-with-python2 pyflow))

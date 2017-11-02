@@ -81,14 +81,16 @@
             (substitute* "redist/CMakeLists.txt"
                 (("set\\(SAMTOOLS_DIR \"/usr/bin\"\\)")
                  (string-append "set(SAMTOOLS_DIR \""
-                                (assoc-ref inputs "samtools") "/bin\")")))))
+                                (assoc-ref inputs "samtools") "/bin\")")))
+            #t))
         (add-before 'configure 'use-dynamic-boost
           (lambda* (#:key inputs outputs #:allow-other-keys)
             ;; By default, it looks for static libraries.  This substitution
             ;; makes sure it looks for dynamically linked versions of Boost.
             (substitute* "src/cmake/boost.cmake"
               (("Boost_USE_STATIC_LIBS ON")
-               "Boost_USE_STATIC_LIBS OFF"))))
+               "Boost_USE_STATIC_LIBS OFF"))
+            #t))
         (add-before 'configure 'fix-tool-paths
           (lambda* (#:key inputs outputs #:allow-other-keys)
             (substitute* "src/python/lib/mantaOptions.py"
@@ -126,11 +128,20 @@
                            "src/srcqc/run_cppcheck.py")
                          (("/usr/bin/env python") (string-append
                                                    (assoc-ref inputs "python")
-                                                   "/bin/python"))))))))
+                                                   "/bin/python")))
+            #t))
+        (add-after 'install 'fix-pyflow-shebang
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (substitute* (string-append (assoc-ref outputs "out")
+                                        "/lib/python/pyflow/pyflow.py")
+              (("#!/usr/bin/env python")
+               (string-append "#!" (assoc-ref inputs "python")
+                              "/bin/python")))
+            #t)))))
     (inputs
      `(("cmake" ,cmake)
        ("boost" ,boost)
-       ("pyflow" ,pyflow)
+       ("pyflow" ,pyflow-2)
        ("python" ,python-2)
        ("cppcheck" ,cppcheck)
        ("doxygen" ,doxygen)
@@ -167,7 +178,7 @@ large insertions within a single efficient workflow.")
     (inputs
      `(("cmake" ,cmake)
        ("boost" ,boost-1.57)
-       ("pyflow" ,pyflow)
+       ("pyflow" ,pyflow-2)
        ("python" ,python-2)
        ("cppcheck" ,cppcheck)
        ("doxygen" ,doxygen)
