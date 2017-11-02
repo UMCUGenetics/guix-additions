@@ -325,3 +325,36 @@ as efficiently and effectively as possible.")
     ;; The files are licensed CC-BY-ND.  The NoDerivatives clause makes it
     ;; non-free, and therefore, the license cannot be added to Guix upstream.
     (license #f)))
+
+(define-public dbnsfp
+  (package
+    (name "dbnsfp")
+    (version "2.9")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "ftp://dbnsfp:dbnsfp@dbnsfp.softgenetics.com/dbNSFPv"
+                    version ".zip"))
+              (sha256
+               (base32
+                "1bs2jpz8d2a9nkc72hhwynzavylr1srsbdrfmmcqpb4pgzqyzk24"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((source-file (assoc-ref %build-inputs "source"))
+               (output-dir (string-append %output "/share/dbnsfp"))
+               (unzip (string-append (assoc-ref %build-inputs "unzip") "/bin/unzip")))
+           (mkdir-p output-dir)
+           (with-directory-excursion output-dir
+             (system* unzip source-file))))))
+    (inputs
+     `(("unzip" ,unzip)))
+    (home-page "https://sites.google.com/site/jpopgen/dbNSFP")
+    (synopsis "Database for functional prediction of non-synonymous SNPs")
+    (description " dbNSFP is a database developed for functional prediction and
+annotation of all potential non-synonymous single-nucleotide variants (nsSNVs)
+in the human genome.")
+    (license #f)))
