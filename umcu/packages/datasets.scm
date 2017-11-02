@@ -358,3 +358,33 @@ as efficiently and effectively as possible.")
 annotation of all potential non-synonymous single-nucleotide variants (nsSNVs)
 in the human genome.")
     (license #f)))
+
+(define-public giab-na12878-high-confidence-regions
+  (package
+    (name "giab-na12878-high-confidence-regions")
+    (version "NISTv3.2.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/release/"
+                    "NA12878_HG001/" version "/NA12878_GIAB_highconf_IllFB"
+                    "-IllGATKHC-CG-Ion-Solid_ALLCHROM_v3.2.2_highconf.bed"))
+              (sha256
+               (base32 "1adj878im498lfplklkir7v2chv1bxamgw3y2a62599wvbhap79q"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((source-file (assoc-ref %build-inputs "source"))
+               (output-dir (string-append %output "/share/giab")))
+           (mkdir-p output-dir)
+           (copy-file source-file
+                      (string-append output-dir "/NA12878_GIAB_highconf_IllFB"
+                                     "-IllGATKHC-CG-Ion-Solid_ALLCHROM_v3.2.2"
+                                     "_highconf.bed"))))))
+    (home-page "http://jimb.stanford.edu/giab")
+    (synopsis "")
+    (description "")
+    (license #f)))
