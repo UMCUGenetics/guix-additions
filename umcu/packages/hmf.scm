@@ -757,10 +757,9 @@ single executable called @code{bam}.")
                (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
                (templates-dir (string-append %output "/share/hmf-pipeline/templates"))
                (scripts-dir (string-append %output "/share/hmf-pipeline/scripts"))
-               (lib-dir (string-append %output "/lib/perl5/site_perl/"
-                                       ,(package-version perl)))
-               (perlbin (string-append (assoc-ref %build-inputs "perl")
-                                       "/bin/perl")))
+               (lib-dir (string-append %output "/lib/perl5/site_perl/" ,(package-version perl)))
+               (perlbin (string-append (assoc-ref %build-inputs "perl") "/bin/perl"))
+               (pythonbin (string-append (assoc-ref %build-inputs "python") "/bin/python")))
            (setenv "PATH" PATH)
 
            ;; Create the directory structure in the build output directory.
@@ -792,7 +791,13 @@ single executable called @code{bam}.")
            ;; Extract scripts to their own custom directory.
            (with-directory-excursion scripts-dir
              (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
-                      "--strip-components=2"))
+                      "--strip-components=2")
+
+             ;; Patch the shebangs of the scripts.
+             (substitute* "annotatePON.py"
+               (("#!/usr/bin/env python") (string-append "#!" pythonbin)))
+             (substitute* "convert_delly_TRA.pl"
+               (("#!/usr/bin/env perl") (string-append "#!" perlbin))))
 
            ;; Extract QScripts to their own custom directory.
            (with-directory-excursion qscripts-dir
@@ -1061,6 +1066,7 @@ REPORT_STATUS	~a"
        ("perl" ,perl)
        ("picard" ,picard-bin-1.141)
        ("plink" ,plink)
+       ("python" ,python-2)
        ("make" ,gnu-make)
        ("findutils" ,findutils)
        ("diffutils" ,diffutils)
