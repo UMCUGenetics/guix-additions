@@ -845,6 +845,11 @@ single executable called @code{bam}.")
                (("-jar \"\\[% opt.QUEUE_PATH %\\]/GenomeAnalysisTK.jar\"")
                 "-jar \"[% opt.GATK_PATH %]/GenomeAnalysisTK.jar\""))
 
+             ;; Patch the Perl command
+             (substitute* "PostStats.sh.tt"
+               (("perl [% opt.BAMMETRICS_PATH %]/bamMetrics.pl")
+                (string-append perlbin " [% opt.BAMMETRICS_PATH %]/bamMetrics.pl")))
+
              ;; Patch the 'make' command.
              (substitute* "Strelka.sh.tt"
                (("make -j") (string-append (assoc-ref %build-inputs "make")
