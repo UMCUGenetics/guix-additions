@@ -847,7 +847,7 @@ single executable called @code{bam}.")
 
              ;; Patch the Perl command
              (substitute* "PostStats.sh.tt"
-               (("perl [% opt.BAMMETRICS_PATH %]/bamMetrics.pl")
+               (("perl \\[% opt.BAMMETRICS_PATH %\\]/bamMetrics.pl")
                 (string-append perlbin " [% opt.BAMMETRICS_PATH %]/bamMetrics.pl")))
 
              ;; Patch the 'make' command.
