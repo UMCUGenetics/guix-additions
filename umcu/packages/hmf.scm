@@ -1095,6 +1095,7 @@ REPORT_STATUS	~a"
        ("perl-strictures" ,perl-strictures-2)
        ("perl-template-toolkit" ,perl-template-toolkit)
        ("perl-time-hires" ,perl-time-hires)
+       ("icedtea-7" ,icedtea-7)
        ("r-qdnaseq" ,r-qdnaseq)
        ("r-ggplot2" ,r-ggplot2)
        ("r-gtools" ,r-gtools)
