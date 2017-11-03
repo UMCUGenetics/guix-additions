@@ -1081,7 +1081,8 @@ REPORT_STATUS	~a"
        ("source" ,source)
        ("tar" ,tar)))
     (propagated-inputs
-     `(("bio-vcf" ,bio-vcf)
+     `(("bash" ,bash)
+       ("bio-vcf" ,bio-vcf)
        ("perl-autovivification" ,perl-autovivification)
        ("perl-bareword-filehandles" ,perl-bareword-filehandles)
        ("perl-file-copy-recursive" ,perl-file-copy-recursive)
