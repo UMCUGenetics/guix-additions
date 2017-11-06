@@ -1115,6 +1115,7 @@ REPORT_STATUS	~a"
        ("grep" ,grep-with-pcre)
        ("sed" ,sed)
        ("gawk" ,gawk)
+       ("perl" ,perl)
        ("inetutils" ,inetutils)
        ("util-linux" ,util-linux)
        ("grid-engine" ,grid-engine-core)
