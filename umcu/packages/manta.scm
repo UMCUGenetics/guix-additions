@@ -129,6 +129,9 @@
                          (("/usr/bin/env python") (string-append
                                                    (assoc-ref inputs "python")
                                                    "/bin/python")))
+            (substitute* "src/python/libexec/sortBam.py"
+              (("originalBam, sortedBam \\]\\)")
+               "originalBam, \"-o\", sortedBam ])"))
             #t))
         (add-after 'install 'fix-pyflow-shebang
           (lambda* (#:key inputs outputs #:allow-other-keys)
