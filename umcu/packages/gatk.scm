@@ -120,15 +120,12 @@ discrete time and discrete space Hidden Markov Models")
       (modify-phases %standard-phases
         (delete 'configure) ; Nothing to configure.
         (delete 'build) ; This is a binary package only.
-        (add-before 'install 'debug-current-working-directory
-          (lambda _
-            (chdir "..")
-            (display (format #f "~s~%" (getcwd)))))
         (replace 'install
           (lambda _
-            (display (format #f "~s~%" (getcwd)))
             (let ((out (string-append (assoc-ref %outputs "out")
                                       "/share/java/" ,name "/")))
+              (mkdir-p out)
+              (chdir "..")
               (install-file "GenomeAnalysisTK.jar" out)))))))
    (home-page "https://www.broadinstitute.org/gatk/")
    (synopsis "Package for analysis of high-throughput sequencing")
@@ -141,6 +138,32 @@ powerful processing engine and high-performance computing features make it
 capable of taking on projects of any size.")
    ;; There are additional restrictions, so it's nonfree.
    (license license:expat)))
+
+(define-public gatk-bin-3.8-0
+  (package (inherit gatk-bin-3.4-0)
+    (name "gatk")
+    (version "3.8")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append
+                   "https://software.broadinstitute.org/gatk/download/"
+                   "auth?package=GATK"))
+             (file-name (string-append name "-" version ".tar.bz2"))
+             (sha256
+              (base32
+               "1wdr0cwaww8053mkh70xxyiky82qir1xv25cflml9ihc3y2pn0fi"))))
+    (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda _
+            (let ((out (string-append (assoc-ref %outputs "out")
+                                      "/share/java/" ,name "/")))
+              (mkdir-p out)
+              (install-file "GenomeAnalysisTK.jar" out)))))))))
 
 (define-public gatk-bin-3.4-46
   (package (inherit gatk-bin-3.4-0)
@@ -155,8 +178,7 @@ capable of taking on projects of any size.")
                   "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/GenomeAnalysisTK-"
                   version ".tar.bz2"))
             (sha256
-             (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
-   (build-system gnu-build-system)))
+             (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))))
 
 (define-public gatk-queue-bin-3.4-0
   (package
@@ -184,6 +206,7 @@ capable of taking on projects of any size.")
             (chdir "..") ; The build system moves into the "resources" folder.
             (let ((out (string-append (assoc-ref %outputs "out")
                                       "/share/java/gatk/")))
+              (mkdir-p out)
               (install-file "Queue.jar" out)))))))
    (home-page "https://www.broadinstitute.org/gatk/")
    (synopsis "Package for analysis of high-throughput sequencing")
@@ -196,6 +219,30 @@ powerful processing engine and high-performance computing features make it
 capable of taking on projects of any size.")
    ;; There are additional restrictions, so it's nonfree.
    (license license:expat)))
+
+(define-public gatk-queue-bin-3.8-0
+  (package (inherit gatk-queue-bin-3.4-0)
+    (name "gatk-queue")
+    (version "3.8")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append "https://software.broadinstitute.org/gatk/"
+                                 "download/auth?package=Queue"))
+             (file-name (string-append name "-" version ".tar.bz2"))
+             (sha256
+              (base32 "0jg9aflz6qscrf8wc156lkvyzc16sd1ya74gaa7pvlv235qrida6"))))
+    (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda _
+            (let ((out (string-append (assoc-ref %outputs "out")
+                                      "/share/java/gatk/")))
+              (mkdir-p out)
+              (install-file "Queue.jar" out)))))))))
 
 (define-public gatk-queue-bin-3.4-46
   (package (inherit gatk-queue-bin-3.4-0)
