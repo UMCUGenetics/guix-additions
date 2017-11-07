@@ -957,3 +957,22 @@ injected in @code{BSgenome.Hsapiens.UCSC.hg19} and they will land at the
 correct position but this injection will exclude chrM (i.e. nothing will be
 injected in that sequence).")
     (license license:artistic2.0)))
+
+(define-public r-flock
+  (package
+    (name "r-flock")
+    (version "0.7")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "flock" version))
+              (sha256
+               (base32
+                "1zg93p74icj4bhxnmnssj2xp6vw4yaksyavq03497v33xfpdxss7"))))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page "http://cran.r-project.org/web/packages/flock")
+    (synopsis "Process Synchronization Using File Locks")
+    (description "Implements synchronization between R processes (spawned by
+using the @code{parallel} package for instance) using file locks.  Supports both
+exclusive and shared locking.")
+    (license license:asl2.0)))
