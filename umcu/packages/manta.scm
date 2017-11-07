@@ -33,7 +33,8 @@
   #:use-module (gnu packages pth)
   #:use-module (gnu packages python)
   #:use-module (umcu packages pyflow)
-  #:use-module (umcu packages boost))
+  #:use-module (umcu packages boost)
+  #:use-module (umcu packages samtools))
 
 (define-public manta
   (package
@@ -129,9 +130,6 @@
                          (("/usr/bin/env python") (string-append
                                                    (assoc-ref inputs "python")
                                                    "/bin/python")))
-            (substitute* "src/python/libexec/sortBam.py"
-              (("originalBam, sortedBam \\]\\)")
-               "originalBam, \"-o\", sortedBam ])"))
             #t))
         (add-after 'install 'fix-pyflow-shebang
           (lambda* (#:key inputs outputs #:allow-other-keys)
@@ -150,7 +148,9 @@
        ("doxygen" ,doxygen)
        ("graphviz" ,graphviz)
        ("htslib" ,htslib)
-       ("samtools" ,samtools)
+       ;; The command-line interface has changed between 1.2 and 1.5.
+       ;; Manta expects the command-line interface of 1.2.
+       ("samtools" ,samtools-1.2)
        ("zlib" ,zlib)
        ("bash" ,bash)))
     (home-page "https://github.com/Illumina/manta")
@@ -187,6 +187,6 @@ large insertions within a single efficient workflow.")
        ("doxygen" ,doxygen)
        ("graphviz" ,graphviz)
        ("htslib" ,htslib)
-       ("samtools" ,samtools)
+       ("samtools" ,samtools-1.2)
        ("zlib" ,zlib)
        ("bash" ,bash)))))
