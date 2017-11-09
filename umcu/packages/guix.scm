@@ -241,60 +241,6 @@ performance measurement data like CPU, memory, disk and network performance
 numbers.")
    (license license:artistic2.0)))
 
-(define-public gwl
-  (let ((commit "58f7111627d76bb0b0931e1d58f7ec2e9ba5a718"))
-    (package
-     (name "gwl")
-     (version (string-append "0.0.9-" (string-take commit 8)))
-     (source (origin
-               (method git-fetch)
-               (uri (git-reference
-                     (url "https://git.roelj.com/guix/gwl.git")
-                     (commit commit)))
-               (file-name (string-append name "-" version "-checkout"))
-               (sha256
-                (base32
-                 "1kmxg1rc5275nq55z2jvpa22m6p1nyih4g0h31rbafbrgdzjxlgr"))))
-     (build-system gnu-build-system)
-     (native-inputs
-      `(("autoconf" ,autoconf)
-        ("automake" ,automake)
-        ("libtool" ,libtool)
-        ("pkg-config" ,pkg-config)))
-     (inputs
-      `(("guix" ,guix)
-        ("guile" ,guile-2.2)))
-     (arguments
-      `(#:tests? #f ; There are no tests.
-        #:phases
-        (modify-phases %standard-phases
-          (add-after 'unpack 'autoconf
-            (lambda _ (zero? (system* "autoreconf" "-vif"))))
-          (add-after 'unpack 'change-static-path
-            (lambda* (#:key inputs outputs #:allow-other-keys)
-              (let ((dist-dir (string-append (assoc-ref outputs "out")
-                                             "/share/gwl")))
-                ;; Create the directory for static data.
-                (mkdir-p dist-dir)
-                (copy-recursively "static" dist-dir)
-
-                ;; Update the code's static-root variable.
-                (substitute* "www/config.scm"
-                             (("\\(define %www-static-root \\(string-append %www-root \\\"/static\\\"\\)\\)")
-                              (format #f "(define %www-static-root ~s)" dist-dir)))
-                #t)))
-          (add-before 'build 'silence-guile
-            (lambda _
-              (setenv "GUILE_WARN_DEPRECATED" "no")
-              (setenv "GUILE_AUTO_COMPILE" "0")
-              #t)))))
-     (home-page "https://gwl.roelj.com")
-     (synopsis "Guix workflow extension")
-     (description "This package provides a workflow management extension for
-GNU Guix.  It can be used to build pipelines and execute them locally, or on
-a computing cluster.  GWL currently only supports Sun Grid Engine.")
-     (license license:agpl3+))))
-
 (define-public vmtouch
   (package
    (name "vmtouch")
