@@ -39,11 +39,11 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.3.2")
+    (version "1.4.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
-     `(("bash" ,bash)
+     `(("bash-full" ,bash)
        ("guix" ,guix)
        ("git" ,git)
        ("gawk" ,gawk)
@@ -130,9 +130,8 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${arguments[@]:1}\")
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
-      unset_output=$(${grep} -h \"^export\" $profiles | ${cut} -d '=' -f1 | ${gawk} '{ print \"unset \" $2 }')
       set_output=$(${grep} -h \"^export\" $profiles)
-      ~a/bin/bash --init-file <(echo \"unset LIBRARY_PATH LD_LIBRARY_PATH LMOD_DEFAULT_MODULEPATH MODULEPATH_ROOT LMOD_PKG LMOD_VERSION LMOD_sys LMOD_PREPEND_BLOCK LMOD_SETTARG_CMD MODULEPATH LMOD_CMD LMOD_arch MODULESHOME LMOD_FULL_SETTARG_SUPPORT LMOD_DIR LMOD_COLORIZE BASH_ENV; unset -f module BASH_FUNC_ml BASH_FUNC_ml%% BASH_FUNC_module;\"; echo \"$unset_output\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
@@ -148,7 +147,7 @@ fi~%"
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
                          (assoc-ref inputs "gwl")
-                         (assoc-ref inputs "bash"))))))
+                         (assoc-ref inputs "bash-full"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
              (let ((out (string-append (assoc-ref outputs "out") "/bin")))
