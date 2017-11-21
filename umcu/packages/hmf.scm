@@ -1108,7 +1108,7 @@ REPORT_STATUS	~a"
        ("r-devtools" ,r-devtools)
        ("r-biobase" ,r-biobase)
        ("r" ,r)
-       ("sambamba" ,sambamba)
+       ("sambamba" ,sambamba-next)
        ("samtools" ,samtools)
        ("snpeff" ,snpeff-bin-4.1)
        ("strelka" ,strelka-1.0.14)
