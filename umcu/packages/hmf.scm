@@ -58,6 +58,7 @@
   #:use-module (umcu packages freec)
   #:use-module (umcu packages gatk)
   #:use-module (umcu packages genenetwork)
+  #:use-module (umcu packages sambamba)
   #:use-module (umcu packages grid-engine)
   #:use-module (umcu packages igvtools)
   #:use-module (umcu packages king)
