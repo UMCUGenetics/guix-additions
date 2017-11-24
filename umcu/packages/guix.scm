@@ -181,7 +181,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.4.0")
+    (version "1.4.1")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -288,7 +288,6 @@ fi~%"
                          (assoc-ref inputs "gawk")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
-                         (assoc-ref inputs "gwl")
                          (assoc-ref inputs "bash-full"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
