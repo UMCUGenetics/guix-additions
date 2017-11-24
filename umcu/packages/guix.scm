@@ -184,12 +184,13 @@ without modification.")
     (version "1.4.0")
     (source #f)
     (build-system gnu-build-system)
+    (propagated-inputs
+     `(("guix" ,guix)
+       ("gwl" ,gwl-next)))
     (inputs
      `(("bash-full" ,bash-custom)
-       ("guix" ,guix)
        ("git" ,git)
-       ("gawk" ,gawk)
-       ("gwl" ,gwl)))
+       ("gawk" ,gawk)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -217,7 +218,6 @@ coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
 cut=\"${coreutils}/bin/cut\"
 grep=\"~a/bin/grep\"
-GWL_PATH=\"~a\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
@@ -241,8 +241,8 @@ fi
 export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_PATH}\"
 
 # Set the Guile environment for GWL
-export GUILE_LOAD_PATH=\"${GWL_PATH}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
-export GUILE_LOAD_COMPILED_PATH=\"${GWL_PATH}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
+export GUILE_LOAD_PATH=\"${guix_profile}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
+export GUILE_LOAD_COMPILED_PATH=\"${guix_profile}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
 
 # Set the X.509 certificates
 export SSL_CERT_DIR=\"${guix_profile}/etc/ssl/certs\"
