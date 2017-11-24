@@ -262,6 +262,12 @@
                     (install-directory (lambda (source target)
                                          (mkdir-p target)
                                          (copy-recursively source target))))
+               ;; Circos looks into a relative path for its configuration
+               ;; files.  We need to provide an absolute path towards the
+               ;; corresponding paths in the store.
+               (substitute* '("bin/circos" "etc/colors_fonts_patterns.conf"
+                              "etc/gddiag.conf" "README")
+                (("<<include etc") (string-append "<<include " etc)))
                (for-each install-directory
                          (list "error" "fonts" "data" "tiles" "etc" "lib")
                          (list error fonts data tiles etc lib))
