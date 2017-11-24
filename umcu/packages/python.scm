@@ -34,10 +34,14 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages admin)
   #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages check)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gcc)
+  #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages python-web)
+  #:use-module (gnu packages python-crypto)
   #:use-module (gnu packages statistics))
 
 (define-public python-py2bit

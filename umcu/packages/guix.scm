@@ -18,6 +18,7 @@
 
 (define-module (umcu packages guix)
   #:use-module (ice-9 rdelim)
+  #:use-module (ice-9 format)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)

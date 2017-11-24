@@ -5,6 +5,7 @@
   #:use-module (guix download)
   #:use-module (guix build-system python)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages check)
   #:use-module (gnu packages databases)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages compression)

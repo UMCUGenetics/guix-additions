@@ -34,6 +34,7 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages lua)
   #:use-module (gnu packages perl)
+  #:use-module (gnu packages perl-check)
   #:use-module (gnu packages python)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages shells)
