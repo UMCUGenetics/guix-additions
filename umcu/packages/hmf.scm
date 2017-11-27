@@ -833,8 +833,8 @@ single executable called @code{bam}.")
                 (string-append (assoc-ref %build-inputs "icedtea-7")
                                "/bin/java -Xmx")))
 
-             ;; Mixed Java 7 and Java 8
              (substitute* '("StrelkaPostProcess.sh.tt")
+               ;; Mixed Java 7 and Java 8
                (("java -jar \"\\[% opt.STRELKA_POST_PROCESS_PATH %\\]/strelka-post-process.jar\"")
                 (string-append (assoc-ref %build-inputs "icedtea-8")
                                "/bin/java -jar "
@@ -842,7 +842,17 @@ single executable called @code{bam}.")
                                "/strelka-post-process.jar\""))
                (("java -Xmx\\[% opt.STRELKAPOSTPROCESS_MEM %\\]G")
                 (string-append (assoc-ref %build-inputs "icedtea-7")
-                               "/bin/java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G")))
+                               "/bin/java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G"))
+               ;; Work-around for:
+               ;; https://github.com/hartwigmedical/pipeline/issues/18
+               (("\\[% opt.OUTPUT_DIR %\\]/scripts/annotatePON.py")
+                (string-append pythonbin " [% opt.OUTPUT_DIR %]/scripts/annotatePON.py")))
+
+             ;; Work-around for:
+             ;; https://github.com/hartwigmedical/pipeline/issues/18
+             (substitute* "Delly.sh.tt"
+               (("\\[% opt.OUTPUT_DIR %\\]/scripts/convert_delly_TRA.pl")
+                (string-append perlbin " [% opt.OUTPUT_DIR %]/scripts/convert_delly_TRA.pl")))
 
              ;; Fix a path mistake in BAF.sh.tt and CallableLoci.sh.tt
              (substitute* '("BAF.sh.tt" "CallableLoci.sh.tt")
