@@ -86,6 +86,7 @@ variants can be visualized using Delly-maze and Delly-suave.")
       (patches (list (search-patch "delly-0.7.7-use-system-libraries.patch")))))
     (arguments
      `(#:tests? #f ; There are no tests to run.
+       #:make-flags '("PARALLEL=1") ; Allow parallel execution at run-time.
        #:phases
        (modify-phases %standard-phases
          (delete 'configure) ; There is no configure phase.
