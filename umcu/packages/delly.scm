@@ -92,7 +92,12 @@ variants can be visualized using Delly-maze and Delly-suave.")
          (delete 'configure) ; There is no configure phase.
          (replace 'install
            (lambda _
-             (let ((bin (string-append (assoc-ref %outputs "out") "/bin")))
+             (let ((bin (string-append (assoc-ref %outputs "out") "/bin"))
+                   (templates (string-append (assoc-ref %outputs "out")
+                                             "/share/delly/templates")))
+               (mkdir-p bin)
+               (mkdir-p templates)
+               (copy-recursively "excludeTemplates" templates)
                (install-file "src/cov" bin)
                (install-file "src/delly" bin)
                (install-file "src/dpe" bin)))))))
