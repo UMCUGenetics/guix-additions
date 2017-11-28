@@ -181,7 +181,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.4.1")
+    (version "1.4.2")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -273,7 +273,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
       set_output=$(${grep} -h \"^export\" $profiles)
-      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$set_output\"; source /etc/profile.d/sge.sh; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
