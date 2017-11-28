@@ -1064,7 +1064,6 @@ REPORT_STATUS	~a"
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
        ("bash" ,bash)
-       ("bcftools" ,bcftools)
        ("bwa" ,bwa)
        ("circos" ,circos)
        ("damage-estimator" ,hmf-damage-estimator)
@@ -1096,6 +1095,7 @@ REPORT_STATUS	~a"
        ("tar" ,tar)))
     (propagated-inputs
      `(("bash" ,bash)
+       ("bcftools" ,bcftools)
        ("bio-vcf" ,bio-vcf)
        ("perl-autovivification" ,perl-autovivification)
        ("perl-bareword-filehandles" ,perl-bareword-filehandles)
