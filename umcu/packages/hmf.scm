@@ -295,6 +295,10 @@ build, reporting and documentation from a central piece of information.")
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
         ("maven" ,maven-bin)))
+     ;; Amber uses an R script for BAF segmentation.
+     (propagated-inputs
+      `(("r" ,r-minimal)
+        ("r-copynumber" ,r-copynumber)))
      (native-inputs
       `(("maven-deps"
           ,(origin
