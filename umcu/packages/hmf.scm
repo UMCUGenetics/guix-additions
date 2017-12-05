@@ -748,11 +748,11 @@ single executable called @code{bam}.")
               (sha256
                (base32 "0zj27xxx9cyrq16rn4g3l0krqg68p8f2qp18w1w4i767j87amlbj"))))))
 
-(define-public r-qdnaseq-1.9.1
-  (let ((commit "b950f58408a0cfd322a1827402edc9893dda3bc6"))
+(define-public r-qdnaseq-1.9.2
+  (let ((commit "cd622dbc67f22160b821cd9044589954024549ae"))
     (package (inherit r-qdnaseq)
       (name "r-qdnaseq")
-      (version "1.9.1")
+      (version "1.9.2")
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -761,7 +761,7 @@ single executable called @code{bam}.")
                 (file-name (string-append name "-" version "-checkout"))
                 (sha256
                  (base32
-                  "0rli9wadk5sa64cz3h161gsr191m6j51af8davzn3mslqc78iw4x"))))
+                  "1n0vxyvqy47lamr7y3lmpvp0w3z3c8fs7rnfqcyzddpjblm63fkq"))))
       (propagated-inputs
        `(("r-matrixstats" ,r-matrixstats-0.50.2)
          ("r-biobase" ,r-biobase)
@@ -1168,7 +1168,7 @@ REPORT_STATUS	~a"
        ("r-iranges" ,r-iranges)
        ("r-matrixstats" ,r-matrixstats)
        ("r-pastecs" ,r-pastecs)
-       ("r-qdnaseq" ,r-qdnaseq-1.9.1)
+       ("r-qdnaseq" ,r-qdnaseq-1.9.2)
        ("r-r-utils" ,r-r-utils)
        ("r-roxygen2" ,r-roxygen2)
        ("r-rsamtools" ,r-rsamtools)
