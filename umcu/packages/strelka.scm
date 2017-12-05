@@ -113,6 +113,10 @@
                (install-file "strelka/src/bin/starling2" bin)
                (install-file "strelka/src/bin/strelkaSiteSimulator" bin)
 
+               ;; Also add Utils.pm to the lib folder, because strelka manipulates
+               ;; its own Perl path to search in this folder.
+               (install-file "src/perl/lib/Utils.pm" lib)
+
                ;; The configureStrelkaWorkflow.pl script looks for the
                ;; strelka2 binary in the libexec directory.
                (system* "ln" "--symbolic"
