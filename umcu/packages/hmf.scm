@@ -736,6 +736,44 @@ single executable called @code{bam}.")
    (description "")
    (license license:agpl3)))
 
+(define-public r-matrixstats-0.50.2
+  (package
+    (inherit r-matrixstats)
+    (version "0.50.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://cran.rstudio.com/src/contrib/Archive/"
+                    "matrixStats/matrixStats_" version ".tar.gz"))
+              (sha256
+               (base32 "0zj27xxx9cyrq16rn4g3l0krqg68p8f2qp18w1w4i767j87amlbj"))))))
+
+(define-public r-qdnaseq-1.9.1
+  (let ((commit "b950f58408a0cfd322a1827402edc9893dda3bc6"))
+    (package (inherit r-qdnaseq)
+      (name "r-qdnaseq")
+      (version "1.9.1")
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/Bioconductor-mirror/QDNAseq")
+                      (commit commit)))
+                (file-name (string-append name "-" version "-checkout"))
+                (sha256
+                 (base32
+                  "0rli9wadk5sa64cz3h161gsr191m6j51af8davzn3mslqc78iw4x"))))
+      (propagated-inputs
+       `(("r-matrixstats" ,r-matrixstats-0.50.2)
+         ("r-biobase" ,r-biobase)
+         ("r-cghbase" ,r-cghbase)
+         ("r-cghcall" ,r-cghcall)
+         ("r-dnacopy" ,r-dnacopy)
+         ("r-genomicranges" ,r-genomicranges)
+         ("r-iranges" ,r-iranges)
+         ("r-matrixstats" ,r-matrixstats)
+         ("r-r-utils" ,r-r-utils)
+         ("r-rsamtools" ,r-rsamtools))))))
+
 (define-public hmf-pipeline
   (package
     (name "hmf-pipeline")
@@ -1115,13 +1153,25 @@ REPORT_STATUS	~a"
        ("perl-template-toolkit" ,perl-template-toolkit)
        ("perl-time-hires" ,perl-time-hires)
        ("icedtea-7" ,icedtea-7)
-       ("r-qdnaseq" ,r-qdnaseq)
+       ("r-biobase" ,r-biobase)
+       ("r-biocstyle" ,r-biocstyle)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-cghbase" ,r-cghbase)
+       ("r-cghcall" ,r-cghcall)
+       ("r-devtools" ,r-devtools)
+       ("r-digest" ,r-digest)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-getoptlong" ,r-getoptlong)
        ("r-ggplot2" ,r-ggplot2)
        ("r-gtools" ,r-gtools)
+       ("r-iranges" ,r-iranges)
+       ("r-matrixstats" ,r-matrixstats)
        ("r-pastecs" ,r-pastecs)
-       ("r-getoptlong" ,r-getoptlong)
-       ("r-devtools" ,r-devtools)
-       ("r-biobase" ,r-biobase)
+       ("r-qdnaseq" ,r-qdnaseq-1.9.1)
+       ("r-r-utils" ,r-r-utils)
+       ("r-roxygen2" ,r-roxygen2)
+       ("r-rsamtools" ,r-rsamtools)
        ("r" ,r)
        ("sambamba" ,sambamba-next)
        ("samtools" ,samtools)
@@ -1137,7 +1187,6 @@ REPORT_STATUS	~a"
        ("util-linux" ,util-linux)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs r-qdnaseq)
        ,@(package-propagated-inputs gatk-bin-3.4-46)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
