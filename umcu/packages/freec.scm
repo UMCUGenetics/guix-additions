@@ -24,6 +24,8 @@
   #:use-module (guix build-system trivial)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages perl)
+  #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression))
 
 (define-public freec-8.7
@@ -99,8 +101,17 @@ mappability data (files created by GEM). ")
              (chdir "src")))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
-             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+             (let* ((out (assoc-ref outputs "out"))
+                    (bin (string-append out "/bin"))
+                    (share (string-append out "/share/freec")))
+               (mkdir-p bin)
+               (mkdir-p share)
+               (copy-recursively "../scripts" share)
                (install-file "freec" bin)))))))
+    (inputs
+     `(("perl" ,perl)))
+    (propagated-inputs
+     `(("r-rtracklayer" ,r-rtracklayer)))
     (home-page "http://bioinfo-out.curie.fr/projects/freec/")
     (synopsis "Tool for detection of copy-number changes and allelic imbalances
 (including LOH) using deep-sequencing data")
