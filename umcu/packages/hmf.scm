@@ -905,6 +905,13 @@ single executable called @code{bam}.")
                (("perl \\[% opt.BAMMETRICS_PATH %\\]/bamMetrics.pl")
                 (string-append perlbin " [% opt.BAMMETRICS_PATH %]/bamMetrics.pl")))
 
+             ;; Patch the path to the FREEC scripts directory
+             (substitute* "Freec.sh.tt"
+               (("< \\[% opt.FREEC_PATH %\\]")
+                (string-append "< " (assoc-ref %build-inputs "freec") "/share/freec"))
+               (("< \"\\[% opt.FREEC_PATH %\\]")
+                (string-append "< \"" (assoc-ref %build-inputs "freec") "/share/freec")))
+
              ;; Patch the 'make' command.
              (substitute* "Strelka.sh.tt"
                (("make -j") (string-append (assoc-ref %build-inputs "make")
