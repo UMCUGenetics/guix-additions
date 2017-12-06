@@ -1166,7 +1166,7 @@ REPORT_STATUS	~a"
        ("r-ggplot2" ,r-ggplot2)
        ("r-gtools" ,r-gtools)
        ("r-iranges" ,r-iranges)
-       ("r-matrixstats" ,r-matrixstats)
+       ("r-matrixstats" ,r-matrixstats-0.50.2)
        ("r-pastecs" ,r-pastecs)
        ("r-qdnaseq" ,r-qdnaseq-1.9.2)
        ("r-r-utils" ,r-r-utils)
