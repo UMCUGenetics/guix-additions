@@ -770,7 +770,6 @@ single executable called @code{bam}.")
          ("r-dnacopy" ,r-dnacopy)
          ("r-genomicranges" ,r-genomicranges)
          ("r-iranges" ,r-iranges)
-         ("r-matrixstats" ,r-matrixstats)
          ("r-r-utils" ,r-r-utils)
          ("r-rsamtools" ,r-rsamtools))))))
 
