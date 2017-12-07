@@ -856,22 +856,16 @@ single executable called @code{bam}.")
                       "--strip-components=2")
 
              ;; Replace the 'java' command with the full path to the input 'java'
-             ;; in each template file.  Some need Java 8, and some need Java 7,
-             ;; so we need to be specific in these cases.
-
-             ;; Java 8
-             (substitute* '("Amber.sh.tt" "Cobalt.sh.tt" "Purple.sh.tt"
-                            "HealthCheck.sh.tt" "BreakpointInspector.sh.tt")
+             ;; in each template file.  Most use Java 8, but snpEff needs Java 7,
+             ;; so we need to be specific in that case.
+             (substitute* '("Amber.sh.tt" "BAF.sh.tt" "BaseRecalibration.sh.tt"
+                            "BreakpointInspector.sh.tt" "CallableLoci.sh.tt"
+                            "Cobalt.sh.tt" "GermlineCalling.sh.tt"
+                            "GermlineFiltering.sh.tt" "HealthCheck.sh.tt"
+                            "PostStats.sh.tt" "Purple.sh.tt" "Realignment.sh.tt"
+                            "Strelka.sh.tt")
                (("java -Xmx")
                 (string-append (assoc-ref %build-inputs "icedtea-8")
-                               "/bin/java -Xmx")))
-
-             ;; Java 7
-             (substitute* '("Realignment.sh.tt" "BAF.sh.tt" "CallableLoci.sh.tt"
-                            "GermlineCalling.sh.tt" "GermlineAnnotation.sh.tt"
-                            "GermlineFiltering.sh.tt" "PostStats.sh.tt" "Strelka.sh.tt")
-               (("java -Xmx")
-                (string-append (assoc-ref %build-inputs "icedtea-7")
                                "/bin/java -Xmx")))
 
              (substitute* '("StrelkaPostProcess.sh.tt")
