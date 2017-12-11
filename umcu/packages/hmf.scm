@@ -115,6 +115,23 @@ Based on the concept of a project object model (POM), Maven can manage a project
 build, reporting and documentation from a central piece of information.")
    (license license:asl2.0)))
 
+;; Here's a very secret package definition.  It's QDNAseq 1.9.2, plus
+;; an extra data set.  That extra data set makes it crucially non-reproducible
+;; if you don't have access to that location on our cluster.  Once there's a
+;; published version of this (dataset) we will update the package definition
+;; accordingly.
+(define-public r-qdnaseq-hmf
+  (package (inherit r-qdnaseq)
+   (name "r-qdnaseq-hmf")
+   (version "1.9.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "file:///hpc/local/CentOS7/cog_bioinf/"
+                  "QDNAseq_v" version "-HMF-GuixSource.tar.gz"))
+            (sha256
+             (base32 "03hbfjncm2scll90f711l68vl4w3zi2f3l1ahmd8kdik7f4ngwsb"))))))
+
 (define-public hmftools
   (let ((commit "e10525d3178fb17db78cabf0f832d6fabf09e9f2"))
     (package
@@ -1177,7 +1194,7 @@ REPORT_STATUS	~a"
        ("r-iranges" ,r-iranges)
        ("r-matrixstats" ,r-matrixstats)
        ("r-pastecs" ,r-pastecs)
-       ("r-qdnaseq" ,r-qdnaseq)
+       ("r-qdnaseq" ,r-qdnaseq-hmf)
        ("r-r-utils" ,r-r-utils)
        ("r-roxygen2" ,r-roxygen2)
        ("r-rsamtools" ,r-rsamtools)
