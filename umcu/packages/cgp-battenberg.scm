@@ -174,67 +174,10 @@ indexing classes and BAM sequence alignment functionality.")
 bammarkduplicates, bammaskflags, bamrecompress, bamsort, bamtofastq.")
    (license license:gpl3+)))
 
-(define-public samtabix
-  (let ((commit "10fd107909c1ac4d679299908be4262a012965ba"))
-  (package
-   (name "samtabix")
-   (version (string-append "0-" (string-take commit 7)))
-   (source (origin
-            (method git-fetch)
-            (uri (git-reference
-                  (url "http://genome-source.cse.ucsc.edu/samtabix.git")
-                  (commit commit)))
-            (sha256
-             (base32 "0c1nj64l42v395sa84n7az43xiap4i6f9n9dfz4058aqiwkhkmma"))
-            (file-name (string-append name "-" version "-checkout"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; There is no test suite.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure))))
-   (inputs
-    `(("zlib" ,zlib)))
-   (native-inputs
-    `(("perl" ,perl)
-      ("python" ,python)
-      ("luajit" ,luajit)))
-   (home-page "http://genome-source.cse.ucsc.edu")
-   (synopsis "")
-   (description "")
-   (license #f))))
-
-(define-public kentutils
-  (package
-   (name "kentutils")
-   (version "302.1.0")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/ENCODE-DCC/kentUtils/archive/v"
-                  version ".tar.gz"))
-            (sha256
-             (base32 "0g184apsva5nwldkn7fzi6rinicrnyzc2xi68dk4qkn8cs5rq0fp"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:phases
-      (modify-phases %standard-phases
-        (delete 'configure))))
-   (native-inputs
-    `(("tcsh" ,tcsh)
-      ("perl" ,perl)
-      ("python" ,python-2)
-      ("coreutils" ,coreutils)
-      ("tcl" ,tcl)))
-   (home-page "https://github.com/ENCODE-DCC/kentUtils")
-   (synopsis "Jim Kent command line bioinformatic utilities")
-   (description "Jim Kent command line bioinformatic utilities")
-   (license #f)))
-
 (define-public pcap-core
   (package
    (name "pcap-core")
-   (version "2.5.0")
+   (version "3.5.0")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -242,7 +185,7 @@ bammarkduplicates, bammaskflags, bamrecompress, bamsort, bamtofastq.")
                   version ".tar.gz"))
             (file-name (string-append name "-" version ".tar.gz"))
             (sha256
-             (base32 "1iq79acml7grs3gxvin8izmfl2lh1yrvhspr9a7mhc3221420afc"))))
+             (base32 "06im5lf00jyghwmqjzb3dpglgjx7pi5ysda75fw8ygmj1fi5q8kj"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f
@@ -271,7 +214,7 @@ Pan-Cancer Analysis Project")
 (define-public perl-bio-db-hts
   (package
     (name "perl-bio-db-hts")
-    (version "2.1")
+    (version "2.9")
     (source
      (origin
        (method url-fetch)
@@ -281,7 +224,7 @@ Pan-Cancer Analysis Project")
              ".tar.gz"))
        (sha256
         (base32
-         "1pg6nrjqykkar8nl7imgnbys3nw2p5320gxyl9qvsn6673m1pid7"))))
+         "0z5qvs1xx38nwfr2fqk582apj1jxrbabjxcawp38swj8b5lnqrdb"))))
     (build-system perl-build-system)
     (arguments
      `(#:tests? #f))
@@ -300,7 +243,7 @@ Pan-Cancer Analysis Project")
 (define-public allelecount
   (package
     (name "allelecount")
-    (version "3.0.1")
+    (version "3.3.1")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -309,7 +252,7 @@ Pan-Cancer Analysis Project")
               (file-name (string-append name "-" version ".tar.gz"))
               (sha256
                (base32
-                "1ds3d6p8finxbamawwwd87cj5p25bkxqlia85mahsdz1z9mfac64"))))
+                "0yza03nma4y5f34x61pdi902fkv9hzkfbpry9qs3nphjf6q5wcwj"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f
@@ -507,7 +450,7 @@ maniread, maniskip, manicopy, maniadd.")
 (define-public perl-bsd-resource
   (package
    (name "perl-bsd-resource")
-   (version "1.2910")
+   (version "1.2911")
    (source
     (origin
      (method url-fetch)
@@ -515,7 +458,7 @@ maniread, maniskip, manicopy, maniadd.")
            "https://cpan.metacpan.org/authors/id/J/JH/JHI/BSD-Resource-"
            version ".tar.gz"))
      (sha256
-      (base32 "1gvgsg558vz3b9d9fqjpl3qam6nwmpbxpn25j0vhlhwbliv3szr9"))))
+      (base32 "0g8c7825ng2m0yz5sy6838rvfdl8j3vm29524wjgf66ccfhgn74x"))))
    (build-system perl-build-system)
    (home-page "http://search.cpan.org/dist/BSD-Resource")
    (synopsis "BSD process resource limit and priority functions")
@@ -525,7 +468,7 @@ maniread, maniskip, manicopy, maniadd.")
 (define-public perl-acme-damn
   (package
   (name "perl-acme-damn")
-  (version "0.06")
+  (version "0.08")
   (source
     (origin
       (method url-fetch)
@@ -535,7 +478,7 @@ maniread, maniskip, manicopy, maniadd.")
              ".tar.gz"))
       (sha256
         (base32
-          "0vzf77pdlyqlshmvrmgcwj9p17l0v67gc2k82fj2r7gqp4rcj9br"))))
+          "03kykdsz3fk5ppb9g92pvnif67zlk501finrwi1csbcizw1js39i"))))
   (build-system perl-build-system)
   (inputs
     `(("perl-test-exception" ,perl-test-exception)))
@@ -548,7 +491,7 @@ maniread, maniskip, manicopy, maniadd.")
 (define-public perl-sys-sigaction
   (package
   (name "perl-sys-sigaction")
-  (version "0.21")
+  (version "0.23")
   (source
     (origin
       (method url-fetch)
@@ -558,7 +501,7 @@ maniread, maniskip, manicopy, maniadd.")
              ".tar.gz"))
       (sha256
         (base32
-          "1nw0rzf5za8yd8s2sbgnw478g5bdlsz7ck2mk2gynqfjdxx20i71"))))
+          "0lykjlq5dsf7z927lpllzixd953izi3w7bg2pgy32h2k8n9nrvy4"))))
   (build-system perl-build-system)
   (home-page
     "http://search.cpan.org/dist/Sys-SigAction")
@@ -677,14 +620,14 @@ maniread, maniskip, manicopy, maniadd.")
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.24.0/"
+                     "/lib/perl5/site_perl/5.26.0/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o644)))
          (add-after 'reset-gzip-timestamps 'fix-permissions-after
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.24.0/"
+                     "/lib/perl5/site_perl/5.26.0/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
@@ -749,7 +692,7 @@ NGS data.")
 (define-public perl-ppi
   (package
     (name "perl-ppi")
-    (version "1.220")
+    (version "1.236")
     (source
      (origin
        (method url-fetch)
@@ -759,7 +702,7 @@ NGS data.")
              ".tar.gz"))
        (sha256
         (base32
-         "10rbc3kq6qb17vcqdrb5473s55b69w3zb2xga79kcnnrwx8bw58y"))))
+         "1v4a622h19d2d6m070jcxn47siqma9g9ly4fcrnrlz8bkhs4nry6"))))
     (build-system perl-build-system)
     (arguments
      `(#:tests? #f))
@@ -794,6 +737,8 @@ NGS data.")
         (base32
          "0w3fppif2pplbw8l1y3xc3vr1z016x02vdnvwadxff53gm2v0d53"))))
     (build-system perl-build-system)
+    (propagated-inputs
+     `(("perl-module-install" ,perl-module-install)))
     (inputs
      `(("perl-hook-lexwrap" ,perl-hook-lexwrap)))
     (home-page "http://search.cpan.org/dist/Test-SubCalls")
@@ -834,6 +779,8 @@ NGS data.")
         (base32
          "0ah3c7nn4zpg4r7ca00zk5c6xc7zcaxxjyvcc5fxqa4r0cdsjhni"))))
     (build-system perl-build-system)
+    (propagated-inputs
+     `(("perl-module-install" ,perl-module-install)))
     (home-page "http://search.cpan.org/dist/Test-Object")
     (synopsis "Thoroughly testing objects via registered handlers")
     (description "")
@@ -856,6 +803,8 @@ NGS data.")
     (build-system perl-build-system)
     (arguments
      `(#:tests? #f))
+    (propagated-inputs
+     `(("perl-module-install" ,perl-module-install)))
     (inputs
      `(("perl-css-tiny" ,perl-css-tiny)
        ("perl-params-util" ,perl-params-util)
@@ -892,7 +841,7 @@ NGS data.")
 (define-public perl-devel-cover
   (package
     (name "perl-devel-cover")
-    (version "1.23")
+    (version "1.29")
     (source
      (origin
        (method url-fetch)
@@ -901,7 +850,7 @@ NGS data.")
              version ".tar.gz"))
        (sha256
         (base32
-         "0m20120c0454b0kmf9zzc5h4wjbgrkdpj4h9ygvbgd3kpgyrwbgv"))))
+         "0afkabxbbbwbnfh6b957cwxx1vcz00r4q49jbhcip3w6ib4pv60n"))))
     (build-system perl-build-system)
     (arguments
      `(#:tests? #f))
@@ -928,7 +877,7 @@ NGS data.")
 (define-public cgp-pindel
   (package
     (name "cgp-pindel")
-    (version "2.2.1")
+    (version "2.2.4")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -936,7 +885,7 @@ NGS data.")
                     version ".tar.gz"))
               (sha256
                (base32
-                "0qykaqi0fr2i75bw8zdkpw1i7crqzfsah51329cnwmdl06zcfbi6"))))
+                "1vadlyffabqj696k9nnzqprxn5avf0a5iykpqjxmw8n2180lppvw"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f
