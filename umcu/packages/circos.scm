@@ -162,7 +162,7 @@
 (define-public perl-time-hires
   (package
     (name "perl-time-hires")
-    (version "1.9741")
+    (version "1.9746")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -170,7 +170,7 @@
                     version ".tar.gz"))
               (sha256
                (base32
-                "0r7qqcf5jnkn33fvrnrwyml5yn38qalq48p7ffvsfbdsz9jrq439"))))
+                "15pmypmkmh1xrig8cqm4izrmh4bf3q3m1v4fr44cjyw2pf0qqh49"))))
     (build-system perl-build-system)
     (home-page "http://search.cpan.org/dist/Time-HiRes")
     (synopsis "High resolution alarm, sleep, gettimeofday, interval timers")
