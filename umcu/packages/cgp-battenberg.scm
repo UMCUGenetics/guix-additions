@@ -411,24 +411,6 @@ on request: mkmanifest, manifind, manicheck, filecheck, fullcheck, skipcheck,
 maniread, maniskip, manicopy, maniadd.")
     (license (package-license perl))))
 
-(define-public perl-env-path
-  (package
-    (name "perl-env-path")
-    (version "0.19")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append "mirror://cpan/authors/id/D/DS/DSB/Env-Path-"
-                           version ".tar.gz"))
-       (sha256
-        (base32
-         "1qhmj15a66h90pjl2dgnxsb9jj3b1r5mpvnr87cafcl8g69z0jr4"))))
-    (build-system perl-build-system)
-    (home-page "http://search.cpan.org/dist/Env-Path")
-    (synopsis "Advanced operations on path variables")
-    (description "")
-    (license #f)))
-
 (define-public perl-bio-pipeline-comparison
   (package
     (name "perl-bio-pipeline-comparison")
@@ -460,24 +442,6 @@ maniread, maniskip, manicopy, maniadd.")
     (synopsis "Comparative assesment of variant calling (CAVar)")
     (description "")
     (license #f)))
-
-(define-public perl-ipc-system-simple
-  (package
-    (name "perl-ipc-system-simple")
-    (version "1.25")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "mirror://cpan/authors/id/P/PJ/PJF/IPC-System-Simple-"
-                    version ".tar.gz"))
-              (sha256
-               (base32
-                "0fsdb81shjj4hifyyzvj7vpkhq5jrfhlcpw2xbjfi1mqz8fsmdpi"))))
-    (build-system perl-build-system)
-    (home-page "http://search.cpan.org/dist/IPC-System-Simple")
-    (synopsis "Run commands simply, with detailed diagnostics")
-    (description "")
-    (license (package-license perl))))
 
 (define-public perl-log-message
   (package
@@ -757,26 +721,6 @@ maniread, maniskip, manicopy, maniadd.")
 Battenberg algorithm that can detect subclonality and copy number in matched
 NGS data.")
     (license license:gpl3+)))
-
-(define-public perl-browser-open
-  (package
-    (name "perl-browser-open")
-    (version "0.04")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             "mirror://cpan/authors/id/C/CF/CFRANKS/Browser-Open-"
-             version ".tar.gz"))
-       (sha256
-        (base32
-         "0rv80n5ihy9vnrzsc3l7wlk8880cwabiljrydrdnxq1gg0lk3sxc"))))
-    (build-system perl-build-system)
-    (home-page
-     "http://search.cpan.org/dist/Browser-Open")
-    (synopsis "open a browser in a given URL")
-    (description "")
-    (license (package-license perl))))
 
 (define-public perl-parallel-iterator
   (package
