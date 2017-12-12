@@ -387,7 +387,7 @@ run from within a source-controlled directory.")
 (define-public perl-indirect
   (package
     (name "perl-indirect")
-    (version "0.37")
+    (version "0.38")
     (source
      (origin
        (method url-fetch)
@@ -396,7 +396,7 @@ run from within a source-controlled directory.")
              version ".tar.gz"))
        (sha256
         (base32
-         "197vk0kvbz17xwvqrixg35f3i7yw4hilynvbzf1dizq4vcz2madd"))))
+         "13k5a8p903m8x3pcv9qqkzvnb8gpgq36cr3dvn3lk1ngsi9w5ydy"))))
     (build-system perl-build-system)
     (home-page "http://search.cpan.org/dist/indirect")
     (synopsis "Lexically warn about using the indirect method call syntax.")
