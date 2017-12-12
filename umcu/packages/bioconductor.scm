@@ -29,6 +29,7 @@
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages ghostscript)
   #:use-module (gnu packages maths)
+  #:use-module (gnu packages perl)
   #:use-module (gnu packages web)
   #:use-module (gnu packages statistics))
 
@@ -78,91 +79,16 @@ pastecs library is a PNEC-Art4 and IFREMER initiative to bring PASSTEC
 functionalities to R.")
     (license license:gpl2+)))
 
-(define-public r-ensembldb
-  (package
-    (name "r-ensembldb")
-    (version "2.0.4")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "ensembldb" version))
-              (sha256
-               (base32
-                "1np96nry1hba8lk4bg3grf8w3k6xz9lgd2jcl3vrj6wsl184c3fr"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biocgenerics" ,r-biocgenerics)
-       ("r-genomicfeatures" ,r-genomicfeatures)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-rsqlite" ,r-rsqlite)
-       ("r-dbi" ,r-dbi)
-       ("r-biobase" ,r-biobase)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-annotationdbi" ,r-annotationdbi)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-annotationhub" ,r-annotationhub)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-iranges" ,r-iranges)
-       ("r-annotationfilter" ,r-annotationfilter)
-       ("r-protgenerics" ,r-protgenerics)))
-    (home-page "http://bioconductor.org/packages/ensembldb")
-    (synopsis "Utilities to create and use Ensembl based annotation databases")
-    (description "This package provides functions to create and use transcript
-centric annotation databases/packages.  The annotation for the databases are
-directly fetched from Ensembl using their Perl API.  The functionality and data
-is similar to that of the TxDb packages from the GenomicFeatures package, but,
-in addition to retrieve all gene/transcript models and annotations from the
-database, the ensembldb package provides also a filter framework allowing to
-retrieve annotations for specific entries like genes encoded on a chromosome
-region or transcript models of lincRNA genes.")
-    (license license:lgpl3)))
-
-(define-public r-biovizbase
-  (package
-    (name "r-biovizbase")
-    (version "1.24.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "biovizBase" version))
-              (sha256
-               (base32
-                "1pfyhjwlxw9p2q5ip0irxpwndgakvn6z6ay5ahgz2gkkk8x8i29w"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-scales" ,r-scales)
-       ("r-hmisc" ,r-hmisc)
-       ("r-dichromat" ,r-dichromat)
-       ("r-summarizedexperiment" ,r-summarizedexperiment)
-       ("r-variantannotation" ,r-variantannotation)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-iranges" ,r-iranges)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-annotationdbi" ,r-annotationdbi)
-       ("r-genomicfeatures" ,r-genomicfeatures)
-       ("r-biostrings" ,r-biostrings)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-ensembldb" ,r-ensembldb)))
-    (home-page "http://bioconductor.org/packages/biovizBase")
-    (synopsis "Basic graphic utilities for visualization of genomic data")
-    (description "This package is designed to provide a set of utilities, color
-schemes and conventions for genomic data.  It serves as the base for various
-high-level packages for biological data visualization.  This saves development
-effort and encourages consistency.")
-    (license license:artistic2.0)))
-
 (define-public r-gviz
   (package
     (name "r-gviz")
-    (version "1.20.0")
+    (version "1.22.1")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "Gviz" version))
               (sha256
                (base32
-                "161mf1lwqcgl8058xsypbcy48p8jhc93gbg9x375p721ccfdxrps"))))
+                "182f88s18vx7wkd6s4sy4bvrkn81733ha9pfiifya92c2ipb6jan"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-s4vectors" ,r-s4vectors)
@@ -211,29 +137,6 @@ results in genomic information plotted together with your data.")
     (description "Tools for clustering and principal component analysis (with
 robust methods, and parallelized functions).")
     (license license:gpl2+)))
-
-(define-public r-ggrepel
-  (package
-    (name "r-ggrepel")
-    (version "0.7.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "ggrepel" version))
-       (sha256
-        (base32
-         "0g0qfm6g71rv27423c1x846ipilnj213knyzrcr09vrpxc87l618"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-ggplot2" ,r-ggplot2)
-       ("r-rcpp" ,r-rcpp)
-       ("r-scales" ,r-scales)))
-    (home-page "http://github.com/slowkow/ggrepel")
-    (synopsis "Repulsive text and label geoms for ggplot2")
-    (description "This package provides text and label geoms for ggplot2 that
-help to avoid overlapping text labels.  Labels repel away from each other and
-away from the data points.")
-    (license license:gpl3)))
 
 (define-public r-diffbind
   (package
@@ -422,14 +325,14 @@ two-case scaling, and extensive customization of plot shape and structure.")
 (define-public r-chippeakanno
   (package
     (name "r-chippeakanno")
-    (version "3.12.3")
+    (version "3.12.4")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "ChIPpeakAnno" version))
        (sha256
         (base32
-         "0c4ijvz049ns01g5r75as1r2w9pvymwh09qs1d7sslvm3jap05s0"))))
+         "0mnz79kmkmjxx88rxranfri6y6q7zy823ljs1gljz6iz4gvgdj02"))))
     (properties `((upstream-name . "ChIPpeakAnno")))
     (build-system r-build-system)
     (propagated-inputs
@@ -586,42 +489,17 @@ segmentation and calling are also implemented via packages DNAcopy and CGHcall,
 respectively.")
    (license license:gpl2+)))
 
-(define-public r-snpstats
-  (package
-   (name "r-snpstats")
-   (version "1.26.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "snpStats" version))
-            (sha256
-             (base32 "1f8i8pj741h8539lqj508ji27p5ljghyvmdrh3qcfx5jwn9jq8bj"))))
-   (properties `((upstream-name . "Snpstats")))
-   (build-system r-build-system)
-   (inputs
-    `(("zlib" ,zlib)))
-   (propagated-inputs
-    `(("r-survival" ,r-survival)
-      ("r-matrix" ,r-matrix)
-      ("r-biocgenerics" ,r-biocgenerics)
-      ("r-zlibbioc" ,r-zlibbioc)))
-   (home-page "http://bioconductor.org/packages/snpStats")
-   (synopsis "SnpMatrix and XSnpMatrix classes and methods")
-   (description "This package provides classes and statistical methods for
-large SNP association studies.  This extends the earlier snpMatrix package,
-allowing for uncertainty in genotypes.")
-   (license license:gpl3+)))
-
 (define-public r-funcisnp-data
   (package
    (name "r-funcisnp-data")
-   (version "1.12.0")
+   (version "1.14.0")
    (source (origin
             (method url-fetch)
             (uri (string-append "http://bioconductor.org/packages/release/"
                                 "data/experiment/src/contrib/FunciSNP.data_"
                                 version ".tar.gz"))
             (sha256
-             (base32 "1y37cgqnbzcddg3v2gl4832s0l7ncm7p7p4dyk0kz29bl62j8g2i"))))
+             (base32 "0zsffyhd9nxsg3a34sd2mycbvs8dsw96pqn1jj7zw5whldjihjwh"))))
    (properties `((upstream-name . "FunciSNP.data")))
    (build-system r-build-system)
    (propagated-inputs
@@ -669,36 +547,10 @@ and chromatin feature to identify functional SNP in coding or non-coding
 regions.")
    (license license:gpl3+)))
 
-(define-public r-ggdendro
-  (package
-    (name "r-ggdendro")
-    (version "0.1-20")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "ggdendro" version))
-              (sha256
-               (base32
-                "1zzq1hxd0d1qa5hrzwfkdw6fzscpcafbwbpkrb62dm559y8awp0j"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-ggplot2" ,r-ggplot2)
-       ("r-mass" ,r-mass)
-       ("r-knitr" ,r-knitr)))
-    (home-page "https://github.com/andrie/ggdendro")
-    (synopsis "Create Dendrograms and Tree Diagrams Using 'ggplot2'")
-    (description "This is a set of tools for dendrograms and tree plots using
-'ggplot2'.  The 'ggplot2' philosophy is to clearly separate data from the
-presentation.  Unfortunately the plot method for dendrograms plots directly
-to a plot device with out exposing the data.  The 'ggdendro' package resolves
-this by making available functions that extract the dendrogram plot data.
-The package provides implementations for tree, rpart, as well as diana and
-agnes cluster diagrams.")    
-    (license license:gpl2+)))
-
 (define-public r-pasilla
   (package
     (name "r-pasilla")
-    (version "1.4.0")
+    (version "1.6.0")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -706,7 +558,7 @@ agnes cluster diagrams.")
                     "/src/contrib/pasilla_" version ".tar.gz"))
               (sha256
                (base32
-                "0nz7s5sdd58bml8bb0c7c2vp8f0pxjl67kijaryncnqq3d2klc1l"))))
+                "0h6ll2csja5vnmylazb1qklz7ybk5hn0nxgkvxhhsmyqk9w7gk6m"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-dexseq" ,r-dexseq)
@@ -771,6 +623,29 @@ P-value.  This package is an interface to code originally made available by
 Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
     (license license:gpl2)))
 
+(define-public r-splitstackshape
+  (package
+   (name "r-splitstackshape")
+   (version "1.4.2")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "splitstackshape" version))
+     (sha256
+      (base32
+       "0m9karfh0pcy0jj3dzq87vybxv9gmcrq5m2k7byxpki95apbrsmg"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-data-table" ,r-data-table)))
+   (home-page "http://github.com/mrdwab/splitstackshape")
+   (synopsis "Stack and Reshape Datasets After Splitting Concatenated Values")
+   (description "Online data collection tools like Google Forms often export
+multiple-response questions with data concatenated in cells.  The concat.split
+(cSplit) family of functions splits such data into separate cells.  The package
+also includes functions to stack groups of columns and to reshape wide data,
+even when the data are \"unbalanced\".")
+   (license license:gpl3)))
+
 (define-public r-motifdb
   (package
    (name "r-motifdb")
@@ -787,7 +662,8 @@ Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
       ("r-s4vectors" ,r-s4vectors)
       ("r-biostrings" ,r-biostrings)
       ("r-iranges" ,r-iranges)
-      ("r-rtracklayer" ,r-rtracklayer)))
+      ("r-rtracklayer" ,r-rtracklayer)
+      ("r-splitstackshape" ,r-splitstackshape)))
    (home-page "http://bioconductor.org/packages/MotifDb")
    (synopsis "Annotated collection of protein-DNA binding sequence motifs")
    (description "This package provides more than 2000 annotated position
