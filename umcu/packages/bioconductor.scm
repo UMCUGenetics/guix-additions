@@ -20,12 +20,15 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
+  #:use-module (guix build-system gnu)
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages boost)
+  #:use-module (gnu packages gawk)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages ghostscript)
   #:use-module (gnu packages maths)
@@ -852,3 +855,67 @@ injected in that sequence).")
 using the @code{parallel} package for instance) using file locks.  Supports both
 exclusive and shared locking.")
     (license license:asl2.0)))
+
+(define r-spp-custom
+  (package
+    (name "r-spp-custom")
+    (version "1.14")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/kundajelab/phantompeakqualtools/raw/master/spp_"
+                    version ".tar.gz"))
+              (sha256
+               (base32 "02sj0482ph0sn9lpmxcmldsrj3sph70r4jp5k0idgbl27qbfcfyh"))))
+    (build-system r-build-system)
+    (inputs
+     `(("boost" ,boost)
+       ("zlib" ,zlib)))
+    (propagated-inputs
+     `(("r-catools" ,r-catools)
+       ("r-rsamtools" ,r-rsamtools)))
+    (home-page "https://github.com/kundajelab/phantompeakqualtools")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
+(define-public r-phantompeakqualtools
+  (package
+    (name "r-phantompeakqualtools")
+    (version "1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/kundajelab/phantompeakqualtools/"
+                    "archive/" version ".tar.gz"))
+              (sha256
+               (base32
+                "0s0nk9y7jb0gm1kvbcxn5n6aiavwlkc779myrnqm1wb51flcrjw6"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         (delete 'build)
+         (replace 'install
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((script (string-append (assoc-ref outputs "out")
+                                          "/share/scripts")))
+               (install-file "run_spp.R" script)))))))
+    (propagated-inputs
+     `(("r-catools" ,r-catools)
+       ("r-snow" ,r-snow)
+       ("r-snowfall" ,r-snowfall)
+       ("r-bitops" ,r-bitops)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-spp-custom" ,r-spp-custom)
+       ("gawk" ,gawk)
+       ("samtools" ,samtools)
+       ("boost" ,boost)
+       ("gzip" ,gzip)))
+    (home-page "https://github.com/kundajelab/phantompeakqualtools")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
