@@ -1178,7 +1178,7 @@ REPORT_STATUS	~a"
        ("perl-strictures" ,perl-strictures-2)
        ("perl-template-toolkit" ,perl-template-toolkit)
        ("perl-time-hires" ,perl-time-hires)
-       ("icedtea-7" ,icedtea-7)
+       ("icedtea-8" ,icedtea-8)
        ("r-biobase" ,r-biobase)
        ("r-biocstyle" ,r-biocstyle)
        ("r-bsgenome" ,r-bsgenome)
