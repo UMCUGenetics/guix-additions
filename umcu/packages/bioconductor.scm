@@ -919,3 +919,87 @@ exclusive and shared locking.")
     (description "")
     (license #f)))
 
+(define-public r-fda
+  (package
+   (name "r-fda")
+   (version "2.4.7")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "fda" version))
+            (sha256
+             (base32
+              "0371c32kxxvfdh18ldgc2p76dr2436ay0n9prdjwm9v0azp4rp9k"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-matrix" ,r-matrix)))
+   (home-page "http://www.functionaldata.org")
+   (synopsis "Functional Data Analysis")
+   (description
+    "These functions were developed to support functional data analysis as
+described in Ramsay, J.  O.  and Silverman, B.  W. (2005) Functional Data
+Analysis.  New York: Springer.  They were ported from earlier versions in
+Matlab and S-PLUS.  An introduction appears in Ramsay, J.  O., Hooker,
+Giles, and Graves, Spencer (2009) Functional Data Analysis with R and
+Matlab (Springer).  The package includes data sets and script files working
+many examples including all but one of the 76 figures in this latter book.
+Matlab versions of the code and sample analyses are no longer distributed
+through CRAN, as they were when the book was published.  For those, ftp
+from <http://www.psych.mcgill.ca/misc/fda/downloads/FDAfuns/> There you find
+a set of .zip files containing the functions and sample analyses, as well as
+two .txt files giving instructions for installation and some additional
+information.  The changes from Version 2.4.1 are fixes of bugs in density.fd
+and removal of functions create.polynomial.basis, polynompen, and polynomial.
+These were deleted because the monomial basis does the same thing and because
+there were errors in the code.")
+   (license license:gpl2+)))
+
+(define-public r-lsd
+  (package
+   (name "r-lsd")
+   (version "3.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "LSD" version))
+            (sha256
+             (base32
+              "069p33aw6iwikp82b7b8wa77wlyjqwr4hcwvrgaxgwqdgn6jjg3k"))))
+   (properties `((upstream-name . "LSD")))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/LSD")
+   (synopsis "Lots of Superior Depictions")
+   (description "Create lots of colorful plots in a plethora of variations
+(try the LSD demotour())")
+   ;; License: "unlimited" -- whatever that means.
+   (license #f)))
+
+(define-public r-fourcseq
+  (package
+   (name "r-fourcseq")
+   (version "1.12.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "FourCSeq" version))
+            (sha256
+             (base32 "08fq289m8g7fgmsrph1gq45q6zpfnrzpm0n4qyf2vc5hsdgnm4qh"))))
+   (properties `((upstream-name . "FourCSeq")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-deseq2" ,r-deseq2)
+      ("r-biobase" ,r-biobase)
+      ("r-biostrings" ,r-biostrings)
+      ("r-genomicranges" ,r-genomicranges)
+      ("r-summarizedexperiment" ,r-summarizedexperiment)
+      ("r-rsamtools" ,r-rsamtools)
+      ("r-ggbio" ,r-ggbio)
+      ("r-reshape2" ,r-reshape2)
+      ("r-rtracklayer" ,r-rtracklayer)
+      ("r-fda" ,r-fda)
+      ("r-genomicalignments" ,r-genomicalignments)
+      ("r-gtools" ,r-gtools)
+      ("r-matrix" ,r-matrix)
+      ("r-lsd" ,r-lsd)
+      ("r-ggplot2" ,r-ggplot2)))
+   (home-page "http://bioconductor.org/packages/FourCSeq/")
+   (synopsis "Package analyse 4C sequencing data")
+   (description "FourCSeq is an R package dedicated to the analysis of (multiplexed) 4C sequencing data. The package provides a pipeline to detect specific interactions between DNA elements and identify differential interactions between conditions. The statistical analysis in R starts with individual bam files for each sample as inputs. To obtain these files, the package contains a python script (extdata/python/demultiplex.py) to demultiplex libraries and trim off primer sequences. With a standard alignment software the required bam files can be then be generated.")
+   (license license:gpl3+)))
