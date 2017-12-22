@@ -83,13 +83,13 @@
   ;; from any other Guix package and you should NOT use this package.
   (package
    (name "maven")
-   (version "3.5.2")
+   (version "3.5.0")
    (source (origin
             (method url-fetch)
             (uri (string-append "http://apache.cs.uu.nl/maven/maven-3/" version
                                 "/binaries/apache-maven-" version "-bin.tar.gz"))
             (sha256
-             (base32 "1zza5kjf69hnx41gy3yhvsk1kz259nig5njcmzjbsr8a75p1yyvh"))))
+             (base32 "0d7hjnj77hc7qqnnfmqlwij8n6pcldfavvd6lilvv5ak4hci9fdy"))))
    ;; We use the GNU build system mainly for its patch-shebang phases.
    (build-system gnu-build-system)
    (arguments
@@ -133,7 +133,7 @@ build, reporting and documentation from a central piece of information.")
              (base32 "03hbfjncm2scll90f711l68vl4w3zi2f3l1ahmd8kdik7f4ngwsb"))))))
 
 (define-public hmftools
-  (let ((commit "e10525d3178fb17db78cabf0f832d6fabf09e9f2"))
+  (let ((commit "5cdd9f04ba20339083fbd1e7a1a5b34ec2596456"))
     (package
      (name "hmftools")
      (version (string-take commit 7))
@@ -145,7 +145,7 @@ build, reporting and documentation from a central piece of information.")
                 (file-name (string-append name "-" version "-checkout"))
                 (sha256
                  (base32
-                  "00nap727sxk00rzq7r7xibavyfcngm1q3pi7wwks1cwzdv1fjvzi"))))
+                  "1qkm8pcg41j1nhkyz3m9fcdsv6pcxq6gwldbshd7g40kf4x01ps5"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f ; Tests are run in the install phase.
@@ -234,7 +234,7 @@ build, reporting and documentation from a central piece of information.")
                 ;; Create credentials file.
                 (with-output-to-file (string-append home-dir "/mysql.login")
                   (lambda _
-                    (format #t "[client]~%database=~a~%user=~a~%password=~a~%protocol=tcp"
+                    (format #t "[client]~%database=~a~%user=~a~%password=~a~%socket=~a/mysql/socket"
                             "hmfpatients" "build" "build" build-dir)))
 
                 ;; Unpack the dependencies downloaded using maven.
@@ -277,47 +277,38 @@ build, reporting and documentation from a central piece of information.")
                 (map (lambda (file-pair)
                        (copy-file (car file-pair)
                                   (string-append output-dir "/" (cdr file-pair))))
-                     '(("patient-db/target/patient-db-1.4-jar-with-dependencies.jar" .
-                        "patient-db-1.4.jar")
-                       ("hmf-common/target/hmf-common-1.jar" .
-                        "hmf-common-1.jar")
-                       ("purity-ploidy-estimator/target/purity-ploidy-estimator-2.0-jar-with-dependencies.jar" .
-                        "purity-ploidy-estimator-2.0.jar")
-                       ("hmf-gene-panel/target/hmf-gene-panel-1-jar-with-dependencies.jar" .
+                     '(("hmf-gene-panel/target/hmf-gene-panel-1-jar-with-dependencies.jar" .
                         "hmf-gene-panel-1.jar")
-                       ("amber/target/amber-1.5-jar-with-dependencies.jar" .
-                        "amber-1.5.jar")
-                       ("count-bam-lines/target/count-bam-lines-1.2-jar-with-dependencies.jar" .
-                        "count-bam-lines-1.2.jar")
+                       ("amber/target/amber-1.0-jar-with-dependencies.jar" .
+                        "amber-1.0.jar")
+                       ("count-bam-lines/target/count-bam-lines-1.0-jar-with-dependencies.jar" .
+                        "count-bam-lines-1.0.jar")
+                       ("patient-report-mailer/target/patient-report-mailer-1.0-jar-with-dependencies.jar" .
+                        "patient-report-mailer-1.0.jar")
+                       ("rups-checker/target/rups-checker-1-jar-with-dependencies.jar" .
+                        "rups-checker-1.jar")
                        ("bachelor/target/bachelor-1-jar-with-dependencies.jar" .
                         "bachelor-1.jar")
                        ("fastq-stats/target/fastq-stats-1.0-jar-with-dependencies.jar" .
                         "fastq-stats-1.0.jar")
-                       ("break-point-inspector/target/break-point-inspector-1.5-jar-with-dependencies.jar" .
-                        "break-point-inspector-1.5.jar")
+                       ("break-point-inspector/target/break-point-inspector-1.2-jar-with-dependencies.jar" .
+                        "break-point-inspector-1.2.jar")
+                       ("patient-db/target/patient-db-1.0-jar-with-dependencies.jar" .
+                        "patient-db-1.0.jar")
+                       ("purity-ploidy-estimator/target/purity-ploidy-estimator-1.2-jar-with-dependencies.jar" .
+                        "purity-ploidy-estimator-1.2.jar")
                        ("bam-slicer/target/bam-slicer-1.0-jar-with-dependencies.jar" .
                         "bam-slicer-1.0.jar")
-                       ("strelka-post-process/target/strelka-post-process-jar-with-dependencies.jar" .
-                        "strelka-post-process-1.0.jar")
-                       ("strelka-post-process/target/mnv-validator-jar-with-dependencies.jar" .
-                        "mnv-validator-1.0.jar")
-                       ("strelka-post-process/target/mnv-detector-jar-with-dependencies.jar" .
-                        "mnv-detector-1.0.jar")
-                       ("api-clients/target/api-clients-1.0-jar-with-dependencies.jar" .
-                        "api-clients-1.0.jar")))
+                       ("strelka-post-process/target/strelka-post-process-1.0-jar-with-dependencies.jar" .
+                        "strelka-post-process-1.0.jar")))
 
                 ;; The HMF pipeline expects the following filenames to exist.
                 (chdir output-dir)
-                (symlink "patient-db-1.4.jar" "patient-db.jar")
-                (symlink "hmf-gene-panel-1.jar" "hmf-gene-panel.jar")
-                (symlink "amber-1.5.jar" "amber.jar")
-                (symlink "count-bam-lines-1.2.jar" "cobalt.jar")
-                (symlink "purity-ploidy-estimator-2.0.jar" "purple.jar")
-                (symlink "break-point-inspector-1.5.jar" "break-point-inspector.jar")
-                (symlink "strelka-post-process-1.0.jar" "strelka-post-process.jar")
-                (symlink "mnv-validator-1.0.jar" "mnv-validator.jar")
-                (symlink "mnv-detector-1.0.jar" "mnv-detector.jar")
-                (symlink "api-clients-1.0.jar" "api-clients.jar")))))))
+                (symlink "amber-1.0.jar" "amber.jar")
+                (symlink "count-bam-lines-1.0.jar" "cobalt.jar")
+                (symlink "purity-ploidy-estimator-1.2.jar" "purple.jar")
+                (symlink "break-point-inspector-1.2.jar" "break-point-inspector.jar")
+                (symlink "strelka-post-process-1.0.jar" "strelka-post-process.jar")))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
         ("maven" ,maven-bin)))
@@ -334,7 +325,7 @@ build, reporting and documentation from a central piece of information.")
                                  "hmftools-mvn-dependencies.tar.gz"))
              (sha256
               (base32
-               "0mbz5q8zrwin1rgjk2bb5ax95210zyndm3bx5lszpql2pmwdbjgk"))))
+               "1iflrwff51ll8vzcpb1dmh3hs2qsbb9h0rbys4gdw584xpdvcz0z"))))
         ("mysql" ,mysql-5.6.25)))
      (native-search-paths
       (list (search-path-specification
