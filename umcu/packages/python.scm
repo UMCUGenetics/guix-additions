@@ -718,7 +718,7 @@ GDC API which provides general download/upload via HTTPS.")
               (mkdir-p scripts)
               (copy-recursively "." scripts)
               (substitute* (string-append scripts "phenoCellSpec_v01/markCellSpecif.py")
-                (("import parseData") "import data"))))))))
+                (("parseData") "data"))))))))
    (home-page "http://archive.broadinstitute.org/mpg/epigwas/")
    (synopsis "Scripts for phenotypic cell type specificity")
    (description "Phenotypic cell-type specificity identifies chromatin
