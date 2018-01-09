@@ -214,7 +214,18 @@ build, reporting and documentation from a central piece of information.")
                            "--user=build"
                            "--password=build"
                            "-e" "CREATE DATABASE hmfpatients")))))
-          (replace 'build
+           (add-before 'build 'patch-circos-configuration
+             (lambda* (#:key inputs #:allow-other-keys)
+               (substitute* '("purity-ploidy-estimator/src/main/resources/circos/circos.template"
+                              "purity-ploidy-estimator/src/main/resources/circos/input.template")
+                 (("<<include etc/")
+                  (string-append "<<include " (assoc-ref inputs "circos")
+                                 "/share/Circos/etc/"))
+                 (("karyotype = data/")
+                  (string-append "karyotype = "
+                                 (assoc-ref inputs "circos")
+                                 "/share/Circos/data/")))))
+           (replace 'build
             (lambda* (#:key inputs outputs #:allow-other-keys)
               (let* ((build-dir (getcwd))
                      (home-dir (string-append build-dir "/home"))
@@ -311,7 +322,8 @@ build, reporting and documentation from a central piece of information.")
                 (symlink "strelka-post-process-1.0.jar" "strelka-post-process.jar")))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)))
+        ("maven" ,maven-bin)
+        ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
       `(("r" ,r-minimal)
