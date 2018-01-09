@@ -83,13 +83,13 @@
   ;; from any other Guix package and you should NOT use this package.
   (package
    (name "maven")
-   (version "3.5.0")
+   (version "3.5.2")
    (source (origin
             (method url-fetch)
             (uri (string-append "http://apache.cs.uu.nl/maven/maven-3/" version
                                 "/binaries/apache-maven-" version "-bin.tar.gz"))
             (sha256
-             (base32 "0d7hjnj77hc7qqnnfmqlwij8n6pcldfavvd6lilvv5ak4hci9fdy"))))
+             (base32 "1zza5kjf69hnx41gy3yhvsk1kz259nig5njcmzjbsr8a75p1yyvh"))))
    ;; We use the GNU build system mainly for its patch-shebang phases.
    (build-system gnu-build-system)
    (arguments
