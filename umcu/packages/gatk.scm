@@ -230,7 +230,7 @@ capable of taking on projects of any size.")
                                  "download/auth?package=Queue"))
              (file-name (string-append name "-" version ".tar.bz2"))
              (sha256
-              (base32 "0jg9aflz6qscrf8wc156lkvyzc16sd1ya74gaa7pvlv235qrida6"))))
+              (base32 "0ka2l77583rqad4s96spbk3npv42mgpzba9bqj8r50xn30yfpa8k"))))
     (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
@@ -242,7 +242,7 @@ capable of taking on projects of any size.")
             (let ((out (string-append (assoc-ref %outputs "out")
                                       "/share/java/gatk/")))
               (mkdir-p out)
-              (install-file "Queue.jar" out)))))))))
+              (install-file "../Queue.jar" out)))))))))
 
 (define-public gatk-queue-bin-3.4-46
   (package (inherit gatk-queue-bin-3.4-0)
