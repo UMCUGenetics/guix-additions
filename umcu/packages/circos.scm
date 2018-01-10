@@ -266,8 +266,15 @@
                ;; files.  We need to provide an absolute path towards the
                ;; corresponding paths in the store.
                (substitute* '("bin/circos" "etc/colors_fonts_patterns.conf"
-                              "etc/gddiag.conf" "README")
-                (("<<include etc") (string-append "<<include " etc)))
+                              "etc/gddiag.conf" "etc/brewer.conf" "README")
+                 (("<<include etc") (string-append "<<include " etc)))
+               (substitute* '("etc/colors.conf" "etc/image.black.conf"
+                              "etc/patterns.conf" "etc/image.conf")
+                 (("<<include ") (string-append "<<include " etc "/")))
+               (substitute* '("etc/fonts.conf" "fonts/README.fonts")
+                 (("= fonts") (string-append "= " fonts)))
+               (substitute* "etc/patterns.conf"
+                 (("= tiles") (string-append "= " tiles)))
                (for-each install-directory
                          (list "error" "fonts" "data" "tiles" "etc" "lib")
                          (list error fonts data tiles etc lib))
