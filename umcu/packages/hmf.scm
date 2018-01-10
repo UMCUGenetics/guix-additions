@@ -871,7 +871,10 @@ single executable called @code{bam}.")
              (substitute* "annotatePON.py"
                (("#!/usr/bin/env python") (string-append "#!" pythonbin)))
              (substitute* "convert_delly_TRA.pl"
-               (("#!/usr/bin/env perl") (string-append "#!" perlbin))))
+               (("#!/usr/bin/env perl") (string-append "#!" perlbin)))
+             (substitute* "run_QDNAseq.R"
+               (("load_all\\(qdnaseq_path\\)")
+                "library(\"QDNAseq\")")))
 
            ;; Extract QScripts to their own custom directory.
            (with-directory-excursion qscripts-dir
