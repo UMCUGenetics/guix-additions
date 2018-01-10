@@ -275,11 +275,14 @@
                  (("= fonts") (string-append "= " fonts)))
                (substitute* "etc/patterns.conf"
                  (("= tiles") (string-append "= " tiles)))
+               (substitute* "lib/Circos/Error.pm"
+                 (("error/configuration.missing.txt")
+                  (string-append error "/configuration.missing.txt")))
                (for-each install-directory
                          (list "error" "fonts" "data" "tiles" "etc" "lib")
                          (list error fonts data tiles etc lib))
                (install-file "bin/circos" bin)
-             #t))))))
+               #t))))))
     (propagated-inputs
      `(("perl" ,perl)
        ("perl-carp" ,perl-carp)
