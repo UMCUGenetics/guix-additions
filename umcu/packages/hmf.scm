@@ -1136,7 +1136,7 @@ REPORT_STATUS	~a"
                (("qsub -P") "qsub -V -P")
                ;; Also apply the 4GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -V -l h_vmem=$h_vmem\"")
+                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -V -l h_vmem=$h_vmem\";")
                 ))))))
     (inputs
      `(("bammetrics" ,bammetrics)
