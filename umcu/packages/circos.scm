@@ -252,6 +252,7 @@
            (lambda* (#:key outputs #:allow-other-keys)
              (let* ((out (assoc-ref outputs "out"))
                     (bin (string-append out "/bin"))
+                    (datapath (string-append out "/share/Circos"))
                     (error (string-append out "/share/Circos/error"))
                     (fonts (string-append out "/share/Circos/fonts"))
                     (data (string-append out "/share/Circos/data"))
@@ -278,6 +279,9 @@
                (substitute* "lib/Circos/Error.pm"
                  (("error/configuration.missing.txt")
                   (string-append error "/configuration.missing.txt")))
+               (substitute* "etc/housekeeping.conf"
+                 (("# data_path = /home/martink/circos-tutorials ")
+                  (string-append "data_path = " datapath)))
                (for-each install-directory
                          (list "error" "fonts" "data" "tiles" "etc" "lib")
                          (list error fonts data tiles etc lib))
