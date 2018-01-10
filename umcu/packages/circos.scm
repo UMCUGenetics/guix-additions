@@ -282,6 +282,12 @@
                (substitute* "etc/housekeeping.conf"
                  (("# data_path = /home/martink/circos-tutorials ")
                   (string-append "data_path = " datapath)))
+               (substitute* "lib/Circos/Configuration.pm"
+                 (("my @possibilities = \\(")
+                  (string-append "my @possibilities = ("
+                                 "catfile( \"" datapath "\", $arg ), "
+                                 "catfile( \"" etc "\", $arg ), "
+                                 "catfile( \"" etc "/tracks\", $arg ), ")))
                (for-each install-directory
                          (list "error" "fonts" "data" "tiles" "etc" "lib")
                          (list error fonts data tiles etc lib))
