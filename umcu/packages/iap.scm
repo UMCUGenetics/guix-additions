@@ -156,7 +156,7 @@
         ("vcflib" ,vcflib-1.0.2)
         ("delly" ,delly-0.7.2)
         ("plink2" ,plink2-1.90b3)
-        ("king" ,king-bin-1.4)
+        ("king" ,king-bin-2.1.2)
         ("perl" ,perl)
         ("perl-file-path" ,perl-file-path)
         ("r" ,r)

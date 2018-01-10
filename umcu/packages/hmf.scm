@@ -1151,7 +1151,7 @@ REPORT_STATUS	~a"
        ("icedtea-8" ,icedtea-8)
        ("icedtea-7" ,icedtea-7)
        ("igvtools" ,igvtools-bin-2.3.60)
-       ("king" ,king-bin-1.4)
+       ("king" ,king-bin-2.1.2)
        ("manta" ,manta)
        ("pbgzip" ,pbgzip)
        ("perl" ,perl)

@@ -29,10 +29,10 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages compression))
 
-(define-public king-bin-1.4
+(define-public king-bin-2.1.2
   (package
     (name "king")
-    (version "1.4")
+    (version "2.1.2")
     ;; WARNING: There's no source code.  This downloads a tarball with the
     ;; executable.
     (source (origin
@@ -40,7 +40,7 @@
       (uri "http://people.virginia.edu/~wc9c/KING/Linux-king.tar.gz")
       (file-name (string-append name "-" version "-bin.tar.gz"))
       (sha256
-       (base32 "0h8mh7dawmp6vwz4znq74rqh01xq319cynbpac6a4b3lxkcfflx2"))))
+       (base32 "0hiiwakrcq9d7xl5ivp4d6bq09qrn3sggy4rsmhpm4ashyi6pr27"))))
     (build-system gnu-build-system)
     ;; The executable is linked to 64-bit libraries.
     (supported-systems '("x86_64-linux"))
