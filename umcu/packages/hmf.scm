@@ -1192,6 +1192,7 @@ REPORT_STATUS	~a"
        ("r-biobase" ,r-biobase)
        ("r-biocstyle" ,r-biocstyle)
        ("r-bsgenome" ,r-bsgenome)
+       ("r-copynumber" ,r-copynumber)
        ("r-cghbase" ,r-cghbase)
        ("r-cghcall" ,r-cghcall)
        ("r-devtools" ,r-devtools)
