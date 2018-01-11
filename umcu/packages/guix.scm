@@ -410,34 +410,3 @@ numbers.")
    (description "vmtouch is a tool for learning about and controlling the file
 system cache of unix and unix-like systems.")
    (license license:bsd-3)))
-
-(define-public gwl-next
-  (package
-    (name "gwl")
-    (version "0.1.1")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "https://www.guixwl.org/releases/gwl-"
-                                  version ".tar.gz"))
-              (sha256
-               (base32
-                "17fw93m3pfandwalhkf7z9saisvqp9w0m0vcsk2w5sscxbs438jd"))))
-    (build-system gnu-build-system)
-    (native-inputs
-     `(("autoconf" ,autoconf)
-       ("automake" ,automake)
-       ("pkg-config" ,pkg-config)))
-    (inputs
-     `(("guile" ,guile-2.2)))
-    (propagated-inputs
-     `(("guix" ,guix)
-       ("guile-commonmark" ,guile-commonmark)))
-    (home-page "https://www.guixwl.org")
-    (synopsis "Workflow management extension for GNU Guix")
-    (description "This project provides two subcommands to GNU Guix and
-introduces two record types that provide a workflow management extension built
-on top of GNU Guix.")
-    ;; The Scheme modules in guix/ and gnu/ are licensed GPL3+,
-    ;; the web interface modules in gwl/ are licensed AGPL3+,
-    ;; and the fonts included in this package are licensed OFL1.1.
-    (license (list license:gpl3+ license:agpl3+ license:silofl1.1))))
