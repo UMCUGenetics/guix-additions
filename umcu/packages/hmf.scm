@@ -833,6 +833,7 @@ single executable called @code{bam}.")
                (scripts-dir (string-append %output "/share/hmf-pipeline/scripts"))
                (lib-dir (string-append %output "/lib/perl5/site_perl/" ,(package-version perl)))
                (perlbin (string-append (assoc-ref %build-inputs "perl") "/bin/perl"))
+               (shbin (string-append (assoc-ref %build-inputs "bash") "/bin/sh"))
                (pythonbin (string-append (assoc-ref %build-inputs "python") "/bin/python")))
            (setenv "PATH" PATH)
 
@@ -972,7 +973,11 @@ single executable called @code{bam}.")
                 (string-append (assoc-ref %build-inputs "coreutils")
                                "/bin/wc "))
                (("Rscript ")
-                (string-append (assoc-ref %build-inputs "r-minimal") "/bin/Rscript ")))
+                (string-append (assoc-ref %build-inputs "r-minimal") "/bin/Rscript "))
+               (("/usr/bin/env perl") perlbin)
+               ;; Use "sh" instead of "bash" to prevent loading bash
+               ;; configuration files that modify the program's environment.
+               (("/usr/bin/env bash") shbin))
 
              (substitute* "Kinship.sh.tt"
                (("cp ")
