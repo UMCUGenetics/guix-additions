@@ -181,12 +181,12 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.4.2")
+    (version "1.4.3")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
      `(("guix" ,guix)
-       ("gwl" ,gwl-next)))
+       ("gwl" ,gwl)))
     (inputs
      `(("bash-full" ,bash-custom)
        ("git" ,git)
@@ -227,14 +227,16 @@ export NIX_STATE_DIR=$guix_root
 
 # Ensure the latest Guix packages are used.  Do not override
 # the user's customizations (if any).
-if [ ! -L $HOME/.config/guix/latest ]; then
-  mkdir -p $HOME/.config/guix
-  ln -s /gnu/repositories/guix $HOME/.config/guix/latest
-# Renew the link as repository updates are managed centrally.
-# This will avoid the warning of an outdated version of Guix.
-elif [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
-  rm -f $HOME/.config/guix/latest
-  ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+if [ -v HOME ]; then
+  if [ ! -L $HOME/.config/guix/latest ]; then
+    mkdir -p $HOME/.config/guix
+    ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+  # Renew the link as repository updates are managed centrally.
+  # This will avoid the warning of an outdated version of Guix.
+  elif [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
+    rm -f $HOME/.config/guix/latest
+    ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+  fi
 fi
 
 # Include our non-standard package repository
