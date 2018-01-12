@@ -240,7 +240,8 @@
               (method url-fetch)
               (uri (string-append "http://circos.ca/distribution/circos-" version ".tgz"))
               (sha256
-               (base32 "0cdf9pbp7din531lpqa9asa507jv7jnxshrwvhaqvr08rzilzn93"))))
+               (base32 "0cdf9pbp7din531lpqa9asa507jv7jnxshrwvhaqvr08rzilzn93"))
+              (patches (list (search-patch "circos-remove-findbin.patch")))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f ; There are no tests.
