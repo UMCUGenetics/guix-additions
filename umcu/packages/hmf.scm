@@ -1029,9 +1029,9 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "bammetrics") "/bin")
                          (string-append (assoc-ref %build-inputs "exoncov") "/bin")
                          (string-append (assoc-ref %build-inputs "damage-estimator") "/share/damage-estimator")
-                         (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
-                         (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
-                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/gatk")
+                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/user-classes")
                          (assoc-ref %build-inputs "strelka")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
@@ -1104,7 +1104,7 @@ REPORT_STATUS	~a"
                (("qsub -P") "qsub -V -P")
                ;; Also apply the 4GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -V -l h_vmem=$h_vmem\";")
+                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -l h_vmem=$h_vmem\";")
                 ))))))
     (inputs
      `(("bammetrics" ,bammetrics)
@@ -1116,8 +1116,7 @@ REPORT_STATUS	~a"
        ("exoncov" ,exoncov)
        ("fastqc" ,fastqc-bin-0.11.4)
        ("freec" ,freec-10.4)
-       ("gatk" ,gatk-bin-3.4-46)
-       ("gatk-queue" ,gatk-queue-bin-3.4-46)
+       ("gatk" ,gatk-full-3.5)
        ("hmftools" ,hmftools)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
@@ -1192,7 +1191,7 @@ REPORT_STATUS	~a"
        ("util-linux" ,util-linux)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs gatk-bin-3.4-46)))
+       ,@(package-propagated-inputs gatk-full-3.5)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
     ;; make sure that the environment variables for these interpreters are
