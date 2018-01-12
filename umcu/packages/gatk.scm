@@ -23,10 +23,50 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages bash)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages java)
-  #:use-module (gnu packages statistics))
+  #:use-module (gnu packages statistics)
+  #:use-module (gnu packages perl))
+
+(define-public maven-bin
+  ;; XXX: This package is only a binary inclusion of Maven.  It is different
+  ;; from any other Guix package and you should NOT use this package.
+  (package
+   (name "maven")
+   (version "3.5.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append "http://apache.cs.uu.nl/maven/maven-3/" version
+                                "/binaries/apache-maven-" version "-bin.tar.gz"))
+            (sha256
+             (base32 "1zza5kjf69hnx41gy3yhvsk1kz259nig5njcmzjbsr8a75p1yyvh"))))
+   ;; We use the GNU build system mainly for its patch-shebang phases.
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; This is just copying a binary, so no tests to perform.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; No configuration, just copying.
+        (delete 'build)     ; No building, just copying.
+        (replace 'install
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let ((outdir (assoc-ref outputs "out")))
+              (mkdir-p (string-append outdir))
+              (copy-recursively "." outdir)
+              (delete-file (string-append outdir "/README.txt"))
+              (delete-file (string-append outdir "/NOTICE"))
+              (delete-file (string-append outdir "/LICENSE"))))))))
+   (propagated-inputs
+    `(("which" ,which)))
+   (home-page "https://maven.apache.org/")
+   (synopsis "Build and dependency management tool for Java")
+   (description "Apache Maven is a software project management and comprehension tool.
+Based on the concept of a project object model (POM), Maven can manage a project's
+build, reporting and documentation from a central piece of information.")
+   (license license:asl2.0)))
 
 (define-public r-gsalib
   (package
@@ -258,3 +298,136 @@ capable of taking on projects of any size.")
                   version ".tar.bz2"))
             (sha256
              (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))))
+
+(define-public gatk-full-3.5
+  (package
+    (name "gatk")
+    (version "3.5-e91472d")
+    (source (origin
+              (method url-fetch)
+              (uri "https://github.com/broadgsa/gatk-protected/archive/3.5.tar.gz")
+              (sha256
+               (base32 "0g07h5a7ajsyapgzh7nxz0yjp3d2v4fwhfnkcs0sfnq7s2rpsh9z"))))
+    (build-system gnu-build-system)
+    (arguments
+      `(#:tests? #f ; Tests are run in the install phase.
+        #:phases
+        (modify-phases %standard-phases
+          (delete 'configure) ; Nothing to configure
+          (replace 'build
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+              (let* ((build-dir (getcwd))
+                     (home-dir (string-append build-dir "/home"))
+                     (settings-dir (string-append build-dir "/mvn"))
+                     (settings (string-append settings-dir "/settings.xml"))
+                     (m2-dir (string-append build-dir "/m2/repository"))
+                     (fakebin (string-append build-dir "/fakebin")))
+
+                ;; Turns out that there's an unused import that breaks the build.
+                ;; Fortunately, we can easily remove it.
+                (substitute* (string-append "public/gatk-tools-public/src/main"
+                                            "/java/org/broadinstitute/gatk"
+                                            "/tools/walkers/varianteval"
+                                            "/VariantEval.java")
+                  (("import oracle.jrockit.jfr.StringConstantPool;")
+                   "//import oracle.jrockit.jfr.StringConstantPool;"))
+
+                ;; Patch hardcoded /bin/sh entries.
+                (substitute* (string-append "public/gatk-queue/src/test/scala"
+                                            "/org/broadinstitute/gatk/queue"
+                                            "/util/ShellUtilsUnitTest.scala")
+                  (("/bin/sh")
+                   (string-append (assoc-ref %build-inputs "bash") "/bin/sh")))
+
+                (mkdir-p settings-dir)
+                (mkdir-p m2-dir)
+
+                ;; Unpack the dependencies downloaded using maven.
+                (with-directory-excursion m2-dir
+                  (zero? (system* "tar" "xvf" (assoc-ref inputs "maven-deps"))))
+
+                ;; Because the build process does not have a home directory in
+                ;; which the 'm2' directory can be created (the directory
+                ;; that will contain all downloaded dependencies for maven),
+                ;; we need to set that directory to some other path.  This is
+                ;; done using an XML configuration file of which a minimal
+                ;; variant can be found below.
+                (with-output-to-file settings
+                  (lambda _
+                    (format #t "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\"
+          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+          xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\">
+<localRepository>~a</localRepository>
+</settings>" m2-dir)))
+
+                ;; Set JAVA_HOME to help maven find the JDK.
+                (setenv "JAVA_HOME" (string-append (assoc-ref inputs "icedtea") "/jre"))
+                (mkdir-p home-dir)
+                (setenv "HOME" home-dir)
+
+                (mkdir-p m2-dir)
+                (mkdir-p settings-dir)
+
+                ;; Compile using maven's compile command.
+                (let ((compile-options (string-append
+                                        "-fn " ; Javadoc targets fail.
+                                        "-Dresource.bundle.skip=true "
+                                        "-Dmaven.tests.skip=true "
+                                        "--offline")))
+                  (system (format #f "mvn compile ~a --global-settings ~s"
+                                  compile-options settings))
+                  (system (format #f "mvn verify ~a --global-settings ~s"
+                                  compile-options settings))
+                  (system (format #f "mvn package ~a --global-settings ~s"
+                                  compile-options settings))))))
+          (replace 'install
+            (lambda _
+              (let ((out (string-append (assoc-ref %outputs "out")
+                                        "/share/java/user-classes/")))
+                (mkdir-p out)
+                (install-file "target/GenomeAnalysisTK.jar" out)
+                (install-file "target/Queue.jar" out)
+                ))))))
+    (native-inputs
+     `(("maven-deps"
+        ,(origin
+          (method url-fetch)
+          (uri (string-append "https://raw.githubusercontent.com/"
+                              "UMCUGenetics/guix-additions/master/blobs/"
+                              "gatk-mvn-dependencies.tar.gz"))
+          (sha256
+           (base32
+            "1rrc7clad01mw83zyfgc4bnfn0nqvfc0mabd8wnj61p64xrigny9"))))))
+    (inputs
+     `(("icedtea" ,icedtea-7 "jdk")
+       ("maven" ,maven-bin)
+       ("bash" ,bash)
+       ("perl" ,perl)
+       ("r" ,r)))
+    (propagated-inputs
+     `(("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "GUIX_JARPATH")
+            (files (list "share/java/user-classes")))))
+    (home-page "https://github.com/broadgsa/gatk-protected")
+    (synopsis "Package for analysis of high-throughput sequencing")
+   (description "The Genome Analysis Toolkit or GATK is a software package for
+analysis of high-throughput sequencing data, developed by the Data Science and
+Data Engineering group at the Broad Institute.  The toolkit offers a wide
+variety of tools, with a primary focus on variant discovery and genotyping as
+well as strong emphasis on data quality assurance.  Its robust architecture,
+powerful processing engine and high-performance computing features make it
+capable of taking on projects of any size.")
+   ;; There are additional restrictions, so it's nonfree.
+   (license license:expat)))

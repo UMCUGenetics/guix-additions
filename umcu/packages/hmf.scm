@@ -78,43 +78,6 @@
     (name "grep-with-pcre")
     (inputs `(("pcre" ,pcre)))))
 
-(define-public maven-bin
-  ;; XXX: This package is only a binary inclusion of Maven.  It is different
-  ;; from any other Guix package and you should NOT use this package.
-  (package
-   (name "maven")
-   (version "3.5.2")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append "http://apache.cs.uu.nl/maven/maven-3/" version
-                                "/binaries/apache-maven-" version "-bin.tar.gz"))
-            (sha256
-             (base32 "1zza5kjf69hnx41gy3yhvsk1kz259nig5njcmzjbsr8a75p1yyvh"))))
-   ;; We use the GNU build system mainly for its patch-shebang phases.
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; This is just copying a binary, so no tests to perform.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; No configuration, just copying.
-        (delete 'build)     ; No building, just copying.
-        (replace 'install
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let ((outdir (assoc-ref outputs "out")))
-              (mkdir-p (string-append outdir))
-              (copy-recursively "." outdir)
-              (delete-file (string-append outdir "/README.txt"))
-              (delete-file (string-append outdir "/NOTICE"))
-              (delete-file (string-append outdir "/LICENSE"))))))))
-   (propagated-inputs
-    `(("which" ,which)))
-   (home-page "https://maven.apache.org/")
-   (synopsis "Build and dependency management tool for Java")
-   (description "Apache Maven is a software project management and comprehension tool.
-Based on the concept of a project object model (POM), Maven can manage a project's
-build, reporting and documentation from a central piece of information.")
-   (license license:asl2.0)))
-
 ;; Here's a very secret package definition.  It's QDNAseq 1.9.2, plus
 ;; an extra data set.  That extra data set makes it crucially non-reproducible
 ;; if you don't have access to that location on our cluster.  Once there's a
