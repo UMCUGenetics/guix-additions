@@ -292,13 +292,6 @@
                          (list "error" "fonts" "data" "tiles" "etc" "lib")
                          (list error fonts data tiles etc lib))
                (install-file "bin/circos" bin)
-               ;; HACK: Circos looks for its modules in "../lib" relative
-               ;; to itself.  The following symlinks ensure that Circos can
-               ;; find its modules, even when the PERL5LIB path isn't set.
-               (symlink (string-append lib "/Circos.pm")
-                        (string-append out "/lib/Circos.pm"))
-               (symlink (string-append lib "/Circos")
-                        (string-append out "/lib/Circos"))
                #t))))))
     (propagated-inputs
      `(("perl" ,perl)
