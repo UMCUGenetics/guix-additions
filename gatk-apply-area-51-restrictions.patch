@@ -1,0 +1,46 @@
+From 9da90268a651a09874c0211f46fa6068130b0306 Mon Sep 17 00:00:00 2001
+From: Roel Janssen <roel@gnu.org>
+Date: Mon, 15 Jan 2018 00:31:38 +0100
+Subject: [PATCH] Apply Area 51 restrictions.
+
+---
+ .../main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java | 2 ++
+ .../broadinstitute/gatk/engine/arguments/GATKArgumentCollection.java    | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java
+index ceb2eda3d..a08cbbdb0 100644
+--- a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java
++++ b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java
+@@ -134,6 +134,7 @@ public abstract class CommandLineExecutable extends CommandLineProgram {
+      * Currently, a key is required only if running with the -et NO_ET or -et STDOUT options.
+      */
+     private void authorizeGATKRun() {
++        /*
+         if ( getArgumentCollection().phoneHomeType == GATKRunReport.PhoneHomeOption.NO_ET ||
+              getArgumentCollection().phoneHomeType == GATKRunReport.PhoneHomeOption.STDOUT ) {
+             if ( getArgumentCollection().gatkKeyFile == null ) {
+@@ -150,6 +151,7 @@ public abstract class CommandLineExecutable extends CommandLineProgram {
+                 }
+             }
+         }
++	*/
+     }
+ 
+     /**
+diff --git a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/arguments/GATKArgumentCollection.java b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/arguments/GATKArgumentCollection.java
+index 0601034df..7597d86d3 100644
+--- a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/arguments/GATKArgumentCollection.java
++++ b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/arguments/GATKArgumentCollection.java
+@@ -90,7 +90,7 @@ public class GATKArgumentCollection {
+      * "NO_ET". You will also need to request a key using the online request form on our website (see FAQs).
+      */
+     @Argument(fullName = "phone_home", shortName = "et", doc="Run reporting mode", required = false)
+-    public GATKRunReport.PhoneHomeOption phoneHomeType = GATKRunReport.PhoneHomeOption.AWS;
++    public GATKRunReport.PhoneHomeOption phoneHomeType = GATKRunReport.PhoneHomeOption.NO_ET;
+     /**
+      * Please see the "phone_home" argument below and the online documentation FAQs for more details on the key system
+      * and how to request a key.
+-- 
+2.15.1
+

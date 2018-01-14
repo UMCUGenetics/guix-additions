@@ -308,7 +308,8 @@ capable of taking on projects of any size.")
               (uri "https://github.com/broadgsa/gatk-protected/archive/3.5.tar.gz")
               (sha256
                (base32 "0g07h5a7ajsyapgzh7nxz0yjp3d2v4fwhfnkcs0sfnq7s2rpsh9z"))
-              (patches (list (search-patch "gatk-disable-vectorloglesscaching.patch")))))
+              (patches (list (search-patch "gatk-disable-vectorloglesscaching.patch")
+                             (search-patch "gatk-apply-area-51-restrictions.patch")))))
     (build-system gnu-build-system)
     (arguments
       `(#:tests? #f ; Tests are run in the install phase.
