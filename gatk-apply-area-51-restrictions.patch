@@ -1,4 +1,4 @@
-From 9da90268a651a09874c0211f46fa6068130b0306 Mon Sep 17 00:00:00 2001
+From 689ebb5a90729e58e7025eb1e1bed62121bbd61d Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Mon, 15 Jan 2018 00:31:38 +0100
 Subject: [PATCH] Apply Area 51 restrictions.
@@ -6,7 +6,8 @@ Subject: [PATCH] Apply Area 51 restrictions.
 ---
  .../main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java | 2 ++
  .../broadinstitute/gatk/engine/arguments/GATKArgumentCollection.java    | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ .../java/org/broadinstitute/gatk/engine/phonehome/GATKRunReport.java    | 2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/CommandLineExecutable.java
 index ceb2eda3d..a08cbbdb0 100644
@@ -41,6 +42,26 @@ index 0601034df..7597d86d3 100644
      /**
       * Please see the "phone_home" argument below and the online documentation FAQs for more details on the key system
       * and how to request a key.
+diff --git a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/phonehome/GATKRunReport.java b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/phonehome/GATKRunReport.java
+index d81c27088..c94b5f590 100644
+--- a/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/phonehome/GATKRunReport.java
++++ b/public/gatk-engine/src/main/java/org/broadinstitute/gatk/engine/phonehome/GATKRunReport.java
+@@ -456,6 +456,7 @@ public class GATKRunReport {
+      * @throws ReviewedGATKException if anything goes wrong
+      */
+     public static void checkAWSAreValid() {
++        /*
+         try {
+             final String accessKeyMD5 = Utils.calcMD5(getAWSUploadAccessKey());
+             final String secretKeyMD5 = Utils.calcMD5(getAWSUploadSecretKey());
+@@ -470,6 +471,7 @@ public class GATKRunReport {
+         } catch ( Exception e ) {
+             throw new ReviewedGATKException("Couldn't decrypt AWS keys, something is wrong with the GATK distribution");
+         }
++        */
+     }
+ 
+     /**
 -- 
-2.15.1
+2.15.0
 
