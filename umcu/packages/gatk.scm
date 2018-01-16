@@ -299,6 +299,13 @@ capable of taking on projects of any size.")
             (sha256
              (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))))
 
+;;
+;; FIXME: This package builds fine, but it doesn't include the R scripts needed by
+;; various GATK and Queue processes.  It will therefore crash at the end of your
+;; computation.  To solve this problem, we need to remove
+;; -Dresource.bundle.skip=true from the compile options, but in that case the
+;; build fails in the build environment because Javadoc seems to hardcode /bin/sh
+;; somewhere, which is not available in the build environment.
 (define-public gatk-full-3.5
   (package
     (name "gatk")
@@ -374,7 +381,7 @@ capable of taking on projects of any size.")
                 ;; Compile using maven's compile command.
                 (let ((compile-options (string-append
                                         "-fn " ; Javadoc targets fail.
-                                        "-Dresource.bundle.skip=true "
+                                        ;"-Dresource.bundle.skip=true "
                                         "-Dmaven.tests.skip=true "
                                         "--offline")))
                   (system (format #f "mvn compile ~a --global-settings ~s"
@@ -389,8 +396,7 @@ capable of taking on projects of any size.")
                                         "/share/java/user-classes/")))
                 (mkdir-p out)
                 (install-file "target/GenomeAnalysisTK.jar" out)
-                (install-file "target/Queue.jar" out)
-                ))))))
+                (install-file "target/Queue.jar" out)))))))
     (native-inputs
      `(("maven-deps"
         ,(origin
@@ -407,6 +413,59 @@ capable of taking on projects of any size.")
        ("bash" ,bash)
        ("perl" ,perl)
        ("r" ,r)))
+    (propagated-inputs
+     `(("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "GUIX_JARPATH")
+            (files (list "share/java/user-classes")))))
+    (home-page "https://github.com/broadgsa/gatk-protected")
+    (synopsis "Package for analysis of high-throughput sequencing")
+   (description "The Genome Analysis Toolkit or GATK is a software package for
+analysis of high-throughput sequencing data, developed by the Data Science and
+Data Engineering group at the Broad Institute.  The toolkit offers a wide
+variety of tools, with a primary focus on variant discovery and genotyping as
+well as strong emphasis on data quality assurance.  Its robust architecture,
+powerful processing engine and high-performance computing features make it
+capable of taking on projects of any size.")
+   ;; There are additional restrictions, so it's nonfree.
+   (license license:expat)))
+
+(define-public gatk-full-3.5-patched-bin
+  (package
+    (name "gatk")
+    (version "3.5-e91472d-patched")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "https://raw.githubusercontent.com/"
+                                  "UMCUGenetics/guix-additions/master/blobs/"
+                                  "gatk-patched-prebuilt.tar.gz"))
+              (sha256
+               (base32
+                "14j9k3jscm278r5scydn9afb5d11yd2iij5km0yddidpxfnpn0r7"))))
+    (build-system gnu-build-system)
+    (arguments
+      `(#:tests? #f ; Tests are run in the install phase.
+        #:phases
+        (modify-phases %standard-phases
+          (delete 'configure) ; Nothing to configure
+          (delete 'build) ; Nothing to build
+          (replace 'install
+            (lambda _
+              (let ((out (string-append (assoc-ref %outputs "out")
+                                        "/share/java/user-classes/")))
+                (mkdir-p out)
+                (install-file "GenomeAnalysisTK.jar" out)
+                (install-file "Queue.jar" out)))))))
     (propagated-inputs
      `(("r-gsalib" ,r-gsalib)
        ("r-ggplot2" ,r-ggplot2)

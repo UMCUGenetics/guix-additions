@@ -1116,7 +1116,7 @@ REPORT_STATUS	~a"
        ("exoncov" ,exoncov)
        ("fastqc" ,fastqc-bin-0.11.4)
        ("freec" ,freec-10.4)
-       ("gatk" ,gatk-full-3.5)
+       ("gatk" ,gatk-full-3.5-patched-bin)
        ("hmftools" ,hmftools)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
@@ -1191,7 +1191,7 @@ REPORT_STATUS	~a"
        ("util-linux" ,util-linux)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs gatk-full-3.5)))
+       ,@(package-propagated-inputs gatk-full-3.5-patched-bin)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
     ;; make sure that the environment variables for these interpreters are
