@@ -78,11 +78,6 @@
     (name "grep-with-pcre")
     (inputs `(("pcre" ,pcre)))))
 
-;; Here's a very secret package definition.  It's QDNAseq 1.9.2, plus
-;; an extra data set.  That extra data set makes it crucially non-reproducible
-;; if you don't have access to that location on our cluster.  Once there's a
-;; published version of this (dataset) we will update the package definition
-;; accordingly.
 (define-public r-qdnaseq-hmf
   (package (inherit r-qdnaseq)
    (name "r-qdnaseq-hmf")
@@ -90,10 +85,10 @@
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/"
-                  "QDNAseq_v" version "-HMF-GuixSource.tar.gz"))
+                  "https://github.com/ccagc/QDNAseq/archive/v"
+                  version ".tar.gz"))
             (sha256
-             (base32 "03hbfjncm2scll90f711l68vl4w3zi2f3l1ahmd8kdik7f4ngwsb"))))))
+             (base32 "1mzwcxcwr00kbf75xrxg0f6z9y5f87x1sq6kw5v16bvxv9ppn62h"))))))
 
 (define-public hmftools
   (let ((commit "5cdd9f04ba20339083fbd1e7a1a5b34ec2596456"))
