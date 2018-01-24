@@ -81,7 +81,7 @@
 (define-public r-qdnaseq-hmf
   (package (inherit r-qdnaseq)
    (name "r-qdnaseq-hmf")
-   (version "1.9.2")
+   (version "1.9.2-HMF.1")
    (source (origin
             (method url-fetch)
             (uri (string-append
