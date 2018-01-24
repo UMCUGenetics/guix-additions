@@ -30,16 +30,23 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system cmake)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
   #:use-module (gnu packages boost)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages curl)
+  #:use-module (gnu packages documentation)
   #:use-module (gnu packages gcc)
+  #:use-module (gnu packages graphviz)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages shells)
-  #:use-module (gnu packages python))
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages tls)
+  #:use-module (gnu packages web)
+  #:use-module (umcu packages boost))
 
 (define-public strelka-1.0.15
   (package
@@ -156,3 +163,123 @@ indels from the aligned sequencing reads of matched tumor-normal samples")
         (base32 "0f9g2pkr1f7s4r8sxl53jxr2cjpyx53zf3va0jj8fxzavxiwmbmk"))
       (patches (list (search-patch "strelka-disable-tests.patch")
                      (search-patch "strelka-disable-install.patch")))))))
+
+(define-public codemin
+  (package
+   (name "codemin")
+   (version "1.0.5")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/Illumina/strelka/raw/"
+                  "5a993884687f2d92f794109e171d0bdeb95e504d"
+                  "/redist/CodeMin-1.0.5.tar.bz2"))
+            (sha256
+             (base32 "1y8wsli1q626i80p3dmrc65p77ch164hj2sbxv497i9y89kvk35s"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure)
+        (delete 'build)
+        (replace 'install
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let ((include-dir (string-append
+                                (assoc-ref outputs "out") "/include")))
+              (mkdir-p include-dir)
+              (copy-recursively "include" include-dir)))))))
+   (home-page "https://github.com/Illumina/strelka/tree/master/redist")
+   (synopsis "Set of lightweight minimization functions.")
+   (description "The CodeMin minimization library provides a set of lightweight
+minimization functions originally developed for the CodeAxe phylogenetic
+analysis package.")
+   ;; MIT license.
+   (license license:expat)))
+
+(define-public strelka-2.8.4
+  (package
+   (name "strelka")
+   (version "2.8.4")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/Illumina/strelka/releases/download/v"
+                  version "/strelka-" version ".release_src.tar.bz2"))
+            (sha256
+             (base32 "1hk0fbxlxisfycfand5hyal51j6mrjq4bkcgaihplwd7gfgbhgsj"))
+            (patches
+             (list (search-patch "strelka2-unbundle-dependencies.patch")))))
+   (build-system cmake-build-system)
+   (arguments
+    `(#:tests? #f
+      #:phases
+      (modify-phases %standard-phases
+        (add-after 'unpack 'unbundle-dependencies
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (substitute* "redist/CMakeLists.txt"
+              ;; HTSlib
+              (("superset\\(HTSLIB_DIR \"\\$\\{CMAKE_CURRENT_BINARY_DIR\\}/\\$\\{HTSLIB_PREFIX\\}\"\\)")
+               (format #f "superset(HTSLIB_DIR \"~a/bin\")" (assoc-ref inputs "htslib")))
+              (("superset\\(HTSLIB_LIBRARY \"\\$\\{HTSLIB_DIR\\}/libhts.a\"\\)")
+               (format #f "superset(HTSLIB_LIBRARY \"~a/lib/libhts.so\")"
+                       (assoc-ref inputs "htslib")))
+              ;; SAMtools
+              (("set\\(SAMTOOLS_DIR \"\\$\\{CMAKE_CURRENT_BINARY_DIR}/\\$\\{SAMTOOLS_PREFIX\\}\"\\)")
+               (format #f "set(SAMTOOLS_DIR \"~a/bin\")"
+                       (assoc-ref inputs "samtools")))
+              (("set\\(SAMTOOLS_LIBRARY \"\\$\\{SAMTOOLS_DIR\\}/libbam.a\"\\)")
+               (format #f "set(SAMTOOLS_LIBRARY \"~a/lib/libbam.a\")"
+                       (assoc-ref inputs "samtools"))))))
+        (add-after 'install 'install-shared-libraries
+          (lambda* (#:key inputs outputs  #:allow-other-keys)
+            (let ((libdir (string-append (assoc-ref outputs "out") "/lib")))
+              (mkdir-p libdir)
+              (map (lambda (file)
+                     (copy-file file (string-append libdir "/" (basename file))))
+                   (find-files "." "\\.so")))))
+        (add-after 'install 'patch-python-bin
+          (lambda* (#:key inputs outputs  #:allow-other-keys)
+            (let ((patch-path (string-append (assoc-ref outputs "out") "/lib/python")))
+              (substitute* (list (string-append patch-path "/makeRunScript.py")
+                                 (string-append patch-path "/pyflow/pyflow.py"))
+                (("/usr/bin/env python")
+                 (string-append (assoc-ref inputs "python") "/bin/python")))))))))
+   (inputs
+    `(("boost" ,boost-1.58)
+      ("perl" ,perl)
+      ("bash" ,bash)
+      ("zlib" ,zlib)
+      ("samtools" ,samtools)
+      ("rapidjson" ,rapidjson)
+      ("codemin" ,codemin)
+      ("curl" ,curl)
+      ("xz" ,xz)
+      ("openssl" ,openssl)
+      ("samtools" ,samtools)
+      ("zlib" ,zlib)
+      ("python" ,python)))
+   (native-inputs
+    `(("bash" ,bash)
+      ("python" ,python-2)
+      ("doxygen" ,doxygen)
+      ("graphviz" ,graphviz)))
+   (propagated-inputs
+    `(("vcftools" ,vcftools)
+      ("htslib" ,htslib)))
+   (native-search-paths (package-native-search-paths perl))
+   (home-page "https://github.com/Illumina/strelka")
+   (synopsis "Small variant caller")
+   (description "Strelka2 is a fast and accurate small variant caller optimized
+for analysis of germline variation in small cohorts and somatic variation in
+tumor/normal sample pairs.  The germline caller employs an efficient tiered
+haplotype model to improve accuracy and provide read-backed phasing, adaptively
+selecting between assembly and a faster alignment-based haplotyping approach at
+each variant locus.  The germline caller also analyzes input sequencing data
+using a mixture-model indel error estimation method to improve robustness to
+indel noise.  The somatic calling model improves on the original Strelka method
+for liquid and late-stage tumor analysis by accounting for possible tumor cell
+contamination in the normal sample.  A final empirical variant re-scoring step
+using random forest models trained on various call quality features has been
+added to both callers to further improve precision.")
+   (license license:gpl3+)))
