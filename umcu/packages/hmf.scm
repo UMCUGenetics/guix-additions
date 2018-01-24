@@ -90,11 +90,11 @@
             (sha256
              (base32 "1mzwcxcwr00kbf75xrxg0f6z9y5f87x1sq6kw5v16bvxv9ppn62h"))))))
 
-(define-public hmftools
+(define-public hmftools-2017-09-21
   (let ((commit "5cdd9f04ba20339083fbd1e7a1a5b34ec2596456"))
     (package
      (name "hmftools")
-     (version (string-take commit 7))
+     (version (string-append "20170921-" (string-take commit 7)))
      (source (origin
               (method git-fetch)
                 (uri (git-reference
@@ -246,38 +246,9 @@
                 (map (lambda (file-pair)
                        (copy-file (car file-pair)
                                   (string-append output-dir "/" (cdr file-pair))))
-                     '(("hmf-gene-panel/target/hmf-gene-panel-1-jar-with-dependencies.jar" .
-                        "hmf-gene-panel-1.jar")
-                       ("amber/target/amber-1.0-jar-with-dependencies.jar" .
-                        "amber-1.0.jar")
-                       ("count-bam-lines/target/count-bam-lines-1.0-jar-with-dependencies.jar" .
-                        "count-bam-lines-1.0.jar")
-                       ("patient-report-mailer/target/patient-report-mailer-1.0-jar-with-dependencies.jar" .
-                        "patient-report-mailer-1.0.jar")
-                       ("rups-checker/target/rups-checker-1-jar-with-dependencies.jar" .
-                        "rups-checker-1.jar")
-                       ("bachelor/target/bachelor-1-jar-with-dependencies.jar" .
-                        "bachelor-1.jar")
-                       ("fastq-stats/target/fastq-stats-1.0-jar-with-dependencies.jar" .
-                        "fastq-stats-1.0.jar")
-                       ("break-point-inspector/target/break-point-inspector-1.2-jar-with-dependencies.jar" .
-                        "break-point-inspector-1.2.jar")
-                       ("patient-db/target/patient-db-1.0-jar-with-dependencies.jar" .
-                        "patient-db-1.0.jar")
-                       ("purity-ploidy-estimator/target/purity-ploidy-estimator-1.2-jar-with-dependencies.jar" .
-                        "purity-ploidy-estimator-1.2.jar")
-                       ("bam-slicer/target/bam-slicer-1.0-jar-with-dependencies.jar" .
-                        "bam-slicer-1.0.jar")
-                       ("strelka-post-process/target/strelka-post-process-1.0-jar-with-dependencies.jar" .
-                        "strelka-post-process-1.0.jar")))
-
-                ;; The HMF pipeline expects the following filenames to exist.
-                (chdir output-dir)
-                (symlink "amber-1.0.jar" "amber.jar")
-                (symlink "count-bam-lines-1.0.jar" "cobalt.jar")
-                (symlink "purity-ploidy-estimator-1.2.jar" "purple.jar")
-                (symlink "break-point-inspector-1.2.jar" "break-point-inspector.jar")
-                (symlink "strelka-post-process-1.0.jar" "strelka-post-process.jar")))))))
+                     (map (lambda (file)
+                            `(,file . ,(basename (string-append (string-drop-right file 26) ".jar"))))
+                          (find-files "." "-jar-with-dependencies.jar")))))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
         ("maven" ,maven-bin)
@@ -306,6 +277,121 @@
      (description "This package provides various tools for working with
 genomics data developed by the Hartwig Medical Foundation.")
      (license license:expat))))
+
+(define-public hmftools-2018-01-11
+  (let ((commit "8d30505dfab219e367a6e5d7d3f2e6ec74877e75"))
+    (package (inherit hmftools-2017-09-21)
+     (name "hmftools")
+     (version (string-append "20180111-" (string-take commit 7)))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/hartwigmedical/hmftools.git")
+                    (commit commit)))
+              (file-name (string-append name "-" version "-checkout"))
+              (sha256
+               (base32
+                "0wk9jk7lg81cf29z6jng6v7qb9xflwn4h87s701i1j80vx24zr9y"))))
+     (build-system gnu-build-system)
+     (native-inputs
+      `(("maven-deps"
+         ,(origin
+           (method url-fetch)
+           (uri (string-append "https://github.com/UMCUGenetics/guix-additions"
+                               "/raw/c0faeec521d6fbd21e120fbd7af4cc0b9eccbf5b"
+                               "/blobs/hmftools-mvn-dependencies.tar.gz"))
+           (sha256
+            (base32
+             "0mbz5q8zrwin1rgjk2bb5ax95210zyndm3bx5lszpql2pmwdbjgk"))))
+        ("mysql" ,mysql-5.6.25))))))
+
+(define-public hmftools
+  (package
+   (name "hmftools")
+   (version "pipeline-compat")
+   (source #f)
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; This is a meta-package.  No tests need to be executed here.
+      #:phases
+      (modify-phases %standard-phases
+       (delete 'unpack)
+       (delete 'configure)
+       (delete 'build)
+       (replace 'install
+         (lambda* (#:key inputs outputs #:allow-other-keys)
+           (let ((output-dir (lambda (path)
+                               (string-append
+                                (assoc-ref outputs "out")
+                                "/share/java/user-classes/" path)))
+                 (hmftools-2017 (lambda (path)
+                                  (string-append
+                                   (assoc-ref inputs "hmftools-2017-09-21")
+                                   "/share/java/user-classes/" path)))
+                 (hmftools-2018 (lambda (path)
+                                  (string-append
+                                   (assoc-ref inputs "hmftools-2018-01-11")
+                                   "/share/java/user-classes/" path))))
+             (mkdir-p (output-dir ""))
+             (chdir (output-dir ""))
+
+             (copy-file (hmftools-2018 "amber-1.5.jar")
+                        (output-dir "amber-1.5.jar"))
+             (symlink "amber-1.5.jar" "amber.jar")
+
+             (copy-file (hmftools-2018 "bachelor-1.jar")
+                        (output-dir "bachelor-1.jar"))
+             (symlink "bachelor-1.jar" "bachelor.jar")
+
+             (copy-file (hmftools-2018 "bam-slicer-1.0.jar")
+                        (output-dir "bam-slicer-1.0.jar"))
+             (symlink "bam-slicer-1.0.jar" "bam-slicer.jar")
+
+             (copy-file (hmftools-2018 "break-point-inspector-1.5.jar")
+                        (output-dir "break-point-inspector-1.5.jar"))
+             (symlink "break-point-inspector-1.5.jar" "break-point-inspector.jar")
+
+             (copy-file (hmftools-2018 "count-bam-lines-1.2.jar")
+                        (output-dir "count-bam-lines-1.2.jar"))
+             (symlink "count-bam-lines-1.2.jar" "cobalt.jar")
+
+             (copy-file (hmftools-2018 "fastq-stats-1.0.jar")
+                        (output-dir "fastq-stats-1.0.jar"))
+             (symlink "fastq-stats-1.0.jar" "fastq-stats.jar")
+
+             (copy-file (hmftools-2018 "hmf-gene-panel-1.jar")
+                        (output-dir "hmf-gene-panel-1.jar"))
+             (symlink "hmf-gene-panel-1.jar" "hmf-gene-panel.jar")
+
+             (copy-file (hmftools-2018 "patient-db-1.5.jar")
+                        (output-dir "patient-db-1.5.jar"))
+             (symlink "patient-db-1.5.jar" "patient-db.jar")
+
+             ;; Use older PURPLE version to keep the pipeline compatible.
+             (copy-file (hmftools-2017 "purity-ploidy-estimator-1.2.jar")
+                        (output-dir "purity-ploidy-estimator-1.2.jar"))
+             (symlink "purity-ploidy-estimator-1.2.jar" "purple.jar")
+
+             ;; strelka-post-process has no version in its filename in the
+             ;; 2018 release.
+             (copy-file (hmftools-2018 "strelka-post-process.jar")
+                        (output-dir "strelka-post-process.jar"))))))))
+   (inputs
+    `(("hmftools-2017-09-21" ,hmftools-2017-09-21)
+      ("hmftools-2018-01-11" ,hmftools-2018-01-11)))
+   (native-search-paths
+    (list (search-path-specification
+           (variable "GUIX_JARPATH")
+           (files (list "share/java/user-classes")))))
+   ;; Amber uses an R script for BAF segmentation.
+   (propagated-inputs
+    `(("r" ,r-minimal)
+      ("r-copynumber" ,r-copynumber)))
+   (home-page "https://github.com/hartwigmedical/hmftools")
+   (synopsis "Various utility tools for working with genomics data.")
+   (description "This package provides various tools for working with
+genomics data developed by the Hartwig Medical Foundation.")
+   (license license:expat)))
 
 (define-public perl-findbin-libs
   (package
