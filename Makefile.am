@@ -51,6 +51,7 @@ SOURCES =                                       \
   umcu/packages/mysql.scm                       \
   umcu/packages/nanosvc.scm                     \
   umcu/packages/neo4j.scm                       \
+  umcu/packages/pathseq.scm                     \
   umcu/packages/pbgzip.scm                      \
   umcu/packages/picard.scm                      \
   umcu/packages/pindel.scm                      \
