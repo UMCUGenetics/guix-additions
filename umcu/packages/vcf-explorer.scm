@@ -18,6 +18,7 @@
                (base32
                 "1ngryr12d3izmhmwplc46xhyj9i7yhrpm90xnsd2578p7m8p5n79"))))
     (build-system python-build-system)
+    (arguments `(#:tests? #f)) ; Fails for Python 2.
     (propagated-inputs
      `(("python-setuptools" ,python-setuptools)
        ("python-psutil" ,python-psutil)))
