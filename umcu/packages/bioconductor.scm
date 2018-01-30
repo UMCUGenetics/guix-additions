@@ -1003,3 +1003,34 @@ there were errors in the code.")
    (synopsis "Package analyse 4C sequencing data")
    (description "FourCSeq is an R package dedicated to the analysis of (multiplexed) 4C sequencing data. The package provides a pipeline to detect specific interactions between DNA elements and identify differential interactions between conditions. The statistical analysis in R starts with individual bam files for each sample as inputs. To obtain these files, the package contains a python script (extdata/python/demultiplex.py) to demultiplex libraries and trim off primer sequences. With a standard alignment software the required bam files can be then be generated.")
    (license license:gpl3+)))
+
+(define-public r-txdb-dmelanogaster-ucsc-dm3-ensgene
+  (package
+    (name "r-txdb-dmelanogaster-ucsc-dm3-ensgene")
+    (version "3.2.2")
+    (source (origin
+              (method url-fetch)
+              ;; We cannot use bioconductor-uri here because this tarball is
+              ;; located under "data/annotation/" instead of "bioc/".
+              (uri (string-append "http://bioconductor.org/packages/"
+                                  "release/data/annotation/src/contrib"
+                                  "/TxDb.Dmelanogaster.UCSC.dm3.ensGene_"
+                                  "3.2.2.tar.gz"))
+              (sha256
+               (base32
+                "1337x23rdmiiza83ms225kri37h16q5hw1lw0m577abcgip3d7c7"))))
+    (properties
+     `((upstream-name . "TxDb.Hsapiens.UCSC.hg19.knownGene")))
+    (build-system r-build-system)
+    ;; As this package provides little more than a very large data file it
+    ;; doesn't make sense to build substitutes.
+    (arguments `(#:substitutable? #f))
+    (propagated-inputs
+     `(("r-genomicfeatures" ,r-genomicfeatures)))
+    (home-page
+     "http://bioconductor.org/packages/TxDb.Dmelanogaster.UCSC.dm3.ensGene/")
+    (synopsis "Annotation package for Dmelanogaster in TxDb format")
+    (description
+     "This package provides an annotation databases generated from UCSC by
+exposing these as @code{TxDb} objects.")
+    (license license:artistic2.0)))
