@@ -849,14 +849,14 @@ single executable called @code{bam}.")
 (define-public hmf-pipeline
   (package
     (name "hmf-pipeline")
-    (version "3.0")
+    (version "3.1")
     (source (origin
               (method url-fetch)
               (uri (string-append
                     "https://github.com/hartwigmedical/pipeline/archive/v"
                     version ".tar.gz"))
               (sha256
-               (base32 "0yd00hkh774lh4gql77s17im3m2xzcmai4a46n0ww2hx5zgpxd4q"))))
+               (base32 "04fh3bs0pspjp2ih7hnv1dsbd26l2j7mmg57bmm18js390hkj8qh"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils)
@@ -870,6 +870,7 @@ single executable called @code{bam}.")
                (tarball (assoc-ref %build-inputs "source"))
                (current-dir (getcwd))
                (bin-dir (string-append %output "/bin"))
+               (patch-bin (string-append (assoc-ref %build-inputs "patch") "/bin/patch"))
                (pipeline-dir (string-append %output "/share/hmf-pipeline"))
                (settings-dir (string-append %output "/share/hmf-pipeline/settings"))
                (qscripts-dir (string-append %output "/share/hmf-pipeline/QScripts"))
@@ -1138,12 +1139,25 @@ REPORT_STATUS	~a"
                          ;; HEALTH-CHECKER
                          (string-append (assoc-ref %build-inputs "coreutils") "/bin/true")))))
 
-           ;; Extract the main scripts into the bin directory.
            (with-directory-excursion %output
+             ;; Extract the main scripts into the bin directory.
              (system* tar "xvf" tarball
                       (string-append "pipeline-" ,version "/bin/pipeline.pl")
                       (string-append "pipeline-" ,version "/bin/create_config.pl")
-                      "--strip-components=1"))
+                      "--strip-components=1")
+
+             ;; Apply the following patches to make the pipeline compatible with
+             ;; the latest versions of Cobalt and StrelkaPostProcess.
+             (format #t "Applying patches... ")
+             (format
+              #t
+              (if (and (zero? (system (string-append
+                                       patch-bin " -p1 < " (assoc-ref %build-inputs "patch1"))))
+
+                       (zero? (system (string-append
+                                       patch-bin " -p1 < " (assoc-ref %build-inputs "patch2")))))
+                  " Succeeded.~%"
+                  " Failed.~%")))
 
            ;; Patch the shebang of the main scripts.
            (with-directory-excursion bin-dir
@@ -1217,7 +1231,20 @@ REPORT_STATUS	~a"
     (native-inputs
      `(("gzip" ,gzip)
        ("source" ,source)
-       ("tar" ,tar)))
+       ("tar" ,tar)
+       ("patch" ,patch)
+       ("patch1" ,(origin
+                    (method url-fetch)
+                    (uri (search-patch "0001-Adapt-command-line-options-for-StrelkaPostProcess.patch"))
+                    (sha256
+                     (base32
+                      "1f175jfygr7qb1vxmn558xmcr00bc8pjbq3pl1mv69v2c4mrwj7k"))))
+       ("patch2" ,(origin
+                    (method url-fetch)
+                    (uri (search-patch "0002-Adapt-Cobalt-command-line-options.patch"))
+                    (sha256
+                     (base32
+                      "13lmdvv5h746m243irnq5wjr5wcvl5bc0x01k7qdgn96dq4982y2"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
