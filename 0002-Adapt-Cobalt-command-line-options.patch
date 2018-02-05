@@ -6,14 +6,23 @@ Subject: [PATCH 2/2] Adapt Cobalt command-line options.
 * lib/HMF/Pipeline/Cobalt.pm: Adjust Cobalt's run function to run for pairs.
 * templates/Cobalt.sh.tt: Adjust command-line arguments.
 ---
- lib/HMF/Pipeline/Cobalt.pm | 40 ++++++++++++++++++----------------------
- templates/Cobalt.sh.tt     |  7 +++++--
- 2 files changed, 23 insertions(+), 24 deletions(-)
+ lib/HMF/Pipeline/Cobalt.pm | 42 +++++++++++++++++++-----------------------
+ templates/Cobalt.sh.tt     |  9 ++++++---
+ 2 files changed, 25 insertions(+), 26 deletions(-)
 
 diff --git a/lib/HMF/Pipeline/Cobalt.pm b/lib/HMF/Pipeline/Cobalt.pm
-index 4b09d3d..5554cb5 100644
+index 4b09d3d..f7843cd 100644
 --- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
 +++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
+@@ -5,7 +5,7 @@ use discipline;
+ 
+ use File::Spec::Functions;
+ 
+-use HMF::Pipeline::Config qw(createDirs sampleBamAndJobs);
++use HMF::Pipeline::Config qw(createDirs sampleControlBamsAndJobs);
+ use HMF::Pipeline::Job qw(fromTemplate);
+ use HMF::Pipeline::Sge qw(qsubJava);
+ 
 @@ -17,28 +17,24 @@ sub run {
  
      say "\n### SCHEDULING COBALT ANALYSIS ###";
@@ -63,10 +72,10 @@ index 4b09d3d..5554cb5 100644
  1;
 \ No newline at end of file
 diff --git a/templates/Cobalt.sh.tt b/templates/Cobalt.sh.tt
-index c63e4c8..2a07960 100644
+index c63e4c8..bae17d5 100644
 --- a/share/hmf-pipeline/templates/Cobalt.sh.tt
 +++ b/share/hmf-pipeline/templates/Cobalt.sh.tt
-@@ -6,7 +6,10 @@
+@@ -6,9 +6,12 @@
  
  java -Xmx[% opt.COBALT_MEM %]G \
      -cp "[% opt.COBALT_PATH %]/cobalt.jar" com.hartwig.hmftools.cobalt.CountBamLinesApplication \
@@ -80,8 +89,9 @@ index c63e4c8..2a07960 100644
 +    -tumor_bam "[% tumor_bam_path %]" \
 +    -output_dir "[% dirs.cobalt %]" \
      -threads [% opt.COBALT_THREADS %]
-
-success
+ 
+ success
+\ No newline at end of file
 -- 
 2.15.0
 
