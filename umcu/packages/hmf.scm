@@ -961,15 +961,8 @@ single executable called @code{bam}.")
                                "/bin/java -Xmx")))
 
              (substitute* '("StrelkaPostProcess.sh.tt")
-               ;; Mixed Java 7 and Java 8
-               (("java -jar \"\\[% opt.STRELKA_POST_PROCESS_PATH %\\]/strelka-post-process.jar\"")
-                (string-append (assoc-ref %build-inputs "icedtea-8")
-                               "/bin/java -jar "
-                               "\"[% opt.STRELKA_POST_PROCESS_PATH %]"
-                               "/strelka-post-process.jar\""))
-               (("java -Xmx\\[% opt.STRELKAPOSTPROCESS_MEM %\\]G")
-                (string-append (assoc-ref %build-inputs "icedtea-7")
-                               "/bin/java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G"))
+               (("java -")
+                (string-append (assoc-ref %build-inputs "icedtea-8") "/bin/java -"))
                ;; Work-around for:
                ;; https://github.com/hartwigmedical/pipeline/issues/18
                (("\\[% opt.OUTPUT_DIR %\\]/scripts/annotatePON.py")
