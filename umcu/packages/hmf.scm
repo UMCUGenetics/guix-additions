@@ -890,9 +890,28 @@ single executable called @code{bam}.")
                               templates-dir))
 
            ;; Extract the modules into the Perl path.
-           (chdir lib-dir)
-           (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
-                    "--strip-components=2")
+           (with-directory-excursion lib-dir
+             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
+                      "--strip-components=2"))
+
+           ;; Extract the template scripts to their own custom directory.
+           (with-directory-excursion templates-dir
+             (system* tar "xvf" tarball
+                      (string-append "pipeline-" ,version "/templates")
+                      "--strip-components=2"))
+
+           ;; Apply the following patches to make the pipeline compatible with
+           ;; the latest versions of Cobalt and StrelkaPostProcess.
+           (with-directory-excursion %output
+             (format #t "Applying patches... ")
+             (let ((patch1 (assoc-ref %build-inputs "patch1"))
+                   (patch2 (assoc-ref %build-inputs "patch2")))
+               (format
+                #t
+                (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
+                         (zero? (system (string-append patch-bin " -p1 < " patch2))))
+                    " Succeeded.~%"
+                    " Failed.~%"))))
 
            ;; Patch the use of external tools
            (substitute* (list (string-append lib-dir "/HMF/Pipeline/Config.pm")
@@ -927,12 +946,7 @@ single executable called @code{bam}.")
              (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
                       "--strip-components=2"))
 
-           ;; Extract the template scripts to their own custom directory.
            (with-directory-excursion templates-dir
-             (system* tar "xvf" tarball
-                      (string-append "pipeline-" ,version "/templates")
-                      "--strip-components=2")
-
              ;; Replace the 'java' command with the full path to the input 'java'
              ;; in each template file.  Most use Java 8, but snpEff needs Java 7,
              ;; so we need to be specific in that case.
@@ -1144,20 +1158,7 @@ REPORT_STATUS	~a"
              (system* tar "xvf" tarball
                       (string-append "pipeline-" ,version "/bin/pipeline.pl")
                       (string-append "pipeline-" ,version "/bin/create_config.pl")
-                      "--strip-components=1")
-
-             ;; Apply the following patches to make the pipeline compatible with
-             ;; the latest versions of Cobalt and StrelkaPostProcess.
-             (format #t "Applying patches... ")
-             (format
-              #t
-              (if (and (zero? (system (string-append
-                                       patch-bin " -p1 < " (assoc-ref %build-inputs "patch1"))))
-
-                       (zero? (system (string-append
-                                       patch-bin " -p1 < " (assoc-ref %build-inputs "patch2")))))
-                  " Succeeded.~%"
-                  " Failed.~%")))
+                      "--strip-components=1"))
 
            ;; Patch the shebang of the main scripts.
            (with-directory-excursion bin-dir
@@ -1200,7 +1201,7 @@ REPORT_STATUS	~a"
                ;; Also apply the 4GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
                 "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -l h_vmem=$h_vmem\";")
-                ))))))
+               ))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)

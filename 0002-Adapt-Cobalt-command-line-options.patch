@@ -12,8 +12,8 @@ Subject: [PATCH 2/2] Adapt Cobalt command-line options.
 
 diff --git a/lib/HMF/Pipeline/Cobalt.pm b/lib/HMF/Pipeline/Cobalt.pm
 index 4b09d3d..f7843cd 100644
---- a/lib/HMF/Pipeline/Cobalt.pm
-+++ b/lib/HMF/Pipeline/Cobalt.pm
+--- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
++++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
 @@ -5,7 +5,7 @@ use discipline;
  
  use File::Spec::Functions;
@@ -73,8 +73,8 @@ index 4b09d3d..f7843cd 100644
 \ No newline at end of file
 diff --git a/templates/Cobalt.sh.tt b/templates/Cobalt.sh.tt
 index c63e4c8..ba4e4d7 100644
---- a/templates/Cobalt.sh.tt
-+++ b/templates/Cobalt.sh.tt
+--- a/share/hmf-pipeline/templates/Cobalt.sh.tt
++++ b/share/hmf-pipeline/templates/Cobalt.sh.tt
 @@ -2,13 +2,16 @@
  # -*- TT -*-
  
