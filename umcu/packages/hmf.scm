@@ -948,8 +948,7 @@ single executable called @code{bam}.")
 
            (with-directory-excursion templates-dir
              ;; Replace the 'java' command with the full path to the input 'java'
-             ;; in each template file.  Most use Java 8, but snpEff needs Java 7,
-             ;; so we need to be specific in that case.
+             ;; in each template file.
              (substitute* '("Amber.sh.tt" "BAF.sh.tt" "BaseRecalibration.sh.tt"
                             "BreakpointInspector.sh.tt" "CallableLoci.sh.tt"
                             "Cobalt.sh.tt" "GermlineCalling.sh.tt"
@@ -1209,7 +1208,6 @@ REPORT_STATUS	~a"
        ("hmftools" ,hmftools)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
-       ("icedtea-7" ,icedtea-7)
        ("igvtools" ,igvtools-bin-2.3.60)
        ("king" ,king-bin-2.1.2)
        ("manta" ,manta)
