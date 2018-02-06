@@ -7,13 +7,13 @@ Subject: [PATCH 2/2] Adapt Cobalt command-line options.
 * templates/Cobalt.sh.tt: Adjust command-line arguments.
 ---
  lib/HMF/Pipeline/Cobalt.pm | 42 +++++++++++++++++++-----------------------
- templates/Cobalt.sh.tt     |  9 ++++++---
- 2 files changed, 25 insertions(+), 26 deletions(-)
+ templates/Cobalt.sh.tt     | 11 +++++++----
+ 2 files changed, 26 insertions(+), 27 deletions(-)
 
 diff --git a/lib/HMF/Pipeline/Cobalt.pm b/lib/HMF/Pipeline/Cobalt.pm
 index 4b09d3d..f7843cd 100644
---- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
-+++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
+--- a/lib/HMF/Pipeline/Cobalt.pm
++++ b/lib/HMF/Pipeline/Cobalt.pm
 @@ -5,7 +5,7 @@ use discipline;
  
  use File::Spec::Functions;
@@ -72,10 +72,15 @@ index 4b09d3d..f7843cd 100644
  1;
 \ No newline at end of file
 diff --git a/templates/Cobalt.sh.tt b/templates/Cobalt.sh.tt
-index c63e4c8..bae17d5 100644
---- a/share/hmf-pipeline/templates/Cobalt.sh.tt
-+++ b/share/hmf-pipeline/templates/Cobalt.sh.tt
-@@ -6,9 +6,12 @@
+index c63e4c8..ba4e4d7 100644
+--- a/templates/Cobalt.sh.tt
++++ b/templates/Cobalt.sh.tt
+@@ -2,13 +2,16 @@
+ # -*- TT -*-
+ 
+ [% INCLUDE ErrorHandling.tt %]
+-[% INCLUDE Logging.tt job_name="Cobalt" main_step=sample log_name="${opt.RUN_NAME}.log" %]
++[% INCLUDE Logging.tt job_name="Cobalt" main_step=tumor_sample log_name="${opt.RUN_NAME}.log" %]
  
  java -Xmx[% opt.COBALT_MEM %]G \
      -cp "[% opt.COBALT_PATH %]/cobalt.jar" com.hartwig.hmftools.cobalt.CountBamLinesApplication \

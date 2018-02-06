@@ -1244,7 +1244,7 @@ REPORT_STATUS	~a"
                     (uri (search-patch "0002-Adapt-Cobalt-command-line-options.patch"))
                     (sha256
                      (base32
-                      "13lmdvv5h746m243irnq5wjr5wcvl5bc0x01k7qdgn96dq4982y2"))))))
+                      "0bvf21am9199gbg2z73qqsn98i0dgnfrav83hwvlmcfw4bzbwnji"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
