@@ -324,10 +324,6 @@ genomics data developed by the Hartwig Medical Foundation.")
                                (string-append
                                 (assoc-ref outputs "out")
                                 "/share/java/user-classes/" path)))
-                 (hmftools-2017 (lambda (path)
-                                  (string-append
-                                   (assoc-ref inputs "hmftools-2017-09-21")
-                                   "/share/java/user-classes/" path)))
                  (hmftools-2018 (lambda (path)
                                   (string-append
                                    (assoc-ref inputs "hmftools-2018-01-11")
@@ -367,18 +363,16 @@ genomics data developed by the Hartwig Medical Foundation.")
                         (output-dir "patient-db-1.5.jar"))
              (symlink "patient-db-1.5.jar" "patient-db.jar")
 
-             ;; Use older PURPLE version to keep the pipeline compatible.
-             (copy-file (hmftools-2017 "purity-ploidy-estimator-1.2.jar")
-                        (output-dir "purity-ploidy-estimator-1.2.jar"))
-             (symlink "purity-ploidy-estimator-1.2.jar" "purple.jar")
+             (copy-file (hmftools-2018 "purity-ploidy-estimator-2.5.jar")
+                        (output-dir "purity-ploidy-estimator-2.5.jar"))
+             (symlink "purity-ploidy-estimator-2.5.jar" "purple.jar")
 
              ;; strelka-post-process has no version in its filename in the
              ;; 2018 release.
              (copy-file (hmftools-2018 "strelka-post-process.jar")
                         (output-dir "strelka-post-process.jar"))))))))
    (inputs
-    `(("hmftools-2017-09-21" ,hmftools-2017-09-21)
-      ("hmftools-2018-01-11" ,hmftools-2018-01-11)))
+    `(("hmftools-2018-01-11" ,hmftools-2018-01-11)))
    (native-search-paths
     (list (search-path-specification
            (variable "GUIX_JARPATH")
