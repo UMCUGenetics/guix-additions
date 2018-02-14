@@ -1180,13 +1180,13 @@ REPORT_STATUS	~a"
                ;; Over-allocate by 4G for each job, because some SGE
                ;; implementations have memory overhead on each job.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
-                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m a -V -l h_vmem=$h_vmem")
+                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m eas -V -l h_vmem=$h_vmem")
                ;; Make sure that environment variables are passed along
                ;; to the jobs correctly.
-               (("qsub -P") "qsub -V -P")
+               (("qsub -P") "qsub -m eas -V -P")
                ;; Also apply the 4GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -l h_vmem=$h_vmem\";")
+                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m eas -l h_vmem=$h_vmem\";")
                ))))))
     (inputs
      `(("bammetrics" ,bammetrics)
