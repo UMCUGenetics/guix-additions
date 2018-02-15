@@ -899,11 +899,13 @@ single executable called @code{bam}.")
            (with-directory-excursion %output
              (format #t "Applying patches... ")
              (let ((patch1 (assoc-ref %build-inputs "patch1"))
-                   (patch2 (assoc-ref %build-inputs "patch2")))
+                   (patch2 (assoc-ref %build-inputs "patch2"))
+                   (patch3 (assoc-ref %build-inputs "patch3")))
                (format
                 #t
                 (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
-                         (zero? (system (string-append patch-bin " -p1 < " patch2))))
+                         (zero? (system (string-append patch-bin " -p1 < " patch2)))
+                         (zero? (system (string-append patch-bin " -p1 < " patch3))))
                     " Succeeded.~%"
                     " Failed.~%"))))
 
@@ -1222,15 +1224,15 @@ REPORT_STATUS	~a"
        ("patch1" ,(origin
                     (method url-fetch)
                     (uri (search-patch "0001-Adapt-command-line-options-for-StrelkaPostProcess.patch"))
-                    (sha256
-                     (base32
-                      "1f175jfygr7qb1vxmn558xmcr00bc8pjbq3pl1mv69v2c4mrwj7k"))))
+                    (sha256 (base32 "1f175jfygr7qb1vxmn558xmcr00bc8pjbq3pl1mv69v2c4mrwj7k"))))
        ("patch2" ,(origin
                     (method url-fetch)
                     (uri (search-patch "0002-Adapt-Cobalt-command-line-options.patch"))
-                    (sha256
-                     (base32
-                      "1g672fhyww1byy7g7jj5jrfaxmi4rlj9nmqviakfm96i63q56zm1"))))))
+                    (sha256 (base32 "1g672fhyww1byy7g7jj5jrfaxmi4rlj9nmqviakfm96i63q56zm1"))))
+       ("patch3" ,(origin
+                   (method url-fetch)
+                   (uri (search-patch "0003-Use-escaped-tabs-for-the-read-group.patch"))
+                   (sha256 (base32 "0jac1fl1f17l29s3qqz6g6qq8hkhr8gbsr5kkhqylww62a6ybyh5"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
