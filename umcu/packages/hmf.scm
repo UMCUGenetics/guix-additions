@@ -900,12 +900,14 @@ single executable called @code{bam}.")
              (format #t "Applying patches... ")
              (let ((patch1 (assoc-ref %build-inputs "patch1"))
                    (patch2 (assoc-ref %build-inputs "patch2"))
-                   (patch3 (assoc-ref %build-inputs "patch3")))
+                   (patch3 (assoc-ref %build-inputs "patch3"))
+                   (patch4 (assoc-ref %build-inputs "patch4")))
                (format
                 #t
                 (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
                          (zero? (system (string-append patch-bin " -p1 < " patch2)))
-                         (zero? (system (string-append patch-bin " -p1 < " patch3))))
+                         (zero? (system (string-append patch-bin " -p1 < " patch3)))
+                         (zero? (system (string-append patch-bin " -p1 < " patch4))))
                     " Succeeded.~%"
                     " Failed.~%"))))
 
@@ -1232,7 +1234,11 @@ REPORT_STATUS	~a"
        ("patch3" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0003-Use-escaped-tabs-for-the-read-group.patch"))
-                   (sha256 (base32 "0jac1fl1f17l29s3qqz6g6qq8hkhr8gbsr5kkhqylww62a6ybyh5"))))))
+                   (sha256 (base32 "0jac1fl1f17l29s3qqz6g6qq8hkhr8gbsr5kkhqylww62a6ybyh5"))))
+       ("patch4" ,(origin
+                   (method url-fetch)
+                   (uri (search-patch "0004-Use-bcftools-to-annotate-PON-data.patch"))
+                   (sha256 (base32 "0jdkc7926why1y7bmb968vplw9ssskfny07qibzzsfz2isrpqzky"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
