@@ -1,23 +1,24 @@
-From 7c325854450b69c07cc8c599d724d00bf0fd0494 Mon Sep 17 00:00:00 2001
+From 1f6f8702408418238025b462b79e3f0649938999 Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Mon, 19 Feb 2018 16:36:52 +0100
 Subject: [PATCH] Use bcftools to annotate PON data.
 
 * templates/StrelkaPostProcess.sh.tt: Make annotatePON.py obsolete.
 ---
- templates/StrelkaPostProcess.sh.tt | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ templates/StrelkaPostProcess.sh.tt | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/templates/StrelkaPostProcess.sh.tt b/templates/StrelkaPostProcess.sh.tt
-index f8ca851..3b87dbb 100644
+index f8ca851..d3f7b2b 100644
 --- a/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 +++ b/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
-@@ -66,13 +66,22 @@ java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G \
+@@ -66,13 +66,23 @@ java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G \
      --dbsnp "[% opt.ANNOTATE_IDDB %]" \
      --alwaysAppendDbsnpId
  
 +assert_last_position_unchanged "$input_vcf" "$output_vcf"
 +[% opt.PBGZIP_PATH %]/pbgzip "$output_vcf"
++[% opt.IGVTOOLS_PATH %]/igvtools index "$output_vcf"
 +
 +rm "$input_vcf" "$input_vcf.idx"
 +input_vcf="${output_vcf}.gz"
