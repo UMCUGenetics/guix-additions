@@ -1,30 +1,35 @@
-From efd93a84d3e437c6849ac1ee1a842de482cf5355 Mon Sep 17 00:00:00 2001
+From a40880238b1e0429a2106a3a81a4f39efd4a3737 Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
-Date: Mon, 19 Feb 2018 12:49:16 +0100
+Date: Mon, 19 Feb 2018 13:42:40 +0100
 Subject: [PATCH] Use bcftools to annotate PON data.
 
 * templates/StrelkaPostProcess.sh.tt: Make annotatePON.py obsolete.
 ---
- templates/StrelkaPostProcess.sh.tt | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ templates/StrelkaPostProcess.sh.tt | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/templates/StrelkaPostProcess.sh.tt b/templates/StrelkaPostProcess.sh.tt
-index f8ca851..2f971ee 100644
+index f8ca851..cdf5294 100644
 --- a/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 +++ b/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
-@@ -69,16 +70,22 @@ java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G \
- assert_last_position_unchanged "$input_vcf" "$output_vcf"
- rm "$input_vcf" "$input_vcf.idx"
- input_vcf="$output_vcf"
--output_vcf="$basefile".pon.vcf
+@@ -66,19 +66,27 @@ java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G \
+     --dbsnp "[% opt.ANNOTATE_IDDB %]" \
+     --alwaysAppendDbsnpId
+ 
++[% opt.PBGZIP_PATH %]/pbgzip -n ${PBGZIP_THREADS} "$output_vcf"
++
++assert_last_position_unchanged "$input_vcf" "$output_vcf"
++rm "$input_vcf" "$input_vcf.idx"
++input_vcf="${output_vcf}.gz"
 +output_vcf="$basefile".annotated.pon.vcf.gz
 +rm -f "$output_vcf" "$output_vcf.idx"
 +
 +[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_PON %]" -c PON_COUNT ${input_vcf} -o ${output_vcf} -O z
 +
-+assert_last_position_unchanged "$input_vcf" "$output_vcf"
-+rm "$input_vcf" "$input_vcf.idx"
-+input_vcf="$output_vcf"
+ assert_last_position_unchanged "$input_vcf" "$output_vcf"
+ rm "$input_vcf" "$input_vcf.idx"
+ input_vcf="$output_vcf"
+-output_vcf="$basefile".pon.vcf
 +output_vcf="$basefile".filtered.pon.vcf.gz
  rm -f "$output_vcf" "$output_vcf.idx"
  
