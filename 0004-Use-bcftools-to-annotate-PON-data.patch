@@ -1,4 +1,4 @@
-From 79d8f93de5dd8ba9864d61ac8d267cbf05144509 Mon Sep 17 00:00:00 2001
+From 1edadb8ab4680d659eb28875cca788fc00b34657 Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Mon, 19 Feb 2018 16:36:52 +0100
 Subject: [PATCH] Use bcftools to annotate PON data.
@@ -9,7 +9,7 @@ Subject: [PATCH] Use bcftools to annotate PON data.
  1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/templates/StrelkaPostProcess.sh.tt b/templates/StrelkaPostProcess.sh.tt
-index f8ca851..ba1c0e2 100644
+index f8ca851..ceeda0a 100644
 --- a/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 +++ b/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 @@ -67,12 +67,21 @@ java -Xmx[% opt.STRELKAPOSTPROCESS_MEM %]G \
@@ -19,14 +19,14 @@ index f8ca851..ba1c0e2 100644
 +[% opt.PBGZIP_PATH %]/pbgzip "$output_vcf"
 +[% opt.TABIX_PATH %]/tabix "${output_vcf}.gz"
 +
-+rm "$input_vcf" "$input_vcf.idx"
+ rm "$input_vcf" "$input_vcf.idx"
 +input_vcf="${output_vcf}.gz"
 +output_vcf="$basefile".annotated.pon.vcf
 +rm -f "$output_vcf" "$output_vcf.idx"
 +
 +[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_PON %]" -c PON_COUNT ${input_vcf} -o ${output_vcf}
 +
- rm "$input_vcf" "$input_vcf.idx"
++rm "$input_vcf" "$input_vcf.tbi"
  input_vcf="$output_vcf"
 -output_vcf="$basefile".pon.vcf
 +output_vcf="$basefile".filtered.pon.vcf
