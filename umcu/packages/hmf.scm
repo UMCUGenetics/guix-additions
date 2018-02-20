@@ -1281,7 +1281,7 @@ REPORT_STATUS	~a"
        ("r" ,r)
        ("sambamba" ,sambamba-next)
        ("samtools" ,samtools)
-       ("snpeff" ,snpeff-bin-4.1)
+       ("snpeff" ,snpeff-bin-4.3t)
        ("strelka" ,strelka-1.0.14)
        ("vcftools" ,vcftools)
        ("coreutils" ,coreutils)

@@ -125,3 +125,55 @@ acid changes).")
       (uri "mirror://sourceforge/snpeff/snpEff_v4_1h_core.zip")
       (sha256
         (base32 "1j45jp4y8wj0q01clxsx46w1f4jm2wh85yl1mbrha7qbqs8c1qn3"))))))
+
+(define-public snpeff-bin-4.3t
+ (package (inherit snpeff-bin-4.1)
+  (name "snpeff")
+  (version "4.3t")
+  (source (origin
+      (method url-fetch)
+      (uri "mirror://sourceforge/snpeff/snpEff_v4_3t_core.zip")
+      (sha256
+       (base32 "0i12mv93bfv8xjwc3rs2x73d6hkvi7kgbbbx3ry984l3ly4p6nnm"))))
+  (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (chdir "../snpEff")
+            (let* ((current-dir (getcwd))
+                   (out (assoc-ref %outputs "out"))
+                   (bin (string-append out "/share/java/" ,name))
+                   (share (string-append out "/share/snpeff"))
+                   (clinvar-file (string-append
+                                  (assoc-ref inputs "clinvar")
+                                  "/share/clinvar/GRCh37/clinvar.vcf.gz"))
+                   (snpeff-db-dir (string-append share "/data"))
+                   (snpeff-db (assoc-ref inputs "snpeff-database"))
+                   (dbsnp-file (string-append (assoc-ref inputs "dbsnp")
+                                             "/share/dbsnp/dbSnp.vcf.gz"))
+                   (create-and-copy
+                    (lambda (dir)
+                      (mkdir (string-append bin "/" dir))
+                      (copy-recursively dir (string-append bin "/" dir)))))
+              (mkdir-p bin)
+              (mkdir-p share)
+              (substitute* "snpEff.config"
+                (("data.dir = ./data/")
+                 (string-append "data.dir = " share "/data"))
+                (("database.local.clinvar      = ./db/GRCh38/clinvar/clinvar-latest.vcf.gz")
+                 (string-append "database.local.clinvar      = " clinvar-file))
+                (("database.local.dbsnp        = ./db/GRCh38/dbSnp/dbSnp.vcf.gz")
+                 (string-append "database.local.dbsnp        = " dbsnp-file)))
+              (chdir share)
+              (system* (string-append (assoc-ref inputs "unzip")
+                                      "/bin/unzip") snpeff-db)
+              (chdir current-dir)
+
+              (install-file "snpEff.config" bin)
+              (install-file "snpEff.jar" bin)
+              (install-file "SnpSift.jar" bin)
+              (map create-and-copy '("scripts" "galaxy"))))))))))
