@@ -1238,7 +1238,7 @@ REPORT_STATUS	~a"
        ("patch4" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0004-Use-bcftools-to-annotate-PON-data.patch"))
-                   (sha256 (base32 "1wy4dk26fmq9nc613v0nqywz39p2pp0789pz2v6b91gw3bjf6sgs"))))))
+                   (sha256 (base32 "1gg46xxw9miaza3f4lw2fyvrah5gahshyyka3hld5sapc726pjxh"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
