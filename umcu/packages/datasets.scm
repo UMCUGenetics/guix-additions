@@ -109,11 +109,12 @@ as efficiently and effectively as possible.")
        #:builder
        (begin
          (use-modules (guix build utils))
-         (let ((source-file (assoc-ref %build-inputs "source"))
-              (output-dir (string-append %output "/share/dbsnp/")))
-          (mkdir-p output-dir)
-          (copy-file source-file
-                     (string-append output-dir "/dbSnp.vcf.gz"))))))
+         (let* ((source-file (assoc-ref %build-inputs "source"))
+                (output-dir  (string-append %output "/share/dbsnp"))
+                (output-file (string-append output-dir "/dbSnp.vcf.gz")))
+           (mkdir-p output-dir)
+           (copy-file source-file output-file)
+           (symlink output-file (string-append output-dir "/00-All.vcf.gz"))))))
     (home-page "https://www.ncbi.nlm.nih.gov/projects/SNP/")
     (synopsis "Short genetic variations")
     (description "")
@@ -345,13 +346,19 @@ as efficiently and effectively as possible.")
        (begin
          (use-modules (guix build utils))
          (let ((source-file (assoc-ref %build-inputs "source"))
-               (output-dir (string-append %output "/share/dbnsfp"))
-               (unzip (string-append (assoc-ref %build-inputs "unzip") "/bin/unzip")))
+               (output-dir  (string-append %output "/share/dbnsfp"))
+               (unzip       (string-append (assoc-ref %build-inputs "unzip") "/bin/unzip"))
+               (gzip        (string-append (assoc-ref %build-inputs "gzip") "/bin/gzip")))
            (mkdir-p output-dir)
            (with-directory-excursion output-dir
-             (system* unzip source-file))))))
+             (system* unzip source-file)
+             (par-for-each (lambda (file)
+                             (format #t "Compressing ~s~%" file)
+                             (system* gzip file))
+                           (find-files output-dir)))))))
     (inputs
-     `(("unzip" ,unzip)))
+     `(("unzip" ,unzip)
+       ("gzip" ,gzip)))
     (home-page "https://sites.google.com/site/jpopgen/dbNSFP")
     (synopsis "Database for functional prediction of non-synonymous SNPs")
     (description " dbNSFP is a database developed for functional prediction and
@@ -388,3 +395,29 @@ in the human genome.")
     (synopsis "")
     (description "")
     (license #f)))
+
+(define-public gwascatalog
+  (package
+   (name "gwascatalog")
+   (version "GRCh37")
+   (source (origin
+            (method url-fetch)
+            (uri "http://www.genome.gov/admin/gwascatalog.txt")
+            (sha256
+             (base32
+              "137xb3r3w6k8syj6dh6a856fvszcjlylwpzp98m35w5q52vxhdnx"))))
+   (build-system trivial-build-system)
+   (arguments
+    `(#:modules ((guix build utils))
+      #:builder
+      (begin
+        (use-modules (guix build utils))
+        (let ((source-file (assoc-ref %build-inputs "source"))
+              (output-dir (string-append %output "/share/gwascatalog")))
+          (mkdir-p output-dir)
+          (copy-file source-file
+                     (string-append output-dir "/gwascatalog.txt"))))))
+   (home-page "http://www.genome.gov/")
+   (synopsis "Extra data sets used by snpEff.")
+   (description "This package contains extra data sets used by snpEff.")
+   (license #f)))
