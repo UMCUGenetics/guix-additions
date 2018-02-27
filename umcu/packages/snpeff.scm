@@ -216,4 +216,22 @@ acid changes).")
          (uri (search-patch "snpeff-4.3t-backport-settings.patch"))
          (sha256
           (base32
-           "1hw44vzcb6k8fq66740kd7kcdmb68bf5zbibc467bcxiiay8xpca"))))))))
+           "1hw44vzcb6k8fq66740kd7kcdmb68bf5zbibc467bcxiiay8xpca"))))))
+  (inputs
+    `(("perl" ,perl)
+      ("python" ,python)
+      ("bash" ,bash)
+      ("r" ,r)
+      ("icedtea" ,icedtea-7)
+      ("clinvar" ,clinvar-grch37)
+      ("gwascatalog" ,gwascatalog)
+      ("dbnsfp" ,dbnsfp)
+      ("snpeff-database"
+       ,(origin
+         (method url-fetch)
+         (uri (string-append
+               "mirror://sourceforge/snpeff/databases/v4_3/"
+               "snpEff_v4_3_hg19.zip"))
+         (sha256
+          (base32 "0rnaa858shjgxx284m73ikf2a1k11n3gc7861svczm2f98wwhar2"))))
+      ("dbsnp" ,dbsnp)))))
