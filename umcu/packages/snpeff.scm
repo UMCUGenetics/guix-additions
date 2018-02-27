@@ -27,6 +27,7 @@
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages java)
@@ -149,6 +150,8 @@ acid changes).")
             (let* ((current-dir (getcwd))
                    (out (assoc-ref %outputs "out"))
                    (bin (string-append out "/share/java/" ,name))
+                   (patch-bin (string-append (assoc-ref %build-inputs "patch")
+                                             "/bin/patch"))
                    (share (string-append out "/share/snpeff"))
                    (clinvar-file (string-append
                                   (assoc-ref inputs "clinvar")
@@ -188,4 +191,29 @@ acid changes).")
               (install-file "snpEff.jar" bin)
               (install-file "SnpSift.jar" bin)
               (for-each create-and-copy '("scripts" "galaxy"))
-              #t))))))))
+
+              ;; Backport settings from an older snpEff version by
+              ;; applying the following patch.
+              (with-directory-excursion bin
+                (format #t "Applying patches... ")
+                (let ((patch-file (assoc-ref %build-inputs "patch-file")))
+                  (format #t
+                   (if (zero? (system (string-append patch-bin " < " patch-file)))
+                       " Succeeded.~%"
+                       " Failed.~%"))))
+
+              #t))))))
+  (native-inputs
+    `(("unzip" ,unzip)
+      ("perl" ,perl)
+      ("python" ,python-2)
+      ("bash" ,bash)
+      ("r" ,r)
+      ("patch" ,patch)
+      ("patch-file"
+       ,(origin
+         (method url-fetch)
+         (uri (search-patch "snpeff-4.3t-backport-settings.patch"))
+         (sha256
+          (base32
+           "1hw44vzcb6k8fq66740kd7kcdmb68bf5zbibc467bcxiiay8xpca"))))))))
