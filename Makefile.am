@@ -53,6 +53,7 @@ SOURCES =                                       \
   umcu/packages/neo4j.scm                       \
   umcu/packages/pathseq.scm                     \
   umcu/packages/pbgzip.scm                      \
+  umcu/packages/perl.scm                        \
   umcu/packages/picard.scm                      \
   umcu/packages/pindel.scm                      \
   umcu/packages/plink.scm                       \
