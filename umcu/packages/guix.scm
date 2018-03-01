@@ -181,7 +181,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.4.3")
+    (version "1.4.4")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -230,12 +230,12 @@ export NIX_STATE_DIR=$guix_root
 if [ -v HOME ]; then
   if [ ! -L $HOME/.config/guix/latest ]; then
     mkdir -p $HOME/.config/guix
-    ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+    ln -s /gnu/repositories/guix $HOME/.config/guix/latest > /dev/null 2>&1 ||:
   # Renew the link as repository updates are managed centrally.
   # This will avoid the warning of an outdated version of Guix.
   elif [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
     rm -f $HOME/.config/guix/latest
-    ln -s /gnu/repositories/guix $HOME/.config/guix/latest
+    ln -s /gnu/repositories/guix $HOME/.config/guix/latest > /dev/null 2>&1 ||:
   fi
 fi
 
