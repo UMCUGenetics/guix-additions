@@ -1208,3 +1208,110 @@ web browser.")
        ("qtwebkit" ,qtwebkit)
        ,@(package-inputs rstudio-server)))
     (synopsis "Integrated development environment (IDE) for R (desktop version)")))
+
+(define-public r-reordercluster
+  (package
+   (name "r-reordercluster")
+   (version "1.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "ReorderCluster" version))
+            (sha256
+             (base32
+              "0ss750frzvj0bm1w7zblmcsjpszhnbffwlkaw31sm003lbx9hy58"))))
+   (properties `((upstream-name . "ReorderCluster")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-gplots" ,r-gplots)
+      ("r-rcpp" ,r-rcpp)))
+   (home-page "http://cran.r-project.org/web/packages/ReorderCluster")
+   (synopsis "Reordering the dendrogram according to the class labels")
+   (description "Tools for performing the leaf reordering for the dendrogram
+that preserves the hierarchical clustering result and at the same time tries
+to group instances from the same class together.")
+   (license license:gpl3+)))
+
+(define-public r-aneufinderdata
+  (package
+   (name "r-aneufinderdata")
+   (version "1.6.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append "http://bioconductor.org/packages"
+                                "/release/data/experiment/src/contrib/"
+                                "AneuFinderData_" version ".tar.gz"))
+            (sha256
+             (base32
+              "0cbgmfciy9v81jfn60mw98csxxdmm3hfqdwyaigbagj949alnbcm"))))
+   (build-system r-build-system)
+   (home-page "http://bioconductor.org/packages/AneuFinderData")
+   (synopsis "Data package for AneuFinder")
+   (description "This package contains data used by AneuFinder.")
+   (license license:artistic2.0)))
+
+(define-public r-aneufinder
+  (package
+    (name "r-aneufinder")
+    (version "1.6.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "AneuFinder" version))
+              (sha256
+               (base32
+                "07mwfzpv9ya9ma74n993pihjhi10pjpnzbx1bfvk55h4mcyl7r7c"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-genomicranges" ,r-genomicranges)
+       ("r-aneufinderdata" ,r-aneufinderdata)
+       ("r-foreach" ,r-foreach)
+       ("r-doparallel" ,r-doparallel)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-iranges" ,r-iranges)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-bamsignals" ,r-bamsignals)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-biostrings" ,r-biostrings)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-reshape2" ,r-reshape2)
+       ("r-ggdendro" ,r-ggdendro)
+       ("r-ggrepel" ,r-ggrepel)
+       ("r-reordercluster" ,r-reordercluster)
+       ("r-mclust" ,r-mclust)
+       ("r-cowplot" ,r-cowplot)))
+    (home-page "http://bioconductor.org/packages/AneuFinder")
+    (synopsis "Copy number variation analysis in single-cell-sequencing data")
+    (description "This package implements functions for copy number variant
+calling, plotting, export and analysis from whole-genome single cell
+sequencing data.")
+    (license license:artistic2.0)))
+
+(define-public r-bsgenome-btaurus-ucsc-bostau8
+  (package
+    (name "r-bsgenome-btaurus-ucsc-bostau8")
+    (version "1.4.2")
+    (source (origin
+              (method url-fetch)
+              ;; We cannot use bioconductor-uri here because this tarball is
+              ;; located under "data/annotation/" instead of "bioc/".
+              (uri (string-append "http://bioconductor.org/packages/"
+                                  "release/data/annotation/src/contrib"
+                                  "/BSgenome.Btaurus.UCSC.bosTau8_"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "16wjy1aw9nvx03r7w8yh5w7sw3pn8i9nczd0n0728l6nnyqxlsz6"))))
+    (properties
+     `((upstream-name . "SNPlocs.Hsapiens.dbSNP144.GRCh37")))
+    (build-system r-build-system)
+    ;; As this package provides little more than a very large data file it
+    ;; doesn't make sense to build substitutes.
+    (arguments `(#:substitutable? #f))
+    (propagated-inputs `(("r-bsgenome" ,r-bsgenome)))
+    (home-page "http://bioconductor.org/packages/BSgenome.Btaurus.UCSC.bosTau8")
+    (synopsis "Full genome sequences for Bos taurus (UCSC version bosTau8)")
+    (description "This package provides the full genome sequences for Bos
+taurus (UCSC version bosTau8).")
+    (license license:artistic2.0)))
