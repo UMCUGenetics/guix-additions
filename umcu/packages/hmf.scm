@@ -305,6 +305,21 @@ genomics data developed by the Hartwig Medical Foundation.")
              "0mbz5q8zrwin1rgjk2bb5ax95210zyndm3bx5lszpql2pmwdbjgk"))))
         ("mysql" ,mysql-5.6.25))))))
 
+(define-public hmftools-2018-03-06
+  (let ((commit "367fde7e04e8dd931a0253fa9e2374a7a66b50be"))
+    (package (inherit hmftools-2018-01-11)
+     (name "hmftools")
+     (version (string-append "20180306-" (string-take commit 7)))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/hartwigmedical/hmftools.git")
+                    (commit commit)))
+              (file-name (string-append name "-" version "-checkout"))
+              (sha256
+               (base32
+                "02k8w7vymib68g499kbl4q91dyz71bb2p72i9l4dg80pa797ssnk")))))))
+
 (define-public hmftools
   (package
    (name "hmftools")
