@@ -1315,3 +1315,27 @@ sequencing data.")
     (description "This package provides the full genome sequences for Bos
 taurus (UCSC version bosTau8).")
     (license license:artistic2.0)))
+
+(define-public r-ideoviz
+  (package
+    (name "r-ideoviz")
+    (version "1.12.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "IdeoViz" version))
+              (sha256
+               (base32
+                "1ihfxp4dngwk72nxw36w15d28cpz4y0qxagap4km76i51c9jm855"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biobase" ,r-biobase)
+       ("r-iranges" ,r-iranges)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-genomeinfodb" ,r-genomeinfodb)))
+    (home-page "http://bioconductor.org/packages/IdeoViz")
+    (synopsis "Plots data (continuous/discrete) along chromosomal ideogram")
+    (description "This package provides functions to plot data associated with
+arbitrary genomic intervals along chromosomal ideogram.")
+    (license license:artistic2.0)))
