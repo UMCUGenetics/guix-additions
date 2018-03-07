@@ -909,6 +909,12 @@ single executable called @code{bam}.")
                       (string-append "pipeline-" ,version "/templates")
                       "--strip-components=2"))
 
+           ;; Extract the settings files to their own custom directory.
+           (with-directory-excursion settings-dir
+             (system* tar "xvf" tarball
+                      (string-append "pipeline-" ,version "/settings")
+                      "--strip-components=2"))
+
            ;; Apply the following patches to make the pipeline compatible with
            ;; the latest versions of Cobalt and StrelkaPostProcess.
            (with-directory-excursion %output
@@ -916,13 +922,15 @@ single executable called @code{bam}.")
              (let ((patch1 (assoc-ref %build-inputs "patch1"))
                    (patch2 (assoc-ref %build-inputs "patch2"))
                    (patch3 (assoc-ref %build-inputs "patch3"))
-                   (patch4 (assoc-ref %build-inputs "patch4")))
+                   (patch4 (assoc-ref %build-inputs "patch4"))
+                   (patch5 (assoc-ref %build-inputs "patch5")))
                (format
                 #t
                 (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
                          (zero? (system (string-append patch-bin " -p1 < " patch2)))
                          (zero? (system (string-append patch-bin " -p1 < " patch3)))
-                         (zero? (system (string-append patch-bin " -p1 < " patch4))))
+                         (zero? (system (string-append patch-bin " -p1 < " patch4)))
+                         (zero? (system (string-append patch-bin " -p1 < " patch5))))
                     " Succeeded.~%"
                     " Failed.~%"))))
 
@@ -1047,12 +1055,7 @@ single executable called @code{bam}.")
                (("cp ")
                 (string-append (assoc-ref %build-inputs "coreutils") "/bin/cp "))))
 
-           ;; Extract the settings files to their own custom directory.
            (with-directory-excursion settings-dir
-             (system* tar "xvf" tarball
-                      (string-append "pipeline-" ,version "/settings")
-                      "--strip-components=2")
-
              ;; Add a prefix to the 'INIFILE' directory specification.
              (substitute*
               (scandir "."
@@ -1253,83 +1256,11 @@ REPORT_STATUS	~a"
        ("patch4" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0004-Use-bcftools-to-annotate-PON-data.patch"))
-                   (sha256 (base32 "05a01p5l8pigwan5zlzplanbg1pgvv8rbx3llir1hnqs7vvs3b1q"))))))
-    (propagated-inputs
-     `(("bash" ,bash)
-       ("bcftools" ,bcftools)
-       ("bio-vcf" ,bio-vcf)
-       ("circos" ,circos)
-       ("perl-autovivification" ,perl-autovivification)
-       ("perl-bareword-filehandles" ,perl-bareword-filehandles)
-       ("perl-file-copy-recursive" ,perl-file-copy-recursive)
-       ("perl-file-find-rule" ,perl-file-find-rule)
-       ("perl-findbin-libs" ,perl-findbin-libs)
-       ("perl-indirect" ,perl-indirect)
-       ("perl-json" ,perl-json)
-       ("perl-list-moreutils" ,perl-list-moreutils)
-       ("perl-multidimensional" ,perl-multidimensional)
-       ("perl-sort-key" ,perl-sort-key)
-       ("perl-strictures" ,perl-strictures-2)
-       ("perl-template-toolkit" ,perl-template-toolkit)
-       ("perl-time-hires" ,perl-time-hires)
-       ("icedtea-8" ,icedtea-8)
-       ("r-biobase" ,r-biobase)
-       ("r-biocstyle" ,r-biocstyle)
-       ("r-bsgenome" ,r-bsgenome)
-       ("r-copynumber" ,r-copynumber)
-       ("r-cghbase" ,r-cghbase)
-       ("r-cghcall" ,r-cghcall)
-       ("r-devtools" ,r-devtools)
-       ("r-digest" ,r-digest)
-       ("r-dnacopy" ,r-dnacopy)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-getoptlong" ,r-getoptlong)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gtools" ,r-gtools)
-       ("r-iranges" ,r-iranges)
-       ("r-matrixstats" ,r-matrixstats)
-       ("r-pastecs" ,r-pastecs)
-       ("r-qdnaseq" ,r-qdnaseq-hmf)
-       ("r-r-utils" ,r-r-utils)
-       ("r-roxygen2" ,r-roxygen2)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r" ,r)
-       ("sambamba" ,sambamba-next)
-       ("samtools" ,samtools)
-       ("snpeff" ,snpeff-bin-4.1)
-       ("strelka" ,strelka-1.0.14)
-       ("vcftools" ,vcftools)
-       ("coreutils" ,coreutils)
-       ("grep" ,grep-with-pcre)
-       ("sed" ,sed)
-       ("gawk" ,gawk)
-       ("perl" ,perl)
-       ("inetutils" ,inetutils)
-       ("util-linux" ,util-linux)
-       ("grid-engine" ,grid-engine-core)
-       ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs gatk-full-3.5-patched-bin)))
-    ;; Bash, Perl and R are not propagated into the profile.  The programs are
-    ;; invoked using their absolute link from the 'tools.ini' file.  We must
-    ;; make sure that the environment variables for these interpreters are
-    ;; set correctly.
-    (native-search-paths
-     (append (package-native-search-paths bash)
-             (package-native-search-paths grid-engine-core)
-             (package-native-search-paths perl)
-             (package-native-search-paths r)
-             (package-native-search-paths ruby)))
-    (search-paths native-search-paths)
-    (home-page "https://github.com/hartwigmedical/pipeline")
-    (synopsis "Default Hartwig Medical Data processing pipeline")
-    (description "Pipeline of tools to process raw fastq data and
-produce meaningful genomic data from Hartwig Medical.")
-    (license license:expat)))
-
-(define-public hmf-pipeline-next
-  (package (inherit hmf-pipeline)
-    (name "hmf-pipeline-next")
-    (version "3.1-next")
+                   (sha256 (base32 "05a01p5l8pigwan5zlzplanbg1pgvv8rbx3llir1hnqs7vvs3b1q"))))
+       ("patch5" ,(origin
+                   (method url-fetch)
+                   (uri (search-patch "0005-Add-somatic-PON-filtering.patch"))
+                   (sha256 (base32 "0f8vcbcg2inir2l8gxzzkzwwjdzyfbbagf9pfmghbfds6i1043pj"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
@@ -1384,4 +1315,20 @@ produce meaningful genomic data from Hartwig Medical.")
        ("util-linux" ,util-linux)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs gatk-full-3.5-patched-bin)))))
+       ,@(package-propagated-inputs gatk-full-3.5-patched-bin)))
+    ;; Bash, Perl and R are not propagated into the profile.  The programs are
+    ;; invoked using their absolute link from the 'tools.ini' file.  We must
+    ;; make sure that the environment variables for these interpreters are
+    ;; set correctly.
+    (native-search-paths
+     (append (package-native-search-paths bash)
+             (package-native-search-paths grid-engine-core)
+             (package-native-search-paths perl)
+             (package-native-search-paths r)
+             (package-native-search-paths ruby)))
+    (search-paths native-search-paths)
+    (home-page "https://github.com/hartwigmedical/pipeline")
+    (synopsis "Default Hartwig Medical Data processing pipeline")
+    (description "Pipeline of tools to process raw fastq data and
+produce meaningful genomic data from Hartwig Medical.")
+    (license license:expat)))
