@@ -1260,7 +1260,7 @@ REPORT_STATUS	~a"
        ("patch5" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0005-Add-somatic-PON-filtering.patch"))
-                   (sha256 (base32 "0f8vcbcg2inir2l8gxzzkzwwjdzyfbbagf9pfmghbfds6i1043pj"))))))
+                   (sha256 (base32 "02ax08jybmrqyrqcw17n9nswkd87b9zrdlpcrcw7q73lbk96s6gw"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)

@@ -1,4 +1,4 @@
-From 55dae257cb71b86c008e49b33d3bdb7ceecb1add Mon Sep 17 00:00:00 2001
+From d7c5d17be941cec33dce813f5fbe0cf5c7cdc5bd Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Tue, 6 Mar 2018 10:01:49 +0100
 Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
@@ -6,13 +6,14 @@ Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
 * lib/HMF/Pipeline/Config/Validate.pm: Split HMF_PON into HMF_GERMLINE_PON and
   HMF_SOMATIC_PON.
 * settings/include/data.ini: Likewise.
+* t/50-pipeline.pl.t: Likewise.
 * templates/StrelkaPostProcess.sh.tt: Annotate and filter both somatic and
   germline PONs.
 ---
  lib/HMF/Pipeline/Config/Validate.pm | 3 ++-
  settings/include/data.ini           | 3 ++-
- templates/StrelkaPostProcess.sh.tt  | 6 ++++--
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ templates/StrelkaPostProcess.sh.tt  | 7 +++++--
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/lib/HMF/Pipeline/Config/Validate.pm b/lib/HMF/Pipeline/Config/Validate.pm
 index 1607b9d..2292658 100644
@@ -43,16 +44,17 @@ index 763bacc..99c6a06 100644
  HIGH_CONFIDENCE_BED	/data/dbs/bed/NA12878_GIAB_highconf_IllFB-IllGATKHC-CG-Ion-Solid_ALLCHROM_v3.2.2_highconf.bed
  
 diff --git a/templates/StrelkaPostProcess.sh.tt b/templates/StrelkaPostProcess.sh.tt
-index f9e04d2..49a3943 100644
+index f9e04d2..26d41e0 100644
 --- a/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 +++ b/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
-@@ -76,14 +76,16 @@ input_vcf="${output_vcf}.gz"
+@@ -76,14 +76,17 @@ input_vcf="${output_vcf}.gz"
  output_vcf="$basefile".annotated.pon.vcf
  rm -f "$output_vcf" "$output_vcf.idx"
  
 -[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_PON %]" -c PON_COUNT ${input_vcf} -o ${output_vcf}
 +[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_GERMLINE_PON %]" -c GERMLINE_PON_COUNT ${input_vcf} -O u | \
 +[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_SOMATIC_PON %]" -c SOMATIC_PON_COUNT ${input_vcf} -o ${output_vcf}
++[% opt.IGVTOOLS_PATH %]/igvtools index "$output_vcf"
  
  rm "$input_vcf" "$input_vcf.tbi"
  input_vcf="$output_vcf"
@@ -66,5 +68,5 @@ index f9e04d2..49a3943 100644
  
  assert_last_position_unchanged "$input_vcf" "$output_vcf"
 -- 
-2.15.0
+2.16.1
 
