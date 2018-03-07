@@ -1,4 +1,4 @@
-From d7c5d17be941cec33dce813f5fbe0cf5c7cdc5bd Mon Sep 17 00:00:00 2001
+From 189b051e87448609993125d1a6570be90fcc063c Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Tue, 6 Mar 2018 10:01:49 +0100
 Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
@@ -10,10 +10,10 @@ Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
 * templates/StrelkaPostProcess.sh.tt: Annotate and filter both somatic and
   germline PONs.
 ---
- lib/HMF/Pipeline/Config/Validate.pm | 3 ++-
- settings/include/data.ini           | 3 ++-
- templates/StrelkaPostProcess.sh.tt  | 7 +++++--
- 3 files changed, 9 insertions(+), 4 deletions(-)
+ lib/HMF/Pipeline/Config/Validate.pm |  3 ++-
+ settings/include/data.ini           |  3 ++-
+ templates/StrelkaPostProcess.sh.tt  | 18 ++++++++++++++----
+ 3 files changed, 18 insertions(+), 6 deletions(-)
 
 diff --git a/lib/HMF/Pipeline/Config/Validate.pm b/lib/HMF/Pipeline/Config/Validate.pm
 index 1607b9d..2292658 100644
@@ -44,26 +44,38 @@ index 763bacc..99c6a06 100644
  HIGH_CONFIDENCE_BED	/data/dbs/bed/NA12878_GIAB_highconf_IllFB-IllGATKHC-CG-Ion-Solid_ALLCHROM_v3.2.2_highconf.bed
  
 diff --git a/templates/StrelkaPostProcess.sh.tt b/templates/StrelkaPostProcess.sh.tt
-index f9e04d2..26d41e0 100644
+index f9e04d2..ae162c5 100644
 --- a/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 +++ b/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
-@@ -76,14 +76,17 @@ input_vcf="${output_vcf}.gz"
- output_vcf="$basefile".annotated.pon.vcf
+@@ -73,17 +73,27 @@ assert_last_position_unchanged "$input_vcf" "$output_vcf"
+ 
+ rm "$input_vcf" "$input_vcf.idx"
+ input_vcf="${output_vcf}.gz"
+-output_vcf="$basefile".annotated.pon.vcf
++output_vcf="$basefile".germline.annotated.pon.vcf.gz
  rm -f "$output_vcf" "$output_vcf.idx"
  
 -[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_PON %]" -c PON_COUNT ${input_vcf} -o ${output_vcf}
-+[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_GERMLINE_PON %]" -c GERMLINE_PON_COUNT ${input_vcf} -O u | \
-+[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_SOMATIC_PON %]" -c SOMATIC_PON_COUNT ${input_vcf} -o ${output_vcf}
++[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_GERMLINE_PON %]" -c GERMLINE_PON_COUNT ${input_vcf} -o ${output_vcf} -O z
++[% opt.IGVTOOLS_PATH %]/igvtools index "$output_vcf"
++
++rm "$input_vcf" "$input_vcf.idx"
++input_vcf="${output_vcf}"
++output_vcf="$basefile".germline.somatic.annotated.pon.vcf.gz
++rm -f "$output_vcf" "$output_vcf.idx"
++
++[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_SOMATIC_PON %]" -c SOMATIC_PON_COUNT -o ${output_vcf} -O z
 +[% opt.IGVTOOLS_PATH %]/igvtools index "$output_vcf"
  
  rm "$input_vcf" "$input_vcf.tbi"
  input_vcf="$output_vcf"
- output_vcf="$basefile".filtered.pon.vcf
+-output_vcf="$basefile".filtered.pon.vcf
++output_vcf="$basefile".filtered.pon.vcf.gz
  rm -f "$output_vcf" "$output_vcf.idx"
  
 -[% opt.BCFTOOLS_PATH %]/bcftools filter -e 'PON_COUNT!="." && MIN(PON_COUNT) > 5' -s PON -m+ "$input_vcf" -o "$output_vcf"
 +[% opt.BCFTOOLS_PATH %]/bcftools filter -e 'GERMLINE_PON_COUNT!="." && MIN(GERMLINE_PON_COUNT) > 5' -s GERMLINE_PON -m+ "$input_vcf" -O u | \
-+[% opt.BCFTOOLS_PATH %]/bcftools filter -e 'SOMATIC_PON_COUNT!="." && MIN(SOMATIC_PON_COUNT) > 3' -s SOMATIC_PON -m+ -o "$output_vcf"
++[% opt.BCFTOOLS_PATH %]/bcftools filter -e 'SOMATIC_PON_COUNT!="." && MIN(SOMATIC_PON_COUNT) > 3' -s SOMATIC_PON -m+ -o "$output_vcf" -O z
  [% opt.IGVTOOLS_PATH %]/igvtools index "$output_vcf"
  
  assert_last_position_unchanged "$input_vcf" "$output_vcf"
