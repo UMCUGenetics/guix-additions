@@ -1,4 +1,4 @@
-From 94e1fdee8070b8232171bb0bf92bde2b21cac52f Mon Sep 17 00:00:00 2001
+From 0adc1c83bc4673ae8ae5182468991cd5fa2080fd Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Tue, 6 Mar 2018 10:01:49 +0100
 Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
@@ -11,9 +11,10 @@ Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
   germline PONs.
 ---
  lib/HMF/Pipeline/Config/Validate.pm |  3 ++-
+ lib/HMF/Pipeline/SomaticVariants.pm |  2 +-
  settings/include/data.ini           |  3 ++-
  templates/StrelkaPostProcess.sh.tt  | 33 +++++++++++++++++++++------------
- 3 files changed, 25 insertions(+), 14 deletions(-)
+ 4 files changed, 26 insertions(+), 15 deletions(-)
 
 diff --git a/lib/HMF/Pipeline/Config/Validate.pm b/lib/HMF/Pipeline/Config/Validate.pm
 index 1607b9d..2292658 100644
@@ -29,6 +30,19 @@ index 1607b9d..2292658 100644
              }
          ),
          COPY_NUMBER => if_enabled({
+diff --git a/lib/HMF/Pipeline/SomaticVariants.pm b/lib/HMF/Pipeline/SomaticVariants.pm
+index 6fcef21..f000f39 100644
+--- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/SomaticVariants.pm
++++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/SomaticVariants.pm
+@@ -25,7 +25,7 @@ sub run {
+     my ($ref_sample, $tumor_sample, $ref_bam_path, $tumor_bam_path, $joint_name, $running_jobs) = sampleControlBamsAndJobs($opt);
+     my $dirs = createDirs(catfile($opt->{OUTPUT_DIR}, "somaticVariants", $joint_name));
+ 
+-    my $final_vcf = catfile($dirs->{out}, "${joint_name}_post_processed.vcf");
++    my $final_vcf = catfile($dirs->{out}, "${joint_name}_post_processed.vcf.gz");
+     $opt->{SOMVAR_VCF_FILE} = $final_vcf; # JOBA: This should be set before early 'checkReportedDoneFile' exit as it is required by downstream processing
+ 
+     my ($recalibrated_ref_bam, $recal_ref_jobs) = checkRecalibratedSample($ref_sample, $ref_bam_path, $opt);
 diff --git a/settings/include/data.ini b/settings/include/data.ini
 index 763bacc..99c6a06 100644
 --- a/share/hmf-pipeline/settings/include/data.ini
