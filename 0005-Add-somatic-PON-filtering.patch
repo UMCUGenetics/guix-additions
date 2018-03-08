@@ -1,4 +1,4 @@
-From d9f36caf740a6c26bbd98e27042eed543eb98dab Mon Sep 17 00:00:00 2001
+From b55301021ee5a677f7e77272561c117053c6abe5 Mon Sep 17 00:00:00 2001
 From: Roel Janssen <roel@gnu.org>
 Date: Tue, 6 Mar 2018 10:01:49 +0100
 Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
@@ -44,7 +44,7 @@ index 763bacc..99c6a06 100644
  HIGH_CONFIDENCE_BED	/data/dbs/bed/NA12878_GIAB_highconf_IllFB-IllGATKHC-CG-Ion-Solid_ALLCHROM_v3.2.2_highconf.bed
  
 diff --git a/templates/StrelkaPostProcess.sh.tt b/templates/StrelkaPostProcess.sh.tt
-index f9e04d2..f55738e 100644
+index f9e04d2..25208ec 100644
 --- a/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 +++ b/share/hmf-pipeline/templates/StrelkaPostProcess.sh.tt
 @@ -71,23 +71,32 @@ assert_last_position_unchanged "$input_vcf" "$output_vcf"
@@ -67,7 +67,7 @@ index f9e04d2..f55738e 100644
  rm -f "$output_vcf" "$output_vcf.idx"
  
 -[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_PON %]" -c PON_COUNT ${input_vcf} -o ${output_vcf}
-+[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_SOMATIC_PON %]" -c SOMATIC_PON_COUNT -o ${output_vcf} -O z
++[% opt.BCFTOOLS_PATH %]/bcftools annotate -a "[% opt.HMF_SOMATIC_PON %]" -c SOMATIC_PON_COUNT ${input_vcf} -o ${output_vcf} -O z
 +[% opt.IGVTOOLS_PATH %]/igvtools index "$output_vcf"
  
  rm "$input_vcf" "$input_vcf.tbi"
