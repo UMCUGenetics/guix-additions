@@ -274,8 +274,9 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${arguments[@]:1}\")
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
-      sge_variables=$(${coreutils}/bin/env | ${grep} \"^SGE\")
-      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"export $sge_variables\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      set_output=$(${grep} -h \"^export\" $profiles)
+      sge_variables=$(${coreutils}/bin/env | ${grep} \"^SGE\" | tr '\\n' ' ')
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"export $sge_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
