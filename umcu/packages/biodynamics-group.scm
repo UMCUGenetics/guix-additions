@@ -67,7 +67,7 @@ pipelines.")
 (define-public kaiju
   (package
    (name "kaiju")
-   (version "1.5.0")
+   (version "1.6.2")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -75,7 +75,7 @@ pipelines.")
                   version ".tar.gz"))
             (file-name (string-append name "-" version ".tar.gz"))
             (sha256
-             (base32 "0afbfalfw9y39bkwnqjrh9bghs118ws1pzj5h8l0nblgn3mbjdks"))))
+             (base32 "1kdn4rxs0kr9ibmrgrfcci71aa6j6gr71dbc8pff7731rpab6kj7"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
@@ -92,7 +92,8 @@ pipelines.")
               (copy-recursively "bin" bin)
               (copy-recursively "util" bin)))))))
    (inputs
-    `(("perl" ,perl)))
+    `(("perl" ,perl)
+      ("zlib" ,zlib)))
    (home-page "http://kaiju.binf.ku.dk/")
    (synopsis "Fast and sensitive taxonomic classification for metagenomics")
    (description "Kaiju is a program for sensitive taxonomic classification
