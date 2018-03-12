@@ -31,14 +31,14 @@
 (define-public spades
   (package
    (name "spades")
-   (version "3.10.1")
+   (version "3.11.1")
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "http://cab.spbu.ru/files/release3.10.1/SPAdes-"
-                  version ".tar.gz"))
+                  "http://cab.spbu.ru/files/release"
+                  version "/SPAdes-" version ".tar.gz"))
             (sha256
-             (base32 "15hd4hgzn91gkqx16r7d76zvhzqhrqdjl1wnk15a2rvpjkmxk7fl"))))
+             (base32 "0x5l4nkkjrkdn41ifz2baz9bp2r5blgrf77impc5nnbxpy35vf1s"))))
    (build-system cmake-build-system)
    ;; Reported under section 2 "Installation", "SPAdes requires a 64-bit
    ;; system": http://cab.spbu.ru/files/release3.10.1/manual.html
