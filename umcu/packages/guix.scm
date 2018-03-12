@@ -190,6 +190,7 @@ without modification.")
     (inputs
      `(("bash-full" ,bash-custom)
        ("git" ,git)
+       ("sed" ,sed)
        ("gawk" ,gawk)))
     (arguments
      `(#:tests? #f
@@ -218,6 +219,7 @@ coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
 cut=\"${coreutils}/bin/cut\"
 grep=\"~a/bin/grep\"
+sed=\"~a/bin/sed\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
@@ -275,7 +277,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
       set_output=$(${grep} -h \"^export\" $profiles)
-      sge_variables=$(${coreutils}/bin/env | ${grep} \"^SGE\" | ${coreutils}/bin/tr '\\n' ' ')
+      sge_variables=$(${coreutils}/bin/env | ${grep} \"^SGE\" | ${sed} 's/ /\\ /g' | ${coreutils}/bin/tr '\\n' ' ')
       ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"export $sge_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
@@ -291,6 +293,7 @@ fi~%"
                          (assoc-ref inputs "gawk")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
+                         (assoc-ref inputs "sed")
                          (assoc-ref inputs "bash-full"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
