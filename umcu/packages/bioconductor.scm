@@ -1339,3 +1339,26 @@ taurus (UCSC version bosTau8).")
     (description "This package provides functions to plot data associated with
 arbitrary genomic intervals along chromosomal ideogram.")
     (license license:artistic2.0)))
+
+(define-public r-readxl
+  (package
+   (name "r-readxl")
+   (version "1.0.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "readxl" version))
+            (sha256
+             (base32
+              "1bf7gxw9r11m4llyymplxiaa4gzgyj4bwmwad5in756pzq3jzmpv"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-cellranger" ,r-cellranger)
+      ("r-rcpp" ,r-rcpp)
+      ("r-tibble" ,r-tibble)))
+   (home-page "http://readxl.tidyverse.org")
+   (synopsis "Read excel files")
+   (description "Import excel files into R.  Supports '.xls' via the embedded
+'libxls' C library <https://sourceforge.net/projects/libxls/> and '.xlsx' via
+the embedded 'RapidXML' C++ library <https://rapidxml.sourceforge.net>.  Works
+on Windows, Mac and Linux without external dependencies.")
+   (license license:gpl3)))
