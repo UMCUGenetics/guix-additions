@@ -93,7 +93,7 @@ next-generation sequence data, and genomic annotations.")
       (base32 "1z7fx79jfsqm0ry89mchifxxrj7vl1h9f98x6p2r2vcbx8f4zvi8"))))
    (build-system gnu-build-system)
    (inputs
-    `(("icedtea" ,icedtea-7)))
+    `(("icedtea" ,icedtea-8)))
    (native-inputs
     `(("unzip" ,unzip)))
    (arguments
