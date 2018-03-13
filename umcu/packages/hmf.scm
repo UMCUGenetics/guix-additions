@@ -639,7 +639,7 @@ BAM files using @code{sambamba}.")
        ("perl" ,perl)
        ("r-minimal" ,r-minimal)
        ("picard" ,picard-bin-1.141)
-       ("icedtea" ,icedtea)
+       ("icedtea" ,icedtea-8)
        ("grid-engine-core" ,grid-engine-core)))
     (propagated-inputs
      `(("r-ggplot2" ,r-ggplot2)
