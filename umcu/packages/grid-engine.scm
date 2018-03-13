@@ -73,7 +73,7 @@
        ("perl" ,perl)
        ("ruby" ,ruby)
        ("gawk" ,gawk)
-       ("icedtea" ,icedtea)))
+       ("icedtea" ,icedtea-8)))
     (arguments
      `(#:tests? #f
        #:phases
