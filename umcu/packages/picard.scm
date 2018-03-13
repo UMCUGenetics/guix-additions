@@ -38,7 +38,7 @@
              (base32 "1ari9j37a0v8bm03c77pw729bqwbqqn6h15rw028jhl1iz4rgd5g"))))
    (build-system gnu-build-system)
    (propagated-inputs
-    `(("icedtea" ,icedtea-7)))
+    `(("icedtea" ,icedtea-8)))
    (native-inputs
     `(("unzip" ,unzip)))
    (arguments
