@@ -635,7 +635,7 @@ BAM files using @code{sambamba}.")
                ;; to its appropriate location.
                (copy-recursively "." bindir)))))))
     (inputs
-     `(("sambamba" ,sambamba)
+     `(("sambamba" ,sambamba-next)
        ("perl" ,perl)
        ("r-minimal" ,r-minimal)
        ("picard" ,picard-bin-1.141)
