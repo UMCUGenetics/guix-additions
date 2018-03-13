@@ -12,8 +12,8 @@ Subject: [PATCH 2/2] Adapt Cobalt command-line options.
 
 diff --git a/lib/HMF/Pipeline/Cobalt.pm b/lib/HMF/Pipeline/Cobalt.pm
 index 4b09d3d..40d3085 100644
---- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
-+++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Cobalt.pm
+--- a/lib/perl5/site_perl/5.26.1/HMF/Pipeline/Cobalt.pm
++++ b/lib/perl5/site_perl/5.26.1/HMF/Pipeline/Cobalt.pm
 @@ -5,7 +5,7 @@ use discipline;
  
  use File::Spec::Functions;

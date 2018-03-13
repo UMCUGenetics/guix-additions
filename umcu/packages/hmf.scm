@@ -1244,11 +1244,11 @@ REPORT_STATUS	~a"
        ("patch1" ,(origin
                     (method url-fetch)
                     (uri (search-patch "0001-Adapt-command-line-options-for-StrelkaPostProcess.patch"))
-                    (sha256 (base32 "1f175jfygr7qb1vxmn558xmcr00bc8pjbq3pl1mv69v2c4mrwj7k"))))
+                    (sha256 (base32 "0b7a0pmg5q0j1qqsbhl5y2phr5ndjyc0mlrsc2gbzv0d6c0ddmp3"))))
        ("patch2" ,(origin
                     (method url-fetch)
                     (uri (search-patch "0002-Adapt-Cobalt-command-line-options.patch"))
-                    (sha256 (base32 "1g672fhyww1byy7g7jj5jrfaxmi4rlj9nmqviakfm96i63q56zm1"))))
+                    (sha256 (base32 "142z53nf9z4657h4yidia2va1gq83wdh7nzx008648vf9rlk2nl6"))))
        ("patch3" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0003-Use-escaped-tabs-for-the-read-group.patch"))
@@ -1260,7 +1260,7 @@ REPORT_STATUS	~a"
        ("patch5" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0005-Add-somatic-PON-filtering.patch"))
-                   (sha256 (base32 "19qinzhij189s6zkj29w20r7rc4jncwaczxyxnan90nlpqdqgfwy"))))))
+                   (sha256 (base32 "1bphww76pwj1cc968c50sdar37z5mf6yf6bnz5cw6xayvm6591sb"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)

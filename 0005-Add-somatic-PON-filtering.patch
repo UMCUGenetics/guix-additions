@@ -18,8 +18,8 @@ Subject: [PATCH] hmf: hmf-pipeline: Add somatic PON filtering.
 
 diff --git a/lib/HMF/Pipeline/Config/Validate.pm b/lib/HMF/Pipeline/Config/Validate.pm
 index 1607b9d..2292658 100644
---- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Config/Validate.pm
-+++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/Config/Validate.pm
+--- a/lib/perl5/site_perl/5.26.1/HMF/Pipeline/Config/Validate.pm
++++ b/lib/perl5/site_perl/5.26.1/HMF/Pipeline/Config/Validate.pm
 @@ -439,7 +439,8 @@ sub configChecks {
                  ANNOTATE_IDNAME => \&key_not_present,
                  ANNOTATE_IDDB => \&missing_file,
@@ -32,8 +32,8 @@ index 1607b9d..2292658 100644
          COPY_NUMBER => if_enabled({
 diff --git a/lib/HMF/Pipeline/SomaticVariants.pm b/lib/HMF/Pipeline/SomaticVariants.pm
 index 6fcef21..f000f39 100644
---- a/lib/perl5/site_perl/5.26.0/HMF/Pipeline/SomaticVariants.pm
-+++ b/lib/perl5/site_perl/5.26.0/HMF/Pipeline/SomaticVariants.pm
+--- a/lib/perl5/site_perl/5.26.1/HMF/Pipeline/SomaticVariants.pm
++++ b/lib/perl5/site_perl/5.26.1/HMF/Pipeline/SomaticVariants.pm
 @@ -25,7 +25,7 @@ sub run {
      my ($ref_sample, $tumor_sample, $ref_bam_path, $tumor_bam_path, $joint_name, $running_jobs) = sampleControlBamsAndJobs($opt);
      my $dirs = createDirs(catfile($opt->{OUTPUT_DIR}, "somaticVariants", $joint_name));
