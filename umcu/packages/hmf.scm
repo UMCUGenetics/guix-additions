@@ -581,7 +581,7 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
     (inputs
      `(("python" ,python-2)))
     (propagated-inputs
-     `(("sambamba" ,sambamba)))
+     `(("sambamba" ,sambamba-next)))
     (home-page "https://github.com/UMCUGenetics/ExonCov")
     (synopsis "Exon coverage statistics from BAM files")
     (description "This package can generate exon coverage statistics from
