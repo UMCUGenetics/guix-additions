@@ -62,7 +62,7 @@
            (lambda _
              (zero? (system* "sh" "autogen.sh")))))))
     (native-inputs
-     `(("autoconf" ,(autoconf-wrapper))
+     `(("autoconf" ,autoconf-wrapper)
        ("automake" ,automake)
        ("libtool" ,libtool)
        ("pkg-config" ,pkg-config)))
