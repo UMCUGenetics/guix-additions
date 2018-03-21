@@ -16,14 +16,6 @@
 ;;; You should have received a copy of the GNU General Public License
 ;;; along with GNU Guix.  If not, see <http://www.gnu.org/licenses/>.
 
-;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
-;; mainlined in GNU Guix.  You should avoid using this package, and if you
-;; can, please write a free replacement for it.
-
-;; WARNING: This is non-free software. It will NEVER and SHOULD NEVER be
-;; mainlined in GNU Guix.  You should avoid using this package, and if you
-;; can, please write a free replacement for it.
-
 (define-module (umcu packages python)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
