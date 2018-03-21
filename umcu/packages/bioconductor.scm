@@ -1362,3 +1362,59 @@ arbitrary genomic intervals along chromosomal ideogram.")
 the embedded 'RapidXML' C++ library <https://rapidxml.sourceforge.net>.  Works
 on Windows, Mac and Linux without external dependencies.")
    (license license:gpl3)))
+
+(define-public r-polynom
+  (package
+   (name "r-polynom")
+   (version "1.3-9")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "polynom" version))
+     (sha256
+      (base32
+       "1s4xxv5rvpigawknvq27v9vzvs83phfsj5h8mim2lmf5bj950nnk"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/polynom")
+   (synopsis "Functions for univariate polynomial manipulations")
+   (description "This package provides a collection of functions to implement a
+class for univariate polynomial manipulations.")
+   (license license:gpl2)))
+
+(define-public r-ggpmisc
+  (package
+   (name "r-ggpmisc")
+   (version "0.2.16")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "ggpmisc" version))
+     (sha256
+      (base32
+       "1hq5zpc3zf4hq49ykrzrgj92cmh6gjsq6kpzcvzvnm5wyh9yy2iq"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-broom" ,r-broom)
+      ("r-dplyr" ,r-dplyr)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-lubridate" ,r-lubridate)
+      ("r-mass" ,r-mass)
+      ("r-plyr" ,r-plyr)
+      ("r-polynom" ,r-polynom)
+      ("r-splus2r" ,r-splus2r)
+      ("r-tibble" ,r-tibble)
+      ("r-xts" ,r-xts)
+      ("r-zoo" ,r-zoo)))
+   (home-page "http://www.r4photobiology.info")
+   (synopsis "Miscellaneous Extensions to @code{ggplot2}")
+   (description "This package provides extensions to @code{ggplot2} respecting
+the grammar of graphics paradigm.  Provides new statistics to locate and tag
+peaks and valleys in 2D plots, a statistics to add a label with the equation
+of a polynomial fitted with lm(), or R^2 or adjusted R^2 or information
+criteria for any model fitted with function lm().  Additional statistics give
+access to functions in package 'broom'.  Provides a function for flexibly
+converting time series to data frames suitable for plotting with 
+@code{ggplot()}.  In addition provides statistics and ggplot geometries useful
+for diagnosing what data are passed to compute_group() and 
+@code{compute_panel()} functions and to geometries.")
+   (license license:gpl2+)))
