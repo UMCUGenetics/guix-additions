@@ -38,8 +38,10 @@
   #:use-module (gnu packages linux)
   #:use-module (gnu packages llvm)
   #:use-module (gnu packages maths)
+  #:use-module (gnu packages networking)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages python)
   #:use-module (gnu packages qt)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages tls)
@@ -1418,3 +1420,110 @@ converting time series to data frames suitable for plotting with
 for diagnosing what data are passed to compute_group() and 
 @code{compute_panel()} functions and to geometries.")
    (license license:gpl2+)))
+
+(define-public r-repr
+  (package
+   (name "r-repr")
+   (version "0.12.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "repr" version))
+            (sha256
+             (base32
+              "1p6a2ryb5iaf4i6nn1iav26bh83wmvncwpk25hyrzd5rxich1bq3"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/repr")
+   (synopsis "Serializable representations")
+   (description "String and binary representations of objects for several
+formats/mime types.")
+   (license license:gpl3)))
+
+(define-public r-irdisplay
+  (package
+  (name "r-irdisplay")
+  (version "0.4.4")
+  (source (origin
+           (method url-fetch)
+           (uri (cran-uri "IRdisplay" version))
+           (sha256
+            (base32
+             "19l4flvik8zw2pany8dpjbrh0bji6bag6pmclgwqnq80532hnfp8"))))
+  (properties
+   `((upstream-name . "IRdisplay")))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-repr" ,r-repr)))
+  (home-page "http://cran.r-project.org/web/packages/IRdisplay")
+  (synopsis "Jupyter display machinery")
+  (description "An interface to the rich display capabilities of 'Jupyter'
+front-ends.  Designed to be used from a running 'IRkernel'")
+  (license license:expat)))
+
+(define-public r-pbdzmq
+  (package
+   (name "r-pbdzmq")
+   (version "0.3-2")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "pbdZMQ" version))
+            (sha256
+             (base32
+              "0dzwwffinn9bbb73dmmh88c374f9057bl0a8dq97fbv63j4a5qpc"))))
+   (properties `((upstream-name . "pbdZMQ")))
+   (build-system r-build-system)
+   (inputs
+    `(("zlib" ,zlib)
+      ("zeromq" ,zeromq)))
+    (native-inputs
+     `(("pkg-config" ,pkg-config)))
+   (home-page "http://r-pbd.org/")
+   (synopsis
+    "Programming with Big Data -- Interface to 'ZeroMQ'")
+   (description
+    "@code{ZeroMQ} is a well-known library for high-performance asynchronous
+messaging in scalable, distributed applications.  This package provides high
+level R wrapper functions to easily utilize 'ZeroMQ'.  We mainly focus on
+interactive client/server programming frameworks.")
+   (license license:gpl3)))
+
+(define-public irkernel
+  (package
+   (name "irkernel")
+   (version "0.8.11")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/IRkernel/IRkernel/archive/"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32
+              "0qf4ra3r772xq7l52nch51d4alywbp946y3hmdzpzrysbr1prs8m"))))
+   (build-system r-build-system)
+   ;; TODO: Registering the kernel so that jupyter automatically detects it doesn't work.
+   ;; (arguments
+   ;;  `(#:phases
+   ;;    (modify-phases %standard-phases
+   ;;      (add-after 'install 'register-kernel
+   ;;        (lambda _
+   ;;          (with-output-to-file "register-kernel.R"
+   ;;            (lambda _
+   ;;              (format #t "library(\"IRkernel\")~%IRkernel::installspec(user = FALSE)~%")))
+   ;;          (system "Rscript register-kernel.R"))))))
+   (inputs
+    `(("python-jupyter-client" ,python-jupyter-client)))
+   (propagated-inputs
+    `(("r-repr" ,r-repr)
+      ("r-evaluate" ,r-evaluate)
+      ("r-irdisplay" ,r-irdisplay)
+      ("r-pbdzmq" ,r-pbdzmq)
+      ("r-crayon" ,r-crayon)
+      ("r-jsonlite" ,r-jsonlite)
+      ("r-uuid" ,r-uuid)
+      ("r-digest" ,r-digest)))
+   (home-page "https://github.com/IRkernel/IRkernel")
+   (synopsis "Native R kernel for Jupyter notebooks")
+   (description "The R kernel for the Jupyter environment executes R code which
+the front-end submits to the kernel via the network.")
+   (license license:expat)))
+
