@@ -34,7 +34,9 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-crypto)
-  #:use-module (gnu packages statistics))
+  #:use-module (gnu packages statistics)
+  #:use-module (gnu packages qt)
+  #:use-module (umcu packages vcf-explorer))
 
 (define-public python-py2bit
   (package
@@ -756,3 +758,74 @@ scripts that allow users to test:
     (description "Support vector structural variation genotyper.")
     ;; MIT license.
     (license license:expat)))
+
+(define-public python2-ete2
+  (package
+    (name "python2-ete2")
+    (version "2.3.10")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "ete2" version))
+       (sha256
+        (base32
+         "18g25prsq3v6zlz9zn8d2nb3fxvld51ci31k21k1v30jfrls8j7w"))
+       (patches (list (search-patch "python-ete2-disable-homecalling.patch")))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f
+       #:python ,python-2))
+    (propagated-inputs
+     `(("python2-numpy" ,python2-numpy)
+       ("python2-pyqt" ,python2-pyqt-4)
+       ("python2-lxml" ,python2-lxml)))
+    (home-page "http://etetoolkit.org")
+    (synopsis "Python environment for phylogenetic tree exploration")
+    (description "This package provides a Python environment for phylogenetic
+tree exploration")
+    (license #f)))
+
+(define-public phylowgs
+  (package
+   (name "phylowgs")
+   (version "smchet5")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/morrislab/phylowgs/archive/"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32 "0c7lpn0fsrlmyfwhx6mgj0gka9lqdis945sfzhcg5kyi42y4m39a"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; No tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure)
+        (replace 'build ; These guys didn't even care to use a build system.
+          (lambda _
+            (system "g++ -o mh.o -O3 mh.cpp util.cpp $(gsl-config --cflags --libs)")))
+        (replace 'install
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (let ((out (string-append (assoc-ref outputs "out")
+                                      "/share/phylowgs")))
+              (for-each (lambda (file) (install-file file out))
+                        (find-files "." "\\.py"))
+              (install-file "mh.o" out)))))))
+   (inputs
+    `(("gsl" ,gsl)
+      ("python" ,python-2)))
+   (propagated-inputs
+    `(("python2-numpy" ,python2-numpy)
+      ("python2-scipy" ,python2-scipy)
+      ("python2-ete2" ,python2-ete2)
+      ("python2-pyvcf" ,python2-pyvcf)))
+   (native-search-paths
+     (list (search-path-specification
+            (variable "GUIX_PHYLOWGS")
+            (files (list "share/phylowgs")))))
+   (home-page "https://github.com/morrislab/phylowgs")
+   (synopsis "")
+   (description "")
+   (license license:gpl3+)))
