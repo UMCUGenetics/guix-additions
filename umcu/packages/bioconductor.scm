@@ -38,8 +38,10 @@
   #:use-module (gnu packages linux)
   #:use-module (gnu packages llvm)
   #:use-module (gnu packages maths)
+  #:use-module (gnu packages networking)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages python)
   #:use-module (gnu packages qt)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages tls)
@@ -1362,3 +1364,189 @@ arbitrary genomic intervals along chromosomal ideogram.")
 the embedded 'RapidXML' C++ library <https://rapidxml.sourceforge.net>.  Works
 on Windows, Mac and Linux without external dependencies.")
    (license license:gpl3)))
+
+(define-public r-polynom
+  (package
+   (name "r-polynom")
+   (version "1.3-9")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "polynom" version))
+     (sha256
+      (base32
+       "1s4xxv5rvpigawknvq27v9vzvs83phfsj5h8mim2lmf5bj950nnk"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/polynom")
+   (synopsis "Functions for univariate polynomial manipulations")
+   (description "This package provides a collection of functions to implement a
+class for univariate polynomial manipulations.")
+   (license license:gpl2)))
+
+(define-public r-ggpmisc
+  (package
+   (name "r-ggpmisc")
+   (version "0.2.16")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "ggpmisc" version))
+     (sha256
+      (base32
+       "1hq5zpc3zf4hq49ykrzrgj92cmh6gjsq6kpzcvzvnm5wyh9yy2iq"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-broom" ,r-broom)
+      ("r-dplyr" ,r-dplyr)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-lubridate" ,r-lubridate)
+      ("r-mass" ,r-mass)
+      ("r-plyr" ,r-plyr)
+      ("r-polynom" ,r-polynom)
+      ("r-splus2r" ,r-splus2r)
+      ("r-tibble" ,r-tibble)
+      ("r-xts" ,r-xts)
+      ("r-zoo" ,r-zoo)))
+   (home-page "http://www.r4photobiology.info")
+   (synopsis "Miscellaneous Extensions to @code{ggplot2}")
+   (description "This package provides extensions to @code{ggplot2} respecting
+the grammar of graphics paradigm.  Provides new statistics to locate and tag
+peaks and valleys in 2D plots, a statistics to add a label with the equation
+of a polynomial fitted with lm(), or R^2 or adjusted R^2 or information
+criteria for any model fitted with function lm().  Additional statistics give
+access to functions in package 'broom'.  Provides a function for flexibly
+converting time series to data frames suitable for plotting with 
+@code{ggplot()}.  In addition provides statistics and ggplot geometries useful
+for diagnosing what data are passed to compute_group() and 
+@code{compute_panel()} functions and to geometries.")
+   (license license:gpl2+)))
+
+(define-public r-repr
+  (package
+   (name "r-repr")
+   (version "0.12.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "repr" version))
+            (sha256
+             (base32
+              "1p6a2ryb5iaf4i6nn1iav26bh83wmvncwpk25hyrzd5rxich1bq3"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/repr")
+   (synopsis "Serializable representations")
+   (description "String and binary representations of objects for several
+formats/mime types.")
+   (license license:gpl3)))
+
+(define-public r-irdisplay
+  (package
+  (name "r-irdisplay")
+  (version "0.4.4")
+  (source (origin
+           (method url-fetch)
+           (uri (cran-uri "IRdisplay" version))
+           (sha256
+            (base32
+             "19l4flvik8zw2pany8dpjbrh0bji6bag6pmclgwqnq80532hnfp8"))))
+  (properties
+   `((upstream-name . "IRdisplay")))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-repr" ,r-repr)))
+  (home-page "http://cran.r-project.org/web/packages/IRdisplay")
+  (synopsis "Jupyter display machinery")
+  (description "An interface to the rich display capabilities of 'Jupyter'
+front-ends.  Designed to be used from a running 'IRkernel'")
+  (license license:expat)))
+
+(define-public r-pbdzmq
+  (package
+   (name "r-pbdzmq")
+   (version "0.3-2")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "pbdZMQ" version))
+            (sha256
+             (base32
+              "0dzwwffinn9bbb73dmmh88c374f9057bl0a8dq97fbv63j4a5qpc"))))
+   (properties `((upstream-name . "pbdZMQ")))
+   (build-system r-build-system)
+   (inputs
+    `(("zlib" ,zlib)
+      ("zeromq" ,zeromq)))
+    (native-inputs
+     `(("pkg-config" ,pkg-config)))
+   (home-page "http://r-pbd.org/")
+   (synopsis
+    "Programming with Big Data -- Interface to 'ZeroMQ'")
+   (description
+    "@code{ZeroMQ} is a well-known library for high-performance asynchronous
+messaging in scalable, distributed applications.  This package provides high
+level R wrapper functions to easily utilize 'ZeroMQ'.  We mainly focus on
+interactive client/server programming frameworks.")
+   (license license:gpl3)))
+
+(define-public irkernel
+  (package
+   (name "irkernel")
+   (version "0.8.11")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/IRkernel/IRkernel/archive/"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32
+              "0qf4ra3r772xq7l52nch51d4alywbp946y3hmdzpzrysbr1prs8m"))))
+   (build-system r-build-system)
+   ;; TODO: Registering the kernel so that jupyter automatically detects it doesn't work.
+   ;; (arguments
+   ;;  `(#:phases
+   ;;    (modify-phases %standard-phases
+   ;;      (add-after 'install 'register-kernel
+   ;;        (lambda _
+   ;;          (with-output-to-file "register-kernel.R"
+   ;;            (lambda _
+   ;;              (format #t "library(\"IRkernel\")~%IRkernel::installspec(user = FALSE)~%")))
+   ;;          (system "Rscript register-kernel.R"))))))
+   (inputs
+    `(("python-jupyter-client" ,python-jupyter-client)))
+   (propagated-inputs
+    `(("r-repr" ,r-repr)
+      ("r-evaluate" ,r-evaluate)
+      ("r-irdisplay" ,r-irdisplay)
+      ("r-pbdzmq" ,r-pbdzmq)
+      ("r-crayon" ,r-crayon)
+      ("r-jsonlite" ,r-jsonlite)
+      ("r-uuid" ,r-uuid)
+      ("r-digest" ,r-digest)))
+   (home-page "https://github.com/IRkernel/IRkernel")
+   (synopsis "Native R kernel for Jupyter notebooks")
+   (description "The R kernel for the Jupyter environment executes R code which
+the front-end submits to the kernel via the network.")
+   (license license:expat)))
+
+(define-public r-ggsignif
+  (package
+  (name "r-ggsignif")
+  (version "0.4.0")
+  (source (origin
+           (method url-fetch)
+           (uri (cran-uri "ggsignif" version))
+           (sha256
+            (base32
+             "1rn58d7pb3axk6chiihryykrzw76adaa2yiafq4d0j6qbhax78f7"))))
+  (build-system r-build-system)
+  (propagated-inputs `(("r-ggplot2" ,r-ggplot2)))
+  (home-page "https://github.com/const-ae/ggsignif")
+  (synopsis "Significance brackets for ggplot2")
+  (description
+    "Enrich your ggplots with group-wise comparisons.  This package provides an
+easy way to indicate if two groups are significantly different.  Commonly this
+is shown by a bracket on top connecting the groups of interest which itself is
+annotated with the level of significance (NS, *, **, ***).  The package provides
+a single layer (geom_signif()) that takes the groups for comparison and the test
+(@code{t.test()}, @code{wilcox.text()} etc.) as arguments and adds the
+annotation to the plot.")
+  (license license:gpl3)))
