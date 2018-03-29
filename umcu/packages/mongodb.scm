@@ -29,25 +29,6 @@
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python))
 
-(define-public python-typing
-  (package
-    (name "python-typing")
-    (version "3.6.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "typing" version))
-       (sha256
-        (base32 "1kns1s6j5l1mx190cy7mf9wm0fpnbr5hvmfw2d14drrq08kfqvf3"))))
-    (build-system python-build-system)
-    (home-page "https://docs.python.org/3/library/typing.html")
-    (synopsis "Type Hints for Python")
-    (description "Type Hints for Python")
-    (license #f)))
-
-(define-public python2-typing
-  (package-with-python2 python-typing))
-
 (define-public mongodb
   (package
     (name "mongodb")
