@@ -8,18 +8,19 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages maths)
-  #:use-module (gnu packages python))
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages time))
 
 (define-public fast5
   (package
    (name "fast5")
-   (version "0.6.0")
+   (version "0.6.5")
    (source (origin
             (method url-fetch)
             (uri (string-append "https://github.com/mateidavid/fast5/archive/v"
                                 version ".tar.gz"))
             (sha256
-             (base32 "1sdp27nr7kkzkl14bdcpgyhi8wkkrfl4m7j7nn2gjqpgzm44c5rs"))))
+             (base32 "06pfg2ldra5g6d14xrxprn35y994w44g0zik2d7npddd0wncxcgq"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
@@ -38,16 +39,30 @@
           (lambda* (#:key inputs outputs #:allow-other-keys)
             (let* ((out (assoc-ref outputs "out"))
                    (python (assoc-ref inputs "python"))
-                   (site-dir (string-append out "/lib/python2.7"
+                   (site-dir (string-append out "/lib/python3.6"
                                             "/site-packages/fast5/"))
                    (bin (string-append out "/bin"))
                    (include (string-append out "/include")))
               (mkdir-p site-dir)
               (mkdir-p bin)
               (install-file "python/fast5/fast5.pyx" site-dir)
-              (install-file "python/fast5/fast5.cpp" site-dir)
               (install-file "python/bin/f5ls" bin)
               (install-file "python/bin/f5pack" bin)
+
+              ;; Patch /usr/bin/env.
+              (substitute* (list (string-append bin "/f5ls")
+                                 (string-append bin "/f5pack"))
+                (("/usr/bin/env python") (string-append python "/bin/python3")))
+
+              ;; Wrap the environments of main programs so that
+              ;; these work as expected.
+              (wrap-program (string-append bin "/f5ls")
+                `("PYTHONPATH" ":" prefix (,bin ,(getenv "PYTHONPATH")
+                                                ,site-dir)))
+              (wrap-program (string-append bin "/f5pack")
+                `("PYTHONPATH" ":" prefix (,bin ,(getenv "PYTHONPATH")
+                                                ,site-dir)))
+
               (for-each (lambda (file)
                           (install-file file include))
                         (find-files "src")))
@@ -55,11 +70,13 @@
    (native-inputs
     `(("which" ,which)))
    (inputs
-    `(("python" ,python-2.7)
-      ("python2-setuptools" ,python2-setuptools)
-      ("python2-cython" ,python2-cython)
+    `(("python" ,python-3.6)
+      ("python-setuptools" ,python-setuptools)
+      ("python-cython" ,python-cython)
       ("hdf5" ,hdf5)
       ("gcc" ,gcc-6)))
+   (propagated-inputs
+    `(("python-dateutil" ,python-dateutil)))
    (home-page "https://github.com/mateidavid/fast5")
    (synopsis "Library for accessing Oxford Nanopore sequencing data")
    (description "This package provides a lightweight C++ library for accessing
