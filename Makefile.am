@@ -50,7 +50,6 @@ SOURCES =                                       \
   umcu/packages/mongodb.scm                     \
   umcu/packages/mysql.scm                       \
   umcu/packages/nanosvc.scm                     \
-  umcu/packages/neo4j.scm                       \
   umcu/packages/pathseq.scm                     \
   umcu/packages/pbgzip.scm                      \
   umcu/packages/perl.scm                        \
