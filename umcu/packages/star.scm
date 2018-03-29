@@ -35,7 +35,7 @@
   #:use-module (gnu packages perl)
   #:use-module (gnu packages vim)
   #:use-module (gnu packages web)
-  #:use-module (umcu packages circos))
+  #:use-module (umcu packages perl))
 
 (define-public star-2.4.2a
   (package
@@ -107,78 +107,6 @@ chimeric (fusion) transcripts, and is also capable of mapping full-length RNA
 sequences.")
     ;; STAR is licensed under GPLv3 or later; htslib is MIT-licensed.
     (license license:gpl3+)))
-
-(define-public perl-pathtools
-  (package
-   (name "perl-pathtools")
-   (version "3.62")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append "mirror://cpan/authors/id/R/RJ/RJBS/PathTools-"
-                         version ".tar.gz"))
-     (sha256
-      (base32 "1lmlqzqmzhjvcb83gk1hcqy7wi3fa05gi49kl1xl6wc8yl90wd9n"))))
-   (build-system perl-build-system)
-   (arguments '(#:tests? #f))
-   (inputs
-    `(("coreutils" ,coreutils)))
-   (home-page "http://search.cpan.org/dist/PathTools")
-   (synopsis "Get pathname of current working directory")
-   (description "")
-   (license #f)))
-
-(define-public perl-threads
-  (package
-   (name "perl-threads")
-   (version "2.15")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append "mirror://cpan/authors/id/J/JD/JDHEDDEN/threads-"
-                         version ".tar.gz"))
-     (sha256
-      (base32 "1nwh6yvb5zm1m1515hrry200jsfdw640a6gj1rzpqckpp3wxbjcq"))))
-   (build-system perl-build-system)
-   (home-page "http://search.cpan.org/dist/threads")
-   (synopsis "Perl interpreter-based threads")
-   (description "")
-   (license (package-license perl))))
-
-(define-public perl-storable
-  (package
-   (name "perl-storable")
-   (version "2.51")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append "mirror://cpan/authors/id/A/AM/AMS/Storable-"
-           version ".tar.gz"))
-     (sha256
-      (base32 "1gphq8yhqzrwwlx2i5a8914ccw41ywmpl7gc648s5frb269bfrm5"))))
-   (build-system perl-build-system)
-   (home-page "http://search.cpan.org/dist/Storable")
-   (synopsis "Persistence for Perl data structures")
-   (description "")
-   (license #f)))
-
-(define perl-set-intervaltree
-  (package
-   (name "perl-set-intervaltree")
-   (version "0.10")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append
-           "mirror://cpan/authors/id/B/BE/BENBOOTH/Set-IntervalTree-"
-           version ".tar.gz"))
-     (sha256
-      (base32 "1g1yam3fwl11wvy489yhhfzrfdlqaj1dh7pgks3myjq71p7rrgg3"))))
-   (build-system perl-build-system)
-   (home-page "http://search.cpan.org/dist/Set-IntervalTree")
-   (synopsis "Perform range-based lookups on sets of ranges.")
-   (description "")
-   (license #f)))
 
 (define-public star-fusion
   (package

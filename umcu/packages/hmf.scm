@@ -65,6 +65,7 @@
   #:use-module (umcu packages manta)
   #:use-module (umcu packages mysql)
   #:use-module (umcu packages pbgzip)
+  #:use-module (umcu packages perl)
   #:use-module (umcu packages picard)
   #:use-module (umcu packages samtools)
   #:use-module (umcu packages snpeff)
