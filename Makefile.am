@@ -31,7 +31,6 @@ SOURCES =                                       \
   umcu/packages/contra.scm                      \
   umcu/packages/databases.scm                   \
   umcu/packages/datasets.scm                    \
-  umcu/packages/delly.scm                       \
   umcu/packages/fast5.scm                       \
   umcu/packages/fastqc.scm                      \
   umcu/packages/freebayes.scm                   \
@@ -43,7 +42,6 @@ SOURCES =                                       \
   umcu/packages/grid-engine.scm                 \
   umcu/packages/guix.scm                        \
   umcu/packages/hmf.scm                         \
-  umcu/packages/iap.scm                         \
   umcu/packages/igvtools.scm                    \
   umcu/packages/king.scm                        \
   umcu/packages/manta.scm                       \
