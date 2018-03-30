@@ -71,28 +71,6 @@
 utility operations.")
   (license license:gpl3)))
 
-(define-public r-pastecs
-  (package
-    (name "r-pastecs")
-    (version "1.3-18")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "pastecs" version))
-              (sha256
-               (base32
-                "0ixlnc1psgqgm71bsf5z5j65lvr92ghpsk9f1ifm94dzjhi6d22i"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-boot" ,r-boot)))
-    (home-page "http://www.sciviews.org/pastecs")
-    (synopsis "Analysis of space-time ecological series")
-    (description
-     "Regulation, decomposition and analysis of space-time series.  The
-pastecs library is a PNEC-Art4 and IFREMER initiative to bring PASSTEC 
-2000 (http://www.obs-vlfr.fr/~enseigne/anado/passtec/passtec.htm)
-functionalities to R.")
-    (license license:gpl2+)))
-
 (define-public r-gviz
   (package
     (name "r-gviz")
