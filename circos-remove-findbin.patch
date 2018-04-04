@@ -1,6 +1,6 @@
-diff -crB circos-0.69-3/bin/circos circos-0.69-3-new/bin/circos
-*** circos-0.69-3/bin/circos	2016-02-19 01:42:59.000000000 +0100
---- circos-0.69-3-new/bin/circos	2018-01-12 09:59:25.662731269 +0100
+diff -crB circos-0.69-6/bin/circos circos-0.69-6-new/bin/circos
+*** circos-0.69-6/bin/circos	2016-02-19 01:42:59.000000000 +0100
+--- circos-0.69-6-new/bin/circos	2018-01-12 09:59:25.662731269 +0100
 ***************
 *** 474,486 ****
   
@@ -17,9 +17,9 @@ diff -crB circos-0.69-3/bin/circos circos-0.69-3-new/bin/circos
   
   use Cwd;
 --- 474,482 ----
-diff -crB circos-0.69-3/lib/Circos/Colors.pm circos-0.69-3-new/lib/Circos/Colors.pm
-*** circos-0.69-3/lib/Circos/Colors.pm	2015-03-17 01:25:43.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Colors.pm	2018-01-12 10:10:39.174797379 +0100
+diff -crB circos-0.69-6/lib/Circos/Colors.pm circos-0.69-6-new/lib/Circos/Colors.pm
+*** circos-0.69-6/lib/Circos/Colors.pm	2015-03-17 01:25:43.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Colors.pm	2018-01-12 10:10:39.174797379 +0100
 ***************
 *** 49,55 ****
   
@@ -39,13 +39,13 @@ diff -crB circos-0.69-3/lib/Circos/Colors.pm circos-0.69-3-new/lib/Circos/Colors
 - use lib "$FindBin::RealBin/../lib";
 - use lib "$FindBin::RealBin/lib";
 - 
+  use POSIX qw(pow);
+
   use Circos::Configuration;
-  use Circos::Constants;
-  use Circos::Debug;
 --- 64,69 ----
-diff -crB circos-0.69-3/lib/Circos/Configuration.pm circos-0.69-3-new/lib/Circos/Configuration.pm
-*** circos-0.69-3/lib/Circos/Configuration.pm	2015-03-17 22:11:01.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Configuration.pm	2018-01-12 10:11:41.064008273 +0100
+diff -crB circos-0.69-6/lib/Circos/Configuration.pm circos-0.69-6-new/lib/Circos/Configuration.pm
+*** circos-0.69-6/lib/Circos/Configuration.pm	2015-03-17 22:11:01.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Configuration.pm	2018-01-12 10:11:41.064008273 +0100
 ***************
 *** 59,68 ****
   use Params::Validate qw(:all);
@@ -59,9 +59,9 @@ diff -crB circos-0.69-3/lib/Circos/Configuration.pm circos-0.69-3-new/lib/Circos
   use Circos::Debug;
   use Circos::Utils;
 --- 59,64 ----
-diff -crB circos-0.69-3/lib/Circos/DataPoint.pm circos-0.69-3-new/lib/Circos/DataPoint.pm
-*** circos-0.69-3/lib/Circos/DataPoint.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/DataPoint.pm	2018-01-12 10:11:54.888270731 +0100
+diff -crB circos-0.69-6/lib/Circos/DataPoint.pm circos-0.69-6-new/lib/Circos/DataPoint.pm
+*** circos-0.69-6/lib/Circos/DataPoint.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/DataPoint.pm	2018-01-12 10:11:54.888270731 +0100
 ***************
 *** 38,51 ****
   
@@ -79,9 +79,9 @@ diff -crB circos-0.69-3/lib/Circos/DataPoint.pm circos-0.69-3-new/lib/Circos/Dat
   use Circos::Constants;
   use Circos::Debug;
 --- 38,46 ----
-diff -crB circos-0.69-3/lib/Circos/Debug.pm circos-0.69-3-new/lib/Circos/Debug.pm
-*** circos-0.69-3/lib/Circos/Debug.pm	2015-03-24 01:26:13.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Debug.pm	2018-01-12 10:12:07.192502006 +0100
+diff -crB circos-0.69-6/lib/Circos/Debug.pm circos-0.69-6-new/lib/Circos/Debug.pm
+*** circos-0.69-6/lib/Circos/Debug.pm	2015-03-24 01:26:13.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Debug.pm	2018-01-12 10:12:07.192502006 +0100
 ***************
 *** 63,75 ****
   
@@ -98,9 +98,9 @@ diff -crB circos-0.69-3/lib/Circos/Debug.pm circos-0.69-3-new/lib/Circos/Debug.p
   use Circos::Constants;
   
 --- 63,71 ----
-diff -crB circos-0.69-3/lib/Circos/Division.pm circos-0.69-3-new/lib/Circos/Division.pm
-*** circos-0.69-3/lib/Circos/Division.pm	2015-11-17 00:55:58.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Division.pm	2018-01-12 10:12:21.544769084 +0100
+diff -crB circos-0.69-6/lib/Circos/Division.pm circos-0.69-6-new/lib/Circos/Division.pm
+*** circos-0.69-6/lib/Circos/Division.pm	2015-11-17 00:55:58.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Division.pm	2018-01-12 10:12:21.544769084 +0100
 ***************
 *** 37,52 ****
   our @EXPORT = qw();
@@ -120,9 +120,9 @@ diff -crB circos-0.69-3/lib/Circos/Division.pm circos-0.69-3-new/lib/Circos/Divi
   use Circos::Constants;
   use Circos::Debug;
 --- 37,47 ----
-diff -crB circos-0.69-3/lib/Circos/Error.pm circos-0.69-3-new/lib/Circos/Error.pm
-*** circos-0.69-3/lib/Circos/Error.pm	2015-03-17 22:46:36.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Error.pm	2018-01-12 10:12:32.472970548 +0100
+diff -crB circos-0.69-6/lib/Circos/Error.pm circos-0.69-6-new/lib/Circos/Error.pm
+*** circos-0.69-6/lib/Circos/Error.pm	2015-03-17 22:46:36.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Error.pm	2018-01-12 10:12:32.472970548 +0100
 ***************
 *** 44,53 ****
   use Params::Validate;
@@ -136,9 +136,9 @@ diff -crB circos-0.69-3/lib/Circos/Error.pm circos-0.69-3-new/lib/Circos/Error.p
   use Circos::Debug;
   use Circos::Utils;
 --- 44,49 ----
-diff -crB circos-0.69-3/lib/Circos/Expression.pm circos-0.69-3-new/lib/Circos/Expression.pm
-*** circos-0.69-3/lib/Circos/Expression.pm	2015-11-30 23:49:36.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Expression.pm	2018-01-12 10:12:41.953144015 +0100
+diff -crB circos-0.69-6/lib/Circos/Expression.pm circos-0.69-6-new/lib/Circos/Expression.pm
+*** circos-0.69-6/lib/Circos/Expression.pm	2015-11-30 23:49:36.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Expression.pm	2018-01-12 10:12:41.953144015 +0100
 ***************
 *** 39,55 ****
   
@@ -159,9 +159,9 @@ diff -crB circos-0.69-3/lib/Circos/Expression.pm circos-0.69-3-new/lib/Circos/Ex
   use Circos::Constants;
   use Circos::Debug;
 --- 39,50 ----
-diff -crB circos-0.69-3/lib/Circos/Font.pm circos-0.69-3-new/lib/Circos/Font.pm
-*** circos-0.69-3/lib/Circos/Font.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Font.pm	2018-01-12 10:12:51.657320357 +0100
+diff -crB circos-0.69-6/lib/Circos/Font.pm circos-0.69-6-new/lib/Circos/Font.pm
+*** circos-0.69-6/lib/Circos/Font.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Font.pm	2018-01-12 10:12:51.657320357 +0100
 ***************
 *** 45,59 ****
   );
@@ -180,9 +180,9 @@ diff -crB circos-0.69-3/lib/Circos/Font.pm circos-0.69-3-new/lib/Circos/Font.pm
   use Circos::Constants;
   use Circos::Colors;
 --- 45,54 ----
-diff -crB circos-0.69-3/lib/Circos/Geometry.pm circos-0.69-3-new/lib/Circos/Geometry.pm
-*** circos-0.69-3/lib/Circos/Geometry.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Geometry.pm	2018-01-12 10:12:58.961452282 +0100
+diff -crB circos-0.69-6/lib/Circos/Geometry.pm circos-0.69-6-new/lib/Circos/Geometry.pm
+*** circos-0.69-6/lib/Circos/Geometry.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Geometry.pm	2018-01-12 10:12:58.961452282 +0100
 ***************
 *** 41,54 ****
   );
@@ -200,9 +200,9 @@ diff -crB circos-0.69-3/lib/Circos/Geometry.pm circos-0.69-3-new/lib/Circos/Geom
   use Circos::Constants;
   use Circos::Debug;
 --- 41,49 ----
-diff -crB circos-0.69-3/lib/Circos/Heatmap.pm circos-0.69-3-new/lib/Circos/Heatmap.pm
-*** circos-0.69-3/lib/Circos/Heatmap.pm	2016-03-30 22:08:12.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Heatmap.pm	2018-01-12 10:13:09.953649538 +0100
+diff -crB circos-0.69-6/lib/Circos/Heatmap.pm circos-0.69-6-new/lib/Circos/Heatmap.pm
+*** circos-0.69-6/lib/Circos/Heatmap.pm	2016-03-30 22:08:12.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Heatmap.pm	2018-01-12 10:13:09.953649538 +0100
 ***************
 *** 24,40 ****
   use Carp qw( carp confess croak );
@@ -223,9 +223,9 @@ diff -crB circos-0.69-3/lib/Circos/Heatmap.pm circos-0.69-3-new/lib/Circos/Heatm
   use Circos::Constants;
   use Circos::Colors;
 --- 24,35 ----
-diff -crB circos-0.69-3/lib/Circos/Ideogram.pm circos-0.69-3-new/lib/Circos/Ideogram.pm
-*** circos-0.69-3/lib/Circos/Ideogram.pm	2015-11-17 01:18:53.000000000 +0100
---- circos-0.69-3-new/lib/Circos/Ideogram.pm	2018-01-12 10:13:22.045864798 +0100
+diff -crB circos-0.69-6/lib/Circos/Ideogram.pm circos-0.69-6-new/lib/Circos/Ideogram.pm
+*** circos-0.69-6/lib/Circos/Ideogram.pm	2015-11-17 01:18:53.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/Ideogram.pm	2018-01-12 10:13:22.045864798 +0100
 ***************
 *** 40,46 ****
   
@@ -249,9 +249,9 @@ diff -crB circos-0.69-3/lib/Circos/Ideogram.pm circos-0.69-3-new/lib/Circos/Ideo
   use Circos::Constants;
   use Circos::Debug;
 --- 49,54 ----
-diff -crB circos-0.69-3/lib/Circos/Image.pm circos-0.69-3-new/lib/Circos/Image.pm
-*** circos-0.69-3/lib/Circos/Image.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Image.pm	2018-01-12 10:13:31.094024696 +0100
+diff -crB circos-0.69-6/lib/Circos/Image.pm circos-0.69-6-new/lib/Circos/Image.pm
+*** circos-0.69-6/lib/Circos/Image.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Image.pm	2018-01-12 10:13:31.094024696 +0100
 ***************
 *** 45,58 ****
   );
@@ -269,9 +269,9 @@ diff -crB circos-0.69-3/lib/Circos/Image.pm circos-0.69-3-new/lib/Circos/Image.p
   use Circos::Colors;
   use Circos::Constants;
 --- 45,53 ----
-diff -crB circos-0.69-3/lib/Circos/IO.pm circos-0.69-3-new/lib/Circos/IO.pm
-*** circos-0.69-3/lib/Circos/IO.pm	2015-12-03 05:51:11.000000000 +0100
---- circos-0.69-3-new/lib/Circos/IO.pm	2018-01-12 10:13:41.686210640 +0100
+diff -crB circos-0.69-6/lib/Circos/IO.pm circos-0.69-6-new/lib/Circos/IO.pm
+*** circos-0.69-6/lib/Circos/IO.pm	2015-12-03 05:51:11.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/IO.pm	2018-01-12 10:13:41.686210640 +0100
 ***************
 *** 39,45 ****
   use Carp qw( carp confess croak );
@@ -295,9 +295,9 @@ diff -crB circos-0.69-3/lib/Circos/IO.pm circos-0.69-3-new/lib/Circos/IO.pm
   use Circos::Colors;
   use Circos::Configuration;
 --- 48,53 ----
-diff -crB circos-0.69-3/lib/Circos/Karyotype.pm circos-0.69-3-new/lib/Circos/Karyotype.pm
-*** circos-0.69-3/lib/Circos/Karyotype.pm	2014-09-09 00:15:58.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Karyotype.pm	2018-01-12 10:13:53.318413330 +0100
+diff -crB circos-0.69-6/lib/Circos/Karyotype.pm circos-0.69-6-new/lib/Circos/Karyotype.pm
+*** circos-0.69-6/lib/Circos/Karyotype.pm	2014-09-09 00:15:58.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Karyotype.pm	2018-01-12 10:13:53.318413330 +0100
 ***************
 *** 38,44 ****
   
@@ -321,9 +321,9 @@ diff -crB circos-0.69-3/lib/Circos/Karyotype.pm circos-0.69-3-new/lib/Circos/Kar
   use Circos::Constants;
   use Circos::Debug;
 --- 47,52 ----
-diff -crB circos-0.69-3/lib/Circos/PNG.pm circos-0.69-3-new/lib/Circos/PNG.pm
-*** circos-0.69-3/lib/Circos/PNG.pm	2014-09-17 05:33:06.000000000 +0200
---- circos-0.69-3-new/lib/Circos/PNG.pm	2018-01-12 10:14:31.011059637 +0100
+diff -crB circos-0.69-6/lib/Circos/PNG.pm circos-0.69-6-new/lib/Circos/PNG.pm
+*** circos-0.69-6/lib/Circos/PNG.pm	2014-09-17 05:33:06.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/PNG.pm	2018-01-12 10:14:31.011059637 +0100
 ***************
 *** 37,51 ****
   our @EXPORT = qw();
@@ -342,9 +342,9 @@ diff -crB circos-0.69-3/lib/Circos/PNG.pm circos-0.69-3-new/lib/Circos/PNG.pm
   use Circos::Colors;
   use Circos::Constants;
 --- 37,46 ----
-diff -crB circos-0.69-3/lib/Circos/Rule.pm circos-0.69-3-new/lib/Circos/Rule.pm
-*** circos-0.69-3/lib/Circos/Rule.pm	2014-10-02 01:14:25.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Rule.pm	2018-01-12 10:14:38.195181067 +0100
+diff -crB circos-0.69-6/lib/Circos/Rule.pm circos-0.69-6-new/lib/Circos/Rule.pm
+*** circos-0.69-6/lib/Circos/Rule.pm	2014-10-02 01:14:25.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Rule.pm	2018-01-12 10:14:38.195181067 +0100
 ***************
 *** 38,51 ****
   
@@ -362,9 +362,9 @@ diff -crB circos-0.69-3/lib/Circos/Rule.pm circos-0.69-3-new/lib/Circos/Rule.pm
   use Circos::Constants;
   use Circos::DataPoint;
 --- 38,46 ----
-diff -crB circos-0.69-3/lib/Circos/SVG.pm circos-0.69-3-new/lib/Circos/SVG.pm
-*** circos-0.69-3/lib/Circos/SVG.pm	2015-11-30 23:23:52.000000000 +0100
---- circos-0.69-3-new/lib/Circos/SVG.pm	2018-01-12 10:14:47.803342631 +0100
+diff -crB circos-0.69-6/lib/Circos/SVG.pm circos-0.69-6-new/lib/Circos/SVG.pm
+*** circos-0.69-6/lib/Circos/SVG.pm	2015-11-30 23:23:52.000000000 +0100
+--- circos-0.69-6-new/lib/Circos/SVG.pm	2018-01-12 10:14:47.803342631 +0100
 ***************
 *** 26,39 ****
   							 );
@@ -382,9 +382,9 @@ diff -crB circos-0.69-3/lib/Circos/SVG.pm circos-0.69-3-new/lib/Circos/SVG.pm
   use Circos::Colors;
   use Circos::Constants;
 --- 26,34 ----
-diff -crB circos-0.69-3/lib/Circos/Text.pm circos-0.69-3-new/lib/Circos/Text.pm
-*** circos-0.69-3/lib/Circos/Text.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Text.pm	2018-01-12 10:14:57.083497772 +0100
+diff -crB circos-0.69-6/lib/Circos/Text.pm circos-0.69-6-new/lib/Circos/Text.pm
+*** circos-0.69-6/lib/Circos/Text.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Text.pm	2018-01-12 10:14:57.083497772 +0100
 ***************
 *** 42,55 ****
   );
@@ -402,9 +402,9 @@ diff -crB circos-0.69-3/lib/Circos/Text.pm circos-0.69-3-new/lib/Circos/Text.pm
   use Circos::Constants;
   use Circos::Colors;
 --- 42,50 ----
-diff -crB circos-0.69-3/lib/Circos/Track/Highlight.pm circos-0.69-3-new/lib/Circos/Track/Highlight.pm
-*** circos-0.69-3/lib/Circos/Track/Highlight.pm	2014-10-01 00:43:27.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Track/Highlight.pm	2018-01-12 10:15:06.795659206 +0100
+diff -crB circos-0.69-6/lib/Circos/Track/Highlight.pm circos-0.69-6-new/lib/Circos/Track/Highlight.pm
+*** circos-0.69-6/lib/Circos/Track/Highlight.pm	2014-10-01 00:43:27.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Track/Highlight.pm	2018-01-12 10:15:06.795659206 +0100
 ***************
 *** 37,50 ****
   our @EXPORT = qw();
@@ -422,9 +422,9 @@ diff -crB circos-0.69-3/lib/Circos/Track/Highlight.pm circos-0.69-3-new/lib/Circ
   use Circos::Constants;
   #use Circos::Colors;
 --- 37,45 ----
-diff -crB circos-0.69-3/lib/Circos/Track/Link.pm circos-0.69-3-new/lib/Circos/Track/Link.pm
-*** circos-0.69-3/lib/Circos/Track/Link.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Track/Link.pm	2018-01-12 10:15:17.387834198 +0100
+diff -crB circos-0.69-6/lib/Circos/Track/Link.pm circos-0.69-6-new/lib/Circos/Track/Link.pm
+*** circos-0.69-6/lib/Circos/Track/Link.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Track/Link.pm	2018-01-12 10:15:17.387834198 +0100
 ***************
 *** 37,50 ****
   our @EXPORT = qw();
@@ -442,9 +442,9 @@ diff -crB circos-0.69-3/lib/Circos/Track/Link.pm circos-0.69-3-new/lib/Circos/Tr
   use Circos::Constants;
   #use Circos::Colors;
 --- 37,45 ----
-diff -crB circos-0.69-3/lib/Circos/Track.pm circos-0.69-3-new/lib/Circos/Track.pm
-*** circos-0.69-3/lib/Circos/Track.pm	2014-09-16 05:31:46.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Track.pm	2018-01-12 10:15:29.628035063 +0100
+diff -crB circos-0.69-6/lib/Circos/Track.pm circos-0.69-6-new/lib/Circos/Track.pm
+*** circos-0.69-6/lib/Circos/Track.pm	2014-09-16 05:31:46.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Track.pm	2018-01-12 10:15:29.628035063 +0100
 ***************
 *** 41,56 ****
   
@@ -464,9 +464,9 @@ diff -crB circos-0.69-3/lib/Circos/Track.pm circos-0.69-3-new/lib/Circos/Track.p
   use Circos::Configuration; # qw(%CONF $DIMS);
   use Circos::Constants;
 --- 41,52 ----
-diff -crB circos-0.69-3/lib/Circos/Unit.pm circos-0.69-3-new/lib/Circos/Unit.pm
-*** circos-0.69-3/lib/Circos/Unit.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Unit.pm	2018-01-12 10:15:37.892169871 +0100
+diff -crB circos-0.69-6/lib/Circos/Unit.pm circos-0.69-6-new/lib/Circos/Unit.pm
+*** circos-0.69-6/lib/Circos/Unit.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Unit.pm	2018-01-12 10:15:37.892169871 +0100
 ***************
 *** 46,60 ****
   );
@@ -485,9 +485,9 @@ diff -crB circos-0.69-3/lib/Circos/Unit.pm circos-0.69-3-new/lib/Circos/Unit.pm
   use Circos::Constants;
   use Circos::Debug;
 --- 46,55 ----
-diff -crB circos-0.69-3/lib/Circos/URL.pm circos-0.69-3-new/lib/Circos/URL.pm
-*** circos-0.69-3/lib/Circos/URL.pm	2014-05-12 18:20:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/URL.pm	2018-01-12 10:15:46.092303006 +0100
+diff -crB circos-0.69-6/lib/Circos/URL.pm circos-0.69-6-new/lib/Circos/URL.pm
+*** circos-0.69-6/lib/Circos/URL.pm	2014-05-12 18:20:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/URL.pm	2018-01-12 10:15:46.092303006 +0100
 ***************
 *** 39,52 ****
   );
@@ -505,9 +505,9 @@ diff -crB circos-0.69-3/lib/Circos/URL.pm circos-0.69-3-new/lib/Circos/URL.pm
   #use Circos::Colors;
   use Circos::Constants;
 --- 39,47 ----
-diff -crB circos-0.69-3/lib/Circos/Utils.pm circos-0.69-3-new/lib/Circos/Utils.pm
-*** circos-0.69-3/lib/Circos/Utils.pm	2014-10-01 21:36:19.000000000 +0200
---- circos-0.69-3-new/lib/Circos/Utils.pm	2018-01-12 10:16:11.576712858 +0100
+diff -crB circos-0.69-6/lib/Circos/Utils.pm circos-0.69-6-new/lib/Circos/Utils.pm
+*** circos-0.69-6/lib/Circos/Utils.pm	2014-10-01 21:36:19.000000000 +0200
+--- circos-0.69-6-new/lib/Circos/Utils.pm	2018-01-12 10:16:11.576712858 +0100
 ***************
 *** 105,114 ****
   
@@ -521,9 +521,9 @@ diff -crB circos-0.69-3/lib/Circos/Utils.pm circos-0.69-3-new/lib/Circos/Utils.p
   use Circos::Debug;
   use Circos::Error;
 --- 105,110 ----
-diff -crB circos-0.69-3/lib/Circos.pm circos-0.69-3-new/lib/Circos.pm
-*** circos-0.69-3/lib/Circos.pm	2016-06-25 00:19:27.000000000 +0200
---- circos-0.69-3-new/lib/Circos.pm	2018-01-12 10:16:35.801097176 +0100
+diff -crB circos-0.69-6/lib/Circos.pm circos-0.69-6-new/lib/Circos.pm
+*** circos-0.69-6/lib/Circos.pm	2016-06-25 00:19:27.000000000 +0200
+--- circos-0.69-6-new/lib/Circos.pm	2018-01-12 10:16:35.801097176 +0100
 ***************
 *** 49,57 ****
   

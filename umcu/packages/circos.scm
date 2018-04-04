@@ -31,12 +31,12 @@
 (define-public circos
   (package
     (name "circos")
-    (version "0.69-3")
+    (version "0.69-6")
     (source (origin
               (method url-fetch)
               (uri (string-append "http://circos.ca/distribution/circos-" version ".tgz"))
               (sha256
-               (base32 "0cdf9pbp7din531lpqa9asa507jv7jnxshrwvhaqvr08rzilzn93"))
+               (base32 "0rhm554179xcini8a5ls64jh2jvm95m593caffgik4j957yrpljj"))
               (patches (list (search-patch "circos-remove-findbin.patch")))))
     (build-system gnu-build-system)
     (arguments
@@ -120,4 +120,4 @@
     (description
      "Circos is a program for the generation of publication-quality, circularly
 composited renditions of genomic data and related annotations.")
-    (license #f)))
+    (license license:gpl2+)))
