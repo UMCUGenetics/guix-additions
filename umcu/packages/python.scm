@@ -786,46 +786,47 @@ tree exploration")
     (license #f)))
 
 (define-public phylowgs
-  (package
-   (name "phylowgs")
-   (version "smchet5")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/morrislab/phylowgs/archive/"
-                  version ".tar.gz"))
-            (file-name (string-append name "-" version ".tar.gz"))
-            (sha256
-             (base32 "0c7lpn0fsrlmyfwhx6mgj0gka9lqdis945sfzhcg5kyi42y4m39a"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; No tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure)
-        (replace 'build ; These guys didn't even care to use a build system.
-          (lambda _
-            (system "g++ -o mh.o -O3 mh.cpp util.cpp $(gsl-config --cflags --libs)")))
-        (replace 'install
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (let ((out (string-append (assoc-ref outputs "out")
-                                      "/share/phylowgs")))
-              (for-each (lambda (file) (install-file file out))
-                        (find-files "." "\\.py"))
-              (install-file "mh.o" out)))))))
-   (inputs
-    `(("gsl" ,gsl)
-      ("python" ,python-2)))
-   (propagated-inputs
-    `(("python2-numpy" ,python2-numpy)
-      ("python2-scipy" ,python2-scipy)
-      ("python2-ete2" ,python2-ete2)
-      ("python2-pyvcf" ,python2-pyvcf)))
-   (native-search-paths
-     (list (search-path-specification
-            (variable "GUIX_PHYLOWGS")
-            (files (list "share/phylowgs")))))
-   (home-page "https://github.com/morrislab/phylowgs")
-   (synopsis "")
-   (description "")
-   (license license:gpl3+)))
+  (let ((commit "18636df520e483d9a4c001ee3f9b3963d75c2bbc"))
+    (package
+     (name "phylowgs")
+     (version (string-append "smchet5-" (string-take commit 9)))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/morrislab/phylowgs.git")
+                    (commit commit)))
+              (file-name (string-append name "-" version "-checkout"))
+              (sha256
+               (base32 "02p6hsnw6k8xcpzryqrpmd6m76xgpv3lkr8jixlqcj1xfz4bgyrj"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:tests? #f ; No tests.
+        #:phases
+        (modify-phases %standard-phases
+                       (delete 'configure)
+                       (replace 'build ; These guys didn't even care to use a build system.
+                                (lambda _
+                                  (system "g++ -o mh.o -O3 mh.cpp util.cpp $(gsl-config --cflags --libs)")))
+                       (replace 'install
+                                (lambda* (#:key inputs outputs #:allow-other-keys)
+                                  (let ((out (string-append (assoc-ref outputs "out")
+                                                            "/share/phylowgs")))
+                                    (for-each (lambda (file) (install-file file out))
+                                              (find-files "." "\\.py"))
+                                    (install-file "mh.o" out)))))))
+     (inputs
+      `(("gsl" ,gsl)
+        ("python" ,python-2)))
+     (propagated-inputs
+      `(("python2-numpy" ,python2-numpy)
+        ("python2-scipy" ,python2-scipy)
+        ("python2-ete2" ,python2-ete2)
+        ("python2-pyvcf" ,python2-pyvcf)))
+     (native-search-paths
+      (list (search-path-specification
+             (variable "GUIX_PHYLOWGS")
+             (files (list "share/phylowgs")))))
+     (home-page "https://github.com/morrislab/phylowgs")
+     (synopsis "")
+     (description "")
+     (license license:gpl3+))))
