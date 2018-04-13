@@ -923,14 +923,16 @@ single executable called @code{bam}.")
                    (patch2 (assoc-ref %build-inputs "patch2"))
                    (patch3 (assoc-ref %build-inputs "patch3"))
                    (patch4 (assoc-ref %build-inputs "patch4"))
-                   (patch5 (assoc-ref %build-inputs "patch5")))
+                   (patch5 (assoc-ref %build-inputs "patch5"))
+                   (patch6 (assoc-ref %build-inputs "patch6")))
                (format
                 #t
                 (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
                          (zero? (system (string-append patch-bin " -p1 < " patch2)))
                          (zero? (system (string-append patch-bin " -p1 < " patch3)))
                          (zero? (system (string-append patch-bin " -p1 < " patch4)))
-                         (zero? (system (string-append patch-bin " -p1 < " patch5))))
+                         (zero? (system (string-append patch-bin " -p1 < " patch5)))
+                         (zero? (system (string-append patch-bin " -p1 < " patch6))))
                     " Succeeded.~%"
                     " Failed.~%"))))
 
@@ -1260,7 +1262,11 @@ REPORT_STATUS	~a"
        ("patch5" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0005-Add-somatic-PON-filtering.patch"))
-                   (sha256 (base32 "1bphww76pwj1cc968c50sdar37z5mf6yf6bnz5cw6xayvm6591sb"))))))
+                   (sha256 (base32 "1bphww76pwj1cc968c50sdar37z5mf6yf6bnz5cw6xayvm6591sb"))))
+       ("patch6" ,(origin
+                   (method url-fetch)
+                   (uri (search-patch "0006-Remove-FREEC_SNPFILE-option.patch"))
+                   (sha256 (base32 "1gfb32l4hisgacx7ld40ib1fhc231m6sj7rr98am0mys3zy9lydm"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
