@@ -924,7 +924,8 @@ single executable called @code{bam}.")
                    (patch3 (assoc-ref %build-inputs "patch3"))
                    (patch4 (assoc-ref %build-inputs "patch4"))
                    (patch5 (assoc-ref %build-inputs "patch5"))
-                   (patch6 (assoc-ref %build-inputs "patch6")))
+                   (patch6 (assoc-ref %build-inputs "patch6"))
+                   (patch7 (assoc-ref %build-inputs "patch7")))
                (format
                 #t
                 (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
@@ -932,7 +933,8 @@ single executable called @code{bam}.")
                          (zero? (system (string-append patch-bin " -p1 < " patch3)))
                          (zero? (system (string-append patch-bin " -p1 < " patch4)))
                          (zero? (system (string-append patch-bin " -p1 < " patch5)))
-                         (zero? (system (string-append patch-bin " -p1 < " patch6))))
+                         (zero? (system (string-append patch-bin " -p1 < " patch6)))
+                         (zero? (system (string-append patch-bin " -p1 < " patch7))))
                     " Succeeded.~%"
                     " Failed.~%"))))
 
@@ -1266,7 +1268,11 @@ REPORT_STATUS	~a"
        ("patch6" ,(origin
                    (method url-fetch)
                    (uri (search-patch "0006-Remove-FREEC_SNPFILE-option.patch"))
-                   (sha256 (base32 "1gfb32l4hisgacx7ld40ib1fhc231m6sj7rr98am0mys3zy9lydm"))))))
+                   (sha256 (base32 "1gfb32l4hisgacx7ld40ib1fhc231m6sj7rr98am0mys3zy9lydm"))))
+       ("patch7" ,(origin
+                   (method url-fetch)
+                   (uri (search-patch "0007-Properly-detect-and-run-fragment-mode.patch"))
+                   (sha256 (base32 "04dqzk8i6khm7wnry5c8ad9cbj8w1l96ljwribjsdb5rxj36dg0a"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
