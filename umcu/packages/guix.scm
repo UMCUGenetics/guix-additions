@@ -425,7 +425,7 @@ system cache of unix and unix-like systems.")
             (uri (string-append
                   "https://www.roelj.com/guile-sparql-" version ".tar.gz"))
             (sha256
-             (base32 "1j7s0rhs42c8wbvyzmn4w7r7sggs0hs87kxrkscvz15qc9xdnl0s"))))
+             (base32 "1ajdnm1q5j87s0zmf3zzg22mx0mgkwqwch7xkrxlrzq31is4xg6b"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
