@@ -830,3 +830,22 @@ tree exploration")
      (synopsis "")
      (description "")
      (license license:gpl3+))))
+
+(define-public python-pymysql
+  (package
+   (name "python-pymysql")
+   (version "0.8.0")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (pypi-uri "PyMySQL" version))
+     (sha256
+      (base32
+       "0h0glwlahamb0d7x0v1ai4c2n7675s7nhjg410lx8xvh75k4mnij"))))
+   (build-system python-build-system)
+   (arguments `(#:tests? #f)) ; Needs a running MySQL database.
+   (home-page "https://github.com/PyMySQL/PyMySQL/")
+   (synopsis "Pure Python MySQL Driver")
+   (description "Pure Python MySQL Driver")
+   (license license:expat)))
+
