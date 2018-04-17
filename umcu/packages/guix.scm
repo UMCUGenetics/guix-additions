@@ -414,3 +414,33 @@ numbers.")
    (description "vmtouch is a tool for learning about and controlling the file
 system cache of unix and unix-like systems.")
    (license license:bsd-3)))
+
+(define-public guile-sparql
+  (package
+   (name "guile-sparql")
+   (version "0.0.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://www.roelj.com/guile-sparql-" version ".tar.gz"))
+            (sha256
+             (base32 "1j7s0rhs42c8wbvyzmn4w7r7sggs0hs87kxrkscvz15qc9xdnl0s"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:phases
+      (modify-phases %standard-phases
+       (add-before 'configure 'autoreconf
+        (lambda _
+          (system* "autoreconf" "-vfi"))))))
+   (native-inputs
+    `(("autoconf" ,autoconf)
+      ("automake" ,automake)
+      ("pkg-config" ,pkg-config)))
+   (inputs
+    `(("guile" ,guile-2.2)))
+   (home-page "https://github.com/roelj/guile-sparql")
+   (synopsis "SPARQL module for Guile")
+   (description "This package provides an interface to query SPARQL
+endpoints from Guile.")
+   (license license:gpl3+)))
