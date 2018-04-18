@@ -1528,3 +1528,31 @@ a single layer (geom_signif()) that takes the groups for comparison and the test
 (@code{t.test()}, @code{wilcox.text()} etc.) as arguments and adds the
 annotation to the plot.")
   (license license:gpl3)))
+
+(define-public r-coverageview
+  (package
+    (name "r-coverageview")
+    (version "1.16.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "CoverageView" version))
+              (sha256
+               (base32
+                "1091mxiclb3zhr48bdj7z8gi3v69l4w25cfpfbxhhp70rffn9xfr"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-s4vectors" ,r-s4vectors)
+       ("r-iranges" ,r-iranges)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-rsamtools" ,r-rsamtools)))
+    (home-page "http://bioconductor.org/packages/CoverageView")
+    (synopsis "Coverage visualization package for R")
+    (description "This package provides a framework for the visualization of
+genome coverage profiles.  It can be used for ChIP-seq experiments, but it can
+be also used for genome-wide nucleosome positioning experiments or other
+experiment types where it is important to have a framework in order to inspect
+how the coverage distributed across the genome.")
+    (license license:artistic2.0)))
+
