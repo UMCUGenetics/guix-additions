@@ -197,17 +197,17 @@ analysis package.")
    ;; MIT license.
    (license license:expat)))
 
-(define-public strelka-2.8.4
+(define-public strelka-2.9.2
   (package
    (name "strelka")
-   (version "2.8.4")
+   (version "2.9.2")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "https://github.com/Illumina/strelka/releases/download/v"
                   version "/strelka-" version ".release_src.tar.bz2"))
             (sha256
-             (base32 "1hk0fbxlxisfycfand5hyal51j6mrjq4bkcgaihplwd7gfgbhgsj"))
+             (base32 "19bq2wzlxmnv8rx112y8z0sfvgsajnd0m945njmfy9p170qjqr27"))
             (patches
              (list (search-patch "strelka2-unbundle-dependencies.patch")))))
    (build-system cmake-build-system)
@@ -246,7 +246,7 @@ analysis package.")
                 (("/usr/bin/env python")
                  (string-append (assoc-ref inputs "python") "/bin/python")))))))))
    (inputs
-    `(("boost" ,boost-1.58)
+    `(("boost" ,boost)
       ("perl" ,perl)
       ("bash" ,bash)
       ("zlib" ,zlib)
@@ -283,3 +283,5 @@ contamination in the normal sample.  A final empirical variant re-scoring step
 using random forest models trained on various call quality features has been
 added to both callers to further improve precision.")
    (license license:gpl3+)))
+
+(define-public strelka strelka-2.9.2)

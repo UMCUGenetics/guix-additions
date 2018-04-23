@@ -1,6 +1,6 @@
-diff -crB strelka-2.8.4.release_src/CMakeLists.txt strelka-2.8.4.release_patched/CMakeLists.txt
-*** strelka-2.8.4.release_src/CMakeLists.txt	2017-10-23 21:18:35.000000000 +0200
---- strelka-2.8.4.release_patched/CMakeLists.txt	2018-01-24 16:13:42.240560276 +0100
+diff -crB strelka-2.9.2.release_src-orig/CMakeLists.txt strelka-2.9.2.release_src/CMakeLists.txt
+*** strelka-2.9.2.release_src/CMakeLists.txt	2018-04-23 13:30:22.980662446 +0200
+--- strelka-2.9.2.release_src_patched/CMakeLists.txt	2018-04-23 13:30:55.776696683 +0200
 ***************
 *** 35,41 ****
   
@@ -11,9 +11,9 @@ diff -crB strelka-2.8.4.release_src/CMakeLists.txt strelka-2.8.4.release_patched
   
   # paths:
 --- 35,40 ----
-diff -crB strelka-2.8.4.release_src/src/c++/CMakeLists.txt strelka-2.8.4.release_patched/src/c++/CMakeLists.txt
-*** strelka-2.8.4.release_src/src/c++/CMakeLists.txt	2017-10-23 21:18:35.000000000 +0200
---- strelka-2.8.4.release_patched/src/c++/CMakeLists.txt	2018-01-18 16:15:51.863723178 +0100
+diff -crB strelka-2.9.2.release_src-orig/src/c++/CMakeLists.txt strelka-2.9.2.release_src/src/c++/CMakeLists.txt
+*** strelka-2.9.2.release_src/src/c++/CMakeLists.txt	2018-04-23 13:30:22.992662458 +0200
+--- strelka-2.9.2.release_src_patched/src/c++/CMakeLists.txt	2018-04-23 13:31:12.440714797 +0200
 ***************
 *** 33,39 ****
   set (THIS_CXX_EXECUTABLE_CMAKE "${THIS_MODULE_DIR}/cxxExecutable.cmake")
@@ -24,30 +24,22 @@ diff -crB strelka-2.8.4.release_src/src/c++/CMakeLists.txt strelka-2.8.4.release
   include ("${THIS_CXX_CONFIGURE_CMAKE}")
   
 --- 33,38 ----
-Only in strelka-2.8.4.release_src/src/c++/lib/alignment/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/applications/starling/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/applications/strelka/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/assembly/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/blt_common/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/blt_util/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/htsapi/test: CMakeLists.txt
-Only in strelka-2.8.4.release_src/src/c++/lib/starling_common/test: CMakeLists.txt
-diff -crB strelka-2.8.4.release_src/src/cmake/boost.cmake strelka-2.8.4.release_patched/src/cmake/boost.cmake
-*** strelka-2.8.4.release_src/src/cmake/boost.cmake	2018-01-24 14:26:42.441471836 +0100
---- strelka-2.8.4.release_patched/src/cmake/boost.cmake	2018-01-24 14:26:30.769291186 +0100
+diff -crB strelka-2.9.2.release_src-orig/src/cmake/boost.cmake strelka-2.9.2.release_src/src/cmake/boost.cmake
+*** strelka-2.9.2.release_src/src/cmake/boost.cmake	2018-04-23 13:30:23.020662487 +0200
+--- strelka-2.9.2.release_src_patched/src/cmake/boost.cmake	2018-04-23 13:31:49.424756545 +0200
 ***************
 *** 44,50 ****
       # for test, so we need two lists now:
-      set (THIS_BOOST_BUILD_COMPONENTS filesystem program_options serialization
-                                       system timer chrono test)
+      set (THIS_BOOST_BUILD_COMPONENTS date_time filesystem program_options
+                                       serialization system timer chrono test)
 !     set (Boost_USE_STATIC_LIBS ON)
       if (NOT WIN32)
           # bjam on windows ignores this setting so skip for win32:
           set (Boost_USE_MULTITHREADED OFF)
 --- 44,50 ----
       # for test, so we need two lists now:
-      set (THIS_BOOST_BUILD_COMPONENTS filesystem program_options serialization
-                                       system timer chrono test)
+      set (THIS_BOOST_BUILD_COMPONENTS date_time filesystem program_options
+                                       serialization system timer chrono test)
 !     set (Boost_USE_STATIC_LIBS OFF)
       if (NOT WIN32)
           # bjam on windows ignores this setting so skip for win32:
@@ -69,36 +61,9 @@ diff -crB strelka-2.8.4.release_src/src/cmake/boost.cmake strelka-2.8.4.release_
   endif ()
   
   set(BOOST_BOOTSTRAP_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/bootstrap/boost)
-diff -crB strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake strelka-2.8.4.release_patched/src/cmake/cxxConfigure.cmake
-*** strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake	2017-10-23 21:18:35.000000000 +0200
---- strelka-2.8.4.release_patched/src/cmake/cxxConfigure.cmake	2018-01-24 17:05:51.738582428 +0100
-***************
-*** 52,75 ****
-      message(FATAL_ERROR "Detected different C and C++ compiler ids, which could lead to link errors. Compiler id for C is ${CMAKE_C_COMPILER_ID}, but for C++ is ${CMAKE_CXX_COMPILER_ID}. Please set CC and CXX to the C and C++ front ends of the same compiler installation.")
-  endif ()
-  
-- # Support for static linking
-- # Note that this implies that all libraries must be found with the
-- # exact file name (libXXX.a or libXXX.so)
-- #if    (THIS_FORCE_STATIC_LINK)
-- #    message(STATUS "All libraries will be statically linked")
-- #    set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "-static")
-- #    set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "-static")
--     # ensure that even if cmake decides to allow for dynamic libs resolution,
--     # this gets overriden into static...
-- #    set(CMAKE_EXE_LINK_DYNAMIC_CXX_FLAGS ${CMAKE_EXE_LINK_STATIC_CXX_FLAGS})
-- #    set(THIS_LIBRARY_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
-- #    set(THIS_LIBRARY_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
--     # set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-- #else  ()
-- #    set(THIS_LIBRARY_PREFIX "")
-- #    set(THIS_LIBRARY_SUFFIX "")
-- #endif ()
-- 
-  # required support for librt to allow boost chrono
-  if (UNIX AND NOT APPLE)
-      set  (THIS_ADDITIONAL_LIB ${THIS_ADDITIONAL_LIB} rt)
---- 52,57 ----
+diff -crB strelka-2.9.2.release_src-orig/src/cmake/cxxConfigure.cmake strelka-2.9.2.release_src/src/cmake/cxxConfigure.cmake
+*** strelka-2.9.2.release_src/src/cmake/cxxConfigure.cmake	2018-04-23 13:30:23.020662487 +0200
+--- strelka-2.9.2.release_src_patched/src/cmake/cxxConfigure.cmake	2018-04-23 13:34:25.404950667 +0200
 ***************
 *** 110,119 ****
       message (STATUS "No ccache found")
@@ -109,11 +74,11 @@ diff -crB strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake strelka-2.8.4.r
 - set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
 - 
   function(get_compiler_name_version compiler_name compiler_version)
-      execute_process(COMMAND ${compiler_name} -dumpversion OUTPUT_VARIABLE this_version)
-      STRING(REGEX REPLACE "(\r?\n)+$" "" this_version "${this_version}")
---- 92,97 ----
+      # behavior of dumpversion changed in gcc 7+, so try the newer "-dumpfullversion" command first, see if it fails,
+      # and if so, go back to the old "-dumpversion" method:
+--- 110,115 ----
 ***************
-*** 199,221 ****
+*** 207,234 ****
   # set compile flags
   #
   
@@ -137,7 +102,12 @@ diff -crB strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake strelka-2.8.4.r
   
   ##
   ## set bug workarounds:
---- 177,191 ----
+  ##
+  
+  # determine version of libstdc++ library
+  if     (${CMAKE_CXX_COMPILER_ID} STREQUAL "INTEL")
+      set(STDCXX_VERSION ${gxx_compiler_version})
+--- 203,238 ----
   # set compile flags
   #
   
@@ -145,6 +115,7 @@ diff -crB strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake strelka-2.8.4.r
 + ## Add flags for non-static Boost linking.
 + ##
 + add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK -DBOOST_LOG_DYN_LINK)
++ 
   
   ##
   ## set static linking of standard libraries for binary redistribution:
@@ -153,11 +124,7 @@ diff -crB strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake strelka-2.8.4.r
   
   ##
   ## set bug workarounds:
-***************
-*** 416,421 ****
---- 386,406 ----
-  
-  append_args (CMAKE_CXX_FLAGS "${CXX_WARN_FLAGS}")
+  ##
   
 + ##
 + ## Add libraries that were unbundled.
@@ -174,12 +141,12 @@ diff -crB strelka-2.8.4.release_src/src/cmake/cxxConfigure.cmake strelka-2.8.4.r
 + append_args (CMAKE_C_FLAGS "-lssl")
 + append_args (CMAKE_C_FLAGS "-lcrypto")
 + 
-  #
-  # other customizations
-  #
-diff -crB strelka-2.8.4.release_src/src/cmake/cxxLibrary.cmake strelka-2.8.4.release_patched/src/cmake/cxxLibrary.cmake
-*** strelka-2.8.4.release_src/src/cmake/cxxLibrary.cmake	2017-10-23 21:18:35.000000000 +0200
---- strelka-2.8.4.release_patched/src/cmake/cxxLibrary.cmake	2018-01-18 16:32:26.129906721 +0100
+  # determine version of libstdc++ library
+  if     (${CMAKE_CXX_COMPILER_ID} STREQUAL "INTEL")
+      set(STDCXX_VERSION ${gxx_compiler_version})
+diff -crB strelka-2.9.2.release_src-orig/src/cmake/cxxLibrary.cmake strelka-2.9.2.release_src/src/cmake/cxxLibrary.cmake
+*** strelka-2.9.2.release_src/src/cmake/cxxLibrary.cmake	2018-04-23 13:30:23.020662487 +0200
+--- strelka-2.9.2.release_src_patched/src/cmake/cxxLibrary.cmake	2018-04-23 13:35:10.197010373 +0200
 ***************
 *** 59,76 ****
   
@@ -211,21 +178,24 @@ diff -crB strelka-2.8.4.release_src/src/cmake/cxxLibrary.cmake strelka-2.8.4.rel
       file(RELATIVE_PATH THIS_RELATIVE_LIBDIR "${THIS_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
       set_property(TARGET ${LIB_TARGET_NAME} PROPERTY FOLDER "${THIS_RELATIVE_LIBDIR}")
   endif()
-diff -crB strelka-2.8.4.release_src/src/CMakeLists.txt strelka-2.8.4.release_patched/src/CMakeLists.txt
-*** strelka-2.8.4.release_src/src/CMakeLists.txt	2017-10-23 21:18:35.000000000 +0200
---- strelka-2.8.4.release_patched/src/CMakeLists.txt	2018-01-18 16:07:13.416654479 +0100
+diff -crB strelka-2.9.2.release_src-orig/src/CMakeLists.txt strelka-2.9.2.release_src/src/CMakeLists.txt
+*** strelka-2.9.2.release_src/src/CMakeLists.txt	2018-04-23 13:30:22.992662458 +0200
+--- strelka-2.9.2.release_src_patched/src/CMakeLists.txt	2018-04-23 13:35:23.477028328 +0200
 ***************
-*** 28,39 ****
+*** 26,40 ****
   
-  # force unit tests at compile time, and set them to be more verbose than
-  # cmake's default "test" target:
+  add_subdirectory (cmake/preInstall)
+  
+- # force unit tests at compile time, and set them to be more verbose than
+- # cmake's default "test" target:
 - set(THIS_UNITTESTS "${THIS_PROJECT_NAME}_unittests")
 - set(utest_cmd ${CMAKE_CTEST_COMMAND} --force-new-ctest-process --output-on-failure)
 - add_custom_target(${THIS_UNITTESTS}
 -     ALL
 -     COMMAND ${utest_cmd}
 -     )
-  
+- 
   add_subdirectory (c++)
   add_subdirectory (python)
---- 28,33 ----
+  add_subdirectory (config)
+--- 26,31 ----
