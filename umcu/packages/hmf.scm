@@ -48,7 +48,6 @@
   #:use-module (gnu packages xml)
   #:use-module (gnu packages)
   #:use-module (umcu packages bioconductor)
-  #:use-module (umcu packages boost)
   #:use-module (umcu packages bwa)
   #:use-module (umcu packages circos)
   #:use-module (umcu packages contra)
