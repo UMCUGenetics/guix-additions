@@ -181,7 +181,7 @@ utility written in C++ implemented on top of the Xerces-C library.")
          ("libtool" ,libtool)))
       (inputs
        `(("pkg-config" ,pkg-config)
-         ("boost" ,boost-1.57)
+         ("boost" ,boost-1.58)
          ("xerces-c" ,xerces-c)
          ("xqilla" ,xqilla)
          ("curl" ,curl)
