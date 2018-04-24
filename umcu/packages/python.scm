@@ -871,3 +871,35 @@ tree exploration")
 (define-public python2-mappy
   (package-with-python2 python-mappy))
 
+(define-public python-ont-tombo
+  (package
+    (name "python-ont-tombo")
+    (version "1.2.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "ont-tombo" version))
+       (sha256
+        (base32
+         "0v3v2j98nlddjlc8l8d0ihcmkbqjphzfnlarkn33219zj3787c94"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-nose2" ,python-nose2)))
+    (propagated-inputs
+     `(("python-cython" ,python-cython)
+       ("python-future" ,python-future)
+       ("python-h5py" ,python-h5py)
+       ("python-mappy" ,python-mappy)
+       ("python-numpy" ,python-numpy)
+       ("python-scipy" ,python-scipy)
+       ("python-setuptools" ,python-setuptools)))
+    (home-page "https://github.com/nanoporetech/tombo")
+    (synopsis "Analysis of raw nanopore sequencing data.")
+    (description "Analysis of raw nanopore sequencing data.")
+    ;; In addition, some of the source code form may contain derivative works of
+    ;; nanoraw licensed under the licence from The Regents of the University of
+    ;; California, terms of which are included below.
+    (license license:mpl2.0)))
+
+(define-public python2-ont-tombo
+  (package-with-python2 python-ont-tombo))
