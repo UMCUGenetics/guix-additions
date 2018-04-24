@@ -1575,3 +1575,36 @@ The package provides functions for point generation, arc length estimation,
 degree elevation and curve fitting.")
     (license license:gpl2)))
 
+(define-public r-karyoploter
+  (package
+    (name "r-karyoploter")
+    (version "1.4.2")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "karyoploteR" version))
+              (sha256
+               (base32
+                "18g6dm6bl5qyr50gydlvq948cmvg21iyb6l33cyh7p4haajf7xaa"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-regioner" ,r-regioner)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-iranges" ,r-iranges)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-memoise" ,r-memoise)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-biovizbase" ,r-biovizbase)
+       ("r-digest" ,r-digest)
+       ("r-bezier" ,r-bezier)))
+    (home-page "http://bioconductor.org/packages/karyoploteR/")
+    (synopsis "Plot customizable linear genomes displaying arbitrary data")
+    (description "This package creates karyotype plots of arbitrary genomes and
+offers a complete set of functions to plot arbitrary data on them.  It mimicks
+many R base graphics functions coupling them with a coordinate change function
+automatically mapping the chromosome and data coordinates into the plot
+coordinates.  In addition to the provided data plotting functions, it is easy
+to add new ones.")
+    (license license:artistic2.0)))
+
