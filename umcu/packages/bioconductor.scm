@@ -1556,3 +1556,22 @@ experiment types where it is important to have a framework in order to inspect
 how the coverage distributed across the genome.")
     (license license:artistic2.0)))
 
+(define-public r-bezier
+  (package
+    (name "r-bezier")
+    (version "1.1")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "bezier" version))
+              (sha256
+               (base32
+                "1bhqf1zbshkf1x8mgqp4mkgdxk9jxi51xj6i47kqkyn9gbdzch0c"))))
+    (build-system r-build-system)
+    (home-page "http://cran.r-project.org/web/packages/bezier")
+    (synopsis "Bezier Curve and Spline Toolkit")
+    (description
+     "This package is a toolkit for working with Bezier curves and splines.
+The package provides functions for point generation, arc length estimation,
+degree elevation and curve fitting.")
+    (license license:gpl2)))
+
