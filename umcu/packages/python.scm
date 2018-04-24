@@ -849,3 +849,25 @@ tree exploration")
    (description "Pure Python MySQL Driver")
    (license license:expat)))
 
+(define-public python-mappy
+  (package
+    (name "python-mappy")
+    (version "2.10")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "mappy" version))
+       (sha256
+        (base32
+         "0cihy3lvk5q3cdg80886mq4s4khb9s8azfi2igwvx9zzy56myah1"))))
+    (build-system python-build-system)
+    (inputs
+     `(("zlib" ,zlib)))
+    (home-page "https://github.com/lh3/minimap2")
+    (synopsis "Minimap2 python binding")
+    (description "Minimap2 python binding")
+    (license license:expat)))
+
+(define-public python2-mappy
+  (package-with-python2 python-mappy))
+
