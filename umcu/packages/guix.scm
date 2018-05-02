@@ -419,13 +419,13 @@ system cache of unix and unix-like systems.")
 (define-public guile-sparql
   (package
    (name "guile-sparql")
-   (version "0.0.2")
+   (version "0.0.3")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "https://www.roelj.com/guile-sparql-" version ".tar.gz"))
             (sha256
-             (base32 "1ajdnm1q5j87s0zmf3zzg22mx0mgkwqwch7xkrxlrzq31is4xg6b"))))
+             (base32 "1nd3h25bnvh13pxgxrf517vr614znnslk2h7pzbvhhwvvzwbn7jq"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
