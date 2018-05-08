@@ -17,7 +17,7 @@
 include guile.am
 
 moddir=$(prefix)/share/guile/site/2.2
-godir=$(libdir)/guile/2.2/ccache
+godir=$(libdir)/guile/2.2/site-ccache
 
 SOURCES =                                       \
   umcu/packages/bioconductor.scm                \
