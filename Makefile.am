@@ -40,6 +40,7 @@ SOURCES =                                       \
   umcu/packages/genomes.scm                     \
   umcu/packages/github.scm                      \
   umcu/packages/grid-engine.scm                 \
+  umcu/packages/guile.scm                       \
   umcu/packages/guix.scm                        \
   umcu/packages/hmf.scm                         \
   umcu/packages/igvtools.scm                    \
