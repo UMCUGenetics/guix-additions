@@ -79,9 +79,6 @@ endpoints from Guile.")
     `(#:tests? #f ; There are no tests.
       #:phases
       (modify-phases %standard-phases
-       ;; (add-before 'configure 'autoreconf
-       ;;  (lambda _
-       ;;    (system* "autoreconf" "-vfi")))
         (add-after 'install 'wrap-executable
           (lambda* (#:key outputs #:allow-other-keys)
             (let ((out            (assoc-ref outputs "out"))
@@ -107,8 +104,7 @@ endpoints from Guile.")
       ("curl" ,curl)
       ("tar" ,tar)
       ("gzip" ,gzip)))
-   (home-page "https://github.com/roelj/guile-sparql")
-   (synopsis "SPARQL module for Guile")
-   (description "This package provides an interface to query SPARQL
-endpoints from Guile.")
+   (home-page #f)
+   (synopsis "")
+   (description "")
    (license license:gpl3+)))
