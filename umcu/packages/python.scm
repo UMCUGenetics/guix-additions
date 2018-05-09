@@ -35,6 +35,7 @@
   #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-crypto)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages rdf)
   #:use-module (gnu packages qt)
   #:use-module (umcu packages vcf-explorer))
 
@@ -903,3 +904,27 @@ tree exploration")
 
 (define-public python2-ont-tombo
   (package-with-python2 python-ont-tombo))
+
+(define-public python-sparqlwrapper
+  (package
+    (name "python-sparqlwrapper")
+    (version "1.8.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/RDFLib/sparqlwrapper/archive/"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1qdbvnh6vl5s2xa0cgg21ywwv7gscsf2xqxwj1jm7fx9ykk757kw"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+     `(("python-rdflib" ,python-rdflib)))
+    (home-page "http://rdflib.github.io/sparqlwrapper")
+    (synopsis "SPARQL Endpoint interface to Python")
+    (description "SPARQL Endpoint interface to Python")
+    (license license:w3c)))
+
+(define-public python2-sparqlwrapper
+  (package-with-python2 python-sparqlwrapper))
