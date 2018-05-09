@@ -928,3 +928,30 @@ tree exploration")
 
 (define-public python2-sparqlwrapper
   (package-with-python2 python-sparqlwrapper))
+
+(define-public python-sparqlkernel
+  (package
+    (name "python-sparqlkernel")
+    (version "1.1.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "sparqlkernel" version))
+              (sha256
+               (base32
+                "0zci9lpm3ki3lbg7rccs734lk3caamkvar5gjbr1jy5f94a76glk"))))
+    (build-system python-build-system)
+    (native-inputs
+     `(("python-traitlets" ,python-traitlets)
+       ("python-notebook" ,python-notebook)
+       ("python-html5lib" ,python-html5lib-0.9)))
+    (propagated-inputs
+     `(("python-sparqlwrapper" ,python-sparqlwrapper)
+       ("python-pygments" ,python-pygments)))
+    (home-page "https://github.com/paulovn/sparql-kernel")
+    (synopsis "Jupyter kernel for SPARQL")
+    (description "This package provides a Jupyter kernel for running SPARQL
+queries.")
+    (license license:bsd-3)))
+
+(define-public python2-sparqlkernel
+  (package-with-python2 python-sparqlkernel))
