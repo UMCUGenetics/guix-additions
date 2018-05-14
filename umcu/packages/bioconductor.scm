@@ -1608,3 +1608,20 @@ coordinates.  In addition to the provided data plotting functions, it is easy
 to add new ones.")
     (license license:artistic2.0)))
 
+(define-public r-moments
+  (package
+  (name "r-moments")
+  (version "0.14")
+  (source (origin
+           (method url-fetch)
+           (uri (cran-uri "moments" version))
+           (sha256
+            (base32
+             "0f9y58w1hxcz4bqivirx25ywlmc80gbi6dfx5cnhkpdg1pk82fra"))))
+  (build-system r-build-system)
+  (home-page "http://www.r-project.org")
+  (synopsis "Moments, cumulants, skewness, kurtosis and related tests")
+  (description "Functions to calculate: moments, Pearson's kurtosis,
+Geary's kurtosis and skewness; tests related to them (Anscombe-Glynn,
+D'Agostino, Bonett-Seier).")
+  (license license:gpl2+)))
