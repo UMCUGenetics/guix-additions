@@ -108,3 +108,45 @@ endpoints from Guile.")
    (synopsis "")
    (description "")
    (license license:gpl3+)))
+
+(define-public graph-cnv-analysis
+  (package
+   (name "graph-cnv-analysis")
+   (version "0.0.1")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/UMCUGenetics/" name "/releases/download/"
+                  version "/" name "-" version ".tar.gz"))
+            (sha256
+             (base32 "0nhm36jj17whbwxd02s1a85c7y463nv3y9gdmca7db10fi8wlsz9"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (add-after 'install 'wrap-executable
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let ((out            (assoc-ref outputs "out"))
+                  (load-path      (string-append
+                                   (assoc-ref outputs "out") "/share/guile/site/2.2:"
+                                   (getenv "GUILE_LOAD_PATH")))
+                  (compiled-path  (string-append
+                                   (assoc-ref outputs "out") "/lib/guile/2.2/site-ccache:"
+                                   (getenv "GUILE_LOAD_COMPILED_PATH"))))
+              (wrap-program (string-append out "/bin/plot-cnv-regions")
+               `("PATH" ":" = (,(getenv "PATH")))
+               `("GUILE_LOAD_PATH" ":" = (,load-path))
+               `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path))))
+            #t)))))
+   (native-inputs
+    `(("autoconf" ,autoconf)
+      ("automake" ,automake)
+      ("pkg-config" ,pkg-config)))
+   (inputs
+    `(("guile" ,guile-2.2)
+      ("guile-sparql" ,guile-sparql)))
+   (home-page "https://github.com/UMCUGenetics/graph-cnv-analysis")
+   (synopsis "")
+   (description "")
+   (license license:gpl3+)))
