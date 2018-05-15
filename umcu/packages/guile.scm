@@ -112,14 +112,14 @@ endpoints from Guile.")
 (define-public graph-cnv-analysis
   (package
    (name "graph-cnv-analysis")
-   (version "0.0.1")
+   (version "0.0.2")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "https://github.com/UMCUGenetics/" name "/releases/download/"
                   version "/" name "-" version ".tar.gz"))
             (sha256
-             (base32 "0nhm36jj17whbwxd02s1a85c7y463nv3y9gdmca7db10fi8wlsz9"))))
+             (base32 "1s4ycsj2b06gspjf3zcj0xg150kd1a29swmgalbvbnw1hbc83ni8"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
