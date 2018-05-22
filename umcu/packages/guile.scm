@@ -32,6 +32,7 @@
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages guile)
+  #:use-module (gnu packages package-management)
   #:use-module (umcu packages guix))
 
 (define-public guile-sparql
@@ -150,3 +151,54 @@ endpoints from Guile.")
    (synopsis "")
    (description "")
    (license license:gpl3+)))
+
+(define-public graphdb-hpc-tools
+  (package
+    (name "graphdb-hpc-tools")
+    (version "0.0.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/UMCUGenetics/graphdb-hpc-tools/"
+                    "archive/" version ".tar.gz"))
+              (file-name (string-append name "-" version ".tar.gz"))
+              (sha256
+               (base32
+                "18rhjpmvqvjpliagh6r7v7vvyp67x8975ww8npq7myy391k57g60"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f ; There are no tests.
+       #:phases
+       (modify-phases %standard-phases
+         (add-before 'configure 'autoreconf
+           (lambda _
+             (system "autoreconf -vif")))
+         (delete 'build)
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+               (mkdir-p bin)
+               (system "ls -lh bin/")
+               (install-file "bin/run-database" bin))))
+         (add-after 'install 'wrap-executable
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((out            (assoc-ref outputs "out"))
+                   (load-path      (getenv "GUILE_LOAD_PATH"))
+                   (compiled-path  (getenv "GUILE_LOAD_COMPILED_PATH")))
+               (wrap-program (string-append out "/bin/run-database")
+                 `("GUILE_LOAD_PATH" ":" = (,load-path))
+                 `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path))))
+             #t)))))
+    (native-inputs
+     `(("autoconf" ,autoconf)
+       ("automake" ,automake)))
+    (inputs
+     `(("guile" ,guile-2.2)))
+    (propagated-inputs
+     `(("gwl" ,gwl)
+       ("guix" ,guix)))
+    (home-page #f)
+    (synopsis "Tools for managing graph databases on Utrecht's HPC")
+    (description "This package provides management tools for running graph
+database instances on Utrecht's HPC.")
+(license license:gpl3+)))
