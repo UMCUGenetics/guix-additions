@@ -182,7 +182,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.4.5")
+    (version "1.5.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -266,10 +266,6 @@ elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] |
   ${git} -C /gnu/repositories/guix rev-parse HEAD;
   echo -n \" * UMCU additional packages:  \";
   ${git} -C /gnu/repositories/guix-additions rev-parse HEAD;
-elif [ \"$1\" == \"pull\" ]; then
-  echo \"This feature has been disabled.\";
-elif [ \"$1\" == \"gc\" ]; then
-  echo \"This feature has been disabled.\";
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
