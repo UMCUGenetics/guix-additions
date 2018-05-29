@@ -28,11 +28,15 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
-  #:use-module (gnu packages curl)
-  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages curl)
+  #:use-module (gnu packages gnupg)
   #:use-module (gnu packages guile)
   #:use-module (gnu packages package-management)
+  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages rdf)
+  #:use-module (gnu packages tex)
   #:use-module (umcu packages guix))
 
 (define-public sesame
@@ -172,3 +176,42 @@
     (description "This package provides management tools for running graph
 database instances on Utrecht's HPC.")
 (license license:gpl3+)))
+
+(define-public sparqling-svs
+  (let ((commit "dd7fa837287f24f4c49b1be66b25acc8e8a3b140"))
+    (package
+     (name "sparqling-svs")
+     (version (string-append "0.0.1-" (string-take commit 7)))
+     (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/UMCUGenetics/sparqling-svs/archive/"
+                    commit ".tar.gz"))
+              (sha256
+               (base32 "0krdmalizwdhnh2qz67bb16ckzw0271nlqh6j8aqgjbx6cx4wyqf"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:phases
+        (modify-phases %standard-phases
+          (add-before 'configure 'autoreconf
+            (lambda _ (system "autoreconf -vif"))))))
+     (native-inputs
+      `(("autoconf" ,autoconf)
+        ("automake" ,automake)
+        ("pkg-config" ,pkg-config)
+        ("texlive-tiny" ,texlive-tiny)))
+     (inputs
+      `(("guile" ,guile-2.2)
+        ("htslib" ,htslib)
+        ("libgcrypt" ,libgcrypt)
+        ("pkg-config" ,pkg-config)
+        ("raptor2" ,raptor2)
+        ("redland" ,redland)
+        ("rasqal" ,rasqal)
+        ("zlib" ,zlib)
+        ("xz" ,xz)))
+     (home-page "https://github.com/UMCUGenetics/sparqling-svs")
+     (synopsis "Tools to use SPARQL to analyze genomic structural variation")
+     (description "This package provides various tools to extract RDF triples
+from genomic data formats.")
+     (license license:gpl3+))))
