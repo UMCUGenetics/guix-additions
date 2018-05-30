@@ -199,7 +199,7 @@ database instances on Utrecht's HPC.")
       `(("autoconf" ,autoconf)
         ("automake" ,automake)
         ("pkg-config" ,pkg-config)
-        ("texlive-tiny" ,texlive-tiny)))
+        ("texlive" ,texlive)))
      (inputs
       `(("guile" ,guile-2.2)
         ("htslib" ,htslib)
