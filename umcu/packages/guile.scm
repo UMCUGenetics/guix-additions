@@ -126,6 +126,20 @@
    (description "")
    (license license:gpl3+)))
 
+(define-public daiane-analysis
+  (package (inherit graph-cnv-analysis)
+   (name "daiane-analysis")
+   (version "0.0.1")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/UMCUGenetics/" name "/releases/download/"
+                  version "/" name "-" version ".tar.gz"))
+            (sha256
+             (base32 "10r69bxhc59gkgqq5qrysdl7l5dh66lvx5yw3gph59j0jz0ja8w2"))))
+   (arguments `(#:tests? #f)) ; There are no tests.
+   (home-page "https://github.com/UMCUGenetics/daiane-analysis")))
+
 (define-public graphdb-hpc-tools
   (package
     (name "graphdb-hpc-tools")
