@@ -129,14 +129,14 @@
 (define-public daiane-analysis
   (package (inherit graph-cnv-analysis)
    (name "daiane-analysis")
-   (version "0.0.2")
+   (version "0.0.3")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "https://github.com/UMCUGenetics/" name "/releases/download/"
                   version "/" name "-" version ".tar.gz"))
             (sha256
-             (base32 "0bk3i0dm04lp7gjiz017vr17gkjilmnl4106mssnb3iqwr2ci9d3"))))
+             (base32 "1iv6lz4x9wj0dpyda2y4sp5rhz7kmfva9kh47n3w2x71ka0cxvmx"))))
    (arguments `(#:tests? #f)) ; There are no tests.
    (home-page "https://github.com/UMCUGenetics/daiane-analysis")))
 
