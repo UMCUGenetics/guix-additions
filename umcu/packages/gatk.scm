@@ -203,7 +203,23 @@ capable of taking on projects of any size.")
             (let ((out (string-append (assoc-ref %outputs "out")
                                       "/share/java/" ,name "/")))
               (mkdir-p out)
-              (install-file "GenomeAnalysisTK.jar" out)))))))))
+              (install-file "GenomeAnalysisTK.jar" out)))))))
+    (propagated-inputs
+     `(("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)
+       ("gatk-queue-bin-3.8-0" ,gatk-queue-bin-3.8-0)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "GUIX_JARPATH")
+            (files (list "share/java/user-classes")))))))
 
 (define-public gatk-bin-3.4-46
   (package (inherit gatk-bin-3.4-0)
