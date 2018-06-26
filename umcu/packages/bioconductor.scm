@@ -386,26 +386,6 @@ microarray data.  Fuctions for data input, diagnostic plots, normalization and
 quality checking.")
    (license license:lgpl2.0+)))
 
-(define-public r-cghbase
-  (package
-   (name "r-cghbase")
-   (version "1.38.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "CGHbase" version))
-            (sha256
-             (base32 "0fynvcsjdbgp69i0nxrc8ni58rhb1kx9k5r3nb91n9i8s43gjqlm"))))
-   (properties `((upstream-name . "CGHbase")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biobase" ,r-biobase)
-      ("r-marray" ,r-marray)))
-   (home-page "http://bioconductor.org/packages/CGHbase")
-   (synopsis "Base functions and classes for arrayCGH data analysis")
-   (description "This package contains functions and classes that are needed by
-arrayCGH packages.")
-   (license license:gpl2+)))
-
 (define-public r-snowfall
   (package
    (name "r-snowfall")
@@ -425,29 +405,6 @@ parallel R programs.  This package offers e.g. extended error checks, and
 additional functions.  All functions work in sequential mode, too, if no
 cluster is present or wished.  Package is also designed as connector to
 the cluster management tool sfCluster, but can also used without it.")  
-   (license license:gpl2+)))
-
-(define-public r-cghcall
-  (package
-   (name "r-cghcall")
-   (version "2.40.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "CGHcall" version))
-            (sha256
-             (base32 "11pi6awz3858yb4s0z3qf3kcmsdgp6d4aj41g4lfix1sv5amllch"))))
-   (properties `((upstream-name . "CGHcall")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biobase" ,r-biobase)
-      ("r-cghbase" ,r-cghbase)
-      ("r-impute" ,r-impute)
-      ("r-dnacopy" ,r-dnacopy)
-      ("r-snowfall" ,r-snowfall)))
-   (home-page "http://bioconductor.org/packages/CGHcall")
-   (synopsis "Base functions and classes for arrayCGH data analysis")
-   (description "This package contains functions and classes that are needed by
-arrayCGH packages.")
    (license license:gpl2+)))
 
 (define-public r-funcisnp-data
