@@ -1,0 +1,421 @@
+diff -crB IAP-2.6.1/IAP/annotateVariants.pm IAP-2.6.1-roelj/IAP/annotateVariants.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/annotateVariants.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/annotateVariants.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 13,20 ****
+  package IAP::annotateVariants;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory                                                                                                              
+  use IAP::sge;
+  
+  sub runAnnotateVariants {
+--- 13,20 ----
+  package IAP::annotateVariants;
+  
+  use strict;
+! use File::Temp;
+!                                                                                                               
+  use IAP::sge;
+  
+  sub runAnnotateVariants {
+diff -crB IAP-2.6.1/IAP/baf.pm IAP-2.6.1-roelj/IAP/baf.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/baf.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/baf.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 10,17 ****
+  package IAP::baf;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runBAF {
+--- 10,17 ----
+  package IAP::baf;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runBAF {
+diff -crB IAP-2.6.1/IAP/baseRecal.pm IAP-2.6.1-roelj/IAP/baseRecal.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/baseRecal.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/baseRecal.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 10,17 ****
+  package IAP::baseRecal;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runBaseRecalibration {
+--- 10,17 ----
+  package IAP::baseRecal;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runBaseRecalibration {
+diff -crB IAP-2.6.1/IAP/callableLoci.pm IAP-2.6.1-roelj/IAP/callableLoci.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/callableLoci.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/callableLoci.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 10,17 ****
+  package IAP::callableLoci;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runCallableLoci {
+--- 10,17 ----
+  package IAP::callableLoci;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runCallableLoci {
+diff -crB IAP-2.6.1/IAP/calling.pm IAP-2.6.1-roelj/IAP/calling.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/calling.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/calling.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 13,20 ****
+  package IAP::calling;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runVariantCalling {
+--- 13,20 ----
+  package IAP::calling;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runVariantCalling {
+diff -crB IAP-2.6.1/IAP/check.pm IAP-2.6.1-roelj/IAP/check.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/check.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/check.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 10,18 ****
+  package IAP::check;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+  use FindBin;
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runCheck {
+--- 10,18 ----
+  package IAP::check;
+  
+  use strict;
+! use File::Temp;
+  use FindBin;
+! 
+  use IAP::sge;
+  
+  sub runCheck {
+diff -crB IAP-2.6.1/IAP/copyNumber.pm IAP-2.6.1-roelj/IAP/copyNumber.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/copyNumber.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/copyNumber.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 12,20 ****
+  package IAP::copyNumber;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+  use File::Path qw(make_path);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runCopyNumberTools {
+--- 12,20 ----
+  package IAP::copyNumber;
+  
+  use strict;
+! use File::Temp;
+  use File::Path qw(make_path);
+! 
+  use IAP::sge;
+  
+  sub runCopyNumberTools {
+diff -crB IAP-2.6.1/IAP/filterVariants.pm IAP-2.6.1-roelj/IAP/filterVariants.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/filterVariants.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/filterVariants.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 11,18 ****
+  package IAP::filterVariants;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory                                                                                                              
+  use IAP::sge;
+  
+  sub runFilterVariants {
+--- 11,18 ----
+  package IAP::filterVariants;
+  
+  use strict;
+! use File::Temp;
+!                                                                                                               
+  use IAP::sge;
+  
+  sub runFilterVariants {
+diff -crB IAP-2.6.1/IAP/mapping.pm IAP-2.6.1-roelj/IAP/mapping.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/mapping.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/mapping.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 13,20 ****
+  package IAP::mapping;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runMapping {
+--- 13,20 ----
+  package IAP::mapping;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runMapping {
+diff -crB IAP-2.6.1/IAP/nipt.pm IAP-2.6.1-roelj/IAP/nipt.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/nipt.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/nipt.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 11,19 ****
+  package IAP::nipt;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+  use FindBin;
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  
+--- 11,19 ----
+  package IAP::nipt;
+  
+  use strict;
+! use File::Temp;
+  use FindBin;
+! 
+  use IAP::sge;
+  
+  
+diff -crB IAP-2.6.1/IAP/poststats.pm IAP-2.6.1-roelj/IAP/poststats.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/poststats.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/poststats.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 11,17 ****
+  package IAP::poststats;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+  use FindBin;
+  use IAP::sge;
+  
+--- 11,17 ----
+  package IAP::poststats;
+  
+  use strict;
+! use File::Temp;
+  use FindBin;
+  use IAP::sge;
+  
+diff -crB IAP-2.6.1/IAP/prestats.pm IAP-2.6.1-roelj/IAP/prestats.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/prestats.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/prestats.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 10,17 ****
+  package IAP::prestats;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runPreStats {
+--- 10,17 ----
+  package IAP::prestats;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runPreStats {
+diff -crB IAP-2.6.1/IAP/realign.pm IAP-2.6.1-roelj/IAP/realign.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/realign.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/realign.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 11,18 ****
+  package IAP::realign;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runRealignment {
+--- 11,18 ----
+  package IAP::realign;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  sub runRealignment {
+diff -crB IAP-2.6.1/IAP/somaticVariants.pm IAP-2.6.1-roelj/IAP/somaticVariants.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/somaticVariants.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/somaticVariants.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 12,20 ****
+  package IAP::somaticVariants;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+  use File::Path qw(make_path);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  ### Run and merge
+--- 12,20 ----
+  package IAP::somaticVariants;
+  
+  use strict;
+! use File::Temp;
+  use File::Path qw(make_path);
+! 
+  use IAP::sge;
+  
+  ### Run and merge
+diff -crB IAP-2.6.1/IAP/structuralVariants.pm IAP-2.6.1-roelj/IAP/structuralVariants.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/structuralVariants.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/structuralVariants.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 10,18 ****
+  package IAP::structuralVariants;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+  use File::Path qw(make_path);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  sub runStructuralVariantCallers {
+--- 10,18 ----
+  package IAP::structuralVariants;
+  
+  use strict;
+! use File::Temp;
+  use File::Path qw(make_path);
+! 
+  use IAP::sge;
+  
+  sub runStructuralVariantCallers {
+diff -crB IAP-2.6.1/IAP/vcfutils.pm IAP-2.6.1-roelj/IAP/vcfutils.pm
+*** a/lib/perl5/site_perl/5.26.1/IAP/vcfutils.pm	Wed Nov  1 08:47:08 2017
+--- b/lib/perl5/site_perl/5.26.1/IAP/vcfutils.pm	Tue Jun 26 17:52:17 2018
+***************
+*** 14,21 ****
+  package IAP::vcfutils;
+  
+  use strict;
+! use POSIX qw(tmpnam);
+! use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::sge;
+  
+  
+--- 14,21 ----
+  package IAP::vcfutils;
+  
+  use strict;
+! use File::Temp;
+! 
+  use IAP::sge;
+  
+  
+diff -crB IAP-2.6.1/illumina_pipeline.pl IAP-2.6.1-roelj/illumina_pipeline.pl
+*** a/bin/illumina_pipeline.pl	Wed Nov  1 08:47:08 2017
+--- b/bin/illumina_pipeline.pl	Tue Jun 26 17:52:25 2018
+***************
+*** 10,16 ****
+  
+  ### Load common perl modules ####
+  use strict;
+! use POSIX qw(tmpnam strftime);
+  use Getopt::Long;
+  use FindBin;
+  use File::Path qw(make_path);
+--- 10,17 ----
+  
+  ### Load common perl modules ####
+  use strict;
+! use File::Temp;
+! use POSIX qw(strftime);
+  use Getopt::Long;
+  use FindBin;
+  use File::Path qw(make_path);
+***************
+*** 19,25 ****
+  use File::Basename qw( dirname );
+  
+  ### Load pipeline modules ####
+- use lib "$FindBin::Bin"; #locates pipeline directory
+  use IAP::prestats;
+  use IAP::mapping;
+  use IAP::poststats;
+--- 20,25 ----
+diff -crB IAP-2.6.1/scripts/run_SAp42ann_on_vcf.pl IAP-2.6.1-roelj/scripts/run_SAp42ann_on_vcf.pl
+*** a/share/iap/scripts/run_SAp42ann_on_vcf.pl	Wed Nov  1 08:47:08 2017
+--- b/share/iap/scripts/run_SAp42ann_on_vcf.pl	Tue Jun 26 17:50:00 2018
+***************
+*** 1,6 ****
+  #!/usr/bin/perl -w
+  use strict;
+! use POSIX qw(tmpnam);
+  
+  
+  my $email = "i.nijman\@umcutrecht.nl";
+--- 1,6 ----
+  #!/usr/bin/perl -w
+  use strict;
+! use File::Temp;
+  
+  
+  my $email = "i.nijman\@umcutrecht.nl";
+***************
+*** 54,57 ****
+      return $jid2;
+  
+  
+! }
+\ No newline at end of file
+--- 54,57 ----
+      return $jid2;
+  
+  
+! }
