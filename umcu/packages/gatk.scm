@@ -236,7 +236,7 @@ capable of taking on projects of any size.")
              (file-name (string-append name "-" version ".tar.bz2"))
             (sha256
              (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
-      (propagated-inputs
+   (propagated-inputs
     `(("r-gsalib" ,r-gsalib)
       ("r-ggplot2" ,r-ggplot2)
       ("r-gplots" ,r-gplots)
