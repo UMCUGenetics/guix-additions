@@ -1583,7 +1583,7 @@ REPORT_STATUS	~a"
                     (method url-fetch)
                     (uri (search-patch "iap-fix-deprecated-perl-functions.patch"))
                     (sha256
-                     (base32 "02w99d96mxzh94zlqxp1x1lfipgxf645m17xqf1qqgvh1kh7z75y"))))))
+                     (base32 "1vzrjs3mfzgfg7viaqxcas41rrzmr66m135p8sr8ld22iqjpmp33"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)

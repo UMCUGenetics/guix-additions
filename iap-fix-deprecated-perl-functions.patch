@@ -653,8 +653,8 @@ diff -crB IAP-2.6.1/IAP/vcfutils.pm IAP-2.6.1-roelj/IAP/vcfutils.pm
   }
   ############
 diff -crB IAP-2.6.1/illumina_pipeline.pl IAP-2.6.1-roelj/illumina_pipeline.pl
-*** IAP-2.6.1/illumina_pipeline.pl	2017-11-01 08:47:08.000000000 +0100
---- IAP-2.6.1-roelj/illumina_pipeline.pl	2018-06-27 13:13:12.542251048 +0200
+*** a/bin/illumina_pipeline.pl	2017-11-01 08:47:08.000000000 +0100
+--- b/bin/illumina_pipeline.pl	2018-06-27 13:13:12.542251048 +0200
 ***************
 *** 10,25 ****
   
