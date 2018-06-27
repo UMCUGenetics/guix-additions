@@ -224,17 +224,30 @@ capable of taking on projects of any size.")
 (define-public gatk-bin-3.4-46
   (package (inherit gatk-bin-3.4-0)
    (name "gatk")
-   (version "3.4-46")
+   (version "3.4-46-gbc02625")
    (source (origin
              (method url-fetch)
              ;; FIXME: You need to be logged in on a web page to download
              ;; this release.  Please download the file manually and change
              ;; the path below accordingly.
-            (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/GenomeAnalysisTK-"
-                  version ".tar.bz2"))
+             (uri (string-append
+                   "https://software.broadinstitute.org/gatk/download/"
+                   "auth?package=GATK-archive&version=" version))
+             (file-name (string-append name "-" version ".tar.bz2"))
             (sha256
-             (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))))
+             (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
+      (propagated-inputs
+    `(("r-gsalib" ,r-gsalib)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-gplots" ,r-gplots)
+      ("r-reshape" ,r-reshape)
+      ("r-optparse" ,r-optparse)
+      ("r-dnacopy" ,r-dnacopy)
+      ("r-naturalsort" ,r-naturalsort)
+      ("r-dplyr" ,r-dplyr)
+      ("r-data-table" ,r-data-table)
+      ("r-hmm" ,r-hmm)
+      ("gatk-queue-bin-3.4-46" ,gatk-queue-bin-3.4-46)))))
 
 (define-public gatk-queue-bin-3.4-0
   (package
@@ -303,17 +316,19 @@ capable of taking on projects of any size.")
 (define-public gatk-queue-bin-3.4-46
   (package (inherit gatk-queue-bin-3.4-0)
    (name "gatk-queue")
-   (version "3.4-46")
+   (version "3.4-46-gbc02625")
    (source (origin
              (method url-fetch)
              ;; FIXME: You need to be logged in on a web page to download
              ;; this release.  Please download the file manually and change
              ;; the path below accordingly.
-            (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/Queue-"
-                  version ".tar.bz2"))
+             (uri (string-append
+                   "https://software.broadinstitute.org/gatk/download/"
+                   "auth?package=Queue-archive&version=" version))
+             (file-name (string-append name "-" version ".tar.bz2"))
             (sha256
-             (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))))
+             (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))
+   ))
 
 ;;
 ;; FIXME: This package builds fine, but it doesn't include the R scripts needed by
@@ -508,3 +523,55 @@ powerful processing engine and high-performance computing features make it
 capable of taking on projects of any size.")
    ;; There are additional restrictions, so it's nonfree.
    (license license:expat)))
+
+(define-public gatk-4-bin
+  (package
+   (name "gatk4")
+   (version"4.0.20")
+   (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/broadinstitute/gatk/releases/download/"
+                    version "/gatk-" version ".zip"))
+              (sha256
+               (base32
+                "1ryl5zwinac89vllxv2qni0ri26p5ybq18kcr66s8lv6v347ymbi"))))
+    (build-system gnu-build-system)
+    (arguments
+      `(#:tests? #f ; Tests are run in the install phase.
+        #:phases
+        (modify-phases %standard-phases
+          (delete 'configure) ; Nothing to configure
+          (delete 'build) ; Nothing to build
+          (replace 'install
+            (lambda _
+              (let ((out (string-append (assoc-ref %outputs "out")
+                                        "/share/java/user-classes/")))
+                (mkdir-p out)
+                (install-file "GenomeAnalysisTK.jar" out)
+                (install-file "Queue.jar" out)))))))
+    (propagated-inputs
+     `(("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "GUIX_JARPATH")
+            (files (list "share/java/user-classes")))))
+    (home-page "https://github.com/broadgsa/gatk-protected")
+    (synopsis "Package for analysis of high-throughput sequencing")
+   (description "The Genome Analysis Toolkit or GATK is a software package for
+analysis of high-throughput sequencing data, developed by the Data Science and
+Data Engineering group at the Broad Institute.  The toolkit offers a wide
+variety of tools, with a primary focus on variant discovery and genotyping as
+well as strong emphasis on data quality assurance.  Its robust architecture,
+powerful processing engine and high-performance computing features make it
+capable of taking on projects of any size.")
+   (license #f)))

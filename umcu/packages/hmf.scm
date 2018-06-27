@@ -588,6 +588,17 @@ package, @code{foo $x} actually compiles to @code{$x->foo}, and
 BAM files using @code{sambamba}.")
     (license license:expat)))
 
+(define-public exoncov-2.1.1
+  (package (inherit exoncov)
+    (version "2.1.1")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append
+                   "https://github.com/UMCUGenetics/ExonCov/archive/v"
+                   version ".tar.gz"))
+             (sha256
+              (base32 "1a22mjmfgmjs9jx2wpx87zd4vzig97mdw8m2gr99cdlmssi3rdka"))))))
+
 (define-public bammetrics
   (package
     (name "bammetrics")
@@ -1540,13 +1551,14 @@ REPORT_STATUS	~a"
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
        ("bash" ,bash)
-       ("bwa" ,bwa)
+       ("bwa" ,bwa-0.7.5a)
        ("damage-estimator" ,hmf-damage-estimator)
        ("delly" ,delly)
-       ("exoncov" ,exoncov)
+       ("exoncov" ,exoncov-2.1.1)
        ("fastqc" ,fastqc-bin-0.11.4)
        ("freec" ,freec-10.4)
-       ("gatk" ,gatk-bin-3.8-0)
+       ("gatk" ,gatk-bin-3.4-46)
+       ("gatk-queue" ,gatk-queue-bin-3.4-46)
        ("hmftools" ,hmftools)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
@@ -1571,7 +1583,7 @@ REPORT_STATUS	~a"
                     (method url-fetch)
                     (uri (search-patch "iap-fix-deprecated-perl-functions.patch"))
                     (sha256
-                     (base32 "0likcpz6w6gg6avh53ipy6rbj29d16qyvlvvma0drv63sgfm505a"))))))
+                     (base32 "02w99d96mxzh94zlqxp1x1lfipgxf645m17xqf1qqgvh1kh7z75y"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
@@ -1613,7 +1625,7 @@ REPORT_STATUS	~a"
        ("r-rsamtools" ,r-rsamtools)
        ("r" ,r)
        ("sambamba" ,sambamba-next)
-       ("samtools" ,samtools)
+       ("samtools" ,samtools-1.2)
        ("snpeff" ,snpeff-bin-4.3t)
        ("strelka" ,strelka-1.0.14)
        ("vcftools" ,vcftools)
