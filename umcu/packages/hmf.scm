@@ -1449,18 +1449,12 @@ FASTQC_PATH	~a
 PICARD_PATH	~a
 BAMMETRICS_PATH	~a
 EXONCALLCOV_PATH	~a
-DAMAGE_ESTIMATOR_PATH	~a
 
 QUEUE_PATH	~a
-QUEUE_LOW_GZIP_COMPRESSION_PATH	~a
 GATK_PATH	~a
 
 STRELKA_PATH	~a
-STRELKA_POST_PROCESS_PATH	~a
 
-AMBER_PATH	~a
-COBALT_PATH	~a
-PURPLE_PATH	~a
 CIRCOS_PATH	~a
 
 FREEC_PATH	~a
@@ -1468,7 +1462,6 @@ QDNASEQ_PATH	~a
 
 DELLY_PATH	~a
 MANTA_PATH	~a
-BPI_PATH	~a
 
 IGVTOOLS_PATH	~a
 SAMTOOLS_PATH	~a
@@ -1478,7 +1471,6 @@ KING_PATH	~a
 BIOVCF_PATH	~a
 BAMUTIL_PATH	~a
 PBGZIP_PATH	~a
-SNPEFF_PATH	~a
 VCFTOOLS_PATH	~a
 BCFTOOLS_PATH	~a
 HEALTH_CHECKER_PATH	MISSING
@@ -1487,29 +1479,21 @@ REALIGNMENT_SCALA	IndelRealignment.scala
 BASERECALIBRATION_SCALA	BaseRecalibration.scala
 CALLING_SCALA	GermlineCaller.scala
 FILTER_SCALA	GermlineFilter.scala
-
-REPORT_STATUS	~a"
+"
                          (string-append (assoc-ref %build-inputs "bwa") "/bin")
                          (string-append (assoc-ref %build-inputs "sambamba") "/bin")
                          (string-append (assoc-ref %build-inputs "fastqc") "/bin")
                          (string-append (assoc-ref %build-inputs "picard") "/share/java/picard")
                          (string-append (assoc-ref %build-inputs "bammetrics") "/bin")
                          (string-append (assoc-ref %build-inputs "exoncov") "/bin")
-                         (string-append (assoc-ref %build-inputs "damage-estimator") "/share/damage-estimator")
-                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
+                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/gatk")
                          (assoc-ref %build-inputs "strelka")
-                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "circos") "/bin")
                          (string-append (assoc-ref %build-inputs "freec") "/bin")
                          (string-append (assoc-ref %build-inputs "r-qdnaseq") "/site-library/QDNAseq")
                          (string-append (assoc-ref %build-inputs "delly") "/bin")
                          (string-append (assoc-ref %build-inputs "manta") "/bin")
-                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
                          (string-append (assoc-ref %build-inputs "igvtools") "/share/java/igvtools")
                          (string-append (assoc-ref %build-inputs "samtools") "/bin")
                          (string-append (assoc-ref %build-inputs "htslib") "/bin")
@@ -1518,11 +1502,8 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "bio-vcf") "/bin")
                          (string-append (assoc-ref %build-inputs "bamutils") "/bin")
                          (string-append (assoc-ref %build-inputs "pbgzip") "/bin")
-                         (string-append (assoc-ref %build-inputs "snpeff") "/share/java/snpeff")
                          (string-append (assoc-ref %build-inputs "vcftools") "/bin")
-                         (string-append (assoc-ref %build-inputs "bcftools") "/bin")
-                         ;; HEALTH-CHECKER
-                         (string-append (assoc-ref %build-inputs "coreutils") "/bin/true")))))
+                         (string-append (assoc-ref %build-inputs "bcftools") "/bin")))))
 
            (with-directory-excursion bin-dir
              ;; Extract the main scripts into the bin directory.
@@ -1546,20 +1527,24 @@ REPORT_STATUS	~a"
                 #t
                 (if (zero? (system (string-append patch-bin " -p1 < " patch1)))
                     " Succeeded.~%"
-                    " Failed.~%"))))))))
+                    " Failed.~%")))
+             ;; Because the command-line tools are installed in the bin/
+             ;; directory, we must adjust the location where IAP looks for
+             ;; its scripts.
+             (substitute* "bin/illumina_pipeline.pl"
+               (("dirname\\(abs_path\\(\\$0\\)\\)")
+                (string-append "\"" %output "/share/iap/\""))))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
        ("bash" ,bash)
        ("bwa" ,bwa-0.7.5a)
-       ("damage-estimator" ,hmf-damage-estimator)
        ("delly" ,delly)
        ("exoncov" ,exoncov-2.1.1)
        ("fastqc" ,fastqc-bin-0.11.4)
        ("freec" ,freec-10.4)
        ("gatk" ,gatk-bin-3.4-46)
        ("gatk-queue" ,gatk-queue-bin-3.4-46)
-       ("hmftools" ,hmftools)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
        ("igvtools" ,igvtools-bin-2.3.60)
@@ -1568,6 +1553,7 @@ REPORT_STATUS	~a"
        ("pbgzip" ,pbgzip)
        ("perl" ,perl)
        ("picard" ,picard-bin-1.141)
+       ("sambamba" ,sambamba-next)
        ("plink" ,plink)
        ("python" ,python-2)
        ("make" ,gnu-make)
@@ -1624,9 +1610,8 @@ REPORT_STATUS	~a"
        ("r-roxygen2" ,r-roxygen2)
        ("r-rsamtools" ,r-rsamtools)
        ("r" ,r)
-       ("sambamba" ,sambamba-next)
+       ;("sambamba" ,sambamba-next)
        ("samtools" ,samtools-1.2)
-       ("snpeff" ,snpeff-bin-4.3t)
        ("strelka" ,strelka-1.0.14)
        ("vcftools" ,vcftools-0.1.14)
        ("coreutils" ,coreutils)
@@ -1636,7 +1621,6 @@ REPORT_STATUS	~a"
        ("perl" ,perl)
        ("inetutils" ,inetutils)
        ("util-linux" ,util-linux)
-       ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
        ,@(package-propagated-inputs gatk-full-3.5-patched-bin)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
