@@ -1628,7 +1628,7 @@ REPORT_STATUS	~a"
        ("samtools" ,samtools-1.2)
        ("snpeff" ,snpeff-bin-4.3t)
        ("strelka" ,strelka-1.0.14)
-       ("vcftools" ,vcftools)
+       ("vcftools" ,vcftools-0.1.14)
        ("coreutils" ,coreutils)
        ("grep" ,grep-with-pcre)
        ("sed" ,sed)
