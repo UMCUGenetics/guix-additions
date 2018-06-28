@@ -1359,14 +1359,14 @@ produce meaningful genomic data from Hartwig Medical.")
 (define-public iap
   (package
     (name "iap")
-    (version "2.6.1")
+    (version "hotfix_fedor13")
     (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/UMCUGenetics/IAP/archive/v"
-                    version ".tar.gz"))
-              (sha256
-               (base32 "0blv15rvngp7236jskz6gs7a8grafyjigj1dg41dh9b6x5cis6z4"))))
+             (method url-fetch)
+             (uri (string-append
+                   "https://github.com/UMCUGenetics/IAP/archive/"
+                   version ".tar.gz"))
+             (sha256
+              (base32 "14q8v6l1l75dz06j3kalg2dg9bhg868f0qgqaya65x8zvv1lv2l1"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils)
@@ -1521,13 +1521,6 @@ FILTER_SCALA	GermlineFilter.scala
                 (string-append "my $settingsDir = \"" settings-dir "\";"))))
 
            (with-directory-excursion %output
-             (format #t "Applying patches... ")
-             (let ((patch1 (assoc-ref %build-inputs "patch1")))
-               (format
-                #t
-                (if (zero? (system (string-append patch-bin " -p1 < " patch1)))
-                    " Succeeded.~%"
-                    " Failed.~%")))
              ;; Because the command-line tools are installed in the bin/
              ;; directory, we must adjust the location where IAP looks for
              ;; its scripts.
