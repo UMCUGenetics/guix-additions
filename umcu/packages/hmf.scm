@@ -1366,7 +1366,7 @@ produce meaningful genomic data from Hartwig Medical.")
                    "https://github.com/UMCUGenetics/IAP/archive/"
                    version ".tar.gz"))
              (sha256
-              (base32 "14q8v6l1l75dz06j3kalg2dg9bhg868f0qgqaya65x8zvv1lv2l1"))))
+              (base32 "17bp05ninrrks8q0cjsyj09zg3ab4ypgwgmwi98am1rbfcvmxi7k"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils)
