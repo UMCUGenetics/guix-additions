@@ -229,3 +229,113 @@ contributing code.")
       (synopsis #f)
       (description #f)
       (license license:gpl3+))))
+
+(define-public grid-engine-core-8.1.8
+  (package (inherit grid-engine-core)
+    (version "8.1.8")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append
+                  "https:////arc.liv.ac.uk/downloads/SGE/releases/"
+                  version "/sge-" version".tar.gz"))
+            (sha256
+             (base32 "0pxk585kfs81clqa3gm3h1lfsddfd1dr4qzlr0mshgfqdh72a83c"))))
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'patch-various-stuff
+           (lambda* (#:key inputs #:allow-other-keys)
+             (substitute* "source/aimk"
+               (("/usr/bin/uname") "uname")
+               (("uname") (string-append (assoc-ref inputs "coreutils")
+                                         "/bin/uname")))
+             (substitute* "source/dist/util/arch"
+               (("/bin/uname") (string-append (assoc-ref inputs "coreutils")
+                                              "/bin/uname"))
+               (("/lib64/libc.so.6") (string-append (assoc-ref inputs "libc")
+                                                    "/lib/libc.so.6"))
+               (("awk") (string-append (assoc-ref inputs "gawk") "/bin/gawk"))
+               (("head") (string-append (assoc-ref inputs "coreutils")
+                                        "/bin/head")))
+             (substitute* "source/aimk"
+               (("= cc") (string-append "= gcc")))
+             ;(substitute* "source/configure"
+             ;  (("SHELL=") (string-append "SHELL=" (assoc-ref inputs "bash")
+             ;                             "/bin/sh #")))
+             ))
+         (replace 'configure
+           (lambda* (#:key inputs #:allow-other-keys)
+             (chdir "source")
+             (setenv "SGE_INPUT_CFLAGS"
+                     (string-append "-I" (assoc-ref inputs "openssl") "/include"))
+             (setenv "JAVA_HOME" (assoc-ref inputs "icedtea"))
+             (system "scripts/bootstrap.sh")
+             #t))
+         (replace 'build
+           (lambda _
+             (system "./aimk -only-core -no-java -no-jni")
+             #t))
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             ;; The scripts/distinst would not work, so we copy the files
+             ;; over manually.
+             (chdir "LINUXAMD64")
+             (let ((bin (string-append (assoc-ref outputs "out") "/bin"))
+                   (lib (string-append (assoc-ref outputs "out") "/lib"))
+                   (include (string-append (assoc-ref outputs "out")
+                                           "/include")))
+               (mkdir-p bin)
+               (mkdir-p lib)
+               (mkdir-p include)
+
+               ;; Binaries
+               (for-each (lambda (file)
+                           (install-file file bin))
+                         '("qacct" "qalter" "qconf" "qdel" "qevent" "qhost"
+                           "qmod" "qping" "qquota" "qrdel" "qrstat" "qrsub"
+                           "qsh" "qstat" "qsub" "sge_coshepherd" "sge_execd"
+                           "sgepasswd" "sge_qmaster" "sge_shadowd"
+                           "sge_share_mon" "sge_shepherd"))
+               (system* "ln" "--symbolic"
+                        (string-append bin "/qalter")
+                        (string-append bin "/qhold"))
+               (system* "ln" "--symbolic"
+                        (string-append bin "/qalter")
+                        (string-append bin "/qresub"))
+               (system* "ln" "--symbolic"
+                        (string-append bin "/qalter")
+                        (string-append bin "/qrls"))
+               (system* "ln" "--symbolic"
+                        (string-append bin "/qsh")
+                        (string-append bin "/qrsh"))
+               (system* "ln" "--symbolic"
+                        (string-append bin "/qstat")
+                        (string-append bin "/qselect"))
+               (system* "ln" "--symbolic"
+                        (string-append bin "/qsh")
+                        (string-append bin "/qlogin"))
+
+               ;; Libraries
+               (for-each (lambda (file)
+                           (install-file file lib))
+                         '("libdrmaa.so" "libjuti.so" "libspoolb.so"
+                           "libspoolc.so" "pam_sge_authorize.so"
+                           "pam_sge-qrsh-setup.so"))
+               (system* "ln" "--symbolic"
+                        (string-append lib "/libdrmaa.so")
+                        (string-append lib "/libdrmaa.so.1"))
+               (system* "ln" "--symbolic"
+                        (string-append lib "/libdrmaa.so")
+                        (string-append lib "/libdrmaa.so.1.0"))
+
+               ;; Headers
+               (install-file "../libs/japi/drmaa.h" include)
+               (install-file "../libs/sched/sge_pqs_api.h" include)
+
+               ;; Pkg-config file
+               (mkdir-p (string-append lib "/pkgconfig"))
+               (with-output-to-file (string-append lib "/pkgconfig/drmaa.pc")
+                 (lambda _
+                   (format #t "Name: drmaa~%Description: DRMAA interface~%Version: 8.1.9~%Requires:~%Libs: -L~a -ldrmaa~%Cflags: -I~a" lib include)))
+               #t))))))))
