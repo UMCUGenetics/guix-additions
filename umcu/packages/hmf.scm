@@ -651,7 +651,7 @@ BAM files using @code{sambamba}.")
        ("r-minimal" ,r-minimal)
        ("picard" ,picard-bin-1.141)
        ("icedtea" ,icedtea-8)
-       ("grid-engine-core" ,grid-engine-core)))
+       ("grid-engine-core" ,grid-engine-core-8.1.8)))
     (propagated-inputs
      `(("r-ggplot2" ,r-ggplot2)
        ("r-knitr" ,r-knitr)
