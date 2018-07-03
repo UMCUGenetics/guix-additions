@@ -958,16 +958,16 @@ exposing these as @code{TxDb} objects.")
 (define-public rstudio-server
   (package
    (name "rstudio-server")
-   (version "1.1.220")
+   (version "1.1.453")
    (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/rstudio/rstudio/archive/v"
-                  version ".tar.gz"))
-            (sha256
-             (base32
-              "1ialz330hlb7kl4q8c9zi2ib4jnr138lc3hdn4sbj3m2rg23747c"))
-            (file-name (string-append name "-" version ".tar.gz"))))
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/rstudio/rstudio.git")
+                   (commit (string-append "v" version))))
+             (sha256
+              (base32
+               "0caz8c0p7kgz0s524r37jycsv7clpry4k54xg02jbwzw37imag30"))
+             (file-name (string-append name "-" version "-checkout"))))
    (build-system cmake-build-system)
    (arguments
     `(#:configure-flags '("-DRSTUDIO_TARGET=Server")
@@ -1001,33 +1001,33 @@ exposing these as @code{TxDb} objects.")
                                         (install-file (string-append clang "/include") dir)
                                         #t))))
         (add-after 'unpack 'unpack-dictionaries
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "dependencies/common"
-                                      (mkdir "dictionaries")
-                                      (mkdir "pandoc") ; TODO: only to appease the cmake stuff
-                                      (zero? (system* "unzip" "-qd" "dictionaries"
-                                                      (assoc-ref inputs "dictionaries"))))))
+           (lambda* (#:key inputs #:allow-other-keys)
+             (with-directory-excursion "dependencies/common"
+               (mkdir "dictionaries")
+               (mkdir "pandoc") ; TODO: only to appease the cmake stuff
+               (zero? (system* "unzip" "-qd" "dictionaries"
+                               (assoc-ref inputs "dictionaries"))))))
         (add-after 'unpack 'unpack-mathjax
           (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "dependencies/common"
-                                      (mkdir "mathjax-26")
-                                      (zero? (system* "unzip" "-qd" "mathjax-26"
-                                                      (assoc-ref inputs "mathjax"))))))
+             (with-directory-excursion "dependencies/common"
+               (mkdir "mathjax-26")
+               (zero? (system* "unzip" "-qd" "mathjax-26"
+                               (assoc-ref inputs "mathjax"))))))
         (add-after 'unpack 'unpack-gin
           (lambda* (#:key inputs #:allow-other-keys)
             (with-directory-excursion "src/gwt"
-                                      (install-file (assoc-ref inputs "junit") "lib")
-                                      (mkdir-p "lib/gin/1.5")
-                                      (zero? (system* "unzip" "-qd" "lib/gin/1.5"
-                                                      (assoc-ref inputs "gin"))))))
+              (install-file (assoc-ref inputs "junit") "lib")
+              (mkdir-p "lib/gin/1.5")
+              (zero? (system* "unzip" "-qd" "lib/gin/1.5"
+                              (assoc-ref inputs "gin"))))))
         (add-after 'unpack 'unpack-gwt
           (lambda* (#:key inputs #:allow-other-keys)
             (with-directory-excursion "src/gwt"
-                                      (mkdir-p "lib/gwt")
-                                      (system* "unzip" "-qd" "lib/gwt"
-                                               (assoc-ref inputs "gwt"))
-                                      (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
-            #t)))))
+              (mkdir-p "lib/gwt")
+	      (system* "unzip" "-qd" "lib/gwt"
+		       (assoc-ref inputs "gwt"))
+               (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
+	    #t)))))
    (native-inputs
     `(("pkg-config" ,pkg-config)
       ("unzip" ,unzip)
@@ -1070,7 +1070,7 @@ exposing these as @code{TxDb} objects.")
       ("clang" ,clang-3.5)
       ("boost" ,boost)
       ("libuuid" ,util-linux)
-      ("pandoc" ,ghc-pandoc)
+      ("pandoc" ,ghc-pandoc-1)
       ("openssl" ,openssl)
       ("pam" ,linux-pam)
       ("zlib" ,zlib)))
@@ -1099,11 +1099,11 @@ web browser.")
                               "/bin/qmake")))
        ((#:phases phases)
         `(modify-phases ,phases
-                        (add-after 'unpack 'relax-qt-version
-                                   (lambda _
-                                     (substitute* "src/cpp/desktop/CMakeLists.txt"
-                                                  (("5\\.4") "5.7"))
-                                     #t))))))
+           (add-after 'unpack 'relax-qt-version
+             (lambda _
+               (substitute* "src/cpp/desktop/CMakeLists.txt"
+                 (("5\\.4") "5.7"))
+               #t))))))
     (inputs
      `(("qtbase" ,qtbase)
        ("qtdeclarative" ,qtdeclarative)
@@ -1112,6 +1112,7 @@ web browser.")
        ("qtsensors" ,qtsensors)
        ("qtxmlpatterns" ,qtxmlpatterns)
        ("qtwebkit" ,qtwebkit)
+       ("qtwebchannel" ,qtwebchannel)
        ,@(package-inputs rstudio-server)))
     (synopsis "Integrated development environment (IDE) for R (desktop version)")))
 
