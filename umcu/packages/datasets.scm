@@ -40,7 +40,7 @@
                   version "/clinvar.vcf.gz"))
             (sha256
              (base32
-              "016wj03d5i4mrks0zw2bm7ir5fp08w2h894d7zxips3z0hlzw88r"))))
+              "1ycavyj9s09gjv6cq550v9khyfn6rc1ni3alvx52fqx50kvl0ggv"))))
    (build-system trivial-build-system)
    (arguments
     `(#:modules ((guix build utils))
@@ -101,7 +101,7 @@ as efficiently and effectively as possible.")
                     "VCF/00-All.vcf.gz"))
               (sha256
                (base32
-                "023z4i4bjs3g1ma37vjphwr3by6j93mbnib6rh09g3ww4pqgl8av"))))
+                "0f2zzi0br0c1dvlx6wfgfm6f7rgp0kb19gb6p0kxzbs3n92viiqa"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils))
