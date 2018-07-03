@@ -22,6 +22,7 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system r)
   #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (gnu packages)
@@ -958,16 +959,16 @@ exposing these as @code{TxDb} objects.")
 (define-public rstudio-server
   (package
    (name "rstudio-server")
-   (version "1.1.220")
+   (version "1.1.453")
    (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/rstudio/rstudio/archive/v"
-                  version ".tar.gz"))
-            (sha256
-             (base32
-              "1ialz330hlb7kl4q8c9zi2ib4jnr138lc3hdn4sbj3m2rg23747c"))
-            (file-name (string-append name "-" version ".tar.gz"))))
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/rstudio/rstudio.git")
+                   (commit (string-append "v" version))))
+             (sha256
+              (base32
+               "0caz8c0p7kgz0s524r37jycsv7clpry4k54xg02jbwzw37imag30"))
+             (file-name (string-append name "-" version "-checkout"))))
    (build-system cmake-build-system)
    (arguments
     `(#:configure-flags '("-DRSTUDIO_TARGET=Server")
@@ -1001,33 +1002,33 @@ exposing these as @code{TxDb} objects.")
                                         (install-file (string-append clang "/include") dir)
                                         #t))))
         (add-after 'unpack 'unpack-dictionaries
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "dependencies/common"
-                                      (mkdir "dictionaries")
-                                      (mkdir "pandoc") ; TODO: only to appease the cmake stuff
-                                      (zero? (system* "unzip" "-qd" "dictionaries"
-                                                      (assoc-ref inputs "dictionaries"))))))
+           (lambda* (#:key inputs #:allow-other-keys)
+             (with-directory-excursion "dependencies/common"
+               (mkdir "dictionaries")
+               (mkdir "pandoc") ; TODO: only to appease the cmake stuff
+               (zero? (system* "unzip" "-qd" "dictionaries"
+                               (assoc-ref inputs "dictionaries"))))))
         (add-after 'unpack 'unpack-mathjax
           (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "dependencies/common"
-                                      (mkdir "mathjax-26")
-                                      (zero? (system* "unzip" "-qd" "mathjax-26"
-                                                      (assoc-ref inputs "mathjax"))))))
+             (with-directory-excursion "dependencies/common"
+               (mkdir "mathjax-26")
+               (zero? (system* "unzip" "-qd" "mathjax-26"
+                               (assoc-ref inputs "mathjax"))))))
         (add-after 'unpack 'unpack-gin
           (lambda* (#:key inputs #:allow-other-keys)
             (with-directory-excursion "src/gwt"
-                                      (install-file (assoc-ref inputs "junit") "lib")
-                                      (mkdir-p "lib/gin/1.5")
-                                      (zero? (system* "unzip" "-qd" "lib/gin/1.5"
-                                                      (assoc-ref inputs "gin"))))))
+              (install-file (assoc-ref inputs "junit") "lib")
+              (mkdir-p "lib/gin/1.5")
+              (zero? (system* "unzip" "-qd" "lib/gin/1.5"
+                              (assoc-ref inputs "gin"))))))
         (add-after 'unpack 'unpack-gwt
           (lambda* (#:key inputs #:allow-other-keys)
             (with-directory-excursion "src/gwt"
-                                      (mkdir-p "lib/gwt")
-                                      (system* "unzip" "-qd" "lib/gwt"
-                                               (assoc-ref inputs "gwt"))
-                                      (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
-            #t)))))
+              (mkdir-p "lib/gwt")
+	      (system* "unzip" "-qd" "lib/gwt"
+		       (assoc-ref inputs "gwt"))
+               (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
+	    #t)))))
    (native-inputs
     `(("pkg-config" ,pkg-config)
       ("unzip" ,unzip)
@@ -1070,7 +1071,7 @@ exposing these as @code{TxDb} objects.")
       ("clang" ,clang-3.5)
       ("boost" ,boost)
       ("libuuid" ,util-linux)
-      ("pandoc" ,ghc-pandoc)
+      ("pandoc" ,ghc-pandoc-1)
       ("openssl" ,openssl)
       ("pam" ,linux-pam)
       ("zlib" ,zlib)))
@@ -1099,11 +1100,11 @@ web browser.")
                               "/bin/qmake")))
        ((#:phases phases)
         `(modify-phases ,phases
-                        (add-after 'unpack 'relax-qt-version
-                                   (lambda _
-                                     (substitute* "src/cpp/desktop/CMakeLists.txt"
-                                                  (("5\\.4") "5.7"))
-                                     #t))))))
+           (add-after 'unpack 'relax-qt-version
+             (lambda _
+               (substitute* "src/cpp/desktop/CMakeLists.txt"
+                 (("5\\.4") "5.7"))
+               #t))))))
     (inputs
      `(("qtbase" ,qtbase)
        ("qtdeclarative" ,qtdeclarative)
@@ -1112,6 +1113,7 @@ web browser.")
        ("qtsensors" ,qtsensors)
        ("qtxmlpatterns" ,qtxmlpatterns)
        ("qtwebkit" ,qtwebkit)
+       ("qtwebchannel" ,qtwebchannel)
        ,@(package-inputs rstudio-server)))
     (synopsis "Integrated development environment (IDE) for R (desktop version)")))
 
@@ -1551,3 +1553,81 @@ to add new ones.")
 Geary's kurtosis and skewness; tests related to them (Anscombe-Glynn,
 D'Agostino, Bonett-Seier).")
   (license license:gpl2+)))
+
+(define-public r-waveslim
+  (package
+    (name "r-waveslim")
+    (version "1.7.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "waveslim" version))
+       (sha256
+        (base32
+         "0lqslkihgrd7rbihqhhk57m9vkbnfsznkvk8430cvbcsn7vridii"))))
+    (build-system r-build-system)
+    (native-inputs `(("gfortran" ,gfortran)))
+    (home-page "http://waveslim.blogspot.com")
+    (synopsis "Basic wavelet routines for up to three-dimensional signal processing")
+    (description
+     "Basic wavelet routines for time series (1D), image (2D) and array (3D)
+analysis.  The code provided here is based on wavelet methodology developed in
+Percival and Walden (2000); Gencay, Selcuk and Whitcher (2001); the dual-tree
+complex wavelet transform (DTCWT) from Kingsbury (1999, 2001) as implemented by
+Selesnick; and Hilbert wavelet pairs (Selesnick 2001, 2002).  All figures in chapters
+4-7 of GSW (2001) are reproducible using this package and R code available at the book
+website(s) below.")
+    (license license:bsd-3)))
+
+(define-public r-massspecwavelet
+  (package
+    (name "r-massspecwavelet")
+    (version "1.46.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "MassSpecWavelet" version))
+              (sha256
+               (base32
+                "0phrh0w1vh6kgl4vph79f3vyd569pn9kl6n1s4hll0ri61j8l0hz"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-waveslim" ,r-waveslim)))
+    (home-page "http://bioconductor.org/packages/MassSpecWavelet")
+    (synopsis "Mass spectrum processing by wavelet-based algorithms")
+    (description "This package provides methods for processing mass
+spectrometry spectrum by using wavelet based algorithm.")
+    (license license:gpl2+)))
+
+(define-public r-xcms
+  (package
+    (name "r-xcms")
+    (version "3.2.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "xcms" version))
+              (sha256
+               (base32
+                "0xqsx6cppjn0kv2smjri6kd3z4d3djlgxyxmbfayvwk9h4wsv1mg"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biobase" ,r-biobase)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-msnbase" ,r-msnbase)
+       ("r-mzr" ,r-mzr)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-protgenerics" ,r-protgenerics)
+       ("r-lattice" ,r-lattice)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-plyr" ,r-plyr)
+       ("r-rann" ,r-rann)
+       ("r-multtest" ,r-multtest)
+       ("r-massspecwavelet" ,r-massspecwavelet)
+       ("r-s4vectors" ,r-s4vectors)))
+    (home-page "http://bioconductor.org/packages/xcms")
+    (synopsis "LC/MS and GC/MS Data Analysis")
+    (description "This package provides a framework for processing and
+visualization of chromatographically separated and single-spectra mass
+spectral data.  It imports from AIA/ANDI NetCDF, mzXML, mzData and mzML
+files.  It preprocesses data for high-throughput, untargeted analyte
+profiling.")
+    (license license:gpl2+)))
