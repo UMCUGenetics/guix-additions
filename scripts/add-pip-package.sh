@@ -20,7 +20,7 @@ verbose=0
 
 read -d '' preamble << EOF
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2018 UMCU
 ;;;
 ;;; This file is not officially part of GNU Guix.
 ;;;
@@ -83,7 +83,7 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 check_avail() {
-  guix package -i $1 | grep 'unknown package' &> /dev/null
+  guixr package -i $1 | grep 'unknown package' &> /dev/null
   if [ $? == 0 ]; then
    return false
   fi
@@ -99,16 +99,16 @@ add_recipie() {
 make_recipie() {
   if check_avail $1
   then
-    guix package -i $1
+    guixr package -i $1
   else
-    guix import pypi $1 | | while read -r pack; do
+    guixr import pypi $1 | | while read -r pack; do
       make_recipie $pack
     done
 
     # CHECK BEST PRACTICES PATHS
     echo $preamble > "$1.scm"
     echo "(define public $1">>"$1.scm"
-    guix import pypi $1 >> "$1.scm"
+    guixr import pypi $1 >> "$1.scm"
     echo ")" >> "$1.scm"
 
     if guix build $1
@@ -126,9 +126,9 @@ make_recipie() {
 for package in ${packages//,/ }
 do
     if [ $verbose == 1 ]; then
-        echo "guix import pypi $package"
+        echo "guixr import pypi $package"
     fi
-    guix import pypi $package
+    guixr import pypi $package
     # check if available if so -> install into profile
     # are dependecies in the store?
     #   yes -> make recipie and add to git
