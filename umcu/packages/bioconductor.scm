@@ -1551,3 +1551,81 @@ to add new ones.")
 Geary's kurtosis and skewness; tests related to them (Anscombe-Glynn,
 D'Agostino, Bonett-Seier).")
   (license license:gpl2+)))
+
+(define-public r-waveslim
+  (package
+    (name "r-waveslim")
+    (version "1.7.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "waveslim" version))
+       (sha256
+        (base32
+         "0lqslkihgrd7rbihqhhk57m9vkbnfsznkvk8430cvbcsn7vridii"))))
+    (build-system r-build-system)
+    (native-inputs `(("gfortran" ,gfortran)))
+    (home-page "http://waveslim.blogspot.com")
+    (synopsis "Basic wavelet routines for up to three-dimensional signal processing")
+    (description
+     "Basic wavelet routines for time series (1D), image (2D) and array (3D)
+analysis.  The code provided here is based on wavelet methodology developed in
+Percival and Walden (2000); Gencay, Selcuk and Whitcher (2001); the dual-tree
+complex wavelet transform (DTCWT) from Kingsbury (1999, 2001) as implemented by
+Selesnick; and Hilbert wavelet pairs (Selesnick 2001, 2002).  All figures in chapters
+4-7 of GSW (2001) are reproducible using this package and R code available at the book
+website(s) below.")
+    (license license:bsd-3)))
+
+(define-public r-massspecwavelet
+  (package
+    (name "r-massspecwavelet")
+    (version "1.46.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "MassSpecWavelet" version))
+              (sha256
+               (base32
+                "0phrh0w1vh6kgl4vph79f3vyd569pn9kl6n1s4hll0ri61j8l0hz"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-waveslim" ,r-waveslim)))
+    (home-page "http://bioconductor.org/packages/MassSpecWavelet")
+    (synopsis "Mass spectrum processing by wavelet-based algorithms")
+    (description "This package provides methods for processing mass
+spectrometry spectrum by using wavelet based algorithm.")
+    (license license:gpl2+)))
+
+(define-public r-xcms
+  (package
+    (name "r-xcms")
+    (version "3.2.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "xcms" version))
+              (sha256
+               (base32
+                "0xqsx6cppjn0kv2smjri6kd3z4d3djlgxyxmbfayvwk9h4wsv1mg"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biobase" ,r-biobase)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-msnbase" ,r-msnbase)
+       ("r-mzr" ,r-mzr)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-protgenerics" ,r-protgenerics)
+       ("r-lattice" ,r-lattice)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-plyr" ,r-plyr)
+       ("r-rann" ,r-rann)
+       ("r-multtest" ,r-multtest)
+       ("r-massspecwavelet" ,r-massspecwavelet)
+       ("r-s4vectors" ,r-s4vectors)))
+    (home-page "http://bioconductor.org/packages/xcms")
+    (synopsis "LC/MS and GC/MS Data Analysis")
+    (description "This package provides a framework for processing and
+visualization of chromatographically separated and single-spectra mass
+spectral data.  It imports from AIA/ANDI NetCDF, mzXML, mzData and mzML
+files.  It preprocesses data for high-throughput, untargeted analyte
+profiling.")
+    (license license:gpl2+)))
