@@ -27,11 +27,11 @@ GUIX_PACKAGE_NOTFOUND_MESSAGE="package not found"
 
 #error: Could not find suitable distribution for Requirement.parse('xxxx<=0.0.0')
 # present in error output
-GUIX_DEPENDENCY_NOTFOUND_PATTERN="(?<=Could not find suitable distribution for Requirement.parse\(\')(.+)\<\="
+GUIX_DEPENDENCY_NOTFOUND_PATTERN="(?<=Could not find suitable distribution for Requirement.parse\(\')(.+)\'"
 GUIX_PACKAGE_PATH="GUIX_PACKAGE_PATH"
 
 # ASSUMES TO BE RUN FROM THE SCRIPTS FOLDER
-GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/"
+GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/:/gnu/repositories/guix-additions"
 
 
 PREAMLBE="""
@@ -102,7 +102,9 @@ def add_dependency(recipe, dependency):
     # Add dependency
     recipe = recipe.replace("(inputs\n\'(", "(inputs\n\'((\"{0}\" ,{0})\n".format(dependency))
 
-
+# MAKE A RECIPE CLEANER
+# Use estat as an example
+#     ("python-tqdm\r" ,#{python-tqdm\xd;}#)))
 
 def check_avail(package):
     p_pack = Popen("guixr package -i {}".format(package), stdout=PIPE, stderr=PIPE, shell=True)
@@ -133,7 +135,7 @@ def make_recipe(package):
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # Make GUIX recipe
-        packagerecipe = "{0}\n(define-public {1}\n{2}\n) (define-public python2-{1}\n (package-with-python2 {1}))".format(PREAMLBE, package, packagerecipe)
+        packagerecipe = "{0}\n(define-public {1}\n{2}\n) (define-public python2-{3}\n (package-with-python2 {1}))".format(PREAMLBE, package, packagerecipe, package.replace("python-",""))
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # write to file
@@ -153,7 +155,8 @@ def make_recipe(package):
             if args.verbose: print("Package [{0}] - Missing dependency {1}".format(package, missing_dep.groups()))
 
             # recurse for this dependency
-            make_recipe(missing_dep.group(1))
+            missing_dep = missing_dep.group(1).split("=")[0].replace("<","").replace(">","")
+            make_recipe(missing_dep)
 
             # when dependency is done add it and continue
             add_dependency(packagerecipe)
