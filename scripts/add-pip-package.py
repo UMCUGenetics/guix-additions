@@ -181,8 +181,9 @@ def make_recipe(package):
                 print("DONE")
 
 # SET GUIX PATH TO LOCAL PACKAGES
-Popen("export {0}={1}".format(GUIX_PACKAGE_PATH, GUIX_ADDITIONS_PATH), stdout=PIPE, stderr=PIPE, shell=True)
-if args.verbose: os.system("echo ${}".format(GUIX_PACKAGE_PATH))
+#print("export {0}={1}".format(GUIX_PACKAGE_PATH, GUIX_ADDITIONS_PATH))
+os.environ[GUIX_PACKAGE_PATH]=GUIX_ADDITIONS_PATH
+if args.verbose: print(os.environ[GUIX_PACKAGE_PATH])
 
 for pack in args.packages:
     if args.verbose: print("Package [{0}] - Starting to generate recipe".format(pack))
