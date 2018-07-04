@@ -104,7 +104,7 @@ def add_dependency(recipe, dependency):
 
 
 def check_avail(package):
-    packagestate = os.popen("guixr package -i {}".format(package)).read()
+    packagestate = os.popen("guixr package -i {}".format(package), stderr=subprocess.STDOUT).read()
 
     if GUIX_UNKNOWN_PACKAGE_MESSAGE in packagestate:
         if args.verbose: print("Package [{}] not found, trying to create a package for it".format(package))
