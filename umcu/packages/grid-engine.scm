@@ -236,7 +236,7 @@ contributing code.")
     (source (origin
              (method url-fetch)
              (uri (string-append
-                  "https:////arc.liv.ac.uk/downloads/SGE/releases/"
+                  "https://arc.liv.ac.uk/downloads/SGE/releases/"
                   version "/sge-" version".tar.gz"))
             (sha256
              (base32 "0pxk585kfs81clqa3gm3h1lfsddfd1dr4qzlr0mshgfqdh72a83c"))))
