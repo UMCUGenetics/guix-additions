@@ -31,7 +31,8 @@ GUIX_DEPENDENCY_NOTFOUND_PATTERN="(?<=Could not find suitable distribution for R
 GUIX_PACKAGE_PATH="GUIX_PACKAGE_PATH"
 
 # ASSUMES TO BE RUN FROM THE SCRIPTS FOLDER
-GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/:/gnu/repositories/guix-additions"
+GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/"
+GUIX_GNU_ADDITIONS_PATH=":/gnu/repositories/guix-additions/"
 
 
 PREAMLBE="""
@@ -185,7 +186,7 @@ def make_recipe(package):
 
 # SET GUIX PATH TO LOCAL PACKAGES
 #print("export {0}={1}".format(GUIX_PACKAGE_PATH, GUIX_ADDITIONS_PATH))
-os.environ[GUIX_PACKAGE_PATH]=GUIX_ADDITIONS_PATH
+os.environ[GUIX_PACKAGE_PATH]=GUIX_ADDITIONS_PATH+GUIX_GNU_ADDITIONS_PATH
 if args.verbose: print(os.environ[GUIX_PACKAGE_PATH])
 
 for pack in args.packages:
