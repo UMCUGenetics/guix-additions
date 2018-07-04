@@ -13,6 +13,7 @@
 
 import argparse
 import os
+from subprocess import Popen, PIPE, STDOUT
 import re
 
 parser = argparse.ArgumentParser(description='Generate GUIX recipies for PIP package(s)')
@@ -104,7 +105,7 @@ def add_dependency(recipe, dependency):
 
 
 def check_avail(package):
-    packagestate = os.popen("guixr package -i {}".format(package), stderr=subprocess.STDOUT).read()
+    packagestate = Popen("guixr package -i {}".format(package), stderr=STDOUT).read()
 
     if GUIX_UNKNOWN_PACKAGE_MESSAGE in packagestate:
         if args.verbose: print("Package [{}] not found, trying to create a package for it".format(package))
@@ -123,7 +124,7 @@ def make_recipe(package):
         # 1st iteration is special due to the PREAMLBE etc...
         # TODO think about how we can clean this up once we have a working prototype
 
-        packagerecipe = os.popen("guixr import pypi {0}".format(package.replace("python-",""))).read()
+        packagerecipe = Popen("guixr import pypi {0}".format(package.replace("python-",""))).read()
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # Make GUIX recipe
@@ -134,7 +135,7 @@ def make_recipe(package):
         with open(recipefile, 'w') as outf:
             outf.write(packagerecipe)
 
-        buildstate = os.popen("guixr build {0}".format(package)).read()
+        buildstate = Popen("guixr build {0}".format(package)).read()
         if args.verbose: print("Package [{0}] - Current buildstate {1}".format(package, buildstate))
 
 
@@ -156,13 +157,13 @@ def make_recipe(package):
             with open(recipefile, 'w') as outf:
                 outf.write(packagerecipe)
 
-            buildstate = os.popen("guixr build {0}".format(package)).read()
+            buildstate = Popen("guixr build {0}".format(package)).read()
             if args.verbose: print("Package [{0}] - Current buildstate {1}".format(package, buildstate))
 
         # We have a complete and working packagerecipe
         add_recipe(package, packagefile)
         # Check if it installs
-        packagestate = os.popen("guixr package -i {}".format(package)).read()
+        packagestate = Popen("guixr package -i {}".format(package)).read()
         if args.verbose: print("Package [{0}] - Current packagestate {1}".format(package, packagestate))
 
         # Report on succes or failure
@@ -173,8 +174,9 @@ def make_recipe(package):
                 print("DONE")
 
 # SET GUIX PATH TO LOCAL PACKAGES
-os.system("export {0}={1}".format(GUIX_PACKAGE_PATH, GUIX_ADDITIONS_PATH))
+Popen("export {0}={1}".format(GUIX_PACKAGE_PATH, GUIX_ADDITIONS_PATH))
 if args.verbose: os.system("echo ${}".format(GUIX_PACKAGE_PATH))
+
 for pack in args.packages:
     if args.verbose: print("Package [{0}] - Starting to generate recipe".format(pack))
     packagename = "python-{0}".format(pack)
