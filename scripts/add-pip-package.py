@@ -147,7 +147,7 @@ def make_recipe(package):
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # Make GUIX recipe
-        packagerecipe = "{0}\n(define-module (umcu packages {4})\n{2}\n(define-public {1}\n {3}) (define-public python2-{4}\n (package-with-python2 {1}))".format(PREAMLBE_GUIX, package, PREAMLBE_MODULES, packagerecipe, package.replace("python-",""))
+        packagerecipe = "{0}\n(define-module (umcu packages {1})\n{2}\n(define-public {1}\n {3}) (define-public python2-{4}\n (package-with-python2 {1}))".format(PREAMLBE_GUIX, package, PREAMLBE_MODULES, packagerecipe, package.replace("python-",""))
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # write to file
@@ -171,14 +171,15 @@ def make_recipe(package):
             for mis_dep in missing_dep:
                 if args.verbose: print("Package [{0}] - Missing dependency {1}".format(package, mis_dep))
                 # recurse for this dependency
-                missing_dep = mis_dep.split("=")[0].replace("<","").replace(">","")
+                missing_dep = "python-"+mis_dep.split("=")[0].replace("<","").replace(">","")
                 make_recipe(missing_dep)
                 add_dependency(packagerecipe, missing_dep)
 
             for mis_nat in missing_nat:
                 if args.verbose: print("Package [{0}] - Missing native input {1}".format(package, mis_nat))
-                make_recipe(mis_nat)
-                add_native(packagerecipe, mis_nat)
+                missing_nat = "python-"+mis_nat
+                make_recipe(missing_nat)
+                add_native(packagerecipe, missing_nat)
 
 
             if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
