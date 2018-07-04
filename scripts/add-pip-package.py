@@ -35,7 +35,7 @@ GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/"
 
 PREAMLBE="""
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2018 UMCU
+;;; Copyright 2018 UMCU
 ;;;
 ;;; This file is not officially part of GNU Guix.
 ;;;
