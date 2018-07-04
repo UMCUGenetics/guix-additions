@@ -299,14 +299,14 @@ between some other projects, specifically AscatNGS and Battenburg.")
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.26.0/"
+                     "/lib/perl5/site_perl/5.26.1/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o644)))
          (add-after 'reset-gzip-timestamps 'fix-permissions-after
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.26.0/"
+                     "/lib/perl5/site_perl/5.26.1/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
