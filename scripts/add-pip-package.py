@@ -36,7 +36,7 @@ GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/"
 GUIX_GNU_ADDITIONS_PATH=":/gnu/repositories/guix-additions/"
 
 
-PREAMLBE="""
+PREAMLBE_GUIX="""
 ;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright 2018 UMCU
 ;;;
@@ -54,8 +54,9 @@ PREAMLBE="""
 ;;;
 ;;; You should have received a copy of the GNU General Public License
 ;;; along with GNU Guix.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
-(define-module (umcu packages python)
+PREAMLBE_MODULES="""
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
@@ -146,7 +147,7 @@ def make_recipe(package):
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # Make GUIX recipe
-        packagerecipe = "{0}\n(define-public {1}\n{2}\n) (define-public python2-{3}\n (package-with-python2 {1}))".format(PREAMLBE, package, packagerecipe, package.replace("python-",""))
+        packagerecipe = "{0}\n(define-module (umcu packages {4})\n{2}\n(define-public {1}\n {3}) (define-public python2-{4}\n (package-with-python2 {1}))".format(PREAMLBE_GUIX, package, PREAMLBE_MODULES, packagerecipe, package.replace("python-",""))
         if args.verbose: print("Package [{0}] - Current recipe {1}".format(package, packagerecipe))
 
         # write to file
