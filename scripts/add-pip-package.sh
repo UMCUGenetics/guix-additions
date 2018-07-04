@@ -2,21 +2,34 @@
 # JdL
 
 # Based on a list of pip packages
-# For each package get dependencies
-#   get/create recipes for dependencies
-# create recipie for package
-# Add all GUIX packages to guix-addiotions
-# Make a request to upstream to include the recipies
-
-# Use guix import pypi xx where possible
+# Use guix import pypi xx
+# check if package available?
+#   yes -> install into profile
+#   no ->
+#     recurse this process for each dependency
+#     make package
+#     check build package
+#     add package
 
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
-# Initialize our own variables:
+# Initialize variables:
 packages=""
 verbose=0
 
+
+
+export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+export GIT_SSL_CAINFO="$SSL_CERT_FILE"
+
+export CURL_CA_BUNDLE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+export REQUESTS_CA_BUNDLE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+
+# PIP REQUIRES PEM
+export CA_BUNDLE="$HOME/.guix-profile/etc/ssl/certs/DigiCert_Global_Root_CA:2.16.8.59.224.86.144.66.70.177.161.117.106.201.89.145.199.74.pem"
+export PIP_CERT="$HOME/.guix-profile/etc/ssl/certs/DigiCert_High_Assurance_EV_Root_CA:2.16.2.172.92.38.106.11.64.155.143.11.121.242.174.70.37.119.pem"
 
 read -d '' preamble << EOF
 ;;; GNU Guix --- Functional package management for GNU
@@ -85,38 +98,56 @@ shift $((OPTIND-1))
 check_avail() {
   guixr package -i $1 | grep 'unknown package' &> /dev/null
   if [ $? == 0 ]; then
-   return false
+    # found a error message, package is not available
+    false
+  else
+    true
   fi
-  return true
 }
+
+check_build() {
+  guixr build -i $1 | grep '?? error ??' &> /dev/null
+  if [ $? == 0 ]; then
+    # found a error message, package did not build
+    # add missing dependencies
+    false
+  else
+    true
+  fi
+}
+
 
 add_recipie() {
   git add $1
-  git commit -m "Adding python package $1"
+  git commit -m "Adding pip package $1"
   git push
 }
 
+
+
 make_recipie() {
-  if check_avail $1
+  if [ check_avail $1 ];
   then
     guixr package -i $1
   else
-    guixr import pypi $1 | | while read -r pack; do
+    # recurse through all dependecies
+    guix import pypi $1 | ...""... | while read -r pack; do
       make_recipie $pack
     done
 
-    # CHECK BEST PRACTICES PATHS
-    echo $preamble > "$1.scm"
-    echo "(define public $1">>"$1.scm"
-    guixr import pypi $1 >> "$1.scm"
-    echo ")" >> "$1.scm"
+    # ASSUMES TO BE RUN FROM THE SCRIPTS FOLDER
+    recipie_file = "../../guix-additions/umcu/packages/$1.scm"
+    echo $preamble > $recipie_file
+    echo "(define public $1" >> $recipie_file
+    guix import pypi $1 >> $recipie_file
+    echo ")" >> $recipie_file
 
-    if guix build $1
-
-      add_recipie "$1.scm"
+    if [ check_build $1 ];
+      add_recipie $recipie_file
       # git pull on hpcguix
       # guix package -i $1
     else
+      echo "[ERROR] a problem occurred while building $1"
       exit 1
     fi
   fi
@@ -125,15 +156,8 @@ make_recipie() {
 #echo "verbose=$verbose, output_file='$output_file', Leftovers: $@"
 for package in ${packages//,/ }
 do
-    if [ $verbose == 1 ]; then
-        echo "guixr import pypi $package"
-    fi
-    guixr import pypi $package
-    # check if available if so -> install into profile
-    # are dependecies in the store?
-    #   yes -> make recipie and add to git
-    #   no -> get missing dependecies and recurse
-    #
+    if [ $verbose == 1 ]; then echo make_recipie "python-$package"; fi
+    make_recipie "python-$package"
 done
 
 # End of file
