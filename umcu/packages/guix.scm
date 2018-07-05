@@ -190,7 +190,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.7.1")
+    (version "1.8.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -287,7 +287,21 @@ elif [ \"$1\" == \"load-profile\" ]; then
       home_variables=$(export -p | ${grep} \"^declare -x HOME\" || echo \"# No HOME variable found.\")
       locale_variables=$(export -p | ${grep} \"^declare -x LANG\" || echo \"# No LANG variable found.\")
       locpath_variables=$(export -p | ${grep} \"^declare -x GUIX_LOCPATH\" || echo \"# No GUIX_LOCPATH variable found.\")
-      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\"; echo \"$locpath_variables\"; echo \"$sge_variables\"; echo \"$malloc_variables\"; echo \"$hostname_variables\"; echo \"$logname_variables\"; echo \"$tmp_variables\"; echo \"$job_id_variables\"; echo \"$home_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      last_profile=\"${profile_arguments[-1]}\"
+      profile_paths=\"$(echo ${profile_arguments[@]} | ${coreutils}/bin/tr ' ' ':')\"
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\";
+                                                       echo \"$locpath_variables\";
+                                                       echo \"$sge_variables\";
+                                                       echo \"$malloc_variables\";
+                                                       echo \"$hostname_variables\";
+                                                       echo \"$logname_variables\";
+                                                       echo \"$tmp_variables\";
+                                                       echo \"$job_id_variables\";
+                                                       echo \"$home_variables\";
+                                                       echo \"$set_output\";
+                                                       echo \"declare -x GUIX_PROFILE_PATH=\\\"$last_profile\\\"\";
+                                                       echo \"declare -x GUIX_PROFILES=\\\"$profile_paths\\\"\";
+                                                       echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
