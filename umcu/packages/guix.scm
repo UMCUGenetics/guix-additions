@@ -190,7 +190,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.5.0")
+    (version "1.6.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -198,9 +198,7 @@ without modification.")
        ("gwl" ,gwl)))
     (inputs
      `(("bash-full" ,bash-custom)
-       ("git" ,git)
-       ("sed" ,sed)
-       ("gawk" ,gawk)))
+       ("git" ,git)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -223,12 +221,10 @@ guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
 guix=\"~a/bin/guix\"
 git=\"~a/bin/git\"
-gawk=\"~a/bin/gawk\"
 coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
 cut=\"${coreutils}/bin/cut\"
 grep=\"~a/bin/grep\"
-sed=\"~a/bin/sed\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
@@ -282,8 +278,11 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
       set_output=$(${grep} -h \"^export\" $profiles)
-      sge_variables=$(export -p | ${grep} \"^declare -x SGE\")
-      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$sge_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      sge_variables=$(export -p | ${grep} \"^declare -x SGE\" || echo \"# No SGE variables found.\")
+      tmp_variables=$(export -p | ${grep} \"^declare -x TMP\" || echo \"# No TMP variables found.\")
+      job_id_variables=$(export -p | ${grep} \"^declare -x JOB_ID\" || echo \"# No JOB_ID variable found.\")
+      home_variables=$(export -p | ${grep} \"^declare -x HOME\" || echo \"# No HOME variable found.\")
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$sge_variables\"; echo \"$tmp_variables\"; echo \"$job_id_variables\"; echo \"$home_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
@@ -295,10 +294,8 @@ else
 fi~%"
                          (assoc-ref inputs "guix")
                          (assoc-ref inputs "git")
-                         (assoc-ref inputs "gawk")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
-                         (assoc-ref inputs "sed")
                          (assoc-ref inputs "bash-full"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
