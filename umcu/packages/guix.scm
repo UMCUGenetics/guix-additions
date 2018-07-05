@@ -190,7 +190,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.7.0")
+    (version "1.7.1")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -281,10 +281,13 @@ elif [ \"$1\" == \"load-profile\" ]; then
       sge_variables=$(export -p | ${grep} \"^declare -x SGE\" || echo \"# No SGE variables found.\")
       tmp_variables=$(export -p | ${grep} \"^declare -x TMP\" || echo \"# No TMP variables found.\")
       job_id_variables=$(export -p | ${grep} \"^declare -x JOB_ID\" || echo \"# No JOB_ID variable found.\")
+      hostname_variables=$(export -p | ${grep} \"^declare -x HOSTNAME\" || echo \"# No HOSTNAME variable found.\")
+      logname_variables=$(export -p | ${grep} \"^declare -x LOGNAME\" || echo \"# No LOGNAME variable found.\")
+      malloc_variables=$(export -p | ${grep} \"^declare -x MALLOC_ARENA_MAX\" || echo \"# No MALLOC_ARENA_MAX variable found.\")
       home_variables=$(export -p | ${grep} \"^declare -x HOME\" || echo \"# No HOME variable found.\")
       locale_variables=$(export -p | ${grep} \"^declare -x LANG\" || echo \"# No LANG variable found.\")
       locpath_variables=$(export -p | ${grep} \"^declare -x GUIX_LOCPATH\" || echo \"# No GUIX_LOCPATH variable found.\")
-      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\"; echo \"$locpath_variables\"; echo \"$sge_variables\"; echo \"$tmp_variables\"; echo \"$job_id_variables\"; echo \"$home_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\"; echo \"$locpath_variables\"; echo \"$sge_variables\"; echo \"$malloc_variables\"; echo \"$hostname_variables\"; echo \"$logname_variables\"; echo \"$tmp_variables\"; echo \"$job_id_variables\"; echo \"$home_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
