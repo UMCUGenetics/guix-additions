@@ -62,6 +62,7 @@ SOURCES =                                       \
   umcu/packages/samtools.scm                    \
   umcu/packages/snp-fingerprinting.scm          \
   umcu/packages/snpeff.scm                      \
+  umcu/packages/sparqling-genomics.scm          \
   umcu/packages/star.scm                        \
   umcu/packages/strelka.scm                     \
   umcu/packages/varscan.scm                     \
