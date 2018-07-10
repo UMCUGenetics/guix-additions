@@ -28,9 +28,12 @@
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system perl)
+  #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages bioconductor)
+  #:use-module (gnu packages statistics)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages lua)
   #:use-module (gnu packages perl)
@@ -260,6 +263,146 @@ between some other projects, specifically AscatNGS and Battenburg.")
     (synopsis "")
     (description "")
     (license #f)))
+
+(define-public r-ascat
+  (let ((commit "9fb25feaae2d7d25a17f5eff7b99666ad7afbba8"))
+    (package
+     (name "r-ascat")
+     (version (string-append "2.5.1-" (string-take commit 7)))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/Crick-CancerGenomics/ascat.git")
+                    (commit commit)))
+              (sha256
+               (base32
+                "02fxhqv4yf9dby8mmjb39fyqd141k3z4nhj0p8m2h4n7a476bdsc"))))
+     (build-system r-build-system)
+     (arguments
+      `(#:phases
+        (modify-phases %standard-phases
+         (add-after 'unpack 'move-to-ascat-dir
+           (lambda _
+             (chdir "ASCAT"))))))
+     (propagated-inputs
+      `(("r-rcolorbrewer" ,r-rcolorbrewer)))
+     (home-page "https://github.com/Crick-CancerGenomics/ascat")
+     (synopsis "ASCAT copy number R package")
+     (description "This package provides the ASCAT R package that can be used
+to infer tumour purity, ploidy and allele-specific copy number profiles.")
+     (license license:gpl3))))
+
+(define-public cgp-battenberg-r
+  (package
+   (name "cgp-battenberg-r")
+   (version "2.2.8")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/Wedge-Oxford/battenberg/archive/v"
+                  version ".tar.gz"))
+            (sha256
+             (base32 "0gi9zv8clr795mzplf1d3dm5agc78xz40kmwckcjqaji4dnbcik1"))))
+   (build-system r-build-system)
+   ; "devtools", "readr", "doParallel", "ggplot2", "RColorBrewer", "gridExtra", "gtools")
+   (propagated-inputs
+    `(("r-devtools" ,r-devtools)
+      ("r-readr" ,r-readr)
+      ("r-doparallel" ,r-doparallel)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-rcolorbrewer" ,r-rcolorbrewer)
+      ("r-gridextra" ,r-gridextra)
+      ("r-gtools" ,r-gtools)
+      ("r-ascat" ,r-ascat)))
+   (home-page "https://github.com/Wedge-Oxford/battenberg")
+   (synopsis "Battenberg R package for subclonal copy number estimation")
+   (description "This package contains the Battenberg R package for subclonal
+copy number estimation.")
+   (license license:gpl3)))
+
+(define-public cgp-battenberg-3.3.0
+  (package
+    (name "cgp-battenberg")
+    (version "3.3.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/cancerit/cgpBattenberg/archive/v"
+                    version ".tar.gz"))
+              (file-name (string-append name "-" version ".tar.gz"))
+              (sha256
+               (base32
+                "17rrciv8c8vdvcx4yljkkl8rlzlpasrnl0i2c0q72zxvzgh9c8z3"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         ;; The Perl in Guix does not support threads.
+         ;; The forks module is a drop-in replacement for it, so it
+         ;; is easier to use that instead of recompiling Perl.
+         (add-after 'unpack 'enable-threads
+           (lambda _
+             (substitute* "perl/bin/battenberg.pl"
+               (("use strict;") "use forks;\nuse strict;"))))
+         (add-before 'build 'move-to-subdirectory
+           (lambda _
+             (chdir "perl")))
+         (replace 'build
+           (lambda* (#:key outputs #:allow-other-keys)
+             (system* "perl" "Makefile.PL"
+                      (string-append "PREFIX=" (assoc-ref outputs "out")))
+             (system* "make")))
+         (add-before 'reset-gzip-timestamps 'fix-permissions
+           (lambda* (#:key outputs #:allow-other-keys)
+             (chmod (string-append
+                     (assoc-ref outputs "out")
+                     "/lib/perl5/site_perl/5.26.1/"
+                     "auto/share/module/Sanger-CGP-Battenberg-Implement"
+                     "/battenberg/probloci.txt.gz") #o644)))
+         (add-after 'reset-gzip-timestamps 'fix-permissions-after
+           (lambda* (#:key outputs #:allow-other-keys)
+             (chmod (string-append
+                     (assoc-ref outputs "out")
+                     "/lib/perl5/site_perl/5.26.1/"
+                     "auto/share/module/Sanger-CGP-Battenberg-Implement"
+                     "/battenberg/probloci.txt.gz") #o444))))))
+    (propagated-inputs
+     `(("allelecount" ,allelecount)
+       ("htslib" ,htslib)
+       ("which" ,which)
+       ("pcap-core" ,pcap-core)
+       ("perl-bio-pipeline-comparison" ,perl-bio-pipeline-comparison)
+       ("impute2-bin" ,impute2-bin)
+       ("cgpvcf" ,cgpvcf)
+       ("perl-const-fast" ,perl-const-fast)
+       ("perl-sub-exporter-progressive" ,perl-sub-exporter-progressive)
+       ("perl-bio-db-hts" ,perl-bio-db-hts)
+       ("bioperl-minimal" ,bioperl-minimal)
+       ("perl-ipc-system-simple" ,perl-ipc-system-simple)
+       ("perl-file-which" ,perl-file-which)
+       ("perl-log-message" ,perl-log-message)
+       ("perl-term-ui" ,perl-term-ui)
+       ("perl-file-sharedir" ,perl-file-sharedir)
+       ("perl-capture-tiny" ,perl-capture-tiny)
+       ("perl-forks" ,perl-forks)
+       ("perl-bsd-resource" ,perl-bsd-resource)
+       ("perl-sub-identify" ,perl-sub-identify)
+       ("perl-autodie" ,perl-autodie)
+       ("perl-archive-extract" ,perl-archive-extract)
+       ("perl" ,perl)
+       ("cgp-battenberg-r" ,cgp-battenberg-r)))
+    (native-inputs
+     `(("perl-module-install" ,perl-module-install)
+       ("perl-module-build" ,perl-module-build)
+       ("perl-file-sharedir-install" ,perl-file-sharedir-install)))
+    (home-page "https://github.com/cancerit/cgpBattenberg")
+    (synopsis "Battenberg algorithm and associated implementation script")
+    (description "This package provides a perl wrapper and an R program for the
+Battenberg algorithm that can detect subclonality and copy number in matched
+NGS data.")
+    (license license:gpl3+)))
 
 (define-public cgp-battenberg
   (package
