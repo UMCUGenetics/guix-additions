@@ -40,7 +40,7 @@
 (define-public sparqling-genomics
   (package
    (name "sparqling-genomics")
-   (version "0.99.1")
+   (version "0.99.2")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -49,7 +49,7 @@
                   version ".tar.gz"))
             (sha256
              (base32
-              "0n1gxcn62zmz6rvqj0nybn08l3k49p8204g347zf0a8965p9c6vw"))))
+              "1lmjvglbjiq4n9a56ic0kwwwip3y1f6wsksdjylf5hggaf5bhmpr"))))
    (build-system gnu-build-system)
    (arguments
     `(#:phases
