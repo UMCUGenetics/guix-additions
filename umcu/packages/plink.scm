@@ -56,8 +56,8 @@
                     (let ((bin (string-append (assoc-ref outputs "out")
                                               "/bin/")))
                       (install-file "plink2" bin)
-                      (symlink (string-append bin "/plink2")
-                               (string-append bin "/plink"))
+                      (symlink (string-append bin "plink2")
+                               (string-append bin "plink"))
                       #t))))))
     (inputs
      `(("zlib" ,zlib)
