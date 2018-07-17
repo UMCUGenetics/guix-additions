@@ -16,11 +16,20 @@ import os
 from subprocess import Popen, PIPE
 import re
 
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 parser = argparse.ArgumentParser(description='Generate GUIX recipies for PIP package(s)')
-parser.add_argument("-v", "--verbose", help="Toggle verbose output")
-parser.add_argument("-p", "--packages", nargs="+", type=str, help="List of pip packages to add to GUIX")
+parser.add_argument("-v", "--verbose",  nargs='?', type=str2bool, help="Toggle verbose output", const="True", default="False")
+parser.add_argument("-p", "--packages", nargs="+", type=str,      help="List of pip packages to package and add to GUIX")
 args = parser.parse_args()
 
+print("--INFO-- running with the following settings: {}".format(vars(args)))
 
 GUIX_UNKNOWN_PACKAGE_MESSAGE="unknown package"
 GUIX_PACKAGE_NOTFOUND_MESSAGE="package not found"
@@ -133,6 +142,7 @@ def check_avail(package):
 
 def make_recipe(package):
     recipefile = "{0}{1}.scm".format(GUIX_ADDITIONS_PATH, package)
+    if args.verbose: print("Package [{0}] - Recipe file {1}".format(package, recipefile))
 
     if check_avail(package):
         print("Package [{0}] is available in GUIX".format(package))
