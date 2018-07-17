@@ -1142,7 +1142,7 @@ to group instances from the same class together.")
 (define-public r-aneufinderdata
   (package
    (name "r-aneufinderdata")
-   (version "1.6.0")
+   (version "1.8.0")
    (source (origin
             (method url-fetch)
             (uri (string-append "http://bioconductor.org/packages"
@@ -1150,7 +1150,7 @@ to group instances from the same class together.")
                                 "AneuFinderData_" version ".tar.gz"))
             (sha256
              (base32
-              "0cbgmfciy9v81jfn60mw98csxxdmm3hfqdwyaigbagj949alnbcm"))))
+              "17snbhlvb64mqcq26kawd92wpckjzxbl78chp87hrwsfhf7my6hm"))))
    (build-system r-build-system)
    (home-page "http://bioconductor.org/packages/AneuFinderData")
    (synopsis "Data package for AneuFinder")
@@ -1160,13 +1160,13 @@ to group instances from the same class together.")
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
-    (version "1.6.0")
+    (version "1.8.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AneuFinder" version))
               (sha256
                (base32
-                "07mwfzpv9ya9ma74n993pihjhi10pjpnzbx1bfvk55h4mcyl7r7c"))))
+                "07xdqal5i0qpcgr4hqdfq0hpzj7kg0wvjcngidqq9k0zci8na8gh"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
