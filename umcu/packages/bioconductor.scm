@@ -1157,6 +1157,28 @@ to group instances from the same class together.")
    (description "This package contains data used by AneuFinder.")
    (license license:artistic2.0)))
 
+(define-public r-ecp
+  (package
+    (name "r-ecp")
+    (version "3.1.0")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "ecp" version))
+              (sha256
+               (base32
+                "0siq5acpy4wmqzm6zvpqj1m8a05hgk5jhb1clv06y40kqk5kjrap"))))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page "http://cran.r-project.org/web/packages/ecp")
+    (synopsis "Non-Parametric Multiple Change-Point Analysis of Multivariate Data")
+    (description
+     "Implements various procedures for finding multiple change-points.  Two
+methods make use of dynamic programming and pruning, with no distributional
+assumptions other than the existence of certain absolute moments in one method.
+Hierarchical and exact search methods are included.  All methods return the set
+of estimated change- points as well as other summary information.")
+    (license license:gpl2+)))
+
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
@@ -1171,6 +1193,7 @@ to group instances from the same class together.")
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
        ("r-aneufinderdata" ,r-aneufinderdata)
+       ("r-ecp" ,r-ecp)
        ("r-foreach" ,r-foreach)
        ("r-doparallel" ,r-doparallel)
        ("r-biocgenerics" ,r-biocgenerics)
