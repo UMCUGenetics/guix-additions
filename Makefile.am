@@ -58,10 +58,12 @@ SOURCES =                                       \
   umcu/packages/pyclone.scm                     \
   umcu/packages/pyflow.scm                      \
   umcu/packages/python.scm                      \
+  umcu/packages/rstudio.scm                     \
   umcu/packages/sambamba.scm                    \
   umcu/packages/samtools.scm                    \
   umcu/packages/snp-fingerprinting.scm          \
   umcu/packages/snpeff.scm                      \
+  umcu/packages/sparqling-genomics.scm          \
   umcu/packages/star.scm                        \
   umcu/packages/strelka.scm                     \
   umcu/packages/varscan.scm                     \

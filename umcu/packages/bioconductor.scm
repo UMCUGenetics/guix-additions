@@ -951,172 +951,6 @@ there were errors in the code.")
 exposing these as @code{TxDb} objects.")
     (license license:artistic2.0)))
 
-;;
-;; RStudio was imported from:
-;; https://github.com/BIMSBbioinfo/guix-bimsb/blob/master/bimsb/packages/staging.scm
-;;
-
-(define-public rstudio-server
-  (package
-   (name "rstudio-server")
-   (version "1.1.453")
-   (source (origin
-             (method git-fetch)
-             (uri (git-reference
-                   (url "https://github.com/rstudio/rstudio.git")
-                   (commit (string-append "v" version))))
-             (sha256
-              (base32
-               "0caz8c0p7kgz0s524r37jycsv7clpry4k54xg02jbwzw37imag30"))
-             (file-name (string-append name "-" version "-checkout"))))
-   (build-system cmake-build-system)
-   (arguments
-    `(#:configure-flags '("-DRSTUDIO_TARGET=Server")
-      #:tests? #f ; no tests
-      #:phases
-      (modify-phases %standard-phases
-        (add-before 'build 'set-java-home
-          (lambda* (#:key inputs #:allow-other-keys)
-            (setenv "JAVA_HOME" (assoc-ref inputs "jdk"))
-            #t))
-        (add-after 'unpack 'fix-dependencies
-          (lambda _
-            ;; Disable checks for bundled dependencies.  We take care of them by other means.
-            (substitute* "src/cpp/session/CMakeLists.txt"
-                         (("if\\(NOT EXISTS \"\\$\\{RSTUDIO_DEPENDENCIES_DIR\\}/common/rmarkdown\"\\)") "if (FALSE)")
-                         (("if\\(NOT EXISTS \"\\$\\{RSTUDIO_DEPENDENCIES_DIR\\}/common/rsconnect\"\\)") "if (FALSE)"))
-            #t))
-        (add-after 'unpack 'copy-clang
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "dependencies/common"
-                                      (let ((clang   (assoc-ref inputs "clang"))
-                                            (dir     "libclang")
-                                            (lib     "libclang/3.5")
-                                            (headers "libclang/builtin-headers"))
-                                        (mkdir-p dir)
-                                        (mkdir-p lib)
-                                        (mkdir-p headers)
-                                        (for-each (lambda (file)
-                                                    (install-file file lib))
-                                                  (find-files (string-append clang "/lib") ".*"))
-                                        (install-file (string-append clang "/include") dir)
-                                        #t))))
-        (add-after 'unpack 'unpack-dictionaries
-           (lambda* (#:key inputs #:allow-other-keys)
-             (with-directory-excursion "dependencies/common"
-               (mkdir "dictionaries")
-               (mkdir "pandoc") ; TODO: only to appease the cmake stuff
-               (zero? (system* "unzip" "-qd" "dictionaries"
-                               (assoc-ref inputs "dictionaries"))))))
-        (add-after 'unpack 'unpack-mathjax
-          (lambda* (#:key inputs #:allow-other-keys)
-             (with-directory-excursion "dependencies/common"
-               (mkdir "mathjax-26")
-               (zero? (system* "unzip" "-qd" "mathjax-26"
-                               (assoc-ref inputs "mathjax"))))))
-        (add-after 'unpack 'unpack-gin
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "src/gwt"
-              (install-file (assoc-ref inputs "junit") "lib")
-              (mkdir-p "lib/gin/1.5")
-              (zero? (system* "unzip" "-qd" "lib/gin/1.5"
-                              (assoc-ref inputs "gin"))))))
-        (add-after 'unpack 'unpack-gwt
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "src/gwt"
-              (mkdir-p "lib/gwt")
-	      (system* "unzip" "-qd" "lib/gwt"
-		       (assoc-ref inputs "gwt"))
-               (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
-	    #t)))))
-   (native-inputs
-    `(("pkg-config" ,pkg-config)
-      ("unzip" ,unzip)
-      ("ant" ,ant)
-      ("jdk" ,icedtea "jdk")
-      ("gin"
-       ,(origin
-         (method url-fetch)
-         (uri "https://s3.amazonaws.com/rstudio-buildtools/gin-1.5.zip")
-         (sha256
-          (base32 "155bjrgkf046b8ln6a55x06ryvm8agnnl7l8bkwwzqazbpmz8qgm"))))
-      ("gwt"
-       ,(origin
-         (method url-fetch)
-         (uri "https://s3.amazonaws.com/rstudio-buildtools/gwt-2.7.0.zip")
-         (sha256
-          (base32 "1cs78z9a1jg698j2n35wsy07cy4fxcia9gi00x0r0qc3fcdhcrda"))))
-      ("junit"
-       ,(origin
-         (method url-fetch)
-         (uri "https://s3.amazonaws.com/rstudio-buildtools/junit-4.9b3.jar")
-         (sha256
-          (base32 "0l850yfbq0cgycp8n0r0a1b7xznd37pgfd656vzdwim4blznqmnw"))))
-      ("mathjax"
-       ,(origin
-         (method url-fetch)
-         (uri "https://s3.amazonaws.com/rstudio-buildtools/mathjax-26.zip")
-         (sha256
-          (base32 "0wbcqb9rbfqqvvhqr1pbqax75wp8ydqdyhp91fbqfqp26xzjv6lk"))))
-      ("dictionaries"
-       ,(origin
-         (method url-fetch)
-         (uri "https://s3.amazonaws.com/rstudio-dictionaries/core-dictionaries.zip")
-         (sha256
-          (base32 "153lg3ai97qzbqp6zjg10dh3sfvz80v42cjw45zwz7gv1risjha3"))))))
-   (inputs
-    `(("r" ,r)
-      ("r-rmarkdown" ,r-rmarkdown) ; TODO: must be linked to another location
-      ;;("r-rsconnect" ,r-rsconnect) ; TODO: must be linked to another location
-      ("clang" ,clang-3.5)
-      ("boost" ,boost)
-      ("libuuid" ,util-linux)
-      ("pandoc" ,ghc-pandoc-1)
-      ("openssl" ,openssl)
-      ("pam" ,linux-pam)
-      ("zlib" ,zlib)))
-   (home-page "http://www.rstudio.org/")
-   (synopsis "Integrated development environment (IDE) for R")
-   (description
-    "RStudio is an integrated development environment (IDE) for the R
-programming language. Some of its features include: Customizable workbench
-with all of the tools required to work with R in one place (console, source,
-plots, workspace, help, history, etc.); syntax highlighting editor with code
-completion; execute code directly from the source editor (line, selection, or
-file); full support for authoring Sweave and TeX documents.  RStudio can also
-be run as a server, enabling multiple users to access the RStudio IDE using a
-web browser.")
-   (license license:agpl3+)))
-
-(define-public rstudio
-  (package (inherit rstudio-server)
-    (name "rstudio")
-    (arguments
-     (substitute-keyword-arguments (package-arguments rstudio-server)
-       ((#:configure-flags flags)
-        '(list "-DRSTUDIO_TARGET=Desktop"
-               (string-append "-DQT_QMAKE_EXECUTABLE="
-                              (assoc-ref %build-inputs "qtbase")
-                              "/bin/qmake")))
-       ((#:phases phases)
-        `(modify-phases ,phases
-           (add-after 'unpack 'relax-qt-version
-             (lambda _
-               (substitute* "src/cpp/desktop/CMakeLists.txt"
-                 (("5\\.4") "5.7"))
-               #t))))))
-    (inputs
-     `(("qtbase" ,qtbase)
-       ("qtdeclarative" ,qtdeclarative)
-       ("qtlocation" ,qtlocation)
-       ("qtsvg" ,qtsvg)
-       ("qtsensors" ,qtsensors)
-       ("qtxmlpatterns" ,qtxmlpatterns)
-       ("qtwebkit" ,qtwebkit)
-       ("qtwebchannel" ,qtwebchannel)
-       ,@(package-inputs rstudio-server)))
-    (synopsis "Integrated development environment (IDE) for R (desktop version)")))
-
 (define-public r-reordercluster
   (package
    (name "r-reordercluster")
@@ -1142,7 +976,7 @@ to group instances from the same class together.")
 (define-public r-aneufinderdata
   (package
    (name "r-aneufinderdata")
-   (version "1.6.0")
+   (version "1.8.0")
    (source (origin
             (method url-fetch)
             (uri (string-append "http://bioconductor.org/packages"
@@ -1150,27 +984,50 @@ to group instances from the same class together.")
                                 "AneuFinderData_" version ".tar.gz"))
             (sha256
              (base32
-              "0cbgmfciy9v81jfn60mw98csxxdmm3hfqdwyaigbagj949alnbcm"))))
+              "17snbhlvb64mqcq26kawd92wpckjzxbl78chp87hrwsfhf7my6hm"))))
    (build-system r-build-system)
    (home-page "http://bioconductor.org/packages/AneuFinderData")
    (synopsis "Data package for AneuFinder")
    (description "This package contains data used by AneuFinder.")
    (license license:artistic2.0)))
 
+(define-public r-ecp
+  (package
+    (name "r-ecp")
+    (version "3.1.0")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "ecp" version))
+              (sha256
+               (base32
+                "0siq5acpy4wmqzm6zvpqj1m8a05hgk5jhb1clv06y40kqk5kjrap"))))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page "http://cran.r-project.org/web/packages/ecp")
+    (synopsis "Non-Parametric Multiple Change-Point Analysis of Multivariate Data")
+    (description
+     "Implements various procedures for finding multiple change-points.  Two
+methods make use of dynamic programming and pruning, with no distributional
+assumptions other than the existence of certain absolute moments in one method.
+Hierarchical and exact search methods are included.  All methods return the set
+of estimated change- points as well as other summary information.")
+    (license license:gpl2+)))
+
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
-    (version "1.6.0")
+    (version "1.8.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AneuFinder" version))
               (sha256
                (base32
-                "07mwfzpv9ya9ma74n993pihjhi10pjpnzbx1bfvk55h4mcyl7r7c"))))
+                "07xdqal5i0qpcgr4hqdfq0hpzj7kg0wvjcngidqq9k0zci8na8gh"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
        ("r-aneufinderdata" ,r-aneufinderdata)
+       ("r-ecp" ,r-ecp)
        ("r-foreach" ,r-foreach)
        ("r-doparallel" ,r-doparallel)
        ("r-biocgenerics" ,r-biocgenerics)

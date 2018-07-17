@@ -71,7 +71,14 @@
    (9 "0g1l56kvw61rpw7dqa9fcl9llkl693h73g631hrhxlm030ddssqb")
    (10 "01lfhrkdsdkdz8ypzapr614ras23x7ckjnr60aa5bzkaqprccrc4")
    (11 "038p7mhnq9m65g505hi3827jkf9f35nd1cy00w8mwafpyxp44mnx")
-   (12 "0gh6lbb1rwpk44pvbamm6vzdfi50xnwkqd9v7s8cjwk3pz973hps")))
+   (12 "0gh6lbb1rwpk44pvbamm6vzdfi50xnwkqd9v7s8cjwk3pz973hps")
+   (13 "1djkx0w9v62q78gz3jsvamj1jq53i6hbfrfhhsw86ihwpjnfy98v")
+   (14 "0z5ikcq9zyxw79d0z36r5p0mspnb5piavbv03jmlan1wnknmrxx7")
+   (15 "09n307fi1j257abhm295k6ksmnzw47ka2zhnr0i5lbdnpvn04xnk")
+   (16 "1cgi1y6mifm8hsgv4avj5ih76535js3qba1sqwbfvp7si76927sh")
+   (17 "0w6jpj2giakji1ir83rpkx1y7n7xqppah3j748m6dm38hywr0gvp")
+   (18 "1k58h4wxbsg7r4rwhrvzx5hfbapba2nxjysbhh6qp6ki5ys99i2v")
+   (19 "07n1i5610lbs672x1s8g82qn3qfj06s0ip3z80sri0g8vxp0s5r7")))
 
 (define-public bash-custom
   (let* ((cppflags (string-join '("-DNON_INTERACTIVE_LOGIN_SHELLS"
@@ -137,7 +144,8 @@
               ;; Add a `sh' -> `bash' link.
               (let ((out (assoc-ref outputs "out")))
                 (with-directory-excursion (string-append out "/bin")
-                  (symlink "bash" "sh")))))
+                  (symlink "bash" "sh")
+                  #t))))
 
           (add-after 'install 'move-development-files
             (lambda* (#:key outputs #:allow-other-keys)
@@ -182,7 +190,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.5.0")
+    (version "1.8.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -190,9 +198,7 @@ without modification.")
        ("gwl" ,gwl)))
     (inputs
      `(("bash-full" ,bash-custom)
-       ("git" ,git)
-       ("sed" ,sed)
-       ("gawk" ,gawk)))
+       ("git" ,git)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -215,12 +221,10 @@ guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
 guix=\"~a/bin/guix\"
 git=\"~a/bin/git\"
-gawk=\"~a/bin/gawk\"
 coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
 cut=\"${coreutils}/bin/cut\"
 grep=\"~a/bin/grep\"
-sed=\"~a/bin/sed\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
@@ -274,8 +278,30 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
       set_output=$(${grep} -h \"^export\" $profiles)
-      sge_variables=$(export -p | ${grep} \"^declare -x SGE\")
-      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$sge_variables\"; echo \"$set_output\"; echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
+      sge_variables=$(export -p | ${grep} \"^declare -x SGE\" || echo \"# No SGE variables found.\")
+      tmp_variables=$(export -p | ${grep} \"^declare -x TMP\" || echo \"# No TMP variables found.\")
+      job_id_variables=$(export -p | ${grep} \"^declare -x JOB_ID\" || echo \"# No JOB_ID variable found.\")
+      hostname_variables=$(export -p | ${grep} \"^declare -x HOSTNAME\" || echo \"# No HOSTNAME variable found.\")
+      logname_variables=$(export -p | ${grep} \"^declare -x LOGNAME\" || echo \"# No LOGNAME variable found.\")
+      malloc_variables=$(export -p | ${grep} \"^declare -x MALLOC_ARENA_MAX\" || echo \"# No MALLOC_ARENA_MAX variable found.\")
+      home_variables=$(export -p | ${grep} \"^declare -x HOME\" || echo \"# No HOME variable found.\")
+      locale_variables=$(export -p | ${grep} \"^declare -x LANG\" || echo \"# No LANG variable found.\")
+      locpath_variables=$(export -p | ${grep} \"^declare -x GUIX_LOCPATH\" || echo \"# No GUIX_LOCPATH variable found.\")
+      last_profile=\"${profile_arguments[-1]}\"
+      profile_paths=\"$(echo ${profile_arguments[@]} | ${coreutils}/bin/tr ' ' ':')\"
+      ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\";
+                                                       echo \"$locpath_variables\";
+                                                       echo \"$sge_variables\";
+                                                       echo \"$malloc_variables\";
+                                                       echo \"$hostname_variables\";
+                                                       echo \"$logname_variables\";
+                                                       echo \"$tmp_variables\";
+                                                       echo \"$job_id_variables\";
+                                                       echo \"$home_variables\";
+                                                       echo \"$set_output\";
+                                                       echo \"declare -x GUIX_PROFILE_PATH=\\\"$last_profile\\\"\";
+                                                       echo \"declare -x GUIX_PROFILES=\\\"$profile_paths\\\"\";
+                                                       echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
     fi
@@ -287,10 +313,8 @@ else
 fi~%"
                          (assoc-ref inputs "guix")
                          (assoc-ref inputs "git")
-                         (assoc-ref inputs "gawk")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
-                         (assoc-ref inputs "sed")
                          (assoc-ref inputs "bash-full"))))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
