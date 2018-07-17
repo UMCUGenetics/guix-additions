@@ -41,8 +41,10 @@ PYTHON_MODULE_NOTFOUND_PATTERN="(?<=ModuleNotFoundError: No module named \')(.+)
 GUIX_PACKAGE_PATH="GUIX_PACKAGE_PATH"
 
 # ASSUMES TO BE RUN FROM THE SCRIPTS FOLDER
-GUIX_ADDITIONS_PATH="../../guix-additions/umcu/packages/"
-GUIX_GNU_ADDITIONS_PATH=":/gnu/repositories/guix-additions/"
+SCRIPT_PATH=os.path.realpath(__file__)
+GUIX_ADDITIONS_PATH=os.sep.join(SCRIPT_PATH.split(os.sep)[:-2])
+PACKAGE_PATH=GUIX_ADDITIONS_PATH+"/umcu/packages/"
+GUIX_GNU_ADDITIONS_PATH="/gnu/repositories/guix-additions/"
 
 
 PREAMLBE_GUIX="""
@@ -141,7 +143,7 @@ def check_avail(package):
     return(True)
 
 def make_recipe(package):
-    recipefile = "{0}{1}.scm".format(GUIX_ADDITIONS_PATH, package)
+    recipefile = "{0}{1}.scm".format(PACKAGE_PATH, package)
     if args.verbose: print("Package [{0}] - Recipe file {1}".format(package, recipefile))
 
     if check_avail(package):
@@ -218,8 +220,9 @@ def make_recipe(package):
 
 # SET GUIX PATH TO LOCAL PACKAGES
 #print("export {0}={1}".format(GUIX_PACKAGE_PATH, GUIX_ADDITIONS_PATH))
-os.environ[GUIX_PACKAGE_PATH]=GUIX_ADDITIONS_PATH+GUIX_GNU_ADDITIONS_PATH
-if args.verbose: print(os.environ[GUIX_PACKAGE_PATH])
+os.environ[GUIX_PACKAGE_PATH]=GUIX_ADDITIONS_PATH+":"+GUIX_GNU_ADDITIONS_PATH
+if args.verbose: print("--INFO-- [Environment] - {0} = {1}".format(GUIX_PACKAGE_PATH, os.environ[GUIX_PACKAGE_PATH]))
+#os.system("echo $GUIX_PACKAGE_PATH")
 
 for pack in args.packages:
     if args.verbose: print("Package [{0}] - Starting to generate recipe".format(pack))
