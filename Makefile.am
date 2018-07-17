@@ -58,6 +58,7 @@ SOURCES =                                       \
   umcu/packages/pyclone.scm                     \
   umcu/packages/pyflow.scm                      \
   umcu/packages/python.scm                      \
+  umcu/packages/rstudio.scm                     \
   umcu/packages/sambamba.scm                    \
   umcu/packages/samtools.scm                    \
   umcu/packages/snp-fingerprinting.scm          \
