@@ -1488,3 +1488,177 @@ spectral data.  It imports from AIA/ANDI NetCDF, mzXML, mzData and mzML
 files.  It preprocesses data for high-throughput, untargeted analyte
 profiling.")
     (license license:gpl2+)))
+
+(define-public r-libcoin
+  (package
+   (name "r-libcoin")
+   (version "1.0-1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "libcoin" version))
+     (sha256
+      (base32
+       "1i38v0pq5snx9clhgfiymk6lq87h41pajhp2dvin30snnq0py6qq"))))
+   (build-system r-build-system)
+   (propagated-inputs `(("r-mvtnorm" ,r-mvtnorm)))
+   (home-page
+    "http://cran.r-project.org/web/packages/libcoin")
+   (synopsis "Linear test statistics for permutation inference")
+   (description
+    "This package provides basic infrastructure for linear test statistics and
+permutation inference in the framework of Strasser and Weber (1999).  This
+package must not be used by end-users.  CRAN package @code{coin} implements all
+user interfaces and is ready to be used by anyone.")
+   (license license:gpl2)))
+
+(define-public r-inum
+  (package
+   (name "r-inum")
+   (version "1.0-0")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "inum" version))
+     (sha256
+      (base32
+       "1b013ak4d0iiwk5a0s7vvsl34d0hs881iq7zrvah4skb89x82cpm"))))
+   (build-system r-build-system)
+   (propagated-inputs `(("r-libcoin" ,r-libcoin)))
+   (home-page
+    "http://cran.r-project.org/web/packages/inum")
+   (synopsis "Interval and enum-type representation of vectors")
+   (description
+    "This package provides an enum-type representation of vectors and
+representation of intervals, including a method of coercing variables
+in data frames.")
+   (license license:gpl2)))
+
+(define-public r-partykit
+  (package
+   (name "r-partykit")
+   (version "1.2-2")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "partykit" version))
+     (sha256
+      (base32
+       "118zrf9015kh0gicma98ddm80qhicdlhri2h1nwz0wlng9hkyxbg"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-formula" ,r-formula)
+      ("r-inum" ,r-inum)
+      ("r-libcoin" ,r-libcoin)
+      ("r-mvtnorm" ,r-mvtnorm)
+      ("r-rpart" ,r-rpart)
+      ("r-survival" ,r-survival)))
+   (home-page
+    "http://partykit.R-Forge.R-project.org/partykit")
+   (synopsis "Toolkit for recursive partytioning")
+   (description
+    "This package provides a toolkit with infrastructure for representing,
+summarizing, and visualizing tree-structured regression and classification
+models.  This unified infrastructure can be used for reading/coercing tree
+models from different sources ('rpart', 'RWeka', 'PMML') yielding objects
+that share functionality for print()/plot()/predict() methods.  Furthermore,
+new and improved reimplementations of conditional inference trees
+(@code{ctree()}) and model-based recursive partitioning (@code{mob()}) from
+the @code{party} package are provided based on the new infrastructure.")
+   (license #f)))
+
+(define-public r-nnls
+  (package
+   (name "r-nnls")
+   (version "1.4")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "nnls" version))
+            (sha256
+             (base32
+              "07vcrrxvswrvfiha6f3ikn640yg0m2b4yd9lkmim1g0jmsmpfp8f"))))
+   (build-system r-build-system)
+   (native-inputs
+    `(("gfortran" ,gfortran)))
+   (home-page
+    "http://cran.r-project.org/web/packages/nnls")
+   (synopsis "The Lawson-Hanson algorithm for non-negative least squares")
+   (description "This package provides an R interface to the Lawson-Hanson
+implementation of an algorithm for non-negative least squares (NNLS).  It also
+allows the combination of non-negative and non-positive constraints.")
+   (license license:gpl2+)))
+
+(define-public r-stabs
+  (package
+  (name "r-stabs")
+  (version "0.6-3")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "stabs" version))
+      (sha256
+        (base32
+          "17sa0sjxf6h7gx1ga1pxhv17yrz3qisaivbf5cbc3asvshhswqg9"))))
+  (build-system r-build-system)
+  (home-page "https://github.com/hofnerb/stabs")
+  (synopsis "Stability selection with error control")
+  (description
+    "This package provides resampling procedures to assess the stability of
+selected variables with additional finite sample error control for
+high-dimensional variable selection procedures such as Lasso or boosting.
+Both, standard stability selection (Meinshausen & Buhlmann, 2010) and
+complementary pairs stability selection with improved error bounds
+(Shah & Samworth, 2013) are implemented.  The package can be combined with
+arbitrary user specified variable selection approaches.")
+  (license license:gpl2)))
+
+(define-public r-mboost
+  (package
+   (name "r-mboost")
+   (version "2.9-0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "mboost" version))
+            (sha256
+             (base32
+              "0hfw69h3j4hwwrdinmazl4abhij2drki5jp9i9qz30gyy16wf0f2"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-lattice" ,r-lattice)
+      ("r-matrix" ,r-matrix)
+      ("r-nnls" ,r-nnls)
+      ("r-partykit" ,r-partykit)
+      ("r-quadprog" ,r-quadprog)
+      ("r-stabs" ,r-stabs)
+      ("r-survival" ,r-survival)))
+   (home-page "https://github.com/boost-R/mboost")
+   (synopsis "Model-Based Boosting")
+   (description "Functional gradient descent algorithm (boosting) for optimizing
+general risk functions utilizing component-wise (penalised) least squares
+estimates or regression trees as base-learners for fitting generalized linear,
+additive and interaction models to potentially high-dimensional data.")
+   (license license:gpl2)))
+
+(define-public r-glinternet
+  (package
+   (name "r-glinternet")
+   (version "1.0.8")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "glinternet" version))
+     (sha256
+      (base32
+       "06ak80j01cbrr6s8hmcc734z476rrqzib0xqjgv7c3jbw0api71y"))))
+   (build-system r-build-system)
+   (home-page "http://web.stanford.edu/~hastie/Papers/glinternet_jcgs.pdf")
+   (synopsis "Learning interactions via hierarchical group-lasso regularization")
+   (description "Group-Lasso INTERaction-NET.  Fits linear pairwise-interaction
+models that satisfy strong hierarchy: if an interaction coefficient is estimated
+to be nonzero, then its two associated main effects also have nonzero estimated
+coefficients.  Accommodates categorical variables (factors) with arbitrary
+numbers of levels, continuous variables, and combinations thereof.  Implements
+the machinery described in the paper \"Learning interactions via hierarchical
+group-lasso regularization\" (JCGS 2015, Volume 24, Issue 3).
+Michael Lim & Trevor Hastie (2015)")
+   (license license:gpl2)))
