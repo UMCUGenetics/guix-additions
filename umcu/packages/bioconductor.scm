@@ -1694,4 +1694,30 @@ Michael Lim & Trevor Hastie (2015)")
   (synopsis "Regression Modeling Strategies")
   (description
     "Regression modeling, testing, estimation, validation, graphics, prediction, and typesetting by storing enhanced model design attributes in the fit.  'rms' is a collection of functions that assist with and streamline modeling.  It also contains functions for binary and ordinal logistic regression models, ordinal models for continuous Y with a variety of distribution families, and the Buckley-James multiple regression model for right-censored responses, and implements penalized maximum likelihood estimation for logistic and ordinary linear models.  'rms' works with almost any regression model, but it was especially written to work with binary or ordinal regression models, Cox regression, accelerated failure time models, ordinary linear models,\tthe Buckley-James model, generalized least squares for serially or spatially correlated observations, generalized linear models, and quantile regression.")
-  (license gpl2+)))
+  (license license:gpl2+)))
+
+(define-public r-multcomp
+(package
+  (name "r-multcomp")
+  (version "1.4-8")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "multcomp" version))
+      (sha256
+        (base32
+          "0fm78g4zjc6ank316qfw977864shmy890znn4fahwc8jjdhpc252"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-codetools" ,r-codetools)
+      ("r-mvtnorm" ,r-mvtnorm)
+      ("r-sandwich" ,r-sandwich)
+      ("r-survival" ,r-survival)
+      ("r-th-data" ,r-th-data)))
+  (home-page
+    "http://cran.r-project.org/web/packages/multcomp")
+  (synopsis
+    "Simultaneous Inference in General Parametric Models")
+  (description
+    "Simultaneous tests and confidence intervals for general linear hypotheses in parametric models, including linear, generalized linear, linear mixed effects, and survival models.  The package includes demos reproducing analyzes presented in the book \"Multiple Comparisons Using R\" (Bretz, Hothorn, Westfall, 2010, CRC Press).")
+  (license license:gpl2)))
