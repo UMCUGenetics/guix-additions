@@ -1662,3 +1662,124 @@ the machinery described in the paper \"Learning interactions via hierarchical
 group-lasso regularization\" (JCGS 2015, Volume 24, Issue 3).
 Michael Lim & Trevor Hastie (2015)")
    (license license:gpl2)))
+
+(define-public r-rms
+(package
+  (name "r-rms")
+  (version "5.1-2")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "rms" version))
+      (sha256
+        (base32
+          "01wjxlqfz6l1bdsvxqq0lsbps0k86hx3ayb6fl2n2hxccvsfxkzi"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-ggplot2" ,r-ggplot2)
+      ("r-hmisc" ,r-hmisc)
+      ("r-htmltable" ,r-htmltable)
+      ("r-htmltools" ,r-htmltools)
+      ("r-lattice" ,r-lattice)
+      ("r-multcomp" ,r-multcomp)
+      ("r-nlme" ,r-nlme)
+      ("r-polspline" ,r-polspline)
+      ("r-quantreg" ,r-quantreg)
+      ("r-rpart" ,r-rpart)
+      ("r-sparsem" ,r-sparsem)
+      ("r-survival" ,r-survival)))
+  (native-inputs `(("gfortran" ,gfortran)))
+  (home-page
+    "http://biostat.mc.vanderbilt.edu/rms")
+  (synopsis "Regression Modeling Strategies")
+  (description
+    "Regression modeling, testing, estimation, validation, graphics, prediction, and typesetting by storing enhanced model design attributes in the fit.  'rms' is a collection of functions that assist with and streamline modeling.  It also contains functions for binary and ordinal logistic regression models, ordinal models for continuous Y with a variety of distribution families, and the Buckley-James multiple regression model for right-censored responses, and implements penalized maximum likelihood estimation for logistic and ordinary linear models.  'rms' works with almost any regression model, but it was especially written to work with binary or ordinal regression models, Cox regression, accelerated failure time models, ordinary linear models,\tthe Buckley-James model, generalized least squares for serially or spatially correlated observations, generalized linear models, and quantile regression.")
+  (license license:gpl2+)))
+
+(define-public r-multcomp
+(package
+  (name "r-multcomp")
+  (version "1.4-8")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "multcomp" version))
+      (sha256
+        (base32
+          "0fm78g4zjc6ank316qfw977864shmy890znn4fahwc8jjdhpc252"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-codetools" ,r-codetools)
+      ("r-mvtnorm" ,r-mvtnorm)
+      ("r-sandwich" ,r-sandwich)
+      ("r-survival" ,r-survival)
+      ("r-th-data" ,r-th-data)))
+  (home-page
+    "http://cran.r-project.org/web/packages/multcomp")
+  (synopsis
+    "Simultaneous Inference in General Parametric Models")
+  (description
+    "Simultaneous tests and confidence intervals for general linear hypotheses in parametric models, including linear, generalized linear, linear mixed effects, and survival models.  The package includes demos reproducing analyzes presented in the book \"Multiple Comparisons Using R\" (Bretz, Hothorn, Westfall, 2010, CRC Press).")
+  (license license:gpl2)))
+
+(define-public r-polspline
+(package
+  (name "r-polspline")
+  (version "1.1.13")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "polspline" version))
+      (sha256
+        (base32
+          "08hz6wlaipjss3cfk0dvr7yy6fc7cd4hqv9finj40kkm5n262xck"))))
+  (build-system r-build-system)
+  (native-inputs `(("gfortran" ,gfortran)))
+  (home-page
+    "http://cran.r-project.org/web/packages/polspline")
+  (synopsis "Polynomial Spline Routines")
+  (description
+    "Routines for the polynomial spline fitting routines hazard regression, hazard estimation with flexible tails, logspline, lspec, polyclass, and polymars, by C.  Kooperberg and co-authors.")
+  (license license:gpl2+)))
+
+(define-public r-sandwich
+(package
+  (name "r-sandwich")
+  (version "2.4-0")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "sandwich" version))
+      (sha256
+        (base32
+          "1h6c12cfv2x42laxf6ifxfk9hqzagvvvimzak88fv8vnxnf5nc9l"))))
+  (build-system r-build-system)
+  (propagated-inputs `(("r-zoo" ,r-zoo)))
+  (home-page
+    "http://cran.r-project.org/web/packages/sandwich")
+  (synopsis "Robust Covariance Matrix Estimators")
+  (description
+    "Model-robust standard error estimators for cross-sectional, time series, clustered, panel, and longitudinal data.")
+  (license #f)))
+
+(define-public r-th-data
+(package
+  (name "r-th-data")
+  (version "1.0-9")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "TH.data" version))
+      (sha256
+        (base32
+          "03xfvww0krw0fn76qmmvrj7dx4shin57qafwhkrggfg25hbqlcfq"))))
+  (properties `((upstream-name . "TH.data")))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-mass" ,r-mass) ("r-survival" ,r-survival)))
+  (home-page
+    "http://cran.r-project.org/web/packages/TH.data")
+  (synopsis "TH's Data Archive")
+  (description
+    "Contains data sets used in other packages Torsten Hothorn maintains.")
+  (license license:gpl3)))
