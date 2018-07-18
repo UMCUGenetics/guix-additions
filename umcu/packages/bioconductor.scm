@@ -1662,3 +1662,36 @@ the machinery described in the paper \"Learning interactions via hierarchical
 group-lasso regularization\" (JCGS 2015, Volume 24, Issue 3).
 Michael Lim & Trevor Hastie (2015)")
    (license license:gpl2)))
+
+(define-public r-rms
+(package
+  (name "r-rms")
+  (version "5.1-2")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "rms" version))
+      (sha256
+        (base32
+          "01wjxlqfz6l1bdsvxqq0lsbps0k86hx3ayb6fl2n2hxccvsfxkzi"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-ggplot2" ,r-ggplot2)
+      ("r-hmisc" ,r-hmisc)
+      ("r-htmltable" ,r-htmltable)
+      ("r-htmltools" ,r-htmltools)
+      ("r-lattice" ,r-lattice)
+      ("r-multcomp" ,r-multcomp)
+      ("r-nlme" ,r-nlme)
+      ("r-polspline" ,r-polspline)
+      ("r-quantreg" ,r-quantreg)
+      ("r-rpart" ,r-rpart)
+      ("r-sparsem" ,r-sparsem)
+      ("r-survival" ,r-survival)))
+  (native-inputs `(("gfortran" ,gfortran)))
+  (home-page
+    "http://biostat.mc.vanderbilt.edu/rms")
+  (synopsis "Regression Modeling Strategies")
+  (description
+    "Regression modeling, testing, estimation, validation, graphics, prediction, and typesetting by storing enhanced model design attributes in the fit.  'rms' is a collection of functions that assist with and streamline modeling.  It also contains functions for binary and ordinal logistic regression models, ordinal models for continuous Y with a variety of distribution families, and the Buckley-James multiple regression model for right-censored responses, and implements penalized maximum likelihood estimation for logistic and ordinary linear models.  'rms' works with almost any regression model, but it was especially written to work with binary or ordinal regression models, Cox regression, accelerated failure time models, ordinary linear models,\tthe Buckley-James model, generalized least squares for serially or spatially correlated observations, generalized linear models, and quantile regression.")
+  (license gpl2+)))
