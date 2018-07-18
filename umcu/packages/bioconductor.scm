@@ -1721,3 +1721,22 @@ Michael Lim & Trevor Hastie (2015)")
   (description
     "Simultaneous tests and confidence intervals for general linear hypotheses in parametric models, including linear, generalized linear, linear mixed effects, and survival models.  The package includes demos reproducing analyzes presented in the book \"Multiple Comparisons Using R\" (Bretz, Hothorn, Westfall, 2010, CRC Press).")
   (license license:gpl2)))
+
+(define-public r-polspline
+  (name "r-polspline")
+  (version "1.1.13")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "polspline" version))
+      (sha256
+        (base32
+          "08hz6wlaipjss3cfk0dvr7yy6fc7cd4hqv9finj40kkm5n262xck"))))
+  (build-system r-build-system)
+  (native-inputs `(("gfortran" ,gfortran)))
+  (home-page
+    "http://cran.r-project.org/web/packages/polspline")
+  (synopsis "Polynomial Spline Routines")
+  (description
+    "Routines for the polynomial spline fitting routines hazard regression, hazard estimation with flexible tails, logspline, lspec, polyclass, and polymars, by C.  Kooperberg and co-authors.")
+  (license license:gpl2+)))
