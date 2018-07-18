@@ -1760,5 +1760,4 @@ Michael Lim & Trevor Hastie (2015)")
   (synopsis "Robust Covariance Matrix Estimators")
   (description
     "Model-robust standard error estimators for cross-sectional, time series, clustered, panel, and longitudinal data.")
-  (license license:#f)))
-               
+  (license #f)))               
