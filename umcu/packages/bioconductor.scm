@@ -1723,6 +1723,7 @@ Michael Lim & Trevor Hastie (2015)")
   (license license:gpl2)))
 
 (define-public r-polspline
+(package
   (name "r-polspline")
   (version "1.1.13")
   (source
