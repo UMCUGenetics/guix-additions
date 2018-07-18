@@ -1760,4 +1760,26 @@ Michael Lim & Trevor Hastie (2015)")
   (synopsis "Robust Covariance Matrix Estimators")
   (description
     "Model-robust standard error estimators for cross-sectional, time series, clustered, panel, and longitudinal data.")
-  (license #f)))               
+  (license #f)))
+
+(define-public r-th-data
+(package
+  (name "r-th-data")
+  (version "1.0-9")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "TH.data" version))
+      (sha256
+        (base32
+          "03xfvww0krw0fn76qmmvrj7dx4shin57qafwhkrggfg25hbqlcfq"))))
+  (properties `((upstream-name . "TH.data")))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-mass" ,r-mass) ("r-survival" ,r-survival)))
+  (home-page
+    "http://cran.r-project.org/web/packages/TH.data")
+  (synopsis "TH's Data Archive")
+  (description
+    "Contains data sets used in other packages Torsten Hothorn maintains.")
+  (license license:gpl3)))
