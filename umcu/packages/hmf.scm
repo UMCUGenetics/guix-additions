@@ -73,6 +73,59 @@
   #:use-module (umcu packages vcflib)
   #:use-module (umcu packages vcftools))
 
+(define-public gridss-bin
+  (package
+    (name "gridss")
+    (version "1.7.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/PapenfussLab/gridss/releases/download/v"
+                    version "/gridss-" version "-gridss-jar-with-dependencies.jar"))
+              (file-name (string-append name "-" version ".jar"))
+              (sha256
+               (base32 "0j0bakl2kcr32cf2mjgk01a8r862jn7bc4vsfyzhjjdj3zl1bkrc"))))
+    (build-system gnu-build-system)
+    (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'unpack) ; Don't unpack the jar.
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda* (#:key inputs #:allow-other-keys)
+            (let ((jar (assoc-ref %build-inputs "source"))
+                  (out (string-append (assoc-ref %outputs "out")
+                                      "/share/java/" ,name "/")))
+              (mkdir-p out)
+              (copy-file jar (string-append out ,name "-" ,version ".jar"))
+              (symlink (string-append out ,name "-" ,version ".jar")
+                       (string-append out ,name ".jar"))))))))
+    (native-search-paths
+     (list (search-path-specification
+            (variable "GUIX_JARPATH")
+            (files (list "share/java/gridss")))))
+    (propagated-inputs
+     `(("r" ,r)
+       ("r-variantannotation" ,r-variantannotation)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-scales" ,r-scales)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-data-table" ,r-data-table)
+       ("r-stringr" ,r-stringr)))
+    (home-page "https://github.com/PapenfussLab/gridss")
+    (synopsis "Genomic Rearrangement IDentification Software Suite")
+    (description "GRIDSS is a module software suite containing tools useful for
+the detection of genomic rearrangements.  GRIDSS includes a genome-wide
+break-end assembler, as well as a structural variation caller for Illumina
+sequencing data.  GRIDSS calls variants based on alignment-guided positional
+de Bruijn graph genome-wide break-end assembly, split read, and read pair
+evidence.")
+    (license license:gpl3+)))
+
 (define-public grep-with-pcre
   (package (inherit grep)
     (name "grep-with-pcre")
