@@ -1864,7 +1864,7 @@ REPORT_STATUS	~a"
            ;; Make sure the templates can be found.
            (with-directory-excursion lib-dir
              (substitute* "HMF/Pipeline/Functions/Template.pm"
-               (("my \\$source_template_dir = catfile\\(HMF::Pipeline::Config::pipelinePath\\(\\), \"templates\"\\);")
+               (("my \\$source_template_dir = catfile\\(HMF::Pipeline::Functions::Config::pipelinePath\\(\\), \"templates\"\\);")
                 (string-append "my $source_template_dir = \"" templates-dir "\";")))
 
              ;; Make sure the other subdirectories can be found.
@@ -1884,16 +1884,16 @@ REPORT_STATUS	~a"
                (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir"))
 
              (substitute* "HMF/Pipeline/Functions/Sge.pm"
-               ;; Over-allocate by 4G for each job, because some SGE
+               ;; Over-allocate by 5G for each job, because some SGE
                ;; implementations have memory overhead on each job.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
-                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m eas -V -l h_vmem=$h_vmem")
+                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m eas -V -l h_vmem=$h_vmem")
                ;; Make sure that environment variables are passed along
                ;; to the jobs correctly.
                (("qsub -P") "qsub -m eas -V -P")
-               ;; Also apply the 4GB over-allocation to GATK-Queue-spawned jobs.
+               ;; Also apply the 5GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (4 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m eas -l h_vmem=$h_vmem\";")
+                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m eas -l h_vmem=$h_vmem\";")
                ))))))
     (inputs
      `(("bammetrics" ,bammetrics)
