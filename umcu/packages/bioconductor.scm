@@ -1783,3 +1783,22 @@ Michael Lim & Trevor Hastie (2015)")
   (description
     "Contains data sets used in other packages Torsten Hothorn maintains.")
   (license license:gpl3)))
+
+(define-public r-pvclust
+  (package
+   (name "r-pvclust")
+   (version "2.0-0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "pvclust" version))
+            (sha256
+             (base32
+              "0hfpf257k5f1w59m0zq6sk0gaamflc3ldkw6qzbpyc4j94hiaihs"))))
+   (build-system r-build-system)
+   (home-page "http://www.sigmath.es.osaka-u.ac.jp/shimo-lab/prog/pvclust/")
+   (synopsis "Hierarchical clustering with P-values via multiscale bootstrap resampling")
+   (description "An implementation of multiscale bootstrap resampling for
+assessing the uncertainty in hierarchical cluster analysis.  It provides AU
+(approximately unbiased) p-value as well as BP (bootstrap probability) value
+for each cluster in a dendrogram.")
+   (license license:gpl2+)))
