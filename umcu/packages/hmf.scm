@@ -376,27 +376,208 @@ genomics data developed by the Hartwig Medical Foundation.")
 
 (define-public hmftools-2018-06-19
   (let ((commit "ce89d46addafda37b64e665ee32f43b814a261a6"))
-    (package (inherit hmftools-2018-01-11)
+    (package
      (name "hmftools")
      (version (string-append "20180619-" (string-take commit 7)))
      (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/hartwigmedical/hmftools.git")
-                    (commit commit)))
-              (file-name (string-append name "-" version "-checkout"))
-              (sha256
-               (base32
-                "1h7i2xvnk1jws6hzbbi5pg0dnb6gwp49lwzlgbyq707r321qcbpc"))))
+               (method git-fetch)
+               (uri (git-reference
+                     (url "https://github.com/hartwigmedical/hmftools.git")
+                     (commit commit)))
+               (file-name (string-append name "-" version "-checkout"))
+               (sha256
+                (base32
+                  "1h7i2xvnk1jws6hzbbi5pg0dnb6gwp49lwzlgbyq707r321qcbpc"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:tests? #f ; Tests are run in the install phase.
+        #:phases
+        (modify-phases %standard-phases
+          (delete 'configure) ; Nothing to configure
+           (add-after 'unpack 'disable-database-modules
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+              (substitute* "pom.xml"
+                ;; The following modules fail to build due to a dependency
+                ;; on itself.
+                 (("<module>health-checker</module>")
+                  "<!-- <module>health-checker</module> -->")
+                 (("<module>patient-reporter</module>")
+                  "<!-- <module>patient-reporter</module> -->"))))
+
+           ;; To build the purity-ploidy-estimator, we need to build patient-db
+           ;; first.  This needs a running MySQL database.  So, we need to set
+           ;; this up before attempting to build the Java archives.
+           (add-before 'build 'start-mysql-server
+            (lambda* (#:key inputs #:allow-other-keys)
+              (let ((mysqld (string-append (assoc-ref inputs "mysql") "/bin/mysqld"))
+                    (mysql (string-append (assoc-ref inputs "mysql") "/bin/mysql"))
+                    (mysql-run-dir (string-append (getcwd) "/mysql")))
+                (mkdir-p "mysql/data")
+                (with-directory-excursion "mysql"
+                  ;; Initialize the MySQL data store.  The mysql_install_db
+                  ;; script uses relative paths to find things, so we need to
+                  ;; change to the right directory.
+                  (with-directory-excursion (assoc-ref inputs "mysql")
+                    (system* "bin/mysql_install_db"
+                             (string-append "--datadir=" mysql-run-dir "/data")
+                             "--user=root"))
+
+                  ;; Run the MySQL server.
+                  (system (string-append
+                           mysqld
+                           " --datadir=" mysql-run-dir "/data "
+                           "--user=root "
+                           "--socket=" mysql-run-dir "/socket "
+                           "--port=3306 "
+                           "--explicit_defaults_for_timestamp "
+                           "&> " mysql-run-dir "/mysqld.log &"))
+
+                  (format #t "Waiting for MySQL server to start.")
+                  (sleep 5)
+
+                  ;; Create 'build' user.
+                  (system* mysql
+                           "--host=127.0.0.1"
+                           "--port=3306"
+                           "--user=root"
+                           "-e" "CREATE USER build@localhost IDENTIFIED BY 'build'")
+
+                  ;; Grant permissions to 'build' user.
+                  (system* mysql
+                           "--host=127.0.0.1"
+                           "--port=3306"
+                           "--user=root"
+                           "-e" "GRANT ALL ON *.* TO 'build'@'localhost'")
+
+                  ;; Create a database.
+                  (system* mysql
+                           "--host=127.0.0.1"
+                           "--port=3306"
+                           "--user=build"
+                           "--password=build"
+                           "-e" "CREATE DATABASE hmfpatients")))))
+           (add-before 'build 'patch-circos-configuration
+             (lambda* (#:key inputs #:allow-other-keys)
+               (substitute* '("purity-ploidy-estimator/src/main/resources/circos/circos.template"
+                              "purity-ploidy-estimator/src/main/resources/circos/input.template")
+                 (("<<include etc/")
+                  (string-append "<<include " (assoc-ref inputs "circos")
+                                 "/share/Circos/etc/"))
+                 (("karyotype = data/")
+                  (string-append "karyotype = "
+                                 (assoc-ref inputs "circos")
+                                 "/share/Circos/data/")))))
+           (replace 'build
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+              (let* ((build-dir (getcwd))
+                     (home-dir (string-append build-dir "/home"))
+                     (settings-dir (string-append build-dir "/mvn"))
+                     (settings (string-append settings-dir "/settings.xml"))
+                     (m2-dir (string-append build-dir "/m2/repository")))
+
+                ;; Set JAVA_HOME to help maven find the JDK.
+                (setenv "JAVA_HOME" (string-append (assoc-ref inputs "icedtea")
+                                                   "/jre"))
+                (mkdir-p home-dir)
+                (setenv "HOME" home-dir)
+
+                (mkdir-p m2-dir)
+                (mkdir-p settings-dir)
+
+                ;; Create credentials file.
+                (with-output-to-file (string-append home-dir "/mysql.login")
+                  (lambda _
+                    (format #t "[client]~%database=~a~%user=~a~%password=~a~%socket=~a/mysql/socket"
+                            "hmfpatients" "build" "build" build-dir)))
+
+                ;; Unpack the dependencies downloaded using maven.
+                (with-directory-excursion m2-dir
+                  (and (zero? (system (string-append
+                                       "cat " (assoc-ref inputs "maven-deps-1") " "
+                                              (assoc-ref inputs "maven-deps-2")
+                                              " > " " ../deps.tar.gz")))
+                       (zero? (system* "tar" "xvf" "../deps.tar.gz"))))
+
+                ;; Because the build process does not have a home directory in
+                ;; which the 'm2' directory can be created (the directory
+                ;; that will contain all downloaded dependencies for maven),
+                ;; we need to set that directory to some other path.  This is
+                ;; done using an XML configuration file of which a minimal
+                ;; variant can be found below.
+                (with-output-to-file settings
+                  (lambda _
+                    (format #t "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\"
+          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+          xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\">
+<localRepository>~a</localRepository>
+</settings>" m2-dir)))
+
+                ;; Remove assumptious/breaking code
+                (substitute* "patient-db/src/main/resources/setup_database.sh"
+                  (("if \\[ \\$\\{SCRIPT_EPOCH\\} -gt \\$\\{DB_EPOCH\\} \\];")
+                   "if true;"))
+
+                ;; Compile using maven's compile command.
+                (zero? (system (format #f "mvn compile --offline --global-settings ~s" settings))))))
+          (replace 'install
+            (lambda* (#:key outputs #:allow-other-keys)
+              (let* ((build-dir (getcwd))
+                     (settings (string-append build-dir "/mvn/settings.xml"))
+                     (output-dir (string-append (assoc-ref outputs "out")
+                                                "/share/java/user-classes")))
+                (zero? (system (string-append "mvn package --offline "
+                                              "-Dmaven.test.skip=true "
+                                              "--global-settings \""
+                                              settings "\"")))
+                (mkdir-p output-dir)
+                (map (lambda (file-pair)
+                       (copy-file (car file-pair)
+                                  (string-append output-dir "/" (cdr file-pair))))
+                     (map (lambda (file)
+                            `(,file . ,(basename (string-append (string-drop-right file 26) ".jar"))))
+                          (find-files "." "-jar-with-dependencies.jar")))))))))
+     (inputs
+      `(("icedtea" ,icedtea-8 "jdk")
+        ("maven" ,maven-bin)
+        ("circos" ,circos)))
+     ;; Amber uses an R script for BAF segmentation.
+     (propagated-inputs
+      `(("r" ,r-minimal)
+        ("r-copynumber" ,r-copynumber)))
      (native-inputs
-      `(("maven-deps"
+      ;; Split files into two pieces because some very specific Git hosting
+      ;; provider limit filesizes to 100MB.
+      `(("maven-deps-1"
           ,(origin
              (method url-fetch)
-             (uri (string-append "file:///home/cog/rjanssen2/hmftools-mvn-dependencies.tar.gz"))
+             (uri (string-append
+                   "https://github.com/UMCUGenetics/guix-additions/raw/"
+                   "d616b7a6a4076737cd0a0f43f7ec448b4ea2d112/blobs/"
+                   "hmftools-mvn-dependencies.tar.gz.partaa"))
              (sha256
               (base32
-               "140cgxazyg1bygk39qdwy7cjlbvzrcaw140b355jdrcxpr6bk69i"))))
-        ("mysql" ,mysql-5.6.25))))))
+               "0qk33jh536jla3dmk97cj6xs960ydskjwbw87gh0wk3gri3w8yd2"))))
+        ("maven-deps-2"
+          ,(origin
+             (method url-fetch)
+             (uri (string-append
+                   "https://github.com/UMCUGenetics/guix-additions/raw/"
+                   "d616b7a6a4076737cd0a0f43f7ec448b4ea2d112/blobs/"
+                   "hmftools-mvn-dependencies.tar.gz.partab"))
+             (sha256
+              (base32
+               "0m8amb2ld99w6gyhsy74651d5c3208dj93127p3zbdh0ln1azarb"))))
+        ("mysql" ,mysql-5.6.25)))
+     (native-search-paths
+      (list (search-path-specification
+             (variable "GUIX_JARPATH")
+             (files (list "share/java/user-classes")))))
+     (home-page "https://github.com/hartwigmedical/hmftools")
+     (synopsis "Various utility tools for working with genomics data.")
+     (description "This package provides various tools for working with
+genomics data developed by the Hartwig Medical Foundation.")
+     (license license:expat))))
 
 (define-public hmftools
   (package
