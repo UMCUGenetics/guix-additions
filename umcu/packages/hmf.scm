@@ -1414,6 +1414,56 @@ REPORT_STATUS	~a"
 produce meaningful genomic data from Hartwig Medical.")
     (license license:expat)))
 
+(define-public hmf-pipeline-data-resources
+  (package
+    (name "hmf-pipeline-data-resources")
+    (version "4.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://nc.hartwigmedicalfoundation.nl/index.php/s/"
+                    "a8lgLsUrZI5gndd/download?path=/HMF-Pipeline-Resources"))
+              (sha256
+               (base32
+                "0rlbzxqilapgljpf8b1w4xv4ph8jlaaqldyl2yjhlgm2i06wcmza"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((tar     (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (unzip   (string-append (assoc-ref %build-inputs "unzip") "/bin/unzip"))
+               (tarball (assoc-ref %build-inputs "source"))
+               (out     (string-append %output "/share/hmf-pipeline")))
+           (mkdir-p out)
+           (with-directory-excursion out
+             (system* unzip tarball)
+             (rename-file (string-append out "/HMF-Pipeline-Resources")
+                          (string-append out "/resources")))
+           (with-directory-excursion (string-append out "/resources")
+             (system* unzip "Mappability.zip"))
+           (with-directory-excursion (string-append out "/resources")
+             (system* tar "xvf" (assoc-ref %build-inputs "germline-pon")))))))
+    (native-inputs
+     `(("tar" ,tar)
+       ("unzip" ,unzip)
+       ("germline-pon"
+        ,(origin
+           (method url-fetch)
+           (uri (string-append
+                 "https://nc.hartwigmedicalfoundation.nl/index.php/s/"
+                 "a8lgLsUrZI5gndd/download?path="
+                 "/HMF_PON_v2.0.tar"))
+           (sha256
+            (base32 "0m2ka2v95mbda5vfqylr7nnwq0k9yr9yrmwzlhfcj91cl3ihf70f"))))))
+    (home-page "https://github.com/hartwigmedical/pipeline")
+    (synopsis "Data resources for the Hartwig Medical pipeline")
+    (description "This package contains files that are needed by the Hartwig
+Medical pipeline.  Please see the README.pdf file for usage restrictions.")
+    ;; See the README.pdf for restrictions.
+    (license #f)))
+
 (define-public iap
   (package
     (name "iap")
