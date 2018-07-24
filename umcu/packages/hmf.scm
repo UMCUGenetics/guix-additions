@@ -373,10 +373,35 @@ genomics data developed by the Hartwig Medical Foundation.")
                (base32
                 "02k8w7vymib68g499kbl4q91dyz71bb2p72i9l4dg80pa797ssnk")))))))
 
+
+(define-public hmftools-2018-06-19
+  (let ((commit "ce89d46addafda37b64e665ee32f43b814a261a6"))
+    (package (inherit hmftools-2018-01-11)
+     (name "hmftools")
+     (version (string-append "20180619-" (string-take commit 7)))
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/hartwigmedical/hmftools.git")
+                    (commit commit)))
+              (file-name (string-append name "-" version "-checkout"))
+              (sha256
+               (base32
+                "1h7i2xvnk1jws6hzbbi5pg0dnb6gwp49lwzlgbyq707r321qcbpc"))))
+     (native-inputs
+      `(("maven-deps"
+          ,(origin
+             (method url-fetch)
+             (uri (string-append "file:///home/cog/rjanssen2/hmftools-mvn-dependencies.tar.gz"))
+             (sha256
+              (base32
+               "140cgxazyg1bygk39qdwy7cjlbvzrcaw140b355jdrcxpr6bk69i"))))
+        ("mysql" ,mysql-5.6.25))))))
+
 (define-public hmftools
   (package
    (name "hmftools")
-   (version "pipeline-compat")
+   (version "pipeline-v4-compat")
    (source #f)
    (build-system gnu-build-system)
    (arguments
@@ -394,53 +419,33 @@ genomics data developed by the Hartwig Medical Foundation.")
                                 "/share/java/user-classes/" path)))
                  (hmftools-2018 (lambda (path)
                                   (string-append
-                                   (assoc-ref inputs "hmftools-2018-01-11")
+                                   (assoc-ref inputs "hmftools-2018-06-19")
                                    "/share/java/user-classes/" path))))
              (mkdir-p (output-dir ""))
              (chdir (output-dir ""))
-
-             (copy-file (hmftools-2018 "amber-1.5.jar")
-                        (output-dir "amber-1.5.jar"))
-             (symlink "amber-1.5.jar" "amber.jar")
-
-             (copy-file (hmftools-2018 "bachelor-1.jar")
-                        (output-dir "bachelor-1.jar"))
-             (symlink "bachelor-1.jar" "bachelor.jar")
-
-             (copy-file (hmftools-2018 "bam-slicer-1.0.jar")
-                        (output-dir "bam-slicer-1.0.jar"))
-             (symlink "bam-slicer-1.0.jar" "bam-slicer.jar")
-
-             (copy-file (hmftools-2018 "break-point-inspector-1.5.jar")
-                        (output-dir "break-point-inspector-1.5.jar"))
-             (symlink "break-point-inspector-1.5.jar" "break-point-inspector.jar")
-
-             (copy-file (hmftools-2018 "count-bam-lines-1.2.jar")
-                        (output-dir "count-bam-lines-1.2.jar"))
-             (symlink "count-bam-lines-1.2.jar" "cobalt.jar")
-
-             (copy-file (hmftools-2018 "fastq-stats-1.0.jar")
-                        (output-dir "fastq-stats-1.0.jar"))
-             (symlink "fastq-stats-1.0.jar" "fastq-stats.jar")
-
-             (copy-file (hmftools-2018 "hmf-gene-panel-1.jar")
-                        (output-dir "hmf-gene-panel-1.jar"))
-             (symlink "hmf-gene-panel-1.jar" "hmf-gene-panel.jar")
-
-             (copy-file (hmftools-2018 "patient-db-1.5.jar")
-                        (output-dir "patient-db-1.5.jar"))
-             (symlink "patient-db-1.5.jar" "patient-db.jar")
-
-             (copy-file (hmftools-2018 "purity-ploidy-estimator-2.5.jar")
-                        (output-dir "purity-ploidy-estimator-2.5.jar"))
-             (symlink "purity-ploidy-estimator-2.5.jar" "purple.jar")
-
-             ;; strelka-post-process has no version in its filename in the
-             ;; 2018 release.
-             (copy-file (hmftools-2018 "strelka-post-process.jar")
-                        (output-dir "strelka-post-process.jar"))))))))
+             (symlink (hmftools-2018 "actionability-analyzer-1.0.jar")   "actionability-analyzer.jar")
+             (symlink (hmftools-2018 "api-clients-1.0.jar")              "api-clients.jar")
+             (symlink (hmftools-2018 "amber-1.5.jar")                    "amber.jar")
+             (symlink (hmftools-2018 "bachelor-1.2.jar")                 "bachelor.jar")
+             (symlink (hmftools-2018 "bachelor-pp-1.0.jar")              "bachelor-pp.jar")
+             (symlink (hmftools-2018 "bam-slicer-1.3.jar")               "bam-slicer.jar")
+             (symlink (hmftools-2018 "break-point-inspector-1.6.jar")    "break-point-inspector.jar")
+             (symlink (hmftools-2018 "count-bam-lines-1.4.jar")          "cobalt.jar")
+             (symlink (hmftools-2018 "fastq-stats-1.0.jar")              "fastq-stats.jar")
+             (symlink (hmftools-2018 "hmf-gene-panel-1.jar")             "hmf-gene-panel.jar")
+             (symlink (hmftools-2018 "hmf-id-generator-1.0.jar")         "hmf-id-generator.jar")
+             (symlink (hmftools-2018 "knowledgebase-importer-1.0.jar")   "knowledgebase-importer.jar")
+             (symlink (hmftools-2018 "mnv-detector-1.4.jar")             "mnv-detector.jar")
+             (symlink (hmftools-2018 "mnv-validator-1.4.jar")            "mnv-validator.jar")
+             (symlink (hmftools-2018 "patient-db-3.8.jar")               "patient-db-3.8.jar")
+             (symlink (hmftools-2018 "portal-data-converter-1.0.jar")    "portal-data-converter.jar")
+             (symlink (hmftools-2018 "purity-pathology-1.0.jar")         "purity-pathology.jar")
+             (symlink (hmftools-2018 "purity-ploidy-estimator-2.14.jar") "purple.jar")
+             (symlink (hmftools-2018 "strelka-post-process-1.4.jar")     "strelka-post-process.jar")
+             (symlink (hmftools-2018 "sv-analyser-1.0.jar")              "sv-analyser-1.0.jar")
+             (symlink (hmftools-2018 "variant-annotator-1.4.jar")        "variant-annotator-1.4.jar")))))))
    (inputs
-    `(("hmftools-2018-01-11" ,hmftools-2018-01-11)))
+    `(("hmftools-2018-06-19" ,hmftools-2018-06-19)))
    (native-search-paths
     (list (search-path-specification
            (variable "GUIX_JARPATH")
@@ -1282,7 +1287,7 @@ REPORT_STATUS	~a"
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
        ("bash" ,bash)
-       ("bwa" ,bwa)
+       ("bwa" ,bwa-0.7.5a)
        ("damage-estimator" ,hmf-damage-estimator)
        ("delly" ,delly)
        ("exoncov" ,exoncov)
