@@ -1428,7 +1428,7 @@ REPORT_STATUS	~a"
                (("/usr/bin/env perl") perlbin))
              (substitute* "create_config.pl"
                (("my \\$settingsDir = catfile\\(dirname\\(abs_path\\(\\$0\\)\\), updir\\(\\), \"settings\"\\);")
-                (string-append "my $settingsDir = \"\";"))))
+                (string-append "my $settingsDir = \"" settings-dir  "\";"))))
 
            ;; Make sure the templates can be found.
            (with-directory-excursion lib-dir
@@ -1645,7 +1645,7 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
     ;; See the README.pdf for restrictions.
     (license #f)))
 
-(define-public hmf-pipeline
+(define-public hmf-pipeline-v4.0
   (package
     (name "hmf-pipeline")
     (version "4.0")
@@ -1771,8 +1771,7 @@ BAMMETRICS_PATH	~a
 EXONCALLCOV_PATH	~a
 DAMAGE_ESTIMATOR_PATH	~a
 
-QUEUE_PATH	~a
-QUEUE_LOW_GZIP_COMPRESSION_PATH	~a
+GATK_QUEUE_PATH	~a
 GATK_PATH	~a
 
 STRELKA_PATH	~a
@@ -1803,12 +1802,12 @@ PBGZIP_PATH	~a
 SNPEFF_PATH	~a
 VCFTOOLS_PATH	~a
 BCFTOOLS_PATH	~a
-HEALTH_CHECKER_PATH	MISSING
+HEALTH_CHECKER_PATH	/tmp
 
 REALIGNMENT_SCALA	IndelRealignment.scala
 BASERECALIBRATION_SCALA	BaseRecalibration.scala
-CALLING_SCALA	GermlineCaller.scala
-FILTER_SCALA	GermlineFilter.scala
+GERMLINE_CALLING_SCALA	GermlineCaller.scala
+GERMLINE_FILTER_SCALA	GermlineFilter.scala
 
 REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "bwa") "/bin")
@@ -1818,7 +1817,6 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "bammetrics") "/bin")
                          (string-append (assoc-ref %build-inputs "exoncov") "/bin")
                          (string-append (assoc-ref %build-inputs "damage-estimator") "/share/damage-estimator")
-                         (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
                          (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
                          (string-append (assoc-ref %build-inputs "gatk") "/share/java/gatk")
                          (assoc-ref %build-inputs "strelka")
@@ -1832,7 +1830,7 @@ REPORT_STATUS	~a"
                          (string-append (assoc-ref %build-inputs "delly") "/bin")
                          (string-append (assoc-ref %build-inputs "manta") "/bin")
                          (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
-                         (string-append (assoc-ref %build-inputs "gridss") "/bin")
+                         (string-append (assoc-ref %build-inputs "gridss") "/share/java/gridss")
                          (string-append (assoc-ref %build-inputs "bwa-0.7.17") "/bin")
                          (string-append (assoc-ref %build-inputs "igvtools") "/share/java/igvtools")
                          (string-append (assoc-ref %build-inputs "samtools") "/bin")
