@@ -71,14 +71,14 @@ as efficiently and effectively as possible.")
 
 (define-public clinvar-grch37
   (package (inherit clinvar)
-    (version "GRCh37-20180704")
+    (version "GRCh37-20180724")
     (source (origin
              (method url-fetch)
              (uri (string-append
                    "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz"))
              (sha256
               (base32
-               "1sajsjbsp0288g03h4r2zay7nigjzqb41n2bmg324klczdxvg0fk"))))
+               "11gv8y8q50nvk86c7bs09bpi2ch6xn43hpcm0apk4kfkvs2k6iqr"))))
    (arguments
     `(#:modules ((guix build utils))
       #:builder
