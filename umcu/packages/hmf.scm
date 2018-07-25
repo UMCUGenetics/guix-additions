@@ -890,7 +890,7 @@ BAM files using @code{sambamba}.")
        ("r-minimal" ,r-minimal)
        ("picard" ,picard-bin-1.141)
        ("icedtea" ,icedtea-8)
-       ("grid-engine-core" ,grid-engine-core-8.1.8)))
+       ("grid-engine-core" ,grid-engine-core)))
     (propagated-inputs
      `(("r-ggplot2" ,r-ggplot2)
        ("r-knitr" ,r-knitr)
@@ -1733,7 +1733,7 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
                (("wc ")      (string-append (assoc-ref %build-inputs "coreutils") "/bin/wc "))
                (("Rscript ") (string-append (assoc-ref %build-inputs "r-minimal") "/bin/Rscript "))
                (("java ")    (string-append (assoc-ref %build-inputs "icedtea-8") "/bin/java "))
-               (("qsub ")    (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub "))
+               (("qsub ")    (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -V "))
                (("/usr/bin/env perl") perlbin)
                ;; Use "sh" instead of "bash" to prevent loading bash
                ;; configuration files that modify the program's environment.
@@ -1981,7 +1981,7 @@ REPORT_STATUS	~a"
        ("perl" ,perl)
        ("inetutils" ,inetutils)
        ("util-linux" ,util-linux)
-       ("grid-engine" ,grid-engine-core-8.1.8)
+       ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
        ,@(package-propagated-inputs gatk-bin-3.8-0)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
@@ -1990,7 +1990,7 @@ REPORT_STATUS	~a"
     ;; set correctly.
     (native-search-paths
      (append (package-native-search-paths bash)
-             (package-native-search-paths grid-engine-core-8.1.8)
+             (package-native-search-paths grid-engine-core)
              (package-native-search-paths perl)
              (package-native-search-paths r)
              (package-native-search-paths ruby)))
