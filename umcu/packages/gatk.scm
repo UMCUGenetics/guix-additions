@@ -20,7 +20,9 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
+  #:use-module (guix build-system python)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system trivial)
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
@@ -29,6 +31,17 @@
   #:use-module (gnu packages cran)
   #:use-module (gnu packages java)
   #:use-module (gnu packages statistics)
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages python-crypto)
+  #:use-module (gnu packages python-web)
+  #:use-module (gnu packages protobuf)
+  #:use-module (gnu packages time)
+  #:use-module (gnu packages mpi)
+  #:use-module (gnu packages tls)
+  #:use-module (gnu packages tcl)
+  #:use-module (gnu packages compression)
+  #:use-module (gnu packages readline)
+  #:use-module (gnu packages databases)
   #:use-module (gnu packages perl))
 
 (define-public maven-bin
@@ -523,3 +536,189 @@ powerful processing engine and high-performance computing features make it
 capable of taking on projects of any size.")
    ;; There are additional restrictions, so it's nonfree.
    (license license:expat)))
+
+(define-public python-theano
+  (package
+    (name "python-theano")
+    (version "1.0.2")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "Theano" version))
+              (sha256
+               (base32
+                "1pmb5754qwiy1x2irciwn4xzsvwapdpi5agwwq8p1898sc1y0s37"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "http://deeplearning.net/software/theano/")
+    (synopsis "Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.")
+    (description "Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs.")
+    (license license:bsd-3)))
+
+(define-public python-pymc3
+  (package
+  (name "python-pymc3")
+  (version "3.5")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "pymc3" version))
+      (sha256
+        (base32
+          "1vi11z1cjhc1hxbjvxay9n7a599z13p583qa6lhvnc6pqs1yd230"))))
+  (build-system python-build-system)
+  (arguments `(#:tests? #f ))
+  (propagated-inputs
+    `(;("python-enum34" ,python-enum34)
+      ("python-h5py" ,python-h5py)
+      ("python-joblib" ,python-joblib)
+      ("python-numpy" ,python-numpy)
+      ("python-pandas" ,python-pandas)
+      ("python-patsy" ,python-patsy)
+      ("python-six" ,python-six)
+      ("python-theano" ,python-theano)
+      ("python-tqdm" ,python-tqdm)))
+  (home-page "http://github.com/pymc-devs/pymc3")
+  (synopsis
+    "Probabilistic Programming in Python: Bayesian Modeling and Probabilistic Machine Learning with Theano")
+  (description
+    "Probabilistic Programming in Python: Bayesian Modeling and Probabilistic Machine Learning with Theano")
+  (license license:asl2.0)))
+
+(define-public python-keras-preprocessing
+  (package
+    (name "python-keras-preprocessing")
+    (version "1.0.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "Keras_Preprocessing" version))
+       (sha256
+        (base32
+         "152i7k01xd3r7kin2s329ddi23b0ym6rb2ha1shnxh7cfxivljc6"))))
+    (build-system python-build-system)
+    (inputs
+     `(("python-six" ,python-six)
+       ("python-scipy" ,python-scipy)))
+    (home-page
+     "https://github.com/keras-team/keras-preprocessing")
+    (synopsis
+     "Easy data preprocessing and data augmentation for deep learning models")
+    (description
+     "Easy data preprocessing and data augmentation for deep learning models")
+    (license license:expat)))
+
+(define-public python-keras
+  (package
+    (name "python-keras")
+    (version "2.2.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "Keras" version))
+       (sha256
+        (base32
+         "1grl2znv1yssrci3r0vc4qzbqzhjfkkqjdg3bqd7y8dgaz8rk12v"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    ;(propagated-inputs
+    ; `(("python-keras-preprocessing" ,python-keras-preprocessing)))
+    (home-page "https://github.com/keras-team/keras")
+    (synopsis "Deep Learning for humans")
+    (description "Deep Learning for humans")
+    (license license:expat)))
+
+(define-public gatk4
+  (package
+    (name "gatk4")
+    (version "4.0.1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/broadinstitute/gatk/releases/download/"
+                    version "/gatk-" version ".zip"))
+              (sha256
+               (base32 "0yv4hdz8x2q4ycsnxpfwpzlhm1g7rz7idjh0kl1c4kagqj7c0ryn"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((unzip   (string-append (assoc-ref %build-inputs "unzip") "/bin/unzip"))
+               (tarball (assoc-ref %build-inputs "source"))
+               (out     (string-append %output "/share/java/user-classes"))
+               (bin     (string-append %output "/bin")))
+           (mkdir-p out)
+           (mkdir-p bin)
+           (system (string-append unzip " " tarball))
+           (chdir (string-append "gatk-" ,version))
+           (install-file "gatk-package-4.0.1.2-local.jar" out)
+           (symlink (string-append out "/gatk-package-4.0.1.2-local.jar")
+                    (string-append out "/gatk.jar"))
+           (install-file "gatk-package-4.0.1.2-spark.jar" out)
+           (symlink (string-append out "/gatk-package-4.0.1.2-spark.jar")
+                    (string-append out "/gatk-spark.jar"))
+           (substitute* "gatk"
+             (("/usr/bin/env python") (string-append
+                                       (assoc-ref %build-inputs "python2")
+                                       "/bin/python"))
+             (("findJar\\(\"local.jar\", envVariableOverride=GATK_LOCAL_JAR_ENV_VARIABLE\\)")
+              (string-append "\"" out "/gatk.jar\""))
+             (("findJar\\(\"spark.jar\", envVariableOverride=GATK_SPARK_JAR_ENV_VARIABLE\\)")
+              (string-append "\"" out "/gatk-spark.jar\"")))
+           (install-file "gatk" bin)))))
+    (native-inputs
+     `(("unzip" ,unzip)))
+    (inputs
+     `(("python2" ,python-2.7)))
+    (propagated-inputs
+     `(("r" ,r)
+       ("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)
+       ("python-certifi",python-certifi)
+       ("openmpi" ,openmpi)
+       ("openssl" ,openssl)
+       ("python" ,python-3.6)
+       ("readline" ,readline)
+       ("python-setuptools" ,python-setuptools)
+       ("sqlite" ,sqlite)
+       ("tk" ,tk)
+       ("python-wheel" ,python-wheel)
+       ("xz" ,xz)
+       ("zlib" ,zlib)
+       ("python-bleach" ,python-bleach)
+       ("python-cycler" ,python-cycler)
+       ("python-h5py" ,python-h5py)
+       ("python-html5lib" ,python-html5lib)
+       ("python-joblib" ,python-joblib)
+       ("python-keras" ,python-keras)
+       ("python-markdown" ,python-markdown)
+       ("python-matplotlib" ,python-matplotlib)
+       ("python-numpy" ,python-numpy)
+       ("python-pandas" ,python-pandas)
+       ("python-patsy" ,python-patsy)
+       ("python-protobuf" ,python-protobuf)
+       ("python-pymc3" ,python-pymc3)
+       ("python-pyparsing" ,python-pyparsing)
+       ("python-dateutil" ,python-dateutil)
+       ("python-pytz" ,python-pytz)
+       ("python-pyyaml" ,python-pyyaml)
+       ("python-scipy" ,python-scipy)
+       ("python-six" ,python-six)
+       ("python-theano" ,python-theano)
+       ("python-tqdm" ,python-tqdm)
+       ("python-werkzeug" ,python-werkzeug)
+       ("python3" ,python-3.6)))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    (license #f)))
+
