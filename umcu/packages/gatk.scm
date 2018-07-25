@@ -32,6 +32,7 @@
   #:use-module (gnu packages java)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages java)
   #:use-module (gnu packages python-crypto)
   #:use-module (gnu packages python-web)
   #:use-module (gnu packages protobuf)
@@ -662,6 +663,8 @@ capable of taking on projects of any size.")
              (("/usr/bin/env python") (string-append
                                        (assoc-ref %build-inputs "python2")
                                        "/bin/python"))
+             (("return \\[\"java\"\\]")
+              (string-append "return [\"" (assoc-ref %build-inputs "icedtea-8") "/bin/java\"]"))
              (("findJar\\(\"local.jar\", envVariableOverride=GATK_LOCAL_JAR_ENV_VARIABLE\\)")
               (string-append "\"" out "/gatk.jar\""))
              (("findJar\\(\"spark.jar\", envVariableOverride=GATK_SPARK_JAR_ENV_VARIABLE\\)")
@@ -670,7 +673,8 @@ capable of taking on projects of any size.")
     (native-inputs
      `(("unzip" ,unzip)))
     (inputs
-     `(("python2" ,python-2.7)))
+     `(("python2" ,python-2.7)
+       ("icedtea-8" ,icedtea-8)))
     (propagated-inputs
      `(("r" ,r)
        ("r-gsalib" ,r-gsalib)
