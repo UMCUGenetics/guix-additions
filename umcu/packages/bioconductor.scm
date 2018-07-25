@@ -1802,3 +1802,30 @@ assessing the uncertainty in hierarchical cluster analysis.  It provides AU
 (approximately unbiased) p-value as well as BP (bootstrap probability) value
 for each cluster in a dendrogram.")
    (license license:gpl2+)))
+
+(define-public r-model4you
+(package
+  (name "r-model4you")
+  (version "0.9-2")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "model4you" version))
+      (sha256
+        (base32
+          "0bi69s4bxdqfkjg7ldg41a72vsvqi6ipzqhfbk5jhj7avfa990b9"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-formula" ,r-formula)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-gridextra" ,r-gridextra)
+      ("r-partykit" ,r-partykit)
+      ("r-sandwich" ,r-sandwich)
+      ("r-survival" ,r-survival)))
+  (home-page
+    "http://cran.r-project.org/web/packages/model4you")
+  (synopsis
+    "Stratified and Personalised Models Based on Model-Based Trees and Forests")
+  (description
+    "Model-based trees for subgroup analyses in clinical trials and model-based forests for the estimation and prediction of personalised treatment effects (personalised models).  Currently partitioning of linear models, lm(), generalised linear models, glm(), and Weibull models, survreg(), is supported.  Advanced plotting functionality is supported for the trees and a test for parameter heterogeneity is provided for the personalised models.  For details on model-based trees for subgroup analyses see Seibold, Zeileis and Hothorn (2016) <doi:10.1515/ijb-2015-0032>; for details on model-based forests for estimation of individual treatment effects see Seibold, Zeileis and Hothorn (2017) <doi:10.1177/0962280217693034>.")
+  (license #f)))
