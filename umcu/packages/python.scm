@@ -369,10 +369,10 @@ feature selection algorithms.")
   (package-with-python2 python-logging))
 
 (define-public icgc-get
-  (let ((commit "656e48704a6dd5fd0e03572d3027983a0fd40fe9"))
+  (let ((commit "059e15e235efac7ba213434283e6abe23edd909f"))
     (package
       (name "icgc-get")
-      (version (string-append "0.0.0-" (string-take commit 7)))
+      (version (string-append "0.6.0-" (string-take commit 7)))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -381,7 +381,7 @@ feature selection algorithms.")
                 (file-name (string-append name "-" version "-checkout"))
                 (sha256
                  (base32
-                  "16dm0a9nfhcw26mkjw7f0vv2cv05caj6rf40g9yhkknfc3ypnkr8"))))
+                  "1j9b2nvl3kspqgc11py48y50m3cjiqlyxzamn0kxzbv91r6rp0b1"))))
       (build-system python-build-system)
       (arguments
        `(#:python ,python-2
