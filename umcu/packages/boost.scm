@@ -73,6 +73,7 @@
        `(#:tests? #f
          #:phases
          (modify-phases %standard-phases
+           (delete 'bootstrap)
            (replace
             'configure
             (lambda* (#:key outputs #:allow-other-keys)
@@ -88,9 +89,10 @@
                 (setenv "SHELL" (which "sh"))
                 (setenv "CONFIG_SHELL" (which "sh"))
 
-                (zero? (system* "./bootstrap.sh"
-                                (string-append "--prefix=" out)
-                                "--with-toolset=gcc")))))
+                (unless (zero? (system* "./bootstrap.sh"
+                                        (string-append "--prefix=" out)
+                                        "--with-toolset=gcc"))
+                  (throw 'configure-error)))))
            (replace
             'build
             (lambda* (#:key outputs #:allow-other-keys)
