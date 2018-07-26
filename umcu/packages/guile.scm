@@ -84,6 +84,57 @@
    (description "")
    (license license:gpl3+)))
 
+(define-public hmf-glue
+  (package
+   (name "hmf-glue")
+   (version "0.0.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/UMCUGenetics/hmf-glue/archive/"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32
+              "1cflmj0m0b7pbkhs7hq37l4wwwwrps9b6q5bplb8rf9qd204578r"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (add-after 'install 'wrap-executable
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let* ((out            (assoc-ref outputs "out"))
+                   (load-path      (string-append out "/share/guile/site/2.2:"
+                                                  (getenv "GUILE_LOAD_PATH")))
+                   (compiled-path  (string-append out "/lib/guile/2.2/site-ccache:"
+                                                  (getenv "GUILE_LOAD_COMPILED_PATH"))))
+              (substitute* (string-append out "/bin/hmf-reset-database")
+               (("\\$\\{prefix\\}")  out))
+              (wrap-program (string-append out "/bin/hmf-import-data")
+                            `("PATH" ":" = (,(getenv "PATH")))
+                            `("GUILE_LOAD_PATH" ":" = (,load-path))
+                            `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path)))
+              (wrap-program (string-append out "/bin/hmf-reset-database")
+                            `("PATH" ":" = (,(getenv "PATH")))
+                            `("GUILE_LOAD_PATH" ":" = (,load-path))
+                            `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path))))
+            #t)))))
+   (native-inputs
+    `(("autoconf" ,autoconf)
+      ("automake" ,automake)
+      ("pkg-config" ,pkg-config)))
+   (inputs
+    `(("guile" ,guile-2.2)
+      ("gwl" ,gwl)
+      ("guix" ,guix)))
+   (home-page "https://github.com/UMCUGenetics/hmf-glue")
+   (synopsis " Tools for extracting information using HMFtools")
+   (description "This repository contains tools for extracting
+information out of HMF pipeline output using HMFtools and importing the
+information into a MySQL database. ")
+   (license license:gpl3+)))
+
 (define-public graph-cnv-analysis
   (package
    (name "graph-cnv-analysis")
