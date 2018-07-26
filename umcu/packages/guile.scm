@@ -87,16 +87,15 @@
 (define-public hmf-glue
   (package
    (name "hmf-glue")
-   (version "0.0.2")
+   (version "0.0.3")
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "https://github.com/UMCUGenetics/hmf-glue/archive/"
-                  version ".tar.gz"))
-            (file-name (string-append name "-" version ".tar.gz"))
+                  "https://github.com/UMCUGenetics/hmf-glue/releases/download/"
+                  version "/hmf-glue-" version ".tar.gz"))
             (sha256
              (base32
-              "1cflmj0m0b7pbkhs7hq37l4wwwwrps9b6q5bplb8rf9qd204578r"))))
+              "1v0y94s3n1i5s57l94vqsywb8ygjg3m2g3k7kihk091sklv3brim"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
@@ -111,19 +110,15 @@
                                                   (getenv "GUILE_LOAD_COMPILED_PATH"))))
               (substitute* (string-append out "/bin/hmf-reset-database")
                (("\\$\\{prefix\\}")  out))
-              (wrap-program (string-append out "/bin/hmf-import-data")
-                            `("PATH" ":" = (,(getenv "PATH")))
-                            `("GUILE_LOAD_PATH" ":" = (,load-path))
-                            `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path)))
-              (wrap-program (string-append out "/bin/hmf-reset-database")
-                            `("PATH" ":" = (,(getenv "PATH")))
+              (for-each (lambda (program)
+                          (wrap-program program
+                            ;; Add $PATH so that optional components like job
+                            ;; scheduler programs can be found at run-time.
+                            `("PATH" ":" = (,(getenv "PATH") "$PATH"))
                             `("GUILE_LOAD_PATH" ":" = (,load-path))
                             `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path))))
+                        (find-files (string-append out "/bin"))))
             #t)))))
-   (native-inputs
-    `(("autoconf" ,autoconf)
-      ("automake" ,automake)
-      ("pkg-config" ,pkg-config)))
    (inputs
     `(("guile" ,guile-2.2)
       ("gwl" ,gwl)
