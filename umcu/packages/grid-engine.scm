@@ -337,5 +337,5 @@ contributing code.")
                (mkdir-p (string-append lib "/pkgconfig"))
                (with-output-to-file (string-append lib "/pkgconfig/drmaa.pc")
                  (lambda _
-                   (format #t "Name: drmaa~%Description: DRMAA interface~%Version: 8.1.9~%Requires:~%Libs: -L~a -ldrmaa~%Cflags: -I~a" lib include)))
+                   (format #t "Name: drmaa~%Description: DRMAA interface~%Version: 8.1.8~%Requires:~%Libs: -L~a -ldrmaa~%Cflags: -I~a" lib include)))
                #t))))))))
