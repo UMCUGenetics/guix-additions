@@ -1727,17 +1727,17 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
     ;; See the README.pdf for restrictions.
     (license #f)))
 
-(define-public hmf-pipeline-v4.0
+(define-public hmf-pipeline-v4.1
   (package
     (name "hmf-pipeline")
-    (version "4.0")
+    (version "4.1")
     (source (origin
               (method url-fetch)
               (uri (string-append
                     "https://github.com/hartwigmedical/pipeline/archive/v"
                     version ".tar.gz"))
               (sha256
-               (base32 "0d3srpb2rn9dysasrmvvqxwzcrs9i7lzc07s8rmw2gx159x086f9"))))
+               (base32 "0254gljj654kbwsspvavyk7895s2jyk2i37nvkjziawfwidrb626"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils)
