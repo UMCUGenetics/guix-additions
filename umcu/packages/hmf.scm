@@ -579,6 +579,88 @@ genomics data developed by the Hartwig Medical Foundation.")
 genomics data developed by the Hartwig Medical Foundation.")
      (license license:expat))))
 
+(define-public hmftools-for-pipeline-v3
+  (package
+   (name "hmftools")
+   (version "pipeline-v3-compat")
+   (source #f)
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; This is a meta-package.  No tests need to be executed here.
+      #:phases
+      (modify-phases %standard-phases
+       (delete 'unpack)
+       (delete 'configure)
+       (delete 'build)
+       (replace 'install
+         (lambda* (#:key inputs outputs #:allow-other-keys)
+           (let ((output-dir (lambda (path)
+                               (string-append
+                                (assoc-ref outputs "out")
+                                "/share/java/user-classes/" path)))
+                 (hmftools-2018 (lambda (path)
+                                  (string-append
+                                   (assoc-ref inputs "hmftools-2018-01-11")
+                                   "/share/java/user-classes/" path))))
+             (mkdir-p (output-dir ""))
+             (chdir (output-dir ""))
+
+             (copy-file (hmftools-2018 "amber-1.5.jar")
+                        (output-dir "amber-1.5.jar"))
+             (symlink "amber-1.5.jar" "amber.jar")
+
+             (copy-file (hmftools-2018 "bachelor-1.jar")
+                        (output-dir "bachelor-1.jar"))
+             (symlink "bachelor-1.jar" "bachelor.jar")
+
+             (copy-file (hmftools-2018 "bam-slicer-1.0.jar")
+                        (output-dir "bam-slicer-1.0.jar"))
+             (symlink "bam-slicer-1.0.jar" "bam-slicer.jar")
+
+             (copy-file (hmftools-2018 "break-point-inspector-1.5.jar")
+                        (output-dir "break-point-inspector-1.5.jar"))
+             (symlink "break-point-inspector-1.5.jar" "break-point-inspector.jar")
+
+             (copy-file (hmftools-2018 "count-bam-lines-1.2.jar")
+                        (output-dir "count-bam-lines-1.2.jar"))
+             (symlink "count-bam-lines-1.2.jar" "cobalt.jar")
+
+             (copy-file (hmftools-2018 "fastq-stats-1.0.jar")
+                        (output-dir "fastq-stats-1.0.jar"))
+             (symlink "fastq-stats-1.0.jar" "fastq-stats.jar")
+
+             (copy-file (hmftools-2018 "hmf-gene-panel-1.jar")
+                        (output-dir "hmf-gene-panel-1.jar"))
+             (symlink "hmf-gene-panel-1.jar" "hmf-gene-panel.jar")
+
+             (copy-file (hmftools-2018 "patient-db-1.5.jar")
+                        (output-dir "patient-db-1.5.jar"))
+             (symlink "patient-db-1.5.jar" "patient-db.jar")
+
+             (copy-file (hmftools-2018 "purity-ploidy-estimator-2.5.jar")
+                        (output-dir "purity-ploidy-estimator-2.5.jar"))
+             (symlink "purity-ploidy-estimator-2.5.jar" "purple.jar")
+
+             ;; strelka-post-process has no version in its filename in the
+             ;; 2018 release.
+             (copy-file (hmftools-2018 "strelka-post-process.jar")
+                        (output-dir "strelka-post-process.jar"))))))))
+   (inputs
+    `(("hmftools-2018-01-11" ,hmftools-2018-01-11)))
+   (native-search-paths
+    (list (search-path-specification
+           (variable "GUIX_JARPATH")
+           (files (list "share/java/user-classes")))))
+   ;; Amber uses an R script for BAF segmentation.
+   (propagated-inputs
+    `(("r" ,r-minimal)
+      ("r-copynumber" ,r-copynumber)))
+   (home-page "https://github.com/hartwigmedical/hmftools")
+   (synopsis "Various utility tools for working with genomics data.")
+   (description "This package provides various tools for working with
+genomics data developed by the Hartwig Medical Foundation.")
+(license license:expat)))
+
 (define-public hmftools
   (package
    (name "hmftools")
@@ -1475,7 +1557,7 @@ REPORT_STATUS	~a"
        ("fastqc" ,fastqc-bin-0.11.4)
        ("freec" ,freec-10.4)
        ("gatk" ,gatk-full-3.5-patched-bin)
-       ("hmftools" ,hmftools)
+       ("hmftools" ,hmftools-for-pipeline-v3)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
        ("igvtools" ,igvtools-bin-2.3.60)
