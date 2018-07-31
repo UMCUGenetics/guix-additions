@@ -1829,3 +1829,65 @@ for each cluster in a dendrogram.")
   (description
     "Model-based trees for subgroup analyses in clinical trials and model-based forests for the estimation and prediction of personalised treatment effects (personalised models).  Currently partitioning of linear models, lm(), generalised linear models, glm(), and Weibull models, survreg(), is supported.  Advanced plotting functionality is supported for the trees and a test for parameter heterogeneity is provided for the personalised models.  For details on model-based trees for subgroup analyses see Seibold, Zeileis and Hothorn (2016) <doi:10.1515/ijb-2015-0032>; for details on model-based forests for estimation of individual treatment effects see Seibold, Zeileis and Hothorn (2017) <doi:10.1177/0962280217693034>.")
   (license #f)))
+
+(define-public r-ihw
+  (package
+    (name "r-ihw")
+    (version "1.8.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "IHW" version))
+       (sha256
+        (base32
+         "0knsyckqlg86di06a9jwqwhk1pl09kmmzi0m0hrzy8msd9d6h9si"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-slam",r-slam)
+        ("r-lpsymphony" ,r-lpsymphony)
+        ("r-fdrtool" ,r-fdrtool)
+        ("r-biocgenerics" ,r-biocgenerics)))
+    (home-page "https://bioconductor.org/packages/IHW/")
+    (synopsis "Independent Hypothesis Weighting")
+    (description "Independent hypothesis weighting (IHW) is a multiple testing procedure that increases power compared to the method of Benjamini and Hochberg by assigning data-driven weights to each hypothesis. The input to IHW is a two-column table of p-values and covariates. The covariate can be any continuous-valued or categorical variable that is thought to be informative on the statistical properties of each hypothesis test, while it is independent of the p-value under the null hypothesis.")
+    (license license:artistic2.0)))
+
+(define-public r-slam
+  (package
+    (name "r-slam")
+    (version "0.1-43")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "slam" version))
+        (sha256
+          (base32
+            "0hy4qzngcgafxxr6ld7n9a9wy979ji998gpcc32vidwyab66dj5h"))))
+    (build-system r-build-system)
+    (home-page
+      "http://cran.r-project.org/web/packages/slam")
+    (synopsis
+      "Sparse Lightweight Arrays and Matrices")
+    (description
+      "Data structures and algorithms for sparse arrays and matrices, based on index arrays and simple triplet representations, respectively.")
+    (license license:gpl2)))
+
+
+(define-public r-lpsymphony
+  (package
+    (name "r-lpsymphony")
+    (version "1.8.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "lpsymphony" version))
+       (sha256
+        (base32
+         "1h0qql7dn8l1rivsa1912ab2wnf2xr6qq1wfpln5wbjz6va96jnr"))))
+    (build-system r-build-system)
+        (home-page "https://bioconductor.org/packages/lpsymphony/")
+  (inputs
+     `(("gfortran" ,gfortran)))
+  (synopsis "Symphony integer linear programming solver in R")
+    (description "This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to SYMPHONY, an open-source linear programming solver written in C++. The main difference between this package and Rsymphony is that it includes the solver source code (SYMPHONY version 5.6), while Rsymphony expects to find header and library files on the users' system. Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY. For Windows, precompiled DLLs are included in this package.")
+    (license #f)))
