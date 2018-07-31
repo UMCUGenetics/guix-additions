@@ -1891,3 +1891,50 @@ for each cluster in a dendrogram.")
   (synopsis "Symphony integer linear programming solver in R")
     (description "This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to SYMPHONY, an open-source linear programming solver written in C++. The main difference between this package and Rsymphony is that it includes the solver source code (SYMPHONY version 5.6), while Rsymphony expects to find header and library files on the users' system. Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY. For Windows, precompiled DLLs are included in this package.")
     (license #f)))
+
+(define-public r-apeglm
+  (package
+    (name "r-apeglm")
+    (version "1.2.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "apeglm" version))
+       (sha256
+        (base32
+         "0pmqj3vwqxasxg6v22whxm7hr6liwyzh8rxaaki7pm35a0y2w9i8"))))
+    (build-system r-build-system)
+        (home-page "https://bioconductor.org/packages/apeglm/")
+    (propagated-inputs
+     `(("r-emdbook",r-emdbook)
+        ("r-summarizedexperiment" ,r-summarizedexperiment)
+        ("r-genomicranges" ,r-genomicranges)
+        ("r-rcppeigen" ,r-rcppeigen)
+        ("r-rcppnumerical" ,r-rcppnumerical)
+        ("r-rcpp" ,r-rcpp)))
+  (synopsis "Approximate posterior estimation for GLM coefficients")
+    (description "apeglm provides Bayesian shrinkage estimators for effect sizes for a variety of GLM models, using approximation of the posterior for individual coefficients.")
+    (license license:gpl2)))
+
+(define-public r-rcppnumerical
+  (package
+    (name "r-rcppnumerical")
+    (version "0.3-2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "RcppNumerical" version))
+        (sha256
+          (base32
+            "0j0hvwsbidahk2zx3zk7fhc6m9cca27iq3ivx7vdvggz8iqzszrz"))))
+    (properties `((upstream-name . "RcppNumerical")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-rcpp" ,r-rcpp) ("r-rcppeigen" ,r-rcppeigen)))
+    (home-page
+      "https://github.com/yixuan/RcppNumerical")
+    (synopsis
+      "'Rcpp' Integration for Numerical Computing Libraries")
+    (description
+      "This package provides a collection of open source libraries for numerical computing (numerical integration, optimization, etc.) and their integration with 'Rcpp'.")
+    (license license:gpl2+)))
