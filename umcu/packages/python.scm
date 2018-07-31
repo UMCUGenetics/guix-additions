@@ -992,3 +992,23 @@ for Python.  The design goals are:
 
 (define-public python2-mysqlclient
   (package-with-python2 python-mysqlclient))
+
+(define-public python-pyega3
+  (package
+   (name "python-pyega3")
+   (version "3.0.19")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "pyega3" version))
+            (sha256
+             (base32
+              "1vky0my8n2ys92km8731y4bhlxb2gf9kzgjjxbpjzj012bbzkz1v"))))
+   (build-system python-build-system)
+   (propagated-inputs
+    `(("python-requests" ,python-requests)
+      ("python-tqdm" ,python-tqdm)
+      ("python-urllib3" ,python-urllib3)))
+   (home-page "https://github.com/EGA-archive/ega-download-client")
+   (synopsis "EGA python client")
+   (description "EGA python client")
+   (license license:asl2.0)))
