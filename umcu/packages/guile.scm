@@ -87,7 +87,7 @@
 (define-public hmf-glue
   (package
    (name "hmf-glue")
-   (version "0.0.3")
+   (version "0.0.4")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -95,7 +95,7 @@
                   version "/hmf-glue-" version ".tar.gz"))
             (sha256
              (base32
-              "1v0y94s3n1i5s57l94vqsywb8ygjg3m2g3k7kihk091sklv3brim"))))
+              "11z88pq6x41lgn9907kgxkdb4rsda2hh2kx6npz8a7s90qpabvkm"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
