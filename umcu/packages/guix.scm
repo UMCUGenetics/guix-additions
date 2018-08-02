@@ -190,7 +190,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.8.0")
+    (version "1.9.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -287,9 +287,13 @@ elif [ \"$1\" == \"load-profile\" ]; then
       home_variables=$(export -p | ${grep} \"^declare -x HOME\" || echo \"# No HOME variable found.\")
       locale_variables=$(export -p | ${grep} \"^declare -x LANG\" || echo \"# No LANG variable found.\")
       locpath_variables=$(export -p | ${grep} \"^declare -x GUIX_LOCPATH\" || echo \"# No GUIX_LOCPATH variable found.\")
+      term_variables=$(export -p | ${grep} \"^declare -x TERM\" || echo \"# No TERM variable found.\")
+      display_variables=$(export -p | ${grep} \"^declare -x DISPLAY\" || echo \"# No DISPLAY variable found.\")
       last_profile=\"${profile_arguments[-1]}\"
       profile_paths=\"$(echo ${profile_arguments[@]} | ${coreutils}/bin/tr ' ' ':')\"
       ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\";
+                                                       echo \"$term_variables\";
+                                                       echo \"$display_variables\";
                                                        echo \"$locpath_variables\";
                                                        echo \"$sge_variables\";
                                                        echo \"$malloc_variables\";
