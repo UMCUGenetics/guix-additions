@@ -235,6 +235,32 @@ capable of taking on projects of any size.")
             (variable "GUIX_JARPATH")
             (files (list "share/java/user-classes")))))))
 
+(define-public gatk-bin-3.8-1
+  (package (inherit gatk-bin-3.8-0)
+    (name "gatk")
+    (version "3.8-1-0-gf15c1c3ef")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append
+                   "https://software.broadinstitute.org/gatk/download/"
+                   "auth?package=GATK-archive&version=" version))
+             (file-name (string-append name "-" version ".tar.bz2"))
+             (sha256
+              (base32
+               "0p5yikcl54j7krp0sh6vw0wg4zs2a2dlllivpnzkxjnhs8s9b0m0"))))
+    (propagated-inputs
+     `(("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)
+       ("gatk-queue-bin-3.8-1" ,gatk-queue-bin-3.8-1)))))
+
 (define-public gatk-bin-3.4-46
   (package (inherit gatk-bin-3.4-0)
    (name "gatk")
@@ -326,6 +352,31 @@ capable of taking on projects of any size.")
                                       "/share/java/gatk/")))
               (mkdir-p out)
               (install-file "../Queue.jar" out)))))))))
+
+(define-public gatk-queue-bin-3.8-1
+  (package (inherit gatk-queue-bin-3.8-0)
+    (name "gatk-queue")
+    (version "3.8-1-0-gf15c1c3ef")
+    (source (origin
+             (method url-fetch)
+             (uri (string-append
+                   "https://software.broadinstitute.org/gatk/download/"
+                   "auth?package=Queue-archive&version=" version))
+             (file-name (string-append name "-" version ".tar.bz2"))
+             (sha256
+              (base32 "0435lf2751w3l2m86m3h6girwr09kpiqahq3pj49gibqnyylx4sq"))))
+    (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda _
+            (let ((out (string-append (assoc-ref %outputs "out")
+                                      "/share/java/gatk/")))
+              (mkdir-p out)
+              (install-file "Queue.jar" out)))))))))
 
 (define-public gatk-queue-bin-3.4-46
   (package (inherit gatk-queue-bin-3.4-0)
