@@ -28,6 +28,7 @@
   #:use-module (gnu packages rdf)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages tex)
+  #:use-module (gnu packages openldap)
   #:use-module (gnu packages)
   #:use-module (guix build utils)
   #:use-module (guix build-system gnu)
@@ -40,7 +41,7 @@
 (define-public sparqling-genomics
   (package
    (name "sparqling-genomics")
-   (version "0.99.4")
+   (version "0.99.5")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -49,18 +50,23 @@
                   version ".tar.gz"))
             (sha256
              (base32
-              "0njii5nf00sdd3nnhmpxgjxqnrdjnc1d7r77rbmqmyh4fhqpq1fy"))))
+              "1b17094mrjx8jp9cl427wxxr12nvin77m0n6769cxz501mwfai6s"))))
    (build-system gnu-build-system)
    (arguments
-    `(#:phases
+    `(#:configure-flags (list (string-append
+                               "--with-libldap-prefix="
+                               (assoc-ref %build-inputs "openldap")))
+      #:phases
       (modify-phases %standard-phases
         (add-after 'install 'wrap-executable
           (lambda* (#:key outputs #:allow-other-keys)
             (let* ((out  (assoc-ref outputs "out"))
                    (guile-load-path
-                    (string-append out "/share/guile/site/2.2"))
+                    (string-append (getenv "GUILE_LOAD_PATH") ":"
+                                   out "/share/guile/site/2.2"))
                    (guile-load-compiled-path
-                    (string-append out "/lib/guile/2.2/site-ccache")))
+                    (string-append (getenv "GUILE_LOAD_COMPILED_PATH") ":"
+                                   out "/lib/guile/2.2/site-ccache")))
               (wrap-program (string-append out "/bin/sg-web")
                 `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
                 `("GUILE_LOAD_COMPILED_PATH" ":" prefix
@@ -69,14 +75,16 @@
     `(("texlive" ,texlive)))
    (inputs
     `(("guile" ,guile-2.2)
+      ("gnutls" ,gnutls) ; Needed to query HTTPS endpoints.
+      ("guile-fibers" ,guile-fibers)
+      ("guile-json" ,guile-json)
       ("htslib" ,htslib)
       ("libgcrypt" ,libgcrypt)
+      ("openldap" ,openldap)
       ("pkg-config" ,pkg-config)
       ("raptor2" ,raptor2)
       ("xz" ,xz)
       ("zlib" ,zlib)))
-   (propagated-inputs
-    `(("gnutls" ,gnutls))) ; Needed to query HTTPS endpoints.
    (home-page "https://github.com/UMCUGenetics/sparqling-genomics")
    (synopsis "Tools to use SPARQL to analyze genomics data")
    (description "This package provides various tools to extract RDF triples
