@@ -41,7 +41,7 @@
 (define-public sparqling-genomics
   (package
    (name "sparqling-genomics")
-   (version "0.99.5")
+   (version "0.99.6")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -50,12 +50,13 @@
                   version ".tar.gz"))
             (sha256
              (base32
-              "1b17094mrjx8jp9cl427wxxr12nvin77m0n6769cxz501mwfai6s"))))
+              "197127r1yvl6fld7m1s8dfwfp9lfmdm096ksvjd8hc4z57zqgcyl"))))
    (build-system gnu-build-system)
    (arguments
     `(#:configure-flags (list (string-append
                                "--with-libldap-prefix="
                                (assoc-ref %build-inputs "openldap")))
+      #:parallel-build? #f
       #:phases
       (modify-phases %standard-phases
         (add-after 'install 'wrap-executable
