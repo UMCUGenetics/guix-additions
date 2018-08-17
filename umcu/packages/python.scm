@@ -1012,3 +1012,29 @@ for Python.  The design goals are:
    (synopsis "EGA python client")
    (description "EGA python client")
    (license license:asl2.0)))
+
+(define-public python-pyfaidx
+  (package
+   (name "python-pyfaidx")
+   (version "0.5.4.2")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "pyfaidx" version))
+            (sha256
+             (base32
+              "0y5zyjksj1rdglj601xd2bbni5abhdh622y3ck76chyzxz9z4rx8"))))
+   (build-system python-build-system)
+   (propagated-inputs
+    `(("python-six" ,python-six)))
+   (home-page "https://pypi.org/project/pyfaidx/")
+   (synopsis "Pythonic random access to fasta subsequences")
+   (description "Samtools provides a function “faidx” (FAsta InDeX), which
+creates a small flat index file allowing for fast random access to any
+subsequence in the indexed FASTA file, while loading a minimal amount of
+the file in to memory.  This python module implements pure Python classes
+for indexing, retrieval, and in-place modification of FASTA files using a
+samtools compatible index.  The pyfaidx module is API compatible with the
+pygr seqdb module. A command-line script @code{faidx} is installed alongside
+the pyfaidx module, and facilitates complex manipulation of FASTA files
+without any programming knowledge.")
+   (license license:asl2.0)))
