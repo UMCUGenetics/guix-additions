@@ -1038,3 +1038,14 @@ pygr seqdb module. A command-line script @code{faidx} is installed alongside
 the pyfaidx module, and facilitates complex manipulation of FASTA files
 without any programming knowledge.")
    (license license:asl2.0)))
+
+(define-public python2-htseq-0.6.0
+  (package (inherit python2-htseq)
+    (version "0.6.0")
+    (source (origin
+              (method url-fetch)
+              (uri "https://files.pythonhosted.org/packages/6f/65/17615c8703a5b66654365db3a7a5d3cec598b968809f1e14f227b63589c4/HTSeq-0.6.0.tar.gz")
+              (sha256
+               (base32
+                "1v90sjpbkj7wpzn52yxpasb84fhkw1v85nw2nwxz2bgzfxn93byp"))
+              (patches (search-patches "0001-htseq-increase-memory-limit.patch"))))))
