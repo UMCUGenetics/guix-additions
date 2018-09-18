@@ -1960,4 +1960,4 @@ for each cluster in a dendrogram.")
     (synopsis "Display and Analyze ROC Curves")
     (description
       "Tools for visualizing, smoothing and comparing receiver operating characteristic (ROC curves). (Partial) area under the curve (AUC) can be compared with statistical tests based on U-statistics or bootstrap.  Confidence intervals can be computed for (p)AUC or ROC curves.")
-    (license gpl3+)))
+    (license license:lgpl3+)))
