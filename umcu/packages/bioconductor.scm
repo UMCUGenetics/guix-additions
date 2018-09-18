@@ -1939,7 +1939,7 @@ for each cluster in a dendrogram.")
       "This package provides a collection of open source libraries for numerical computing (numerical integration, optimization, etc.) and their integration with 'Rcpp'.")
     (license license:gpl2+)))
 
-(define-public r-pROC
+(define-public r-proc
   (package
     (name "r-proc")
     (version "1.12.1")
