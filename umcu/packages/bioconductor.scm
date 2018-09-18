@@ -1938,3 +1938,26 @@ for each cluster in a dendrogram.")
     (description
       "This package provides a collection of open source libraries for numerical computing (numerical integration, optimization, etc.) and their integration with 'Rcpp'.")
     (license license:gpl2+)))
+
+(define-public r-proc
+  (package
+    (name "r-proc")
+    (version "1.12.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "pROC" version))
+        (sha256
+          (base32
+            "05ad69a6fxy9k903cw3h4q59ch2jv6qfg9yjdbw3cgiiazcafrlj"))))
+    (properties `((upstream-name . "pROC")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-ggplot2" ,r-ggplot2)
+        ("r-plyr" ,r-plyr)
+        ("r-rcpp" ,r-rcpp)))
+    (home-page "http://expasy.org/tools/pROC/")
+    (synopsis "Display and Analyze ROC Curves")
+    (description
+      "Tools for visualizing, smoothing and comparing receiver operating characteristic (ROC curves). (Partial) area under the curve (AUC) can be compared with statistical tests based on U-statistics or bootstrap.  Confidence intervals can be computed for (p)AUC or ROC curves.")
+    (license license:lgpl3+)))
