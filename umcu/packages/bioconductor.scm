@@ -1961,3 +1961,43 @@ for each cluster in a dendrogram.")
     (description
       "Tools for visualizing, smoothing and comparing receiver operating characteristic (ROC curves). (Partial) area under the curve (AUC) can be compared with statistical tests based on U-statistics or bootstrap.  Confidence intervals can be computed for (p)AUC or ROC curves.")
     (license license:lgpl3+)))
+
+(define-public r-decipher
+  (package
+    (name "r-decipher")
+    (version "2.8.1")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "DECIPHER" version))
+              (sha256
+               (base32
+                "1rzi0bmnd9xl79b9zsj4csgky61xa4aylma5lj9l9p3qvqc5gz4b"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biostrings" ,r-biostrings)
+       ("r-rsqlite" ,r-rsqlite)))
+    (home-page "http://bioconductor.org/packages/DECIPHER")
+    (synopsis "Tools for deciphering and managing biological sequences")
+    (description "This package provides a toolset for deciphering and managing
+biological sequences.")
+    (license license:gpl3)))
+
+(define-public r-hash
+  (package
+   (name "r-hash")
+   (version "2.2.6")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "hash" version))
+            (sha256
+             (base32
+              "0mkx59bmni3b283znvbndnkbar85fzavzdfgmwrhskidsqcz34yz"))))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/hash")
+   (synopsis "Implementation of hash/associated arrays/dictionaries")
+   (description
+    "This package implements a data structure similar to hashes in Perl and
+dictionaries in Python but with a purposefully R flavor.  For objects of
+appreciable size, access using hashes outperforms native named lists and
+vectors.")
+   (license license:gpl2+)))
