@@ -41,7 +41,7 @@
 (define-public sparqling-genomics
   (package
    (name "sparqling-genomics")
-   (version "0.99.8")
+   (version "0.99.9")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -50,7 +50,7 @@
                   version ".tar.gz"))
             (sha256
              (base32
-              "12lpqg0cbv86afdcbgg0kg846rmm5hcavl59afy0hiw51j0ccrg9"))))
+              "1gabjpm2qa76jipf5fa71y323qg611wvhlci2qa9zz0py21pmzdf"))))
    (build-system gnu-build-system)
    (arguments
     `(#:configure-flags (list (string-append
@@ -59,19 +59,30 @@
       #:parallel-build? #f
       #:phases
       (modify-phases %standard-phases
+        (add-after 'install 'setup-static-resources
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let* ((out        (assoc-ref outputs "out"))
+                   (web-root   (string-append
+                                out "/share/sparqing-genomics/sg-web"))
+                   (static-dir (string-append web-root "/static")))
+              (mkdir-p static-dir)
+              (copy-recursively "web/static" static-dir))))
         (add-after 'install 'wrap-executable
           (lambda* (#:key outputs #:allow-other-keys)
             (let* ((out  (assoc-ref outputs "out"))
                    (guile-load-path
-                    (string-append (getenv "GUILE_LOAD_PATH") ":"
-                                   out "/share/guile/site/2.2"))
+                    (string-append out "/share/guile/site/2.2:"
+                                   (getenv "GUILE_LOAD_PATH")))
                    (guile-load-compiled-path
-                    (string-append (getenv "GUILE_LOAD_COMPILED_PATH") ":"
-                                   out "/lib/guile/2.2/site-ccache")))
+                    (string-append out "/lib/guile/2.2/site-ccache:"
+                                   (getenv "GUILE_LOAD_COMPILED_PATH")))
+                   (web-root (string-append
+                              out "/share/sparqing-genomics/sg-web")))
               (wrap-program (string-append out "/bin/sg-web")
                 `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
                 `("GUILE_LOAD_COMPILED_PATH" ":" prefix
-                  (,guile-load-compiled-path)))))))))
+                  (,guile-load-compiled-path))
+                `("SG_WEB_ROOT" ":" prefix (,web-root)))))))))
    (native-inputs
     `(("texlive" ,texlive)))
    (inputs
