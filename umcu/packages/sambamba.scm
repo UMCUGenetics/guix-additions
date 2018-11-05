@@ -35,7 +35,7 @@
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages python)
   #:use-module (gnu packages gcc)
-  #:use-module (gnu packages ldc)
+  #:use-module (gnu packages dlang)
   #:use-module (gnu packages llvm)
   #:use-module (srfi srfi-1))
 
