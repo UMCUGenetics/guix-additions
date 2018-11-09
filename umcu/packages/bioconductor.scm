@@ -2002,3 +2002,26 @@ dictionaries in Python but with a purposefully R flavor.  For objects of
 appreciable size, access using hashes outperforms native named lists and
 vectors.")
    (license license:gpl2+)))
+
+(define-public r-boruta
+  (package
+  (name "r-boruta")
+  (version "6.0.0")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "Boruta" version))
+      (sha256
+        (base32
+          "1pp8zal1vhxlzdhl20phn39m3ffhw5glyqbcgwa0w14zw2mpm6hw"))))
+  (properties `((upstream-name . "Boruta")))
+  (build-system r-build-system)
+  (propagated-inputs `(("r-ranger" ,r-ranger)))
+  (home-page "https://notabug.org/mbq/Boruta/")
+  (synopsis
+    "Wrapper Algorithm for All Relevant Feature Selection")
+  (description "An all relevant feature selection wrapper algorithm.
+It finds relevant features by comparing original attributes' importance
+with importance achievable at random, estimated using their permuted
+copies (shadows).")
+  (license license:gpl2+)))
