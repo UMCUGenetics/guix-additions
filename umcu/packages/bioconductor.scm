@@ -2025,3 +2025,23 @@ It finds relevant features by comparing original attributes' importance
 with importance achievable at random, estimated using their permuted
 copies (shadows).")
   (license license:gpl2+)))
+
+(define-public r-geneoverlap
+  (package
+  (name "r-geneoverlap")
+  (version "1.18.0")
+  (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "GeneOverlap" version))
+            (sha256
+             (base32
+              "1p87ngk0lfbb86hwx63x4xjnw77xslh5a7136l1dwia24r9dccls"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-rcolorbrewer" ,r-rcolorbrewer)
+     ("r-gplots" ,r-gplots)))
+  (home-page "http://bioconductor.org/packages/GeneOverlap/")
+  (synopsis "Test and visualize gene overlaps")
+  (description "This package can be used to test two sets of gene lists
+and visualize the results.")
+  (license license:gpl3)))
