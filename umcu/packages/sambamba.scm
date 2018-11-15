@@ -39,6 +39,117 @@
   #:use-module (gnu packages llvm)
   #:use-module (srfi srfi-1))
 
+(define htslib-for-sambamba
+  (let ((commit "2f3c3ea7b301f9b45737a793c0b2dcf0240e5ee5"))
+    (package
+      (inherit htslib)
+      (name "htslib-for-sambamba")
+      (version (string-append "1.3.1-1." (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/lomereiter/htslib.git")
+               (commit commit)))
+         (file-name (string-append "htslib-" version "-checkout"))
+         (sha256
+          (base32
+           "0g38g8s3npr0gjm9fahlbhiskyfws9l5i0x1ml3rakzj7az5l9c9"))))
+      (native-inputs
+       `(("autoconf" ,autoconf)
+         ("automake" ,automake)
+         ,@(package-native-inputs htslib))))))
+
+(define-public sambamba-0.6.8
+  (package
+    (name "sambamba")
+    (version "0.6.8")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lomereiter/sambamba.git")
+             (commit (string-append "v" version))))
+       (file-name (string-append name "-" version "-checkout"))
+       (sha256
+        (base32
+         "0k0cz3qcv98p6cq09zlbgnjsggxcqbcmzxg5zikgcgbr2nfq4lry"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f                      ; there is no test target
+       #:parallel-build? #f             ; not supported
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         (add-after 'unpack 'fix-ldc-version
+           (lambda _
+             (substitute* "gen_ldc_version_info.py"
+               (("/usr/bin/env.*") (which "python3")))
+             (substitute* "Makefile"
+               ;; We use ldc2 instead of ldmd2 to compile sambamba.
+               (("\\$\\(shell which ldmd2\\)") (which "ldc2")))
+             #t))
+         (add-after 'unpack 'place-biod-and-undead
+           (lambda* (#:key inputs #:allow-other-keys)
+             (copy-recursively (assoc-ref inputs "biod") "BioD")
+             (copy-recursively (assoc-ref inputs "undead") "undeaD")
+             #t))
+         (add-after 'unpack 'unbundle-prerequisites
+           (lambda _
+             (substitute* "Makefile"
+               (("htslib/libhts.a lz4/lib/liblz4.a")
+                "-L-lhts -L-llz4")
+               ((" lz4-static htslib-static") ""))
+             #t))
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let* ((out   (assoc-ref outputs "out"))
+                    (bin   (string-append out "/bin")))
+               (mkdir-p bin)
+               (install-file "bin/sambamba" bin)
+               #t))))))
+    (native-inputs
+     `(("ldc" ,ldc)
+       ("rdmd" ,rdmd)
+       ("python" ,python-minimal)
+       ("biod"
+        ,(let ((commit "4f1a7d2fb7ef3dfe962aa357d672f354ebfbe42e"))
+           (origin
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/biod/BioD.git")
+                   (commit commit)))
+             (file-name (string-append "biod-"
+                                       (string-take commit 9)
+                                       "-checkout"))
+             (sha256
+              (base32
+               "1k5pdjv1qvi0a3rwd1sfq6zbj37l86i7bf710m4c0y6737lxj426")))))
+       ("undead"
+        ,(let ((commit "9be93876982b5f14fcca60832563b3cd767dd84d"))
+           (origin
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/biod/undeaD.git")
+                   (commit commit)))
+             (file-name (string-append "undead-"
+                                       (string-take commit 9)
+                                       "-checkout"))
+             (sha256
+              (base32
+               "1xfarj0nqlmi5jd1vmcmm7pabzaf9hxyvk6hp0d6jslb5k9r8r3d")))))))
+    (inputs
+     `(("lz4" ,lz4)
+       ("htslib" ,htslib-for-sambamba)))
+    (home-page "http://lomereiter.github.io/sambamba")
+    (synopsis "Tools for working with SAM/BAM data")
+    (description "Sambamba is a high performance modern robust and
+fast tool (and library), written in the D programming language, for
+working with SAM and BAM files.  Current parallelised functionality is
+an important subset of samtools functionality, including view, index,
+sort, markdup, and depth.")
+    (license license:gpl2+)))
+
 ;; Imported from gitlab.com/genenetwork/guix-bioinformatics
 (define-public shunit2
   (let ((commit "60dd60bcd1573befe38465010263ab242e55811d"))
