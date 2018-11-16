@@ -2690,7 +2690,7 @@ databases.")
 
 (define-public r-qvalue-2.14.0
   (package (inherit r-qvalue)
-    (name "r-graphite")
+    (name "r-qvalue")
     (version "2.14.0")
     (source (origin
               (method url-fetch)
