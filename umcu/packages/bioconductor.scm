@@ -47,6 +47,8 @@
   #:use-module (gnu packages qt)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages tls)
+  #:use-module (gnu packages multiprecision)
+  #:use-module (gnu packages xml)
   #:use-module (gnu packages web))
 
 (define-public r-rmisc
@@ -2045,3 +2047,523 @@ copies (shadows).")
   (description "This package can be used to test two sets of gene lists
 and visualize the results.")
   (license license:gpl3)))
+
+(define-public r-chipseeker
+  (package
+  (name "r-chipseeker")
+  (version "1.18.0")
+  (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "ChIPseeker" version))
+            (sha256
+             (base32
+              "08d8m4svnyki4pg0mwy17p7wi7anw9ba347ck36x8lzbjb8xcmwg"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-annotationdbi" ,r-annotationdbi)
+     ("r-biocgenerics" ,r-biocgenerics)
+     ("r-boot" ,r-boot)
+     ("r-enrichplot" ,r-enrichplot)
+     ("r-iranges" ,r-iranges)
+     ("r-genomeinfodb" ,r-genomeinfodb)
+     ("r-genomicranges" ,r-genomicranges)
+     ("r-genomicfeatures" ,r-genomicfeatures)
+     ("r-ggplot2" ,r-ggplot2)
+     ("r-gplots" ,r-gplots)
+     ("r-gridbase" ,r-gridbase)
+     ("r-gtools" ,r-gtools)
+     ("r-dplyr" ,r-dplyr)
+     ("r-plotrix" ,r-plotrix)
+     ("r-dplyr" ,r-dplyr)
+     ("r-magrittr" ,r-magrittr)
+     ("r-rcolorbrewer" ,r-rcolorbrewer)
+     ("r-rtracklayer" ,r-rtracklayer)
+     ("r-s4vectors" ,r-s4vectors)
+     ("r-txdb-hsapiens-ucsc-hg19-knowngene" ,r-txdb-hsapiens-ucsc-hg19-knowngene)
+     ("r-upsetr" ,r-upsetr)))
+  (home-page "http://bioconductor.org/packages/ChIPseeker/")
+  (synopsis "ChIPseeker for ChIP peak Annotation, Comparison, and Visualization")
+  (description "This package implements functions to retrieve the nearest genes
+around the peak, annotate genomic region of the peak, statstical methods for
+estimate the significance of overlap among ChIP peak data sets, and incorporate
+GEO database for user to compare the own dataset with those deposited in database.
+The comparison can be used to infer cooperative regulation and thus can be used to
+generate hypotheses.  Several visualization functions are implemented to summarize
+the coverage of the peak experiment, average profile and heatmap of peaks binding
+to TSS regions, genomic annotation, distance to TSS, and overlap of peaks or
+genes.")
+  (license license:artistic2.0)))
+
+(define-public r-enrichplot
+  (package
+  (name "r-enrichplot")
+  (version "1.2.0")
+  (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "enrichplot" version))
+            (sha256
+             (base32
+              "0cxqfpy6py4k3z3lnlkiwx89r4ymfpdc4hm25dfpazqgjflz5is7"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-annotationdbi" ,r-annotationdbi)
+     ("r-cowplot" ,r-cowplot)
+     ("r-dose" ,r-dose)
+     ("r-europepmc" ,r-europepmc)
+     ("r-ggplot2" ,r-ggplot2)
+     ("r-ggplotify" ,r-ggplotify)
+     ("r-ggraph", r-ggraph)
+     ("r-ggridges" ,r-ggridges)
+     ("r-gosemsim" ,r-gosemsim)
+     ("r-gridextra" ,r-gridextra)
+     ("r-igraph" ,r-igraph)
+     ("r-purrr" ,r-purrr)
+     ("r-rcolorbrewer" ,r-rcolorbrewer)
+     ("r-reshape2" ,r-reshape2)
+     ("r-upsetr" ,r-upsetr)))
+  (home-page "http://bioconductor.org/packages/GeneOverlap/")
+  (synopsis "Visualization of Functional Enrichment Result")
+  (description "The 'enrichplot' package implements several visualization
+methods for interpreting functional enrichment results obtained from ORA
+or GSEA analysis. All the visualization methods are developed based on
+'ggplot2' graphics.")
+  (license license:artistic2.0)))
+
+(define-public r-dose
+  (package
+  (name "r-dose")
+  (version "3.8.0")
+  (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "DOSE" version))
+            (sha256
+             (base32
+              "1ipdyzwk8znqmm1gby7ib8g5zsgzdjpv420ld6jmp7kz9x9pk1yf"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-annotationdbi" ,r-annotationdbi)
+     ("r-biocparallel" ,r-biocparallel)
+     ("r-do-db" ,r-do-db)
+     ("r-fgsea" ,r-fgsea)
+     ("r-ggplot2" ,r-ggplot2)
+     ("r-gosemsim" ,r-gosemsim)
+     ("r-qvalue" ,r-qvalue)
+     ("r-reshape2" ,r-reshape2)
+     ("r-s4vectors" ,r-s4vectors)))
+  (home-page "https://cran.r-project.org/web/packages/grid/")
+  (synopsis "Disease Ontology Semantic and Enrichment analysis")
+  (description "This package implements five methods proposed by Resnik,
+Schlicker, Jiang, Lin and Wang respectively for measuring semantic similarities
+among DO terms and gene products. Enrichment analyses including hypergeometric model
+and gene set enrichment analysis are also implemented for discovering disease
+associations of high-throughput biological data.")
+  (license license:artistic2.0)))
+
+(define-public r-do-db
+  (package
+  (name "r-do-db")
+  (version "2.9")
+  (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "http://bioconductor.org/packages/"
+                  "release/data/annotation/src/contrib/DO.db_"
+                  version ".tar.gz"))
+            (sha256
+             (base32
+              "10bqqa124l61ivzy4mdd3z3ar9a6537qbxw23pc4y9w8a6dwnavn"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-annotationdbi" ,r-annotationdbi)))
+  (home-page "http://bioconductor.org/packages/DO.db/")
+  (synopsis "Set of annotation maps describing the entire Disease Ontology")
+  (description "This package implements five methods proposed by Resnik,
+Schlicker, Jiang, Lin and Wang respectively for measuring semantic similarities
+among DO terms and gene products. Enrichment analyses including hypergeometric
+model and gene set enrichment analysis are also implemented for discovering
+disease associations of high-throughput biological data.")
+  (license license:artistic2.0)))
+
+(define-public r-fgsea
+  (package
+    (name "r-fgsea")
+    (version "1.8.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "fgsea" version))
+              (sha256
+               (base32
+                "0cxxvlmg340l5l5fz4abbwppiri0ibg4navvq5k3wg511mz8ma2q"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-rcpp" ,r-rcpp)
+       ("r-data-table" ,r-data-table)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gridextra" ,r-gridextra)
+       ("r-fastmatch" ,r-fastmatch)
+       ("r-matrix" ,r-matrix)))
+    (home-page "http://bioconductor.org/packages/fgsea/")
+    (synopsis "Fast Gene Set Enrichment Analysis")
+    (description "The package implements an algorithm for fast gene set
+enrichment analysis.  Using the fast algorithm allows to make more
+permutations and get more fine grained p-values, which allows to use
+accurate stantard approaches to multiple hypothesis correction.")
+    (license license:expat)))
+
+(define-public r-gosemsim
+  (package
+    (name "r-gosemsim")
+    (version "2.8.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "GOSemSim" version))
+              (sha256
+               (base32
+                "0ckihpy8jmgn2np1avprz76v9z7i5hqm2gj514c6dmmq3csbc7ib"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-annotationdbi" ,r-annotationdbi)
+       ("r-go-db" ,r-go-db)))
+    (home-page "http://bioconductor.org/packages/GOSemSim/")
+    (synopsis "GO-terms Semantic Similarity Measures")
+    (description "The semantic comparisons of Gene Ontology (GO)
+annotations provide quantitative ways to compute similarities between
+genes and gene groups, and have became important basis for many
+bioinformatics analysis approaches. GOSemSim is an R package for semantic
+similarity computation among GO terms, sets of GO terms, gene products
+and gene clusters.  GOSemSim implemented five methods proposed by
+Resnik, Schlicker, Jiang, Lin and Wang respectively.")
+    (license license:artistic2.0)))
+
+(define-public r-upsetr
+  (package
+    (name "r-upsetr")
+    (version "1.3.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "UpSetR" version))
+       (sha256
+        (base32
+         "08vj7l92b8fpqyqwxshll2mhk3yhgyr74axvr2lf29z78bapymhz"))))
+    (properties `((upstream-name . "UpSetR")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-ggplot2" ,r-ggplot2)
+       ("r-gridextra" ,r-gridextra)
+       ("r-plyr" ,r-plyr)
+       ("r-scales" ,r-scales)))
+    (home-page "http://github.com/hms-dbmi/UpSetR")
+    (synopsis "More Scalable Alternative to Venn and Euler Diagrams for Visualizing Intersecting Sets")
+    (description "Creates visualizations of intersecting sets using a
+novel matrix design, along with visualizations of several common set, element and
+attribute related tasks.")
+    (license license:expat)))
+
+(define-public r-europepmc
+  (package
+    (name "r-europepmc")
+    (version "0.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "europepmc" version))
+       (sha256
+        (base32
+         "1ngqs1sqzkbwv98dd5z4cxj8bnz41wyd0g060a2vpqi3s99s4i2h"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-dplyr" ,r-dplyr)
+       ("r-httr" ,r-httr)
+       ("r-jsonlite" ,r-jsonlite)
+       ("r-plyr" ,r-plyr)
+       ("r-progress" ,r-progress)
+       ("r-purrr" ,r-purrr)
+       ("r-urltools" ,r-urltools)
+       ("r-xml2" ,r-xml2)))
+    (home-page "http://github.com/ropensci/europepmc/")
+    (synopsis "R Interface to the Europe PubMed Central RESTful Web Service")
+    (description "An R Client for the Europe PubMed Central RESTful Web Service
+(see <https://europepmc.org/RestfulWebService> for more information).  It gives
+access to both metadata on life science literature and open access full texts.
+Europe PMC indexes all PubMed content and other literature sources including
+Agricola, a bibliographic database of citations to the agricultural literature,
+or Biological Patents.  In addition to bibliographic metadata, the client allows
+users to fetch citations and reference lists.  Links between life-science
+literature and other EBI databases, including ENA, PDB or ChEMBL are also
+accessible.  No registration or API key is required.  See the vignettes for
+usage examples.")
+    (license license:gpl3)))
+
+(define-public r-urltools
+  (package
+    (name "r-urltools")
+    (version "1.7.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "urltools" version))
+       (sha256
+        (base32
+         "01h3fwk5mzicy2isvdla9r0zxrxhaf902xx4dg3f16a1l4fgi1a4"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-rcpp" ,r-rcpp) ("r-triebeard" ,r-triebeard)))
+    (home-page
+     "https://github.com/Ironholds/urltools/")
+    (synopsis
+     "Vectorised Tools for URL Handling and Parsing")
+    (description
+     "This package provides a toolkit for all URL-handling needs, including
+encoding and decoding, parsing, parameter extraction and modification.  All
+functions are designed to be both fast and entirely vectorised.  It is
+intended to be useful for people dealing with web-related datasets, such as
+server-side logs, although may be useful for other situations involving
+large sets of URLs.")
+    (license license:expat)))
+
+(define-public r-triebeard
+  (package
+    (name "r-triebeard")
+    (version "0.3.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "triebeard" version))
+       (sha256
+        (base32
+         "1hqyz57gph02c9fdc07lxz113bbklif3g18sw8jan6pakhhdc7dz"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-rcpp" ,r-rcpp)))
+    (home-page "https://github.com/Ironholds/triebeard/")
+    (synopsis "'Radix' Trees in 'Rcpp'")
+    (description "'Radix trees', or 'tries', are key-value data structures
+optimised for efficient lookups, similar in purpose to hash tables. 'triebeard'
+provides an implementation of 'radix trees' for use in R programming and in
+developing packages with 'Rcpp'.")
+    (license license:expat)))
+
+(define-public r-ggplotify
+  (package
+    (name "r-ggplotify")
+    (version "0.0.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "ggplotify" version))
+       (sha256
+        (base32
+         "14hqlpvnaq5psz1ljcpw9isa06827rg3fm5c1dx159rsjfi56yby"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-ggplot2" ,r-ggplot2)
+       ;("r-gridgraphics" ,r-gridgraphics)
+       ("r-rvcheck" ,r-rvcheck)))
+    (home-page "https://github.com/GuangchuangYu/ggplotify")
+    (synopsis "Convert Plot to 'grob' or 'ggplot' Object")
+    (description "Convert plot function call (using expression or formula)
+to 'grob' or 'ggplot' object that compatible to the 'grid' and 'ggplot2'
+ecosystem.  With this package, we are able to e.g.  using 'cowplot' to align
+plots produced by 'base' graphics, 'grid', 'lattice', 'vcd' etc.  by converting
+them to 'ggplot' objects.")
+    (license license:artistic2.0)))
+
+(define-public r-ggraph
+  (package
+  (name "r-ggraph")
+  (version "1.0.2")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "ggraph" version))
+      (sha256
+        (base32
+          "0fpmp326mryd1k1qvacjadksrnhbla8h960i18lmrimzrag7692c"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-digest" ,r-digest)
+      ("r-dplyr" ,r-dplyr)
+      ("r-ggforce" ,r-ggforce)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-ggrepel" ,r-ggrepel)
+      ("r-gtable" ,r-gtable)
+      ("r-igraph" ,r-igraph)
+      ("r-mass" ,r-mass)
+      ("r-plyr" ,r-plyr)
+      ("r-rcpp" ,r-rcpp)
+      ("r-scales" ,r-scales)
+      ("r-viridis" ,r-viridis)))
+  (home-page
+    "http://cran.r-project.org/web/packages/ggraph")
+  (synopsis
+    "An Implementation of Grammar of Graphics for Graphs and Networks")
+  (description
+    "The grammar of graphics as implemented in ggplot2 is a poor fit for
+graph and network visualizations due to its reliance on tabular data
+input.  ggraph is an extension of the ggplot2 API tailored to graph
+visualizations and provides the same flexible approach to building up
+plots layer by layer.")
+  (license license:gpl3)))
+
+(define-public r-igraph
+  (package
+    (name "r-igraph")
+    (version "1.2.2")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "igraph" version))
+       (sha256
+        (base32
+         "1bggm7b8v3bh7q2589w26qvd7sgs69m4qiij7d0rbm0ykkgxm8lx"))))
+    (build-system r-build-system)
+    (inputs
+     `(("glpk" ,glpk)
+       ("gmp" ,gmp)
+       ("libxml2" ,libxml2)
+       ("zlib" ,zlib)))
+    (propagated-inputs
+     `(("r-magrittr" ,r-magrittr)
+       ("r-matrix" ,r-matrix)
+       ("r-pkgconfig" ,r-pkgconfig)))
+    (native-inputs `(("gfortran" ,gfortran)))
+    (home-page "http://igraph.org")
+    (synopsis "Network Analysis and Visualization")
+    (description
+     "Routines for simple graphs and network analysis.  It can handle large graphs
+very well and provides functions for generating random and regular graphs, graph
+visualization, centrality methods and much more.")
+    (license license:gpl2+)))
+
+(define-public r-ggforce
+  (package
+    (name "r-ggforce")
+    (version "0.1.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "ggforce" version))
+       (sha256
+        (base32
+         "0wydxmy6sfl84q94dd27m7cpg9iy6vgwzy3nr3m3cf3rfjk87sn4"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-dplyr" ,r-dplyr)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gtable" ,r-gtable)
+       ("r-lazyeval" ,r-lazyeval)
+       ("r-mass" ,r-mass)
+       ("r-rcpp" ,r-rcpp)
+       ("r-scales" ,r-scales)
+       ("r-tweenr" ,r-tweenr)
+       ("r-units" ,r-units)))
+    (home-page
+     "http://cran.r-project.org/web/packages/ggforce")
+    (synopsis "Accelerating 'ggplot2'")
+    (description
+     "The aim of 'ggplot2' is to aid in visual data investigations.  This focus
+has led to a lack of facilities for composing specialised plots. 'ggforce' aims
+to be a collection of mainly new stats and geoms that fills this gap.  All
+additional functionality is aimed to come through the official extension system
+so using 'ggforce' should be a stable experience.")
+    (license license:gpl2+)))
+
+(define-public r-rvcheck
+  (package
+    (name "r-rvcheck")
+    (version "0.1.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "rvcheck" version))
+       (sha256
+        (base32
+         "116cs1ih5m55jyp0f5whjvnbn4gpi4550qkbwzw0mq254x2r8vdg"))))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rlang" ,r-rlang)))
+    (home-page
+     "http://cran.r-project.org/web/packages/rvcheck")
+    (synopsis "R Package Version Check")
+    (description "Check latest release version of R and R package
+(both in 'CRAN', 'Bioconductor' or 'Github').")
+    (license license:artistic2.0)))
+
+(define-public r-tweenr
+  (package
+    (name "r-tweenr")
+    (version "1.0.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "tweenr" version))
+       (sha256
+        (base32
+         "0r98ln17fdzdda66rsj6lqwi843anl6m7c287kbzc4gkj931cifh"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-farver" ,r-farver)
+       ("r-magrittr" ,r-magrittr)
+       ("r-rcpp" ,r-rcpp)
+       ("r-rlang" ,r-rlang)))
+    (home-page "https://github.com/thomasp85/tweenr")
+    (synopsis
+     "Interpolate Data for Smooth Animations")
+    (description
+     "In order to create smooth animation between states of data, tweening is necessary.
+This package provides a range of functions for creating tweened data that can be used as
+basis for animation.  Furthermore it adds a number of vectorized interpolaters for
+common R data types such as numeric, date and colour.")
+    (license license:expat)))
+
+(define-public r-units
+  (package
+    (name "r-units")
+    (version "0.6-1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "units" version))
+       (sha256
+        (base32
+         "0gafl1d89gvmpndmkb9ng7dqhvnb5cx9igza0rjdrdn285icb07i"))))
+    (build-system r-build-system)
+    ;(inputs `(("udunits-2" ,udunits-2)))
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page
+     "https://github.com/r-quantities/units/")
+    (synopsis "Measurement Units for R Vectors")
+    (description
+     "Support for measurement units in R vectors, matrices and arrays: automatic
+propagation, conversion, derivation and simplification of units; raising errors
+in case of unit incompatibility.  Compatible with the POSIXct, Date and difftime
+classes.  Uses the UNIDATA udunits library and unit database for unit
+compatibility checking and conversion.")
+    (license license:gpl2)))
+
+(define-public r-farver
+  (package
+    (name "r-farver")
+    (version "1.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "farver" version))
+       (sha256
+        (base32
+         "18r98j9n2l6zjjx6gqvrjj6j19r52k0mrn72p4vyy97ag8fs8hb1"))))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page "https://github.com/thomasp85/farver")
+    (synopsis
+     "Vectorised Colour Conversion and Comparison")
+    (description
+     "The encoding of colour can be handled in many different ways, using
+different colour spaces.  As different colour spaces have different uses,
+efficient conversion between these representations are important.  The
+'farver' package provides a set of functions that gives access to very
+fast colour space conversion and comparisons implemented in C++, and
+offers 100-fold speed improvements over the 'convertColor' function in
+the 'grDevices' package.")
+    (license license:expat)))
