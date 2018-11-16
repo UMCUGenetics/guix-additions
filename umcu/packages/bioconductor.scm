@@ -26,6 +26,7 @@
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (gnu packages)
+  #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bioconductor)
   #:use-module (gnu packages bioinformatics)
@@ -2552,10 +2553,11 @@ common R data types such as numeric, date and colour.")
         (base32
          "0gafl1d89gvmpndmkb9ng7dqhvnb5cx9igza0rjdrdn285icb07i"))))
     (build-system r-build-system)
-    ;(inputs `(("udunits-2" ,udunits-2)))
-    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
-    (home-page
-     "https://github.com/r-quantities/units/")
+    (inputs
+     `(("udunits" ,udunits)))
+    (propagated-inputs
+     `(("r-rcpp" ,r-rcpp)))
+    (home-page "https://github.com/r-quantities/units/")
     (synopsis "Measurement Units for R Vectors")
     (description
      "Support for measurement units in R vectors, matrices and arrays: automatic
@@ -2610,8 +2612,7 @@ the 'grDevices' package.")
        ("r-ggraph" ,r-ggraph)
        ("r-reactome-db" ,r-reactome-db)
        ("r-igraph" ,r-igraph)
-       ;("r-graphite" ,r-graphite)
-       ))
+       ("r-graphite" ,r-graphite)))
     (home-page "https://guangchuangyu.github.io/software/ReactomePA")
     (synopsis "Reactome Pathway Analysis")
     (description "This package provides functions for pathway analysis based on
@@ -2639,3 +2640,50 @@ enrichment analysis and several functions for visualization.")
     (description "This package provides a set of annotation maps for reactome
 assembled using data from reactome.")
     (license license:cc-by4.0)))
+
+(define-public udunits
+  (package
+    (name "udunits")
+    (version "2.2.26")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "0v9mqw4drnkzkm57331ail6yvs9485jmi37s40lhvmf7r5lli3rn"))))
+    (build-system gnu-build-system)
+    (native-inputs
+     `(("libtool" ,libtool)))
+    (inputs
+     `(("expat" ,expat)))
+    (home-page "https://www.unidata.ucar.edu/downloads/udunits")
+    (synopsis "Programatic handling of units of physical quantities")
+    (description "The UDUNITS package from Unidata is a C-based package for the
+programatic handling of units of physical quantities.")
+    (license license:expat)))
+
+(define-public r-graphite
+  (package
+    (name "r-graphite")
+    (version "1.28.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "graphite" version))
+              (sha256
+               (base32
+                "1qc0c7fn54fq00fkpmzcw34lgqj5z1ry8wfzapha11an123psfaw"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-annotationdbi" ,r-annotationdbi)
+       ("r-checkmate" ,r-checkmate)
+       ("r-graph" ,r-graph)
+       ("r-httr" ,r-httr)
+       ("r-rappdirs" ,r-rappdirs)))
+    (home-page "https://guangchuangyu.github.io/software/ReactomePA")
+    (synopsis "GRAPH Interaction from pathway Topological Environment")
+    (description "Graph objects from pathway topology derived from Biocarta,
+HumanCyc, KEGG, NCI, Panther, PathBank, PharmGKB, Reactome and SMPDB
+databases.")
+    (license license:agpl3)))
