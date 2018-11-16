@@ -2148,7 +2148,7 @@ or GSEA analysis. All the visualization methods are developed based on
      ("r-fgsea" ,r-fgsea)
      ("r-ggplot2" ,r-ggplot2)
      ("r-gosemsim" ,r-gosemsim)
-     ("r-qvalue" ,r-qvalue)
+     ("r-qvalue" ,r-qvalue-2.14.0)
      ("r-reshape2" ,r-reshape2)
      ("r-s4vectors" ,r-s4vectors)))
   (home-page "https://cran.r-project.org/web/packages/grid/")
@@ -2687,3 +2687,14 @@ programatic handling of units of physical quantities.")
 HumanCyc, KEGG, NCI, Panther, PathBank, PharmGKB, Reactome and SMPDB
 databases.")
     (license license:agpl3)))
+
+(define-public r-qvalue-2.14.0
+  (package (inherit r-qvalue)
+    (name "r-graphite")
+    (version "2.14.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "qvalue" version))
+              (sha256
+               (base32
+                "03qxshqwwq1rj23p6pjrz08jm3ziikvy9badi4mz2rcwy2nz783a"))))))
