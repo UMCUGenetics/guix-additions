@@ -2345,6 +2345,29 @@ provides an implementation of 'radix trees' for use in R programming and in
 developing packages with 'Rcpp'.")
     (license license:expat)))
 
+(define-public r-gridgraphics
+  (package
+    (name "r-gridgraphics")
+    (version "0.3-0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "gridGraphics" version))
+       (sha256
+        (base32
+         "1p94flvq5h3x817pl1m0aj3sim87x6zdbpv9xrgdnqw3rxfzwgqs"))))
+    (properties `((upstream-name . "gridGraphics")))
+    (build-system r-build-system)
+    (home-page "https://github.com/pmur002/gridgraphics")
+    (synopsis "Redraw Base Graphics Using 'grid' Graphics")
+    (description
+     "Functions to convert a page of plots drawn with the 'graphics' package
+into identical output drawn with the 'grid' package.  The result looks like
+the original 'graphics'-based plot, but consists of 'grid' grobs and viewports
+that can then be manipulated with 'grid' functions (e.g., edit grobs and
+revisit viewports).")
+    (license license:gpl2+)))
+
 (define-public r-ggplotify
   (package
     (name "r-ggplotify")
@@ -2359,7 +2382,7 @@ developing packages with 'Rcpp'.")
     (build-system r-build-system)
     (propagated-inputs
      `(("r-ggplot2" ,r-ggplot2)
-       ;("r-gridgraphics" ,r-gridgraphics)
+       ("r-gridgraphics" ,r-gridgraphics)
        ("r-rvcheck" ,r-rvcheck)))
     (home-page "https://github.com/GuangchuangYu/ggplotify")
     (synopsis "Convert Plot to 'grob' or 'ggplot' Object")
@@ -2567,3 +2590,52 @@ fast colour space conversion and comparisons implemented in C++, and
 offers 100-fold speed improvements over the 'convertColor' function in
 the 'grDevices' package.")
     (license license:expat)))
+
+(define-public r-reactomepa
+  (package
+    (name "r-reactomepa")
+    (version "1.26.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "ReactomePA" version))
+              (sha256
+               (base32
+                "1kglvgn1sjnx9rm45lxp0ji19vzb8qlvjs01agsdbvkn19im5nkm"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-annotationdbi" ,r-annotationdbi)
+       ("r-dose" ,r-dose)
+       ("r-enrichplot" ,r-enrichplot)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-ggraph" ,r-ggraph)
+       ("r-reactome-db" ,r-reactome-db)
+       ("r-igraph" ,r-igraph)
+       ;("r-graphite" ,r-graphite)
+       ))
+    (home-page "https://guangchuangyu.github.io/software/ReactomePA")
+    (synopsis "Reactome Pathway Analysis")
+    (description "This package provides functions for pathway analysis based on
+REACTOME pathway database. It implements enrichment analysis, gene set
+enrichment analysis and several functions for visualization.")
+    (license license:gpl2)))
+
+(define-public r-reactome-db
+  (package
+    (name "r-reactome-db")
+    (version "1.66.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "http://www.bioconductor.org/packages/release/data/"
+                    "annotation/src/contrib/reactome.db_" version ".tar.gz"))
+              (sha256
+               (base32
+                "093bara4hk0590gxrz8ingbym79bs5hcf4plarrqdcldlljqfsyl"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-annotationdbi" ,r-annotationdbi)))
+    (home-page "https://guangchuangyu.github.io/software/ReactomePA")
+    (synopsis "Set of annotation maps for reactome")
+    (description "This package provides a set of annotation maps for reactome
+assembled using data from reactome.")
+    (license license:cc-by4.0)))
