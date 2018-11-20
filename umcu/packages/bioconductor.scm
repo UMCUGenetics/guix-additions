@@ -2708,7 +2708,7 @@ databases.")
      ("r-gosemsim" ,r-gosemsim)
      ("r-magrittr" ,r-magrittr)
      ("r-plyr" ,r-plyr)
-     ("r-qvalue" ,r-qvalue)
+     ("r-qvalue" ,r-qvalue-2.14.0)
      ("r-rvcheck" ,r-rvcheck)
      ("r-tidyr" ,r-tidyr)
      ("r-go-db" ,r-go-db)))
@@ -2718,7 +2718,6 @@ databases.")
   (description "This package implements methods to analyze and visualize
  functional profiles (GO and KEGG) of gene and gene clusters.")
   (license license:artistic2.0)))
-
 
 (define-public r-qvalue-2.14.0
   (package (inherit r-qvalue)
