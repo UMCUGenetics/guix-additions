@@ -2688,6 +2688,38 @@ HumanCyc, KEGG, NCI, Panther, PathBank, PharmGKB, Reactome and SMPDB
 databases.")
     (license license:agpl3)))
 
+(define-public r-clusterprofiler
+  (package
+  (name "r-clusterprofiler")
+  (version "3.10.0")
+  (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "clusterProfiler" version))
+            (sha256
+             (base32
+              "1h38prkl4yvk319x3iq6ljad6p8m3s8yxv1zii82m1qjrjaxdmz5"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-annotationhub" ,r-annotationhub)
+     ("r-dose" ,r-dose)
+     ("r-later" ,r-later)
+     ("r-enrichplot" ,r-enrichplot)
+     ("r-ggplot2" ,r-ggplot2)
+     ("r-gosemsim" ,r-gosemsim)
+     ("r-magrittr" ,r-magrittr)
+     ("r-plyr" ,r-plyr)
+     ("r-qvalue" ,r-qvalue)
+     ("r-rvcheck" ,r-rvcheck)
+     ("r-tidyr" ,r-tidyr)
+     ("r-go-db" ,r-go-db)))
+  (home-page "http://bioconductor.org/packages/clusterProfiler/")
+  (synopsis "statistical analysis and visualization of functional profiles
+ for genes and gene clusters")
+  (description "This package implements methods to analyze and visualize
+ functional profiles (GO and KEGG) of gene and gene clusters.")
+  (license license:artistic2.0)))
+
+
 (define-public r-qvalue-2.14.0
   (package (inherit r-qvalue)
     (name "r-qvalue")
