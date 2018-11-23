@@ -2729,3 +2729,213 @@ databases.")
               (sha256
                (base32
                 "03qxshqwwq1rj23p6pjrz08jm3ziikvy9badi4mz2rcwy2nz783a"))))))
+
+(define-public r-spdata
+  (package
+   (name "r-spdata")
+   (version "0.2.9.4")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "spData" version))
+     (sha256
+      (base32
+       "039rf7c5npv0xhw46ja5igravi3l0zcg9vfkngza1vn4zwgg1yi8"))))
+   (properties `((upstream-name . "spData")))
+   (build-system r-build-system)
+   (home-page "https://github.com/Nowosad/spData")
+   (synopsis "Datasets for Spatial Analysis")
+   (description
+    "Diverse spatial datasets for demonstrating, benchmarking and teaching
+spatial data analysis.  It includes R data of class sf (defined by the
+package 'sf'), Spatial ('sp'), and nb ('spdep').  Unlike other spatial
+data packages such as 'rnaturalearth' and 'maps', it also contains data
+stored in a range of file formats including GeoJSON, ESRI Shapefile and
+GeoPackage.  Some of the datasets are designed to illustrate specific
+analysis techniques.  cycle_hire() and cycle_hire_osm(), for example, is
+designed to illustrate point pattern analysis techniques.")
+   (license #f)))
+
+(define-public r-learnbayes
+  (package
+   (name "r-learnbayes")
+   (version "2.15.1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "LearnBayes" version))
+     (sha256
+      (base32
+       "0ch54v2zz2yyyk0lvn5rfikdmyz1qh9j1wk3585wl8v58mc0h4cv"))))
+   (properties `((upstream-name . "LearnBayes")))
+   (build-system r-build-system)
+   (home-page
+    "http://cran.r-project.org/web/packages/LearnBayes")
+   (synopsis
+    "Functions for Learning Bayesian Inference")
+   (description
+    "This package provides a collection of functions helpful in learning the
+basic tenets of Bayesian statistical inference.  It contains functions for
+summarizing basic one and two parameter posterior distributions and predictive
+distributions.  It contains MCMC algorithms for summarizing posterior
+distributions defined by the user.  It also contains functions for regression
+models, hierarchical models, Bayesian tests, and illustrations of Gibbs
+sampling.")
+   (license license:gpl2+)))
+
+(define-public r-gmodels
+  (package
+  (name "r-gmodels")
+  (version "2.18.1")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (cran-uri "gmodels" version))
+      (sha256
+        (base32
+          "0s8kd8krqk4kwv2zqxpsfy3w8qdwf5naf4b5l383vidq9sil0qb2"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-gdata" ,r-gdata) ("r-mass" ,r-mass)))
+  (home-page
+    "http://cran.r-project.org/web/packages/gmodels")
+  (synopsis
+    "Various R Programming Tools for Model Fitting")
+  (description
+    "Various R programming tools for model fitting.")
+  (license license:gpl2)))
+
+(define-public r-deldir
+  (package
+   (name "r-deldir")
+   (version "0.1-15")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "deldir" version))
+     (sha256
+      (base32
+       "0407wfnjcfg7ca6ani96bbg5ksx8jkyijaprv7n4g7w21311242p"))))
+   (build-system r-build-system)
+   (native-inputs `(("gfortran" ,gfortran)))
+   (home-page
+    "http://cran.r-project.org/web/packages/deldir")
+   (synopsis
+    "Delaunay Triangulation and Dirichlet (Voronoi) Tessellation")
+   (description
+    "Calculates the Delaunay triangulation and the Dirichlet or Voronoi
+tessellation (with respect to the entire plane) of a planar point set.
+Plots triangulations and tessellations in various ways.  Clips tessellations
+to sub-windows.  Calculates perimeters of tessellations.  Summarises
+information about the tiles of the tessellation.")
+   (license license:gpl2+)))
+
+(define-public r-spdep
+  (package
+   (name "r-spdep")
+   (version "0.8-1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "spdep" version))
+     (sha256
+      (base32
+       "1c13y9zjklqr6y87kra9i9mcf5n0zvd80iqmhg5l9bdzpd6x3h8b"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-boot" ,r-boot)
+      ("r-coda" ,r-coda)
+      ("r-deldir" ,r-deldir)
+      ("r-expm" ,r-expm)
+      ("r-gmodels" ,r-gmodels)
+      ("r-learnbayes" ,r-learnbayes)
+      ("r-mass" ,r-mass)
+      ("r-matrix" ,r-matrix)
+      ("r-nlme" ,r-nlme)
+      ("r-sp" ,r-sp)
+      ("r-spdata" ,r-spdata)))
+   (home-page "https://github.com/r-spatial/spdep/")
+   (synopsis
+    "Spatial Dependence: Weighting Schemes, Statistics and Models")
+   (description
+    "This package provides a collection of functions to create spatial weights
+matrix objects from polygon 'contiguities', from point patterns by distance and
+tessellations, for summarizing these objects, and for permitting their use in
+spatial data analysis, including regional aggregation by minimum spanning tree;
+a collection of tests for spatial 'autocorrelation', including global
+'Morans I', 'APLE', 'Gearys C', 'Hubert/Mantel' general cross product
+statistic, Empirical Bayes estimates and 'Assun????o/Reis' Index, 'Getis/Ord'
+G and multicoloured join count statistics, local 'Moran's I' and 'Getis/Ord' G,
+'saddlepoint' approximations, exact tests for global and local 'Moran's I' and
+'LOSH' local indicators of spatial heteroscedasticity; and functions for
+estimating spatial simultaneous 'autoregressive' ('SAR') lag and error models,
+impact measures for lag models, weighted and 'unweighted' 'SAR' and 'CAR'
+spatial regression models, semi-parametric and Moran 'eigenvector' spatial
+filtering, 'GM SAR' error models, and generalized spatial two stage least
+squares models.")
+   (license license:gpl2+)))
+
+(define-public r-adegenet
+  (package
+   (name "r-adegenet")
+   (version "2.1.1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "adegenet" version))
+     (sha256
+      (base32
+       "0ynfblp0hbd3dp3k86fn1wyhqr28lk6hs2bg4q7gyf0sfdfzwhrh"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-ade4" ,r-ade4)
+      ("r-ape" ,r-ape)
+      ("r-boot" ,r-boot)
+      ("r-dplyr" ,r-dplyr)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-igraph" ,r-igraph)
+      ("r-mass" ,r-mass)
+      ("r-reshape2" ,r-reshape2)
+      ("r-seqinr" ,r-seqinr)
+      ("r-shiny" ,r-shiny)
+      ("r-spdep" ,r-spdep)
+      ("r-vegan" ,r-vegan)))
+   (home-page
+    "https://github.com/thibautjombart/adegenet")
+   (synopsis
+    "Exploratory Analysis of Genetic and Genomic Data")
+   (description
+    "Toolset for the exploration of genetic and genomic data.  Adegenet
+provides formal (S4) classes for storing and handling various genetic data,
+including genetic markers with varying ploidy and hierarchical population
+structure ('genind' class), alleles counts by populations ('genpop'), and
+genome-wide SNP data ('genlight').  It also implements original multivariate
+methods (DAPC, sPCA), graphics, statistical tests, simulation tools, distance
+and similarity measures, and several spatial methods.  A range of both
+empirical and simulated datasets is also provided to illustrate various
+methods.")
+   (license license:gpl2+)))
+
+(define-public r-hierfstat
+  (package
+  (name "r-hierfstat")
+  (version "0.04-22")
+  (source (origin
+           (method url-fetch)
+           (uri (cran-uri "hierfstat" version))
+           (sha256
+            (base32
+             "1fav2v2996v5kb1ffa6v5wxfm921syxg6as034vd3j4jfhdibyfx"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-ade4" ,r-ade4)
+     ("r-adegenet" ,r-adegenet)
+     ("r-gtools" ,r-gtools)))
+  (home-page "http://www.r-project.org")
+  (synopsis "Estimation and Tests of Hierarchical F-Statistics")
+  (description "Allows the estimation of hierarchical F-statistics from haploid
+or diploid genetic data with any numbers  of levels in the hierarchy, following
+the algorithm of Yang (Evolution, 1998, 52(4):950-956; <DOI:10.2307/2411227>.
+Functions are also given to test via randomisations the significance of each F
+and variance components, using the likelihood-ratio statistics G.")
+  (license license:gpl2+)))
