@@ -66,6 +66,7 @@ SOURCES =                                       \
   umcu/packages/sparqling-genomics.scm          \
   umcu/packages/star.scm                        \
   umcu/packages/strelka.scm                     \
+  umcu/packages/tailseeker.scm                  \
   umcu/packages/varscan.scm                     \
   umcu/packages/vcf-explorer.scm                \
   umcu/packages/vcflib.scm                      \
