@@ -2939,3 +2939,24 @@ the algorithm of Yang (Evolution, 1998, 52(4):950-956; <DOI:10.2307/2411227>.
 Functions are also given to test via randomisations the significance of each F
 and variance components, using the likelihood-ratio statistics G.")
   (license license:gpl2+)))
+
+(define-public r-diagram
+  (package
+   (name "r-diagram")
+   (version "1.6.4")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "diagram" version))
+            (sha256
+             (base32
+              "0f6ffprn5k0ir1s7m9s7izc64aa17r3gnygagz5bihrlsvawaavw"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-shape" ,r-shape)))
+   (home-page "http://cran.r-project.org/web/packages/diagram")
+   (synopsis "Functions for visualising simple graphs and flow diagrams")
+   (description
+    "This package can be used to Visualise simple graphs (networks) based on a
+transition matrix, utilities to plot flow diagrams, visualising webs, and
+electrical networks.")
+   (license license:gpl2+)))
