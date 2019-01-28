@@ -158,6 +158,7 @@ acid changes).")
                                   "/share/clinvar/GRCh37/clinvar.vcf.gz"))
                    (snpeff-db-dir (string-append share "/data"))
                    (snpeff-db (assoc-ref inputs "snpeff-database"))
+                   (snpeff-db-GRCm38.86 (assoc-ref inputs "snpeff-database-GRCm38.86"))
                    (dbsnp-dir (string-append (assoc-ref inputs "dbsnp")
                                              "/share/dbsnp/"))
                    (gwascatalog-file (string-append
@@ -186,6 +187,8 @@ acid changes).")
               (chdir share)
               (system* (string-append (assoc-ref inputs "unzip")
                                       "/bin/unzip") snpeff-db)
+              (system* (string-append (assoc-ref inputs "unzip")
+                                      "/bin/unzip") snpeff-db-GRCm38.86)
               (chdir current-dir)
               (install-file "snpEff.config" bin)
               (install-file "snpEff.jar" bin)
@@ -234,4 +237,12 @@ acid changes).")
                "snpEff_v4_3_hg19.zip"))
          (sha256
           (base32 "0rnaa858shjgxx284m73ikf2a1k11n3gc7861svczm2f98wwhar2"))))
+    ("snpeff-database-GRCm38.86"
+       ,(origin
+         (method url-fetch)
+         (uri (string-append
+               "mirror://sourceforge/snpeff/databases/v4_3/"
+               "snpEff_v4_3_GRCm38.86.zip"))
+         (sha256
+          (base32 "0rsdgv01yc33ppr8z412gk07xq098vsl8qhhii7s34kchk0qa746"))))
       ("dbsnp" ,dbsnp)))))
