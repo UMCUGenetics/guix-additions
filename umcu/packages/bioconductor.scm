@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2016, 2017, 2018, 2019 Roel Janssen <roel@gnu.org>
 ;;;
 ;;; This file is not officially part of GNU Guix.
 ;;;
@@ -2960,3 +2960,35 @@ and variance components, using the likelihood-ratio statistics G.")
 transition matrix, utilities to plot flow diagrams, visualising webs, and
 electrical networks.")
    (license license:gpl2+)))
+
+(define-public r-pathview
+  (package
+   (name "r-pathview")
+   (version "1.22.1")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "pathview" version))
+            (sha256
+             (base32
+              "19xvlk4sm0jf2xdl1cm2v8i1acxp8xk2yzpjgwv8r6x5h13zqpf0"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-kegggraph", r-kegggraph)
+      ("r-xml", r-xml)
+      ("r-rgraphviz", r-rgraphviz)
+      ("r-graph", r-graph)
+      ("r-png", r-png)
+      ("r-annotationdbi", r-annotationdbi)
+      ("r-keggrest", r-keggrest)
+      ("r-org-hs-eg-db", r-org-hs-eg-db)))
+   (home-page "http://bioconductor.org/packages/pathview/")
+   (synopsis "Toolset for pathway-based data integration and visualization")
+   (description "Pathview is a tool set for pathway based data integration
+and visualization.  It maps and renders a wide variety of biological data
+on relevant pathway graphs. All users need is to supply their data and
+specify the target pathway. Pathview automatically downloads the pathway
+graph data, parses the data file, maps user data to the pathway, and render
+pathway graph with the mapped data.  In addition, Pathview also seamlessly
+integrates with pathway and gene set (enrichment) analysis tools for
+ large-scale and fully automated analysis.")
+   (license license:gpl3)))
