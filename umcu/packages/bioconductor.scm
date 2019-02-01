@@ -33,6 +33,7 @@
   #:use-module (gnu packages boost)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
+  #:use-module (gnu packages image)
   #:use-module (gnu packages gawk)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages ghostscript)
