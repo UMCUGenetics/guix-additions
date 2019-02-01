@@ -2961,6 +2961,26 @@ transition matrix, utilities to plot flow diagrams, visualising webs, and
 electrical networks.")
    (license license:gpl2+)))
 
+(define-public r-rgraphviz
+  (package
+   (name "r-rgraphviz")
+   (version "2.26.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "Rgraphviz" version))
+            (sha256
+             (base32
+              "0bp6517xsih0wng2rgkh9z4r1afqhwl3h04z6ssm7p4cdj0ahm4y"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-graph", r-graph)))
+   (home-page "http://bioconductor.org/packages/Rgraphviz/")
+   (synopsis "Provides plotting capabilities for R graph objects")
+   (description "Interfaces R with the graphviz library for plotting R
+graph objects from the graph package.")
+   ;; Licence is EBL
+   (license #f)))
+
 (define-public r-kegggraph
   (package
    (name "r-kegggraph")
