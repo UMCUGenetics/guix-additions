@@ -2961,6 +2961,29 @@ transition matrix, utilities to plot flow diagrams, visualising webs, and
 electrical networks.")
    (license license:gpl2+)))
 
+(define-public r-kegggraph
+  (package
+   (name "r-kegggraph")
+   (version "1.42.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "KEGGgraph" version))
+            (sha256
+             (base32
+              "0ry0pfqc61r0cz98j6zlyhh4qh6568l0w0j61xmysayyp046mgy3"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-xml", r-xml)
+      ("r-graph", r-graph)))
+   (home-page "http://bioconductor.org/packages/KEGGgraph/")
+   (synopsis "KEGGgraph: A graph approach to KEGG PATHWAY")
+   (description "KEGGGraph is an interface between KEGG pathway and graph object
+as well as a collection of tools to analyze, dissect and visualize these graphs.
+It parses the regularly updated KGML (KEGG XML) files into graph models
+maintaining all essential pathway attributes. The package offers functionalities
+including parsing, graph operation, visualization and etc.")
+   (license license:gpl2)))
+
 (define-public r-pathview
   (package
    (name "r-pathview")
