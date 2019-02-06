@@ -2433,36 +2433,6 @@ visualizations and provides the same flexible approach to building up
 plots layer by layer.")
   (license license:gpl3)))
 
-(define-public r-igraph
-  (package
-    (name "r-igraph")
-    (version "1.2.2")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "igraph" version))
-       (sha256
-        (base32
-         "1bggm7b8v3bh7q2589w26qvd7sgs69m4qiij7d0rbm0ykkgxm8lx"))))
-    (build-system r-build-system)
-    (inputs
-     `(("glpk" ,glpk)
-       ("gmp" ,gmp)
-       ("libxml2" ,libxml2)
-       ("zlib" ,zlib)))
-    (propagated-inputs
-     `(("r-magrittr" ,r-magrittr)
-       ("r-matrix" ,r-matrix)
-       ("r-pkgconfig" ,r-pkgconfig)))
-    (native-inputs `(("gfortran" ,gfortran)))
-    (home-page "http://igraph.org")
-    (synopsis "Network Analysis and Visualization")
-    (description
-     "Routines for simple graphs and network analysis.  It can handle large graphs
-very well and provides functions for generating random and regular graphs, graph
-visualization, centrality methods and much more.")
-    (license license:gpl2+)))
-
 (define-public r-ggforce
   (package
     (name "r-ggforce")
