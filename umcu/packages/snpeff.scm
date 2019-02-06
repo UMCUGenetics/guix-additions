@@ -160,6 +160,8 @@ acid changes).")
                    (snpeff-db (assoc-ref inputs "snpeff-database"))
                    (snpeff-db-GRCm38.86 (assoc-ref inputs "snpeff-database-GRCm38.86"))
                    (snpeff-db-GRCh37.75 (assoc-ref inputs "snpeff-database-GRCh37.75"))
+                   (snpeff-db-UMD3.1.86 (assoc-ref inputs "snpeff-database-UMD3.1.86"))
+                   (snpeff-db-GRCh38.86 (assoc-ref inputs "snpeff-database-GRCh38.86"))
                    (dbsnp-dir (string-append (assoc-ref inputs "dbsnp")
                                              "/share/dbsnp/"))
                    (gwascatalog-file (string-append
@@ -192,6 +194,11 @@ acid changes).")
                                       "/bin/unzip") snpeff-db-GRCm38.86)
 	      (system* (string-append (assoc-ref inputs "unzip")
                                       "/bin/unzip") snpeff-db-GRCh37.75)
+	      (system* (string-append (assoc-ref inputs "unzip")
+                                      "/bin/unzip") snpeff-db-GRCh38.86)
+	      (system* (string-append (assoc-ref inputs "unzip")
+                                      "/bin/unzip") snpeff-db-UMD3.1.86)
+                                      
               (chdir current-dir)
               (install-file "snpEff.config" bin)
               (install-file "snpEff.jar" bin)
@@ -248,6 +255,23 @@ acid changes).")
                "snpEff_v4_3_GRCm38.86.zip"))
          (sha256
           (base32 "0rsdgv01yc33ppr8z412gk07xq098vsl8qhhii7s34kchk0qa746"))))
+    ("snpeff-database-UMD3.1.86"
+       ,(origin
+         (method url-fetch)
+         (uri (string-append
+               "mirror://sourceforge/snpeff/databases/v4_3/"
+               "snpEff_v4_3_UMD3.1.86.zip"))
+         (sha256
+          (base32 "0h4d7w3n5pr1lfbmf921z4rx163n93qfw2klv94qw7syl3db6lli"))))
+    ("snpeff-database-GRCh38.86"
+       ,(origin
+         (method url-fetch)
+         (uri (string-append
+               "mirror://sourceforge/snpeff/databases/v4_3/"
+               "snpEff_v4_3_GRCh38.86.zip"))
+         (sha256
+          (base32 "1rf8q7l732ayjq2lpny4s75zpij05j00151374nqblk4wri2mz0i"))))
+
     ("snpeff-database-GRCh37.75"
        ,(origin
          (method url-fetch)
