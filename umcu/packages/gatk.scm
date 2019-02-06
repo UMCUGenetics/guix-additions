@@ -40,6 +40,7 @@
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages tcl)
+  #:use-module (gnu packages sqlite)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages readline)
   #:use-module (gnu packages databases)

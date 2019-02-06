@@ -28,6 +28,7 @@
   #:use-module (gnu packages bash)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages databases)
+  #:use-module (gnu packages dbm)
   #:use-module (gnu packages gawk)
   #:use-module (gnu packages guile)
   #:use-module (gnu packages java)

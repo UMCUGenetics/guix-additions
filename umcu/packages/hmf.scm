@@ -1691,21 +1691,15 @@ single executable called @code{bam}.")
            (with-directory-excursion settings-dir
              ;; Add a prefix to the 'INIFILE' directory specification.
              (substitute*
-              (scandir "."
-                       (lambda (item)
-                         (and (> (string-length item) 3)
-                              (string= (string-take-right item 3) "ini"))))
+              (scandir "." (lambda (item) (string-suffix? "ini" item)))
               (("INIFILE	settings")
                (string-append "INIFILE	" settings-dir)))
 
              (with-directory-excursion "include"
                (substitute*
-                   (scandir "."
-                            (lambda (item)
-                              (and (> (string-length item) 3)
-                                   (string= (string-take-right item 3) "ini"))))
-                 (("INIFILE	settings")
-                  (string-append "INIFILE	" settings-dir))))
+                (scandir "." (lambda (item) (string-suffix? "ini" item)))
+                (("INIFILE	settings")
+                 (string-append "INIFILE	" settings-dir))))
 
              ;; We are going to roll our own tools.ini.
              (delete-file "include/tools.ini")
@@ -2391,6 +2385,383 @@ produce meaningful genomic data from Hartwig Medical.")
                     version ".tar.gz"))
               (sha256
                (base32 "0254gljj654kbwsspvavyk7895s2jyk2i37nvkjziawfwidrb626"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils)
+                  (ice-9 ftw))
+       #:builder
+       (begin
+         (use-modules (guix build utils)
+                      (ice-9 ftw))
+         (let ((tar           (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+               (PATH          (string-append (assoc-ref %build-inputs "gzip") "/bin"))
+               (tarball       (assoc-ref %build-inputs "source"))
+               (current-dir   (getcwd))
+               (bin-dir       (string-append %output "/bin"))
+               (patch-bin     (string-append (assoc-ref %build-inputs "patch") "/bin/patch"))
+               (pipeline-dir  (string-append %output "/share/hmf-pipeline"))
+               (settings-dir  (string-append %output "/share/hmf-pipeline/settings"))
+               (qscripts-dir  (string-append %output "/share/hmf-pipeline/QScripts"))
+               (templates-dir (string-append %output "/share/hmf-pipeline/templates"))
+               (scripts-dir   (string-append %output "/share/hmf-pipeline/scripts"))
+               (lib-dir       (string-append %output "/lib/perl5/site_perl/" ,(package-version perl)))
+               (perlbin       (string-append (assoc-ref %build-inputs "perl") "/bin/perl"))
+               (shbin         (string-append (assoc-ref %build-inputs "bash") "/bin/sh"))
+               (pythonbin     (string-append (assoc-ref %build-inputs "python") "/bin/python")))
+
+           (setenv "PATH" PATH)
+
+           ;; Create the directory structure in the build output directory.
+           (map mkdir-p (list lib-dir scripts-dir qscripts-dir settings-dir templates-dir))
+
+           ;; Extract the modules into the Perl path.
+           (with-directory-excursion lib-dir
+             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
+                      "--strip-components=2"))
+
+           ;; Extract the template scripts to their own custom directory.
+           (with-directory-excursion templates-dir
+             (system* tar "xvf" tarball
+                      (string-append "pipeline-" ,version "/templates")
+                      "--strip-components=2"))
+
+           ;; Extract the settings files to their own custom directory.
+           (with-directory-excursion settings-dir
+             (system* tar "xvf" tarball
+                      (string-append "pipeline-" ,version "/settings")
+                      "--strip-components=2"))
+
+           ;; Apply the following patches to skip the read group validation.
+           (with-directory-excursion %output
+             (format #t "Applying patches... ")
+             (let ((patch1 (assoc-ref %build-inputs "patch1")))
+               (format
+                #t
+                (if (and (zero? (system (string-append patch-bin " -p1 < " patch1))))
+                    " Succeeded.~%"
+                    " Failed.~%"))))
+
+           ;; Patch the use of external tools
+           (substitute* (list (string-append lib-dir "/HMF/Pipeline/Functions/Config.pm")
+                              (string-append lib-dir "/HMF/Pipeline/Functions/Validate.pm"))
+             (("qx\\(\\$samtools ") (string-append "qx(" (assoc-ref %build-inputs "samtools") "/bin/samtools "))
+             (("qx\\(bash ")        (string-append "qx(" (assoc-ref %build-inputs "bash") "/bin/bash "))
+             (("qx\\(cat ")         (string-append "qx(" (assoc-ref %build-inputs "coreutils") "/bin/cat ")))
+
+           ;; Extract scripts to their own custom directory.
+           (with-directory-excursion scripts-dir
+             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
+                      "--strip-components=2"))
+
+           ;; Extract QScripts to their own custom directory.
+           (with-directory-excursion qscripts-dir
+             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
+                      "--strip-components=2"))
+
+           (with-directory-excursion templates-dir
+             (substitute* (scandir "." (lambda (item)
+                                         (not (eq? (string-ref item 0) #\.))))
+               (("rm ")      (string-append (assoc-ref %build-inputs "coreutils")  "/bin/rm "))
+               (("mv ")      (string-append (assoc-ref %build-inputs "coreutils")  "/bin/mv "))
+               (("grep ")    (string-append (assoc-ref %build-inputs "grep") "/bin/grep "))
+               (("find ")    (string-append (assoc-ref %build-inputs "findutils") "/bin/find "))
+               (("awk ")     (string-append (assoc-ref %build-inputs "gawk") "/bin/awk "))
+               (("diff -u")  (string-append (assoc-ref %build-inputs "diffutils") "/bin/diff -u"))
+               (("touch \"") (string-append (assoc-ref %build-inputs "coreutils") "/bin/touch \""))
+               (("mkdir ")   (string-append (assoc-ref %build-inputs "coreutils") "/bin/mkdir "))
+               (("mkfifo ")  (string-append (assoc-ref %build-inputs "coreutils") "/bin/mkfifo "))
+               (("wc ")      (string-append (assoc-ref %build-inputs "coreutils") "/bin/wc "))
+               (("Rscript ") (string-append (assoc-ref %build-inputs "r-minimal") "/bin/Rscript "))
+               (("java ")    (string-append (assoc-ref %build-inputs "icedtea-8") "/bin/java "))
+               (("qsub ")    (string-append (assoc-ref %build-inputs "grid-engine") "/bin/qsub -V "))
+               (("/usr/bin/env perl") perlbin)
+               ;; Use "sh" instead of "bash" to prevent loading bash
+               ;; configuration files that modify the program's environment.
+               (("/usr/bin/env bash") shbin)))
+
+           (with-directory-excursion settings-dir
+             ;; Add a prefix to the 'INIFILE' directory specification.
+             (substitute*
+              (scandir "."
+                       (lambda (item)
+                         (and (> (string-length item) 3)
+                              (string= (string-take-right item 3) "ini"))))
+              (("INIFILE	settings")
+               (string-append "INIFILE	" settings-dir)))
+
+             (with-directory-excursion "include"
+               (substitute*
+                   (scandir "."
+                            (lambda (item)
+                              (and (> (string-length item) 3)
+                                   (string= (string-take-right item 3) "ini"))))
+                 (("INIFILE	settings")
+                  (string-append "INIFILE	" settings-dir))))
+
+             ;; We are going to roll our own tools.ini.
+             (delete-file "include/tools.ini")
+             (with-output-to-file "include/tools.ini"
+               (lambda _
+                 (format #t "# Generated by GNU Guix
+BWA_PATH	~a
+SAMBAMBA_PATH	~a
+
+FASTQC_PATH	~a
+PICARD_PATH	~a
+BAMMETRICS_PATH	~a
+EXONCALLCOV_PATH	~a
+DAMAGE_ESTIMATOR_PATH	~a
+
+GATK_QUEUE_PATH	~a
+GATK_PATH	~a
+
+STRELKA_PATH	~a
+STRELKA_POST_PROCESS_PATH	~a
+
+AMBER_PATH	~a
+COBALT_PATH	~a
+PURPLE_PATH	~a
+CIRCOS_PATH	~a
+
+FREEC_PATH	~a
+QDNASEQ_PATH	~a
+
+DELLY_PATH	~a
+MANTA_PATH	~a
+BPI_PATH	~a
+GRIDSS_PATH	~a
+GRIDSS_BWA_PATH	~a
+
+IGVTOOLS_PATH	~a
+SAMTOOLS_PATH	~a
+TABIX_PATH	~a
+PLINK_PATH	~a
+KING_PATH	~a
+BIOVCF_PATH	~a
+BAMUTIL_PATH	~a
+PBGZIP_PATH	~a
+SNPEFF_PATH	~a
+VCFTOOLS_PATH	~a
+BCFTOOLS_PATH	~a
+HEALTH_CHECKER_PATH	/tmp
+
+REALIGNMENT_SCALA	IndelRealignment.scala
+BASERECALIBRATION_SCALA	BaseRecalibration.scala
+GERMLINE_CALLING_SCALA	GermlineCaller.scala
+GERMLINE_FILTER_SCALA	GermlineFilter.scala
+
+REPORT_STATUS	~a"
+                         (string-append (assoc-ref %build-inputs "bwa") "/bin")
+                         (string-append (assoc-ref %build-inputs "sambamba") "/bin")
+                         (string-append (assoc-ref %build-inputs "fastqc") "/bin")
+                         (string-append (assoc-ref %build-inputs "picard") "/share/java/picard")
+                         (string-append (assoc-ref %build-inputs "bammetrics") "/bin")
+                         (string-append (assoc-ref %build-inputs "exoncov") "/bin")
+                         (string-append (assoc-ref %build-inputs "damage-estimator") "/share/damage-estimator")
+                         (string-append (assoc-ref %build-inputs "gatk-queue") "/share/java/gatk")
+                         (string-append (assoc-ref %build-inputs "gatk") "/share/java/gatk")
+                         (assoc-ref %build-inputs "strelka")
+                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "circos") "/bin")
+                         (string-append (assoc-ref %build-inputs "freec") "/bin")
+                         (string-append (assoc-ref %build-inputs "r-qdnaseq") "/site-library/QDNAseq")
+                         (string-append (assoc-ref %build-inputs "delly") "/bin")
+                         (string-append (assoc-ref %build-inputs "manta") "/bin")
+                         (string-append (assoc-ref %build-inputs "hmftools") "/share/java/user-classes")
+                         (string-append (assoc-ref %build-inputs "gridss") "/share/java/gridss")
+                         (string-append (assoc-ref %build-inputs "bwa-0.7.17") "/bin")
+                         (string-append (assoc-ref %build-inputs "igvtools") "/share/java/igvtools")
+                         (string-append (assoc-ref %build-inputs "samtools") "/bin")
+                         (string-append (assoc-ref %build-inputs "htslib") "/bin")
+                         (string-append (assoc-ref %build-inputs "plink") "/bin")
+                         (string-append (assoc-ref %build-inputs "king") "/bin")
+                         (string-append (assoc-ref %build-inputs "bio-vcf") "/bin")
+                         (string-append (assoc-ref %build-inputs "bamutils") "/bin")
+                         (string-append (assoc-ref %build-inputs "pbgzip") "/bin")
+                         (string-append (assoc-ref %build-inputs "snpeff") "/share/java/snpeff")
+                         (string-append (assoc-ref %build-inputs "vcftools") "/bin")
+                         (string-append (assoc-ref %build-inputs "bcftools") "/bin")
+                         ;; HEALTH-CHECKER
+                         (string-append (assoc-ref %build-inputs "coreutils") "/bin/true")))))
+
+           (with-directory-excursion %output
+             ;; Extract the main scripts into the bin directory.
+             (system* tar "xvf" tarball
+                      (string-append "pipeline-" ,version "/bin/pipeline.pl")
+                      (string-append "pipeline-" ,version "/bin/create_config.pl")
+                      "--strip-components=1"))
+
+           ;; Patch the shebang of the main scripts.
+           (with-directory-excursion bin-dir
+             (substitute* '("pipeline.pl" "create_config.pl")
+               (("/usr/bin/env perl") perlbin))
+             (substitute* "create_config.pl"
+               (("my \\$settingsDir = catfile\\(dirname\\(abs_path\\(\\$0\\)\\), updir\\(\\), \"settings\"\\);")
+                (string-append "my $settingsDir = \"" settings-dir "\";"))))
+
+           ;; Make sure the templates can be found.
+           (with-directory-excursion lib-dir
+             (substitute* "HMF/Pipeline/Functions/Template.pm"
+               (("my \\$source_template_dir = catfile\\(HMF::Pipeline::Functions::Config::pipelinePath\\(\\), \"templates\"\\);")
+                (string-append "my $source_template_dir = \"" templates-dir "\";")))
+
+             ;; Make sure the other subdirectories can be found.
+             (substitute* "HMF/Pipeline/Functions/Config.pm"
+               (("my \\$pipeline_path = pipelinePath\\(\\);")
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
+               (("my \\$output_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
+                (string-append "my $output_fh = IO::Pipe->new()->writer(\""
+                               (assoc-ref %build-inputs "coreutils") "/bin/tee"))
+               (("my \\$error_fh = IO::Pipe->new\\(\\)->writer\\(\"tee")
+                (string-append "my $error_fh = IO::Pipe->new()->writer(\""
+                               (assoc-ref %build-inputs "coreutils") "/bin/tee"))
+               (("\\$opt->\\{VERSION\\} = qx\\(git --git-dir \\$git_dir describe --tags\\);")
+                (string-append "$opt->{VERSION} = \"" ,version "\";"))
+               (("my \\$pipeline_path = pipelinePath\\(\\);")
+                (string-append "my $pipeline_path = \"" pipeline-dir "\";"))
+               (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir"))
+
+             (substitute* "HMF/Pipeline/Functions/Sge.pm"
+               ;; Over-allocate by 5G for each job, because some SGE
+               ;; implementations have memory overhead on each job.
+               (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
+                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -V -l h_vmem=$h_vmem")
+               ;; Make sure that environment variables are passed along
+               ;; to the jobs correctly.
+               (("qsub -P") "qsub -m as -M $opt->{MAIL} -V -P")
+               ;; Also apply the 5GB over-allocation to GATK-Queue-spawned jobs.
+               (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
+                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";")
+               ))))))
+    (inputs
+     `(("bammetrics" ,bammetrics)
+       ("bamutils" ,bamutils)
+       ("bash" ,bash)
+       ("bwa" ,bwa-0.7.5a)
+       ("bwa-0.7.17" ,bwa)
+       ("damage-estimator" ,hmf-damage-estimator)
+       ("delly" ,delly)
+       ("exoncov" ,exoncov)
+       ("fastqc" ,fastqc-bin-0.11.4)
+       ("freec" ,freec-10.4)
+       ("gatk" ,gatk-bin-3.8-0)
+       ("gatk-queue" ,gatk-queue-bin-3.8-0)
+       ("gridss" ,gridss-bin)
+       ("hmftools" ,hmftools)
+       ("htslib" ,htslib)
+       ("icedtea-8" ,icedtea-8)
+       ("igvtools" ,igvtools-bin-2.3.60)
+       ("king" ,king-bin-2.1.2)
+       ("manta" ,manta)
+       ("pbgzip" ,pbgzip)
+       ("perl" ,perl)
+       ("picard" ,picard-bin-1.141)
+       ("plink" ,plink)
+       ("python" ,python-2)
+       ("make" ,gnu-make)
+       ("findutils" ,findutils)
+       ("diffutils" ,diffutils)
+       ("r-minimal" ,r-minimal)))
+    (native-inputs
+     `(("gzip" ,gzip)
+       ("source" ,source)
+       ("tar" ,tar)
+       ("patch" ,patch)
+       ("patch1" ,(origin
+                    (method url-fetch)
+                    (uri (search-patch "hmf-pipeline-skip-readgroup-validation.patch"))
+                    (sha256 (base32 "0l9lax3pvbmm7a0gbbn1hvb9l0h4pid8xp3sbpgps5xxy1vnf7f1"))))))
+    (propagated-inputs
+     `(("bash" ,bash)
+       ("bcftools" ,bcftools)
+       ("bio-vcf" ,bio-vcf)
+       ("circos" ,circos)
+       ("perl-autovivification" ,perl-autovivification)
+       ("perl-bareword-filehandles" ,perl-bareword-filehandles)
+       ("perl-file-copy-recursive" ,perl-file-copy-recursive)
+       ("perl-file-find-rule" ,perl-file-find-rule)
+       ("perl-findbin-libs" ,perl-findbin-libs)
+       ("perl-indirect" ,perl-indirect)
+       ("perl-json" ,perl-json)
+       ("perl-list-moreutils" ,perl-list-moreutils)
+       ("perl-multidimensional" ,perl-multidimensional)
+       ("perl-sort-key" ,perl-sort-key)
+       ("perl-strictures" ,perl-strictures-2)
+       ("perl-template-toolkit" ,perl-template-toolkit)
+       ("perl-time-hires" ,perl-time-hires)
+       ("icedtea-8" ,icedtea-8)
+       ("r-biobase" ,r-biobase)
+       ("r-biocstyle" ,r-biocstyle)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-copynumber" ,r-copynumber)
+       ("r-cghbase" ,r-cghbase)
+       ("r-cghcall" ,r-cghcall)
+       ("r-devtools" ,r-devtools)
+       ("r-digest" ,r-digest)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-getoptlong" ,r-getoptlong)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gtools" ,r-gtools)
+       ("r-iranges" ,r-iranges)
+       ("r-matrixstats" ,r-matrixstats)
+       ("r-pastecs" ,r-pastecs)
+       ("r-qdnaseq" ,r-qdnaseq-hmf)
+       ("r-r-utils" ,r-r-utils)
+       ("r-roxygen2" ,r-roxygen2)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r" ,r)
+       ("sambamba" ,sambamba-0.6.8)
+       ("samtools" ,samtools)
+       ("snpeff" ,snpeff-bin-4.3t)
+       ("strelka" ,strelka-1.0.14)
+       ("vcftools" ,vcftools-0.1.14)
+       ("coreutils" ,coreutils)
+       ("grep" ,grep-with-pcre)
+       ("sed" ,sed)
+       ("gawk" ,gawk)
+       ("perl" ,perl)
+       ("inetutils" ,inetutils)
+       ("util-linux" ,util-linux)
+       ("grid-engine" ,grid-engine-core)
+       ,@(package-propagated-inputs bammetrics)
+       ,@(package-propagated-inputs gatk-bin-3.8-0)))
+    ;; Bash, Perl and R are not propagated into the profile.  The programs are
+    ;; invoked using their absolute link from the 'tools.ini' file.  We must
+    ;; make sure that the environment variables for these interpreters are
+    ;; set correctly.
+    (native-search-paths
+     (append (package-native-search-paths bash)
+             (package-native-search-paths grid-engine-core)
+             (package-native-search-paths perl)
+             (package-native-search-paths r)
+             (package-native-search-paths ruby)))
+    (search-paths native-search-paths)
+    (home-page "https://github.com/hartwigmedical/pipeline")
+    (synopsis "Default Hartwig Medical Data processing pipeline")
+    (description "Pipeline of tools to process raw fastq data and
+produce meaningful genomic data from Hartwig Medical.")
+    (license license:expat)))
+
+;; ----------------------------------------------------------------------------
+;; HMF-PIPELINE 4.8
+;; ----------------------------------------------------------------------------
+
+(define-public hmf-pipeline-v4.8
+  (package
+    (name "hmf-pipeline")
+    (version "4.8")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/hartwigmedical/pipeline/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "0ih55dhc564g9a3w6cw8v8dcw6rr5mjrh04x4g4axl5rqcpc5arm"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils)

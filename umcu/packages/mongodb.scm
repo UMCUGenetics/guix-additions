@@ -27,6 +27,7 @@
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python))
 
 (define-public mongodb

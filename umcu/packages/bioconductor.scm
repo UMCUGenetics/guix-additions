@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2016, 2017, 2018, 2019 Roel Janssen <roel@gnu.org>
 ;;;
 ;;; This file is not officially part of GNU Guix.
 ;;;
@@ -33,9 +33,11 @@
   #:use-module (gnu packages boost)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
+  #:use-module (gnu packages image)
   #:use-module (gnu packages gawk)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages ghostscript)
+  #:use-module (gnu packages graph)
   #:use-module (gnu packages haskell)
   #:use-module (gnu packages java)
   #:use-module (gnu packages linux)
@@ -2960,3 +2962,241 @@ and variance components, using the likelihood-ratio statistics G.")
 transition matrix, utilities to plot flow diagrams, visualising webs, and
 electrical networks.")
    (license license:gpl2+)))
+
+(define-public r-kegggraph
+  (package
+   (name "r-kegggraph")
+   (version "1.42.0")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "KEGGgraph" version))
+            (sha256
+             (base32
+              "0ry0pfqc61r0cz98j6zlyhh4qh6568l0w0j61xmysayyp046mgy3"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-xml", r-xml)
+      ("r-graph", r-graph)))
+   (home-page "http://bioconductor.org/packages/KEGGgraph/")
+   (synopsis "KEGGgraph: A graph approach to KEGG PATHWAY")
+   (description "KEGGGraph is an interface between KEGG pathway and graph object
+as well as a collection of tools to analyze, dissect and visualize these graphs.
+It parses the regularly updated KGML (KEGG XML) files into graph models
+maintaining all essential pathway attributes. The package offers functionalities
+including parsing, graph operation, visualization and etc.")
+   (license license:gpl2)))
+
+(define-public r-pathview
+  (package
+   (name "r-pathview")
+   (version "1.22.1")
+   (source (origin
+            (method url-fetch)
+            (uri (bioconductor-uri "pathview" version))
+            (sha256
+             (base32
+              "19xvlk4sm0jf2xdl1cm2v8i1acxp8xk2yzpjgwv8r6x5h13zqpf0"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-kegggraph", r-kegggraph)
+      ("r-xml", r-xml)
+      ("r-rgraphviz", r-rgraphviz)
+      ("r-graph", r-graph)
+      ("r-png", r-png)
+      ("r-annotationdbi", r-annotationdbi)
+      ("r-keggrest", r-keggrest)
+      ("r-org-hs-eg-db", r-org-hs-eg-db)))
+   (home-page "http://bioconductor.org/packages/pathview/")
+   (synopsis "Toolset for pathway-based data integration and visualization")
+   (description "Pathview is a tool set for pathway based data integration
+and visualization.  It maps and renders a wide variety of biological data
+on relevant pathway graphs. All users need is to supply their data and
+specify the target pathway. Pathview automatically downloads the pathway
+graph data, parses the data file, maps user data to the pathway, and render
+pathway graph with the mapped data.  In addition, Pathview also seamlessly
+integrates with pathway and gene set (enrichment) analysis tools for
+ large-scale and fully automated analysis.")
+   (license license:gpl3)))
+
+(define-public r-listenv
+  (package
+    (name "r-listenv")
+    (version "0.7.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "listenv" version))
+       (sha256
+        (base32
+         "0ma5jsri2zqkrlsm9nqpikl7imbwfy1glsmk13mblw0q245h49k1"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-r-rsp" ,r-r-rsp)))
+    (home-page
+     "https://github.com/HenrikBengtsson/listenv")
+    (synopsis
+     "Environments Behaving (Almost) as Lists")
+    (description
+     "List environments are environments that have list-like properties.  For instance, the elements of a list environment are ordered and can be accessed and iterated over using index subsetting, e.g. 'x <- listenv(a = 1, b = 2); for (i in seq_along(x)) x[[i]] <- x[[i]] ^ 2; y <- as.list(x)'.")
+    (license #f)))
+
+(define-public r-globals
+  (package
+    (name "r-globals")
+    (version "0.12.4")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "globals" version))
+       (sha256
+        (base32
+         "0szyv1ayyk31bh3xqlkj43020w44xq6s4rw2bxwizyjssxm3b1br"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-codetools" ,r-codetools)))
+    (home-page
+     "https://github.com/HenrikBengtsson/globals")
+    (synopsis
+     "Identify Global Objects in R Expressions")
+    (description
+     "Identifies global (\"unknown\" or \"free\") objects in R expressions by code inspection using various strategies, e.g.  conservative or liberal.  The objective of this package is to make it as simple as possible to identify global objects for the purpose of exporting them in distributed compute environments.")
+    (license #f)))
+
+(define-public r-future
+  (package
+    (name "r-future")
+    (version "1.11.1.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "future" version))
+       (sha256
+        (base32
+         "1s4lyqg4mm1drzc6czaalmhmxfjgp4nznb14ql5xzny9rprgz43i"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-digest" ,r-digest)
+       ("r-globals" ,r-globals)
+       ("r-listenv" ,r-listenv)))
+    (home-page
+     "https://github.com/HenrikBengtsson/future")
+    (synopsis
+     "Unified Parallel and Distributed Processing in R for Everyone")
+    (description
+     "The purpose of this package is to provide a lightweight and unified Future API for sequential and parallel processing of R expression via futures.  The simplest way to evaluate an expression in parallel is to use `x %<-% { expression }` with `plan(multiprocess)`.  This package implements sequential, multicore, multisession, and cluster futures.  With these, R expressions can be evaluated on the local machine, in parallel a set of local machines, or distributed on a mix of local and remote machines.  Extensions to this package implement additional backends for processing futures via compute cluster schedulers etc.  Because of its unified API, there is no need to modify any code in order switch from sequential on the local machine to, say, distributed processing on a remote compute cluster.  Another strength of this package is that global variables and functions are automatically identified and exported as needed, making it straightforward to tweak existing code to make use of futures.")
+    (license #f)))
+
+(define-public r-rsvd
+  (package
+    (name "r-rsvd")
+    (version "1.0.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "rsvd" version))
+       (sha256
+        (base32
+         "0vjhrvnkl9rmvl8sv2kac5sd10z3fgxymb676ynxzc2pmhydy3an"))))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-matrix" ,r-matrix)))
+    (home-page "https://github.com/erichson/rSVD")
+    (synopsis
+     "Randomized Singular Value Decomposition")
+    (description
+     "Low-rank matrix decompositions are fundamental tools and widely used for data analysis, dimension reduction, and data compression.  Classically, highly accurate deterministic matrix algorithms are used for this task.  However, the emergence of large-scale data has severely challenged our computational ability to analyze big data.  The concept of randomness has been demonstrated as an effective strategy to quickly produce approximate answers to familiar problems such as the singular value decomposition (SVD).  The rsvd package provides several randomized matrix algorithms such as the randomized singular value decomposition (rsvd), randomized principal component analysis (rpca), randomized robust principal component analysis (rrpca), randomized interpolative decomposition (rid), and the randomized CUR decomposition (rcur).  In addition several plot functions are provided.  The methods are discussed in detail by Erichson et al. (2016) <arXiv:1608.02148>.")
+    (license license:gpl3+)))
+
+(define-public r-future-apply
+  (package
+    (name "r-future-apply")
+    (version "1.1.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "future.apply" version))
+       (sha256
+        (base32
+         "0b6v9rxvnnz13sydbgkapw71hx98fwdczjchgqnspjmq2340kdc0"))))
+    (properties `((upstream-name . "future.apply")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-future" ,r-future)
+       ("r-globals" ,r-globals)))
+    (home-page
+     "https://github.com/HenrikBengtsson/future.apply")
+    (synopsis
+     "Apply Function to Elements in Parallel using Futures")
+    (description
+     "Implementations of apply(), eapply(), lapply(), Map(), mapply(), replicate(), sapply(), tapply(), and vapply() that can be resolved using any future-supported backend, e.g.  parallel on the local machine or distributed on a compute cluster.  These future_*apply() functions come with the same pros and cons as the corresponding base-R *apply() functions but with the additional feature of being able to be processed via the future framework.")
+    (license license:gpl2+)))
+
+;ERROR: dependencies ?future?, ?future.apply?, ?ggrepel?, ?rsvd? are not available for package ?Seurat?
+
+(define-public r-seurat
+  (package
+    (name "r-seurat")
+    (version "3.0")
+    (source (origin
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/satijalab/seurat.git")
+                   (commit "0f5eddcf3e614456523a21c95ecdf9c981b631fd")))
+             (file-name (git-file-name name version))
+             (sha256
+              (base32
+               "02wrizxh8hsiq59pn0bz19ahd6y1d45raprgzws35yh3a799wmy4"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-ape" ,r-ape)
+       ("r-cluster" ,r-cluster)
+       ("r-cowplot" ,r-cowplot)
+       ("r-dosnow" ,r-dosnow)
+       ("r-dplyr" ,r-dplyr)
+       ("r-dtw" ,r-dtw)
+       ("r-fitdistrplus" ,r-fitdistrplus)
+       ("r-foreach" ,r-foreach)
+       ("r-future" ,r-future)
+       ("r-future-apply" ,r-future-apply)
+       ("r-fpc" ,r-fpc)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-ggrepel" ,r-ggrepel)
+       ("r-ggridges" ,r-ggridges)
+       ("r-gplots" ,r-gplots)
+       ("r-hdf5r" ,r-hdf5r)
+       ("r-hmisc" ,r-hmisc)
+       ("r-httr" ,r-httr)
+       ("r-ica" ,r-ica)
+       ("r-igraph" ,r-igraph)
+       ("r-irlba" ,r-irlba)
+       ("r-lars" ,r-lars)
+       ("r-lmtest" ,r-lmtest)
+       ("r-mass" ,r-mass)
+       ("r-matrix" ,r-matrix)
+       ("r-metap" ,r-metap)
+       ("r-mixtools" ,r-mixtools)
+       ("r-pbapply" ,r-pbapply)
+       ("r-plotly" ,r-plotly)
+       ("r-png" ,r-png)
+       ("r-rann" ,r-rann)
+       ("r-rsvd" ,r-rsvd)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-rcpp" ,r-rcpp)
+       ("r-rcppeigen" ,r-rcppeigen)
+       ("r-rcppprogress" ,r-rcppprogress)
+       ("r-reshape2" ,r-reshape2)
+       ("r-reticulate" ,r-reticulate)
+       ("r-rocr" ,r-rocr)
+       ("r-rtsne" ,r-rtsne)
+       ("r-sdmtools" ,r-sdmtools)
+       ("r-tidyr" ,r-tidyr)
+       ("r-tsne" ,r-tsne)))
+    (home-page "http://www.satijalab.org/seurat")
+    (synopsis "Seurat is an R toolkit for single cell genomics")
+    (description
+     "This package is an R package designed for QC, analysis, and
+exploration of single cell RNA-seq data.  It easily enables widely-used
+analytical techniques, including the identification of highly variable genes,
+dimensionality reduction; PCA, ICA, t-SNE, standard unsupervised clustering
+algorithms; density clustering, hierarchical clustering, k-means, and the
+discovery of differentially expressed genes and markers.")
+    (license license:gpl3)))
