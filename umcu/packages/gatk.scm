@@ -35,6 +35,7 @@
   #:use-module (gnu packages java)
   #:use-module (gnu packages python-crypto)
   #:use-module (gnu packages python-web)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages protobuf)
   #:use-module (gnu packages time)
   #:use-module (gnu packages mpi)

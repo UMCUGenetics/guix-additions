@@ -5,6 +5,7 @@
   #:use-module (guix download)
   #:use-module (guix build-system python)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python))
 
 (define-public python2-pyvcf

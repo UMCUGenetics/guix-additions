@@ -9,6 +9,7 @@
   #:use-module (gnu packages databases)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python))
 
 ;; This package is only for Python 2.  We therefore don't expose
