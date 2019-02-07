@@ -62,7 +62,8 @@
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages xorg)
-  #:use-module (umcu packages mysql))
+  #:use-module (umcu packages mysql)
+  #:use-module (umcu packages boost))
 
 ;;
 ;; When RStudio upgraded to Qt 5.11, they use Qt5WebEngine, which isn't
@@ -1326,7 +1327,7 @@ time Web content can be enhanced with native controls.")
 (define-public rstudio-server
   (package
    (name "rstudio-server")
-   (version "1.1.453")
+   (version "1.1.463")
    (source (origin
              (method git-fetch)
              (uri (git-reference
@@ -1334,7 +1335,7 @@ time Web content can be enhanced with native controls.")
                    (commit (string-append "v" version))))
              (sha256
               (base32
-               "0caz8c0p7kgz0s524r37jycsv7clpry4k54xg02jbwzw37imag30"))
+               "014g984znsczzy1fyn9y1ly3rbsngryfs674lfgciz60mqnl8im6"))
              (file-name (string-append name "-" version "-checkout"))))
    (build-system cmake-build-system)
    (arguments
@@ -1435,8 +1436,8 @@ time Web content can be enhanced with native controls.")
     `(("r" ,r)
       ("r-rmarkdown" ,r-rmarkdown) ; TODO: must be linked to another location
       ;;("r-rsconnect" ,r-rsconnect) ; TODO: must be linked to another location
-      ("clang" ,clang-3.5)
-      ("boost" ,boost)
+      ("clang" ,clang-3.7)
+      ("boost" ,boost-1.63.0)
       ("libuuid" ,util-linux)
       ("pandoc" ,ghc-pandoc)
       ("openssl" ,openssl)
