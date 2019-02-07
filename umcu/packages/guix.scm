@@ -190,7 +190,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.9.0")
+    (version "1.10.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
@@ -247,7 +247,7 @@ if [ -v HOME ]; then
 fi
 
 # Include our non-standard package repository
-export GUIX_PACKAGE_PATH=\"$guix_additional${GUIX_PACKAGE_PATH:+:$GUIX_PACKAGE_PATH}\"
+export GUIX_PACKAGE_PATH=\"${GUIX_PACKAGE_PATH:+$GUIX_PACKAGE_PATH:}$guix_additional\"
 
 # Set the Guile environment for GWL
 export GUILE_LOAD_PATH=\"${guix_profile}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
