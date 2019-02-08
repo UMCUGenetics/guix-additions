@@ -1051,3 +1051,29 @@ without any programming knowledge.")
                (base32
                 "1v90sjpbkj7wpzn52yxpasb84fhkw1v85nw2nwxz2bgzfxn93byp"))
               (patches (search-patches "0001-htseq-increase-memory-limit.patch"))))))
+
+(define-public python-umap-learn
+  (package
+    (name "python-umap-learn")
+    (version "0.3.7")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "umap-learn" version))
+        (sha256
+          (base32
+            "1fgym8as0s7wjm4hw324xjfbx6y6bsnfwwhrvxxaij3cqk6wk0cw"))))
+    (build-system python-build-system)
+    (propagated-inputs
+    `(("python-numpy" ,python-numpy)
+      ("python-scipy" ,python-scipy)
+      ("python-scikit-learn" ,python-scikit-learn)
+      ("python-nose" ,python-nose)
+      ("python-numba" ,python-numba)))
+    (home-page "http://github.com/lmcinnes/umap")
+    (synopsis
+      "Uniform Manifold Approximation and Projection")
+    (description
+      "Uniform Manifold Approximation and Projection")
+    (license license:bsd-3)))
+
