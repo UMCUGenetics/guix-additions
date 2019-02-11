@@ -3170,3 +3170,34 @@ dimensionality reduction; PCA, ICA, t-SNE, standard unsupervised clustering
 algorithms; density clustering, hierarchical clustering, k-means, and the
 discovery of differentially expressed genes and markers.")
     (license license:gpl3)))
+
+(define-public r-deepsnv
+  (package
+   (name "r-deepsnv")
+   (version "1.28.0")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (bioconductor-uri "deepSNV" version))
+     (sha256
+      (base32
+       "0maswzsfv9rw01v9alq9jbifc8lg6g2h65338v9chb05dkj03baj"))))
+   (properties `((upstream-name . "deepSNV")))
+   (build-system r-build-system)
+   (inputs
+    `(("zlib" ,zlib)))
+   (propagated-inputs
+    `(("r-biostrings" ,r-biostrings)
+      ("r-genomicranges" ,r-genomicranges)
+      ("r-iranges" ,r-iranges)
+      ("r-rhtslib" ,r-rhtslib)
+      ("r-summarizedexperiment" ,r-summarizedexperiment)
+      ("r-variantannotation" ,r-variantannotation)
+      ("r-vgam" ,r-vgam)))
+   (home-page
+    "http://github.com/gerstung-lab/deepSNV")
+   (synopsis
+    "Detection of subclonal SNVs in deep sequencing data.")
+   (description
+    "This package provides provides quantitative variant callers for detecting subclonal mutations in ultra-deep (>=100x coverage) sequencing experiments.  The deepSNV algorithm is used for a comparative setup with a control experiment of the same loci and uses a beta-binomial model and a likelihood ratio test to discriminate sequencing errors and subclonal SNVs.  The shearwater algorithm computes a Bayes classifier based on a beta-binomial model for variant calling with multiple samples for precisely estimating model parameters - such as local error rates and dispersion - and prior knowledge, e.g.  from variation data bases such as COSMIC.")
+   (license license:gpl3)))
