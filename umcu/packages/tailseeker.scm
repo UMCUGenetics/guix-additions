@@ -28,6 +28,7 @@
   #:use-module (gnu packages linux)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths))
 
@@ -93,7 +94,7 @@ caller, specifically targeting the use for tailseeker2.")
             (setenv "CFLAGS" (string-append
                               "-I"
                               (assoc-ref inputs "python-numpy")
-                              "/lib/python3.6/site-packages/numpy/core/include"))
+                              "/lib/python3.7/site-packages/numpy/core/include"))
             (substitute* "Makefile"
               (("CFLAGS=	-O3 -Wall -Werror") "CFLAGS=	-O2 -Wall"))
             (invoke "make")))
@@ -101,7 +102,7 @@ caller, specifically targeting the use for tailseeker2.")
           (lambda* (#:key inputs outputs #:allow-other-keys)
             (let* ((out (assoc-ref outputs "out"))
                    (bin-dir     (string-append out "/bin"))
-                   (python-path (string-append out "/lib/python3.6/site-packages/tailseeker"))
+                   (python-path (string-append out "/lib/python3.7/site-packages/tailseeker"))
                    (python-cmd  (string-append (assoc-ref inputs "python") "/bin/python3"))
                    (ayb-cmd     (string-append (assoc-ref inputs "all-your-base") "/bin/AYB"))
                    (bgzip-cmd   (string-append (assoc-ref inputs "htslib") "/bin/bgzip"))
@@ -128,7 +129,7 @@ caller, specifically targeting the use for tailseeker2.")
    (native-inputs
     `(("pkg-config" ,pkg-config)))
    (inputs
-    `(("python" ,python-3.6)
+    `(("python" ,python-3.7)
       ("all-your-base" ,all-your-base)))
    (propagated-inputs
     `(("python-biopython" ,python-biopython)
