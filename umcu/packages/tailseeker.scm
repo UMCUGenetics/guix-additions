@@ -117,6 +117,14 @@ caller, specifically targeting the use for tailseeker2.")
               (install-file "../bin/tailseq-retrieve-signals" bin-dir)
               (substitute* (string-append out "/bin/tailseeker")
                 (("TAILSEEKER_DIR = ") (string-append "TAILSEEKER_DIR = '" share-dir "' #")))
+              (install-file "../conf/defaults.conf" conf-dir)
+              (install-file "../conf/defaults-hiseq.conf" conf-dir)
+              (install-file "../conf/defaults-miseq.conf" conf-dir)
+
+              ;; XXX: This is a run-time specific setting for which no good default exists.
+              ;;(substitute* (string-append conf-dir "/defaults-miseq.conf")
+              ;;  (("_exp: [73, GTCAG, 1]") "_exp: [72, CCCCCCCCCC, 1]"))
+
               (call-with-output-file (string-append conf-dir "/paths.conf")
                 (lambda (port)
                   (for-each (lambda (item) (format port "~a: ~a~%" (car item) (cdr item)))
@@ -125,7 +133,15 @@ caller, specifically targeting the use for tailseeker2.")
                               ("bgzip"      . ,bgzip-cmd)
                               ("tabix"      . ,tabix-cmd)
                               ("AYB"        . ,ayb-cmd)
-                              ("snakemake"  . ,snake-cmd)))))))))))
+                              ("snakemake"  . ,snake-cmd)))))
+
+              ;; Tailseeker doesn't care about UNIX filesystems and expects to find binaries
+              ;; in its own directory.
+              (mkdir-p (string-append share-dir "/bin"))
+              (symlink (string-append bin-dir "/tailseq-retrieve-signals")
+                       (string-append share-dir "/bin/tailseq-retrieve-signals"))
+              (symlink (string-append bin-dir "/sqi2fq")
+                       (string-append share-dir "/bin/sqi2fq"))))))))
    (native-inputs
     `(("pkg-config" ,pkg-config)))
    (inputs
