@@ -88,6 +88,10 @@ caller, specifically targeting the use for tailseeker2.")
     `(#:tests? #f
       #:phases
       (modify-phases %standard-phases
+        (add-after 'unpack 'remove-pythonpath-hack
+          (lambda _
+            (substitute* "tailseeker/snakesupport.py"
+              (("'export PYTHONPATH=\"\\{PYTHONPATH\\}\" '\n") ""))))
         (add-before 'build 'move-to-src
           (lambda* (#:key inputs #:allow-other-keys)
             (chdir "src")
@@ -103,7 +107,7 @@ caller, specifically targeting the use for tailseeker2.")
             (let* ((out (assoc-ref outputs "out"))
                    (bin-dir     (string-append out "/bin"))
                    (python-path (string-append out "/lib/python3.7/site-packages/tailseeker"))
-                   (python-cmd  (string-append (assoc-ref inputs "python") "/bin/python3"))
+                   (python-cmd  (string-append (assoc-ref inputs "python-3") "/bin/python3"))
                    (ayb-cmd     (string-append (assoc-ref inputs "all-your-base") "/bin/AYB"))
                    (bgzip-cmd   (string-append (assoc-ref inputs "htslib") "/bin/bgzip"))
                    (tabix-cmd   (string-append (assoc-ref inputs "htslib") "/bin/tabix"))
@@ -141,11 +145,15 @@ caller, specifically targeting the use for tailseeker2.")
               (symlink (string-append bin-dir "/tailseq-retrieve-signals")
                        (string-append share-dir "/bin/tailseq-retrieve-signals"))
               (symlink (string-append bin-dir "/sqi2fq")
-                       (string-append share-dir "/bin/sqi2fq"))))))))
+                       (string-append share-dir "/bin/sqi2fq"))
+
+              ;; Same for scripts.
+              (mkdir-p (string-append share-dir "/scripts"))
+              (copy-recursively "../scripts" (string-append share-dir "/scripts"))))))))
    (native-inputs
     `(("pkg-config" ,pkg-config)))
    (inputs
-    `(("python" ,python-3.7)
+    `(("python-3" ,python-3)
       ("all-your-base" ,all-your-base)))
    (propagated-inputs
     `(("python-biopython" ,python-biopython)
