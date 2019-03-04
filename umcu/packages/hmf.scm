@@ -3070,6 +3070,7 @@ REPORT_STATUS	~a"
        ("perl-template-toolkit" ,perl-template-toolkit)
        ("perl-time-hires" ,perl-time-hires)
        ("icedtea-8" ,icedtea-8)
+       ("r-argparser" ,r-argparser)
        ("r-biobase" ,r-biobase)
        ("r-biocstyle" ,r-biocstyle)
        ("r-bsgenome" ,r-bsgenome)
