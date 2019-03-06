@@ -1,11 +1,13 @@
 diff -crB manta-1.1.0.release_src/src/c++/lib/manta/ReadGroupStatsUtil.cpp manta-1.1.0.release_src_patched/src/c++/lib/manta/ReadGroupStatsUtil.cpp
 *** a/src/c++/lib/manta/ReadGroupStatsUtil.cpp	1970-01-01 01:00:00.000000000 +0100
---- b/src/c++/lib/manta/ReadGroupStatsUtil.cpp	2019-03-05 12:48:07.990754976 +0100
+--- b/src/c++/lib/manta/ReadGroupStatsUtil.cpp	2019-03-06 15:00:50.822718602 +0100
 ***************
-*** 242,252 ****
+*** 240,252 ****
+  
+              if (_totalOrientCount < minCount)
               {
-                  std::ostringstream oss;
-                  oss << "ERROR: Too few observations (" << _totalOrientCount << ") to determine pair orientation for " << _rgLabel << "'\n";
+!                 std::ostringstream oss;
+!                 oss << "ERROR: Too few observations (" << _totalOrientCount << ") to determine pair orientation for " << _rgLabel << "'\n";
 !                 BOOST_THROW_EXCEPTION(LogicException(oss.str()));
               }
   
@@ -14,10 +16,11 @@ diff -crB manta-1.1.0.release_src/src/c++/lib/manta/ReadGroupStatsUtil.cpp manta
               {
                   const unsigned maxPercent((_orientCount[maxIndex]*100)/_totalOrientCount);
                   std::ostringstream oss;
---- 242,252 ----
+--- 240,251 ----
+  
+              if (_totalOrientCount < minCount)
               {
-                  std::ostringstream oss;
-                  oss << "ERROR: Too few observations (" << _totalOrientCount << ") to determine pair orientation for " << _rgLabel << "'\n";
+!                 std::cerr << "ERROR: Too few observations (" << _totalOrientCount << ") to determine pair orientation for " << _rgLabel << "'\n";
 !                 //BOOST_THROW_EXCEPTION(LogicException(oss.str()));
               }
   
@@ -26,3 +29,26 @@ diff -crB manta-1.1.0.release_src/src/c++/lib/manta/ReadGroupStatsUtil.cpp manta
               {
                   const unsigned maxPercent((_orientCount[maxIndex]*100)/_totalOrientCount);
                   std::ostringstream oss;
+***************
+*** 518,527 ****
+          {
+              using namespace illumina::common;
+  
+!             std::ostringstream oss;
+!             oss << "ERROR: Unexpected consensus read orientation (" << _stats.relOrients << ") for " << _rgLabel << "\n"
+                  << "\tManta currently handles paired-end (FR) reads only.\n";
+!             BOOST_THROW_EXCEPTION(LogicException(oss.str()));
+          }
+  
+          // finalize insert size distro:
+--- 517,526 ----
+          {
+              using namespace illumina::common;
+  
+!             std::cerr << "ERROR: Unexpected consensus read orientation (" << _stats.relOrients << ") for " << _rgLabel << "\n"
+                  << "\tManta currently handles paired-end (FR) reads only.\n";
+!             return;
+!             //BOOST_THROW_EXCEPTION(LogicException(oss.str()));
+          }
+  
+          // finalize insert size distro:
