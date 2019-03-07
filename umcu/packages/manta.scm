@@ -161,20 +161,3 @@ in small sets of individuals and somatic variation in tumor/normal sample pairs.
 Manta discovers, assembles and scores large-scale SVs, medium-sized indels and
 large insertions within a single efficient workflow.")
    (license license:gpl3)))
-
-(define-public manta-patched
-  (package (inherit manta)
-   (name "manta")
-   (version "1.1.0-patched")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/Illumina/manta/releases/download/v"
-                  "1.1.0/manta-1.1.0.release_src.tar.bz2"))
-            (file-name (string-append name "-" version ".tar.bz2"))
-            (sha256
-             (base32 "0d4fp0jq3b3d97jz81hv0kd3av12ycbjk28mirhbmwh32zm2d54k"))
-            (patches (list (search-patch "manta-use-system-zlib.patch")
-                           (search-patch "manta-use-system-htslib.patch")
-                           (search-patch "manta-use-system-samtools.patch")
-                           (search-patch "manta-ignore-too-few-observations.patch")))))))
