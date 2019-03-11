@@ -774,7 +774,7 @@ genomics data developed by the Hartwig Medical Foundation.")
 
 (define-public hmftools-2018-11-02
   (let ((commit "cc96075219c297bb516930b9e18561b298286457"))
-    (package (inherit hmftools-2018-09-03)
+    (package
      (name "hmftools")
      (version (string-append "20181102-" (string-take commit 7)))
      (source (origin
@@ -786,6 +786,7 @@ genomics data developed by the Hartwig Medical Foundation.")
               (sha256
                (base32
                 "1ca50apsf4zydpc2w9mradw59vm56p1r6cqmy9afbhz25vllp6yj"))))
+     (build-system gnu-build-system)
      (arguments
       `(#:tests? #f ; Tests are run in the install phase.
         #:phases
@@ -935,7 +936,40 @@ genomics data developed by the Hartwig Medical Foundation.")
                      (map (lambda (file)
                             `(,file . ,(basename (string-append (string-drop-right file 26) ".jar"))))
                           (find-files "." "-jar-with-dependencies.jar")))
+
+                ;; To make the package easier to integrate with the accompanying pipeline 4.8,
+                ;; we provide symbolic links to the JAR files without version numbers.
+                (with-directory-excursion output-dir
+                  (symlink "amber-1.7.jar"                    "amber.jar")
+                  (symlink "api-clients-local-SNAPSHOT.jar"   "api-clients.jar")
+                  (symlink "bachelor-1.2.jar"                 "bachelor.jar")
+                  (symlink "bachelor-pp-1.2.jar"              "bachelor-pp.jar")
+                  (symlink "bam-slicer-1.3.jar"               "bam-slicer.jar")
+                  (symlink "break-point-inspector-1.7.jar"    "break-point-inspector.jar")
+                  (symlink "cgi-treatment-extractor-1.2.jar"  "cgi-treatment-extractor.jar")
+                  (symlink "count-bam-lines-1.5.jar"          "cobalt.jar")
+                  (symlink "data_analyser-1.0.jar"            "data_analyser.jar")
+                  (symlink "fastq-stats-1.0.jar"              "fastq-stats.jar")
+                  (symlink "hmf-gene-panel-builder-local-SNAPSHOT.jar" "hmf-gene-panel.jar")
+                  (symlink "hmf-id-generator-1.4.jar"         "hmf-id-generator.jar")
+                  (symlink "knowledgebase-importer-1.2.jar"   "knowledgebase-importer.jar")
+                  (symlink "mnv-detector-1.4.jar"             "mnv-detector.jar")
+                  (symlink "mnv-validator-1.4.jar"            "mnv-validator.jar")
+                  (symlink "patient-db-3.12.jar"              "patient-db.jar")
+                  (symlink "portal-data-converter-1.0.jar"    "portal-data-converter.jar")
+                  (symlink "purity-ploidy-estimator-2.17.jar" "purple.jar")
+                  (symlink "strelka-post-process-1.4.jar"     "strelka-post-process.jar")
+                  (symlink "sv-analyser-1.0.jar"              "sv-analyser.jar")
+                  (symlink "variant-annotator-1.6.jar"        "variant-annotator.jar"))
                 #t))))))
+     (inputs
+      `(("icedtea" ,icedtea-8 "jdk")
+        ("maven" ,maven-bin)
+        ("circos" ,circos)))
+     ;; Amber uses an R script for BAF segmentation.
+     (propagated-inputs
+      `(("r" ,r-minimal)
+        ("r-copynumber" ,r-copynumber)))
      (native-inputs
       `(("maven-deps"
           ,(origin
@@ -945,8 +979,17 @@ genomics data developed by the Hartwig Medical Foundation.")
                    "maven-dependencies.tar.gz"))
              (sha256
               (base32
-               "04p2zvxjv4m37cnpvzbds7war8yd932vsy78lcjsi44826fm9iha"))))
-        ("mysql" ,mysql-5.6.25))))))
+               "16ffn537lcmambgl71vil3fp8wb7kqxn2yl384mi3ycqdcq6affx"))))
+        ("mysql" ,mysql-5.6.25)))
+     (native-search-paths
+      (list (search-path-specification
+             (variable "GUIX_JARPATH")
+             (files (list "share/java/user-classes")))))
+     (home-page "https://github.com/hartwigmedical/hmftools")
+     (synopsis "Various utility tools for working with genomics data.")
+     (description "This package provides various tools for working with
+genomics data developed by the Hartwig Medical Foundation.")
+     (license license:expat))))
 
 (define-public hmftools-2019-02-28
   (let ((commit "f5e098fda2051bf41dcb541aafcebc21a5f1da4f"))
