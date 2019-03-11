@@ -1515,6 +1515,55 @@ genomics data developed by the Hartwig Medical Foundation.")
 genomics data developed by the Hartwig Medical Foundation.")
 (license license:expat)))
 
+(define-public hmftools-for-pipeline-v4.8
+  (package
+   (name "hmftools")
+   (version "pipeline-v4.8-compat")
+   (source #f)
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; This is a meta-package.  No tests need to be executed here.
+      #:phases
+      (modify-phases %standard-phases
+       (delete 'unpack)
+       (delete 'configure)
+       (delete 'build)
+       (replace 'install
+         (lambda* (#:key inputs outputs #:allow-other-keys)
+           (let ((output-dir (lambda (path)
+                               (string-append
+                                (assoc-ref outputs "out")
+                                "/share/java/user-classes/" path)))
+                 (hmftools-20180808 (lambda (path)
+                                      (string-append
+                                       (assoc-ref inputs "hmftools-2018-08-08")
+                                       "/share/java/user-classes/" path)))
+                 (hmftools-20181102 (lambda (path)
+                                      (string-append
+                                       (assoc-ref inputs "hmftools-2018-11-02")
+                                       "/share/java/user-classes/" path))))
+             (mkdir-p (output-dir ""))
+             (chdir (output-dir ""))
+             (symlink (hmftools-20180808 "amber-1.6.jar") "amber.jar")
+             (symlink (hmftools-20180808 "count-bam-lines-1.4.jar") "cobalt.jar")
+             (symlink (hmftools-20181102 "purity-ploidy-estimator-2.17.jar") "purple.jar")))))))
+   (inputs
+    `(("hmftools-2018-08-08" ,hmftools-2018-08-08)
+      ("hmftools-2018-11-02" ,hmftools-2018-11-02)))
+   (native-search-paths
+    (list (search-path-specification
+           (variable "GUIX_JARPATH")
+           (files (list "share/java/user-classes")))))
+   ;; Amber uses an R script for BAF segmentation.
+   (propagated-inputs
+    `(("r" ,r-minimal)
+      ("r-copynumber" ,r-copynumber)))
+   (home-page "https://github.com/hartwigmedical/hmftools")
+   (synopsis "Various utility tools for working with genomics data.")
+   (description "This package provides tools developed by Hartwig Medical
+Foundation that are used in the accompanying HMF pipeline (version 4.8).")
+(license license:expat)))
+
 (define-public hmftools
   (package
    (name "hmftools")
@@ -3505,7 +3554,7 @@ REPORT_STATUS	~a"
        ("gatk" ,gatk-bin-3.8-0)
        ("gatk-queue" ,gatk-queue-bin-3.8-0)
        ("gridss" ,gridss-bin)
-       ("hmftools" ,hmftools-2018-11-02)
+       ("hmftools" ,hmftools-for-pipeline-v4.8)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
        ("igvtools" ,igvtools-bin-2.3.60)
