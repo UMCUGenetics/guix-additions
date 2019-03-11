@@ -3249,7 +3249,7 @@ REPORT_STATUS	~a"
        ("gatk" ,gatk-bin-3.8-0)
        ("gatk-queue" ,gatk-queue-bin-3.8-0)
        ("gridss" ,gridss-bin)
-       ("hmftools" ,hmftools-2019-02-28)
+       ("hmftools" ,hmftools-2018-11-02)
        ("htslib" ,htslib)
        ("icedtea-8" ,icedtea-8)
        ("igvtools" ,igvtools-bin-2.3.60)
