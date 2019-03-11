@@ -190,12 +190,11 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.10.0")
+    (version "1.11.0")
     (source #f)
     (build-system gnu-build-system)
     (propagated-inputs
-     `(("guix" ,guix)
-       ("gwl" ,gwl)))
+     `(("guix" ,guix)))
     (inputs
      `(("bash-full" ,bash-custom)
        ("git" ,git)))
@@ -249,7 +248,7 @@ fi
 # Include our non-standard package repository
 export GUIX_PACKAGE_PATH=\"${GUIX_PACKAGE_PATH:+$GUIX_PACKAGE_PATH:}$guix_additional\"
 
-# Set the Guile environment for GWL
+# Set the Guile environment for Guix
 export GUILE_LOAD_PATH=\"${guix_profile}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
 export GUILE_LOAD_COMPILED_PATH=\"${guix_profile}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
 
@@ -277,7 +276,9 @@ elif [ \"$1\" == \"load-profile\" ]; then
       profile_arguments=(\"${arguments[@]:1}\")
       profile_arguments=(\"${profile_arguments[@]/--}\")
       profiles=${profile_arguments[@]/%/\"/etc/profile\"}
-      set_output=$(${grep} -h \"^export\" $profiles)
+      # When no variables are set in the Guix profile file, at least set PATH
+      # to avoid leaking to hardcoded '/usr/bin'.
+      set_output=$(${grep} -h \"^export\" $profiles || echo \"export PATH=\\\"\\\"\")
       sge_variables=$(export -p | ${grep} \"^declare -x SGE\" || echo \"# No SGE variables found.\")
       tmp_variables=$(export -p | ${grep} \"^declare -x TMP\" || echo \"# No TMP variables found.\")
       job_id_variables=$(export -p | ${grep} \"^declare -x JOB_ID\" || echo \"# No JOB_ID variable found.\")
@@ -305,6 +306,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
                                                        echo \"$set_output\";
                                                        echo \"declare -x GUIX_PROFILE_PATH=\\\"$last_profile\\\"\";
                                                        echo \"declare -x GUIX_PROFILES=\\\"$profile_paths\\\"\";
+                                                       echo \"unset TERMCAP\";
                                                        echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
