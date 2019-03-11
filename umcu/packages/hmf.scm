@@ -3035,21 +3035,26 @@ produce meaningful genomic data from Hartwig Medical.")
        (begin
          (use-modules (guix build utils)
                       (ice-9 ftw))
-         (let ((tar           (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
-               (PATH          (string-append (assoc-ref %build-inputs "gzip") "/bin"))
-               (tarball       (assoc-ref %build-inputs "source"))
-               (current-dir   (getcwd))
-               (bin-dir       (string-append %output "/bin"))
-               (patch-bin     (string-append (assoc-ref %build-inputs "patch") "/bin/patch"))
-               (pipeline-dir  (string-append %output "/share/hmf-pipeline"))
-               (settings-dir  (string-append %output "/share/hmf-pipeline/settings"))
-               (qscripts-dir  (string-append %output "/share/hmf-pipeline/QScripts"))
-               (templates-dir (string-append %output "/share/hmf-pipeline/templates"))
-               (scripts-dir   (string-append %output "/share/hmf-pipeline/scripts"))
-               (lib-dir       (string-append %output "/lib/perl5/site_perl/" ,(package-version perl)))
-               (perlbin       (string-append (assoc-ref %build-inputs "perl") "/bin/perl"))
-               (shbin         (string-append (assoc-ref %build-inputs "bash") "/bin/sh"))
-               (pythonbin     (string-append (assoc-ref %build-inputs "python") "/bin/python")))
+         (let* ((tar           (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
+                (PATH          (string-append (assoc-ref %build-inputs "gzip") "/bin"))
+                (tarball       (assoc-ref %build-inputs "source"))
+                (current-dir   (getcwd))
+                (bin-dir       (string-append %output "/bin"))
+                (patch-bin     (string-append (assoc-ref %build-inputs "patch") "/bin/patch"))
+                (pipeline-dir  (string-append %output "/share/hmf-pipeline"))
+                (settings-dir  (string-append %output "/share/hmf-pipeline/settings"))
+                (qscripts-dir  (string-append %output "/share/hmf-pipeline/QScripts"))
+                (templates-dir (string-append %output "/share/hmf-pipeline/templates"))
+                (scripts-dir   (string-append %output "/share/hmf-pipeline/scripts"))
+                (lib-dir       (string-append %output "/lib/perl5/site_perl/" ,(package-version perl)))
+                (perlbin       (string-append (assoc-ref %build-inputs "perl") "/bin/perl"))
+                (shbin         (string-append (assoc-ref %build-inputs "bash") "/bin/sh"))
+                (pythonbin     (string-append (assoc-ref %build-inputs "python") "/bin/python"))
+                (extract-files (lambda (output-dir input-dir)
+                                 (with-directory-excursion output-dir
+                                   (system* tar "xvf" tarball
+                                            (string-append "pipeline-" ,version "/" input-dir)
+                                            "--strip-components=2")))))
 
            (setenv "PATH" PATH)
 
@@ -3057,31 +3062,23 @@ produce meaningful genomic data from Hartwig Medical.")
            (map mkdir-p (list lib-dir scripts-dir qscripts-dir settings-dir templates-dir))
 
            ;; Extract the modules into the Perl path.
-           (with-directory-excursion lib-dir
-             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/lib/")
-                      "--strip-components=2"))
+           (extract-files lib-dir "lib")
 
            ;; Extract the template scripts to their own custom directory.
-           (with-directory-excursion templates-dir
-             (system* tar "xvf" tarball
-                      (string-append "pipeline-" ,version "/templates")
-                      "--strip-components=2"))
+           (extract-files templates-dir "templates")
 
            ;; Extract the settings files to their own custom directory.
-           (with-directory-excursion settings-dir
-             (system* tar "xvf" tarball
-                      (string-append "pipeline-" ,version "/settings")
-                      "--strip-components=2"))
+           (extract-files settings-dir "settings")
 
            ;; Apply the following patches to skip the read group validation.
            (with-directory-excursion %output
              (format #t "Applying patches... ")
              (let ((patch1 (assoc-ref %build-inputs "patch1")))
-               (format
-                #t
-                (if (and (zero? (system (string-append patch-bin " -p1 < " patch1))))
-                    " Succeeded.~%"
-                    " Failed.~%"))))
+               (if (and (zero? (system (string-append patch-bin " -p1 < " patch1))))
+                   (format #t " Succeeded.~%")
+                   (begin
+                     (format #t " Failed.~%")
+                     (throw 'applying-patch-failure)))))
 
            ;; Patch the use of external tools
            (substitute* (list (string-append lib-dir "/HMF/Pipeline/Functions/Config.pm")
@@ -3091,14 +3088,10 @@ produce meaningful genomic data from Hartwig Medical.")
              (("qx\\(cat ")         (string-append "qx(" (assoc-ref %build-inputs "coreutils") "/bin/cat ")))
 
            ;; Extract scripts to their own custom directory.
-           (with-directory-excursion scripts-dir
-             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/scripts")
-                      "--strip-components=2"))
+           (extract-files scripts-dir "scripts")
 
            ;; Extract QScripts to their own custom directory.
-           (with-directory-excursion qscripts-dir
-             (system* tar "xvf" tarball (string-append "pipeline-" ,version "/QScripts")
-                      "--strip-components=2"))
+           (extract-files qscripts-dir "QScripts")
 
            (with-directory-excursion templates-dir
              (substitute* (scandir "." (lambda (item)
@@ -3315,7 +3308,7 @@ REPORT_STATUS	~a"
        ("patch1" ,(origin
                     (method url-fetch)
                     (uri (search-patch "hmf-pipeline-skip-readgroup-validation.patch"))
-                    (sha256 (base32 "0l9lax3pvbmm7a0gbbn1hvb9l0h4pid8xp3sbpgps5xxy1vnf7f1"))))))
+                    (sha256 (base32 "1pdivvkbqiv80cjqnj0dgsq8yd2s62ch464cylad5n5ian8n1q5f"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
