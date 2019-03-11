@@ -288,12 +288,11 @@ elif [ \"$1\" == \"load-profile\" ]; then
       home_variables=$(export -p | ${grep} \"^declare -x HOME\" || echo \"# No HOME variable found.\")
       locale_variables=$(export -p | ${grep} \"^declare -x LANG\" || echo \"# No LANG variable found.\")
       locpath_variables=$(export -p | ${grep} \"^declare -x GUIX_LOCPATH\" || echo \"# No GUIX_LOCPATH variable found.\")
-      term_variables=$(export -p | ${grep} \"^declare -x TERM\" || echo \"# No TERM variable found.\")
       display_variables=$(export -p | ${grep} \"^declare -x DISPLAY\" || echo \"# No DISPLAY variable found.\")
       last_profile=\"${profile_arguments[-1]}\"
       profile_paths=\"$(echo ${profile_arguments[@]} | ${coreutils}/bin/tr ' ' ':')\"
       ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\";
-                                                       echo \"$term_variables\";
+                                                       echo \"export TERM=xterm\";
                                                        echo \"$display_variables\";
                                                        echo \"$locpath_variables\";
                                                        echo \"$sge_variables\";
@@ -306,7 +305,6 @@ elif [ \"$1\" == \"load-profile\" ]; then
                                                        echo \"$set_output\";
                                                        echo \"declare -x GUIX_PROFILE_PATH=\\\"$last_profile\\\"\";
                                                        echo \"declare -x GUIX_PROFILES=\\\"$profile_paths\\\"\";
-                                                       echo \"unset TERMCAP\";
                                                        echo \"PS1=\\\"\\u@\\h \\W [env]\\\\$ \\\"\") -i \"${@:$(($# + 1))}\"
     else
       printf \"Usage:\\n  $0 $1 /path/to/profile\\n\"
