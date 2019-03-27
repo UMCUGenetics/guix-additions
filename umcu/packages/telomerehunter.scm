@@ -84,7 +84,8 @@
      ("r-gridextra", r-gridextra)
      ("r-rcolorbrewer" ,r-rcolorbrewer)
      ("r-cowplot", r-cowplot)
-     ("r-svglite", r-svglite)))
+     ("r-svglite", r-svglite)
+     ("r-dplyr", r-dplyr)))
   (native-search-paths
     (list (search-path-specification
       (variable "R_LIBS_SITE")
