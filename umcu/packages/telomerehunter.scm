@@ -59,17 +59,21 @@
                   (bindir (string-append (assoc-ref outputs "out") "/bin")))
          (substitute* "telomerehunter/run_plot.sh"
            (("R --no-save") (string-append (assoc-ref inputs "r") "/bin/R --no-save")))
-           (mkdir-p python-libdir)
-           (copy-recursively "telomerehunter" site-dir)
-           (mkdir-p bindir)
-           (mkdir-p (string-append (assoc-ref outputs "out") "/site-library"))
-           (install-file "telomerehunter-1.1.0.data/scripts/telomerehunter" bindir)
-           (wrap-program (string-append bindir "/telomerehunter")
-             `("PYTHONPATH" ":" prefix (,bindir ,(getenv "PYTHONPATH")
-                                                ,site-dir))))))
+         (substitute* (list "telomerehunter/filter_telomere_reads.py"
+                            "telomerehunter/normalize_TVR_counts.R")
+           (("samtools ") (string-append (assoc-ref inputs "samtools") "/bin/samtools ")))
+         (mkdir-p python-libdir)
+         (copy-recursively "telomerehunter" site-dir)
+         (mkdir-p bindir)
+         (mkdir-p (string-append (assoc-ref outputs "out") "/site-library"))
+         (install-file "telomerehunter-1.1.0.data/scripts/telomerehunter" bindir)
+         (wrap-program (string-append bindir "/telomerehunter")
+          `("PYTHONPATH" ":" prefix (,bindir ,(getenv "PYTHONPATH")
+                                             ,site-dir))))))
        (delete 'install))))
   (inputs
-    `(("unzip" ,unzip)))
+   `(("unzip" ,unzip)
+     ("samtools" ,samtools)))
   (propagated-inputs
     `(("r" ,r)
      ("python2-pypdf2", python2-pypdf2)
@@ -91,4 +95,3 @@
                 from WGS Data. It is designed to take BAM files from a tumor and/or a control
                 sample as input. The tool was developed at the German Cancer Research Center (DKFZ).")
   (license license:gpl3+)))
-
