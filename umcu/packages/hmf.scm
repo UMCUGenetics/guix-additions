@@ -3340,11 +3340,16 @@ produce meaningful genomic data from Hartwig Medical.")
            ;; Extract the settings files to their own custom directory.
            (extract-files settings-dir "settings")
 
+           ;; Extract scripts to their own custom directory.
+           (extract-files scripts-dir "scripts")
+
            ;; Apply the following patches to skip the read group validation.
            (with-directory-excursion %output
              (format #t "Applying patches... ")
-             (let ((patch1 (assoc-ref %build-inputs "patch1")))
-               (if (and (zero? (system (string-append patch-bin " -p1 < " patch1))))
+             (let ((patch1 (assoc-ref %build-inputs "patch1"))
+                   (patch2 (assoc-ref %build-inputs "patch2")))
+               (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
+                        (zero? (system (string-append patch-bin " -p1 < " patch2))))
                    (format #t " Succeeded.~%")
                    (begin
                      (format #t " Failed.~%")
@@ -3356,9 +3361,6 @@ produce meaningful genomic data from Hartwig Medical.")
              (("qx\\(\\$samtools ") (string-append "qx(" (assoc-ref %build-inputs "samtools") "/bin/samtools "))
              (("qx\\(bash ")        (string-append "qx(" (assoc-ref %build-inputs "bash") "/bin/bash "))
              (("qx\\(cat ")         (string-append "qx(" (assoc-ref %build-inputs "coreutils") "/bin/cat ")))
-
-           ;; Extract scripts to their own custom directory.
-           (extract-files scripts-dir "scripts")
 
            ;; Extract QScripts to their own custom directory.
            (extract-files qscripts-dir "QScripts")
@@ -3545,7 +3547,11 @@ REPORT_STATUS	~a"
        ("patch1" ,(origin
                     (method url-fetch)
                     (uri (search-patch "hmf-pipeline-skip-readgroup-validation.patch"))
-                    (sha256 (base32 "1pdivvkbqiv80cjqnj0dgsq8yd2s62ch464cylad5n5ian8n1q5f"))))))
+                    (sha256 (base32 "1pdivvkbqiv80cjqnj0dgsq8yd2s62ch464cylad5n5ian8n1q5f"))))
+       ("patch2" ,(origin
+                    (method url-fetch)
+                    (uri (search-patch "hmf-pipeline-disable-required-pon.patch"))
+                    (sha256 (base32 "15znidznrvy00j10ig3caqp6dqm399y702sdgpsz15bmc9yzlq10"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
