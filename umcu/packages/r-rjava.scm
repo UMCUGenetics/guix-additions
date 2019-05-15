@@ -6,7 +6,6 @@
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system r)
-  #:use-module (guix licenses)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages icu4c)
   #:use-module (gnu packages java)
