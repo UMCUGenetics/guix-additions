@@ -3237,3 +3237,28 @@ variants in VCF format.  The packages contains functions for parsing VCFs from
 a number of popular callers as well as functions for dealing with breakpoints
 involving two separate genomic loci encoded as GRanges objects.")
     (license license:gpl3)))
+
+(define-public r-mutsigextractor
+  (let ((commit "18deddb70ad29211d2b35b0ce564b829f2105a13"))
+    (package
+      (name "r-mutsigextractor")
+      (version (string-append "0-" (string-take commit 7)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/luannnguyen/mutSigExtractor.git")
+                      (commit commit)))
+                (file-name (string-append name "-" version "-checkout"))
+                (sha256
+                 (base32
+                  "0pcxk5ay68mgf17zll4r46s44y06dj8i3070ifh5bqgpq91dgkzq"))))
+      (build-system r-build-system)
+      (propagated-inputs
+       `(("r-genomicranges" ,r-genomicranges)
+         ("r-variantannotation" ,r-variantannotation)
+         ("r-bsgenome" ,r-bsgenome)
+         ("r-bsgenome-hsapiens-ucsc-hg19" ,r-bsgenome-hsapiens-ucsc-hg19)))
+      (home-page "https://github.com/luannnguyen/mutSigExtractor")
+      (synopsis "Extracts SNV, indel, and SV signatures from VCF files")
+      (description "More about what it does (maybe more than one line). Use four spaces when indenting paragraphs within the Description.")
+      (license license:expat))))
