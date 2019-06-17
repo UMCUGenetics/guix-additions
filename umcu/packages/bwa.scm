@@ -24,6 +24,7 @@
   #:use-module (guix build utils)
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system cmake)
   #:use-module (gnu packages)
   #:use-module (gnu packages compression))
 
@@ -111,3 +112,27 @@ mainstream assemblers, miniasm does not have a consensus step.  It simply
 concatenates pieces of read sequences to generate the final unitig sequences.
 Thus the per-base error rate is similar to the raw input reads.")
    (license license:expat)))
+
+(define-public assembly-stats
+  (package
+   (name "assembly-stats")
+   (version "1.0.1")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/sanger-pathogens/assembly-stats/archive/v"
+                  version ".tar.gz"))
+            (file-name (string-append name "-" version ".tar.gz"))
+            (sha256
+             (base32 "0xc5ppmcs09d16f062nbb0mdb0cnfhbnkp0arlxnfi6jli6n3gh2"))))
+   (build-system cmake-build-system)
+   (arguments
+    `(#:configure-flags (list (string-append
+                               "-DINSTALL_DIR:PATH="
+                               %output
+                               "/bin"))))
+   (home-page "https://github.com/sanger-pathogens")
+   (synopsis "Tool to extract assembly statistics from FASTA and FASTQ files")
+   (description "This package provides a tool to extract assembly statistics
+from FASTA and FASTQ files.")
+   (license license:gpl3)))
