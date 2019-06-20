@@ -783,7 +783,6 @@ genomics data developed by the Hartwig Medical Foundation.")
                     (url "https://github.com/hartwigmedical/hmftools.git")
                     (commit commit)))
               (file-name (string-append name "-" version "-checkout"))
-              (patches (list (search-patch "0001-purity-ploidy-estimator-Add-reference-genome-data-fo.patch")))
               (sha256
                (base32
                 "1ca50apsf4zydpc2w9mradw59vm56p1r6cqmy9afbhz25vllp6yj"))))
