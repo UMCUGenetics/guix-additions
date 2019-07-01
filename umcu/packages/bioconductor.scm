@@ -3262,3 +3262,51 @@ involving two separate genomic loci encoded as GRanges objects.")
       (synopsis "Extracts SNV, indel, and SV signatures from VCF files")
       (description "More about what it does (maybe more than one line). Use four spaces when indenting paragraphs within the Description.")
       (license license:expat))))
+
+(define-public r-hiddenmarkov
+  (package
+   (name "r-hiddenmarkov")
+   (version "1.8-11")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "HiddenMarkov" version))
+            (sha256
+             (base32
+              "1yh85pdb9r90qxcl5gxslyplxzrx8knrrsl2q65l57zfkqj185ja"))))
+   (properties `((upstream-name . "HiddenMarkov")))
+   (build-system r-build-system)
+   (native-inputs
+    `(("gfortran" ,gfortran)))
+   (home-page "http://cran.r-project.org/web/packages/HiddenMarkov")
+   (synopsis "Hidden Markov models")
+   (description "This package contains functions for the analysis of Discrete
+Time Hidden Markov Models, Markov Modulated GLMs and the Markov Modulated
+Poisson Process.  It includes functions for simulation, parameter estimation,
+and the Viterbi algorithm. See the topic 'HiddenMarkov' for an introduction to
+the package, and 'Change Log' for a list of recent changes. The algorithms are
+based of those of Walter Zucchini.")
+   (license license:gpl2+)))
+
+(define-public r-depmixs4
+  (package
+   (name "r-depmixs4")
+   (version "1.3-5")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "depmixS4" version))
+            (sha256
+             (base32
+              "155bxfyhkmwz3asx1q8myvn3qjb3i2aq7pnw0r7kxygxzn071hkq"))))
+   (properties
+    `((upstream-name . "depmixS4")))
+   (propagated-inputs
+    `(("r-nnet" ,r-nnet)
+      ("r-mass" ,r-mass)
+      ("r-rsolnp" ,r-rsolnp)))
+   (build-system r-build-system)
+   (home-page "http://cran.r-project.org/web/packages/depmixS4")
+   (synopsis "Dependent Mixture Models")
+   (description "This package fits latent (hidden) Markov models on mixed
+categorical and continuous (time series) data, otherwise known as dependent
+mixture models.")
+   (license license:gpl2+)))

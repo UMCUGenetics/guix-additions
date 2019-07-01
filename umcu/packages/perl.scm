@@ -19,6 +19,7 @@
 (define-module (umcu packages perl)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix build-system perl)
+  #:use-module (guix build-system gnu)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix packages)
@@ -28,7 +29,8 @@
   #:use-module (gnu packages compression)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages perl-check)
-  #:use-module (gnu packages pkg-config))
+  #:use-module (gnu packages pkg-config)
+  #:use-module (umcu packages bioconductor))
 
 (define-public perl-storable
   (package
@@ -592,3 +594,46 @@ maniread, maniskip, manicopy, maniadd.")
     (synopsis "Code coverage metrics for Perl")
     (description "")
     (license (package-license perl))))
+
+(define-public hiddendomains
+  (package
+   (name "hiddendomains")
+   (version "3.0")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "mirror://sourceforge/hiddendomains/hiddenDomains."
+                  version ".tar.gz"))
+            (sha256
+             (base32 "17d8svkns7iwvg826pb75c92i3n9n77hcvcf0ialm6kxsqnxb8wq"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure)
+        (delete 'build)
+        (replace 'install
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (let ((bin   (string-append (assoc-ref outputs "out") "/bin"))
+                  (share (string-append (assoc-ref outputs "out")
+                                        "/share/hiddenDomains")))
+              (mkdir-p bin)
+              (for-each (lambda (file) (install-file file bin))
+               '("binReads.pl"     "centersToGEM.pl" "domainsMergeToBed.pl"
+                 "domainsToBed.pl" "hiddenDomains"   "peakCenters"))
+              (mkdir-p share)
+              (install-file "hiddenDomains.R" share)))))))
+   (inputs
+    `(("perl" ,perl)))
+   (propagated-inputs
+    `(("r-depmixS4" ,r-depmixs4)
+      ("r-hiddenmarkov" ,r-hiddenmarkov)))
+   (home-page "http://hiddendomains.sourceforge.net")
+   (synopsis "Programs used to identify enrichment of ChIP-seq reads")
+   (description "hiddenDomains is a suite of programs used to identify
+significant enrichment of ChIP-seq reads that span large domains, like
+HK27me3.  The input data can be in BAM format, or in a tab-delimited
+'reads per bin' format described below.  The output is a BED formatted
+file the lists the enriched domains and their posterior probabilities.")
+   (license #f)))
