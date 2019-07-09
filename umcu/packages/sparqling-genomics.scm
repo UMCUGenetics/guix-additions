@@ -30,6 +30,7 @@
   #:use-module (gnu packages tls)
   #:use-module (gnu packages tex)
   #:use-module (gnu packages openldap)
+  #:use-module (gnu packages xml)
   #:use-module (gnu packages)
   #:use-module (guix build utils)
   #:use-module (guix build-system gnu)
@@ -42,7 +43,7 @@
 (define-public sparqling-genomics
   (package
    (name "sparqling-genomics")
-   (version "0.99.9")
+   (version "0.99.10")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -51,23 +52,15 @@
                   version ".tar.gz"))
             (sha256
              (base32
-              "1gabjpm2qa76jipf5fa71y323qg611wvhlci2qa9zz0py21pmzdf"))))
+              "114sjnm850gj63jsiqk22dc5g4pd297qigj4ggpavb20k0k7yn30"))))
    (build-system gnu-build-system)
    (arguments
     `(#:configure-flags (list (string-append
                                "--with-libldap-prefix="
                                (assoc-ref %build-inputs "openldap")))
-      #:parallel-build? #f
+      #:parallel-build? #f ; It breaks building the documentation.
       #:phases
       (modify-phases %standard-phases
-        (add-after 'install 'setup-static-resources
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let* ((out        (assoc-ref outputs "out"))
-                   (web-root   (string-append
-                                out "/share/sparqing-genomics/sg-web"))
-                   (static-dir (string-append web-root "/static")))
-              (mkdir-p static-dir)
-              (copy-recursively "web/static" static-dir))))
         (add-after 'install 'wrap-executable
           (lambda* (#:key outputs #:allow-other-keys)
             (let* ((out  (assoc-ref outputs "out"))
@@ -78,28 +71,30 @@
                     (string-append out "/lib/guile/2.2/site-ccache:"
                                    (getenv "GUILE_LOAD_COMPILED_PATH")))
                    (web-root (string-append
-                              out "/share/sparqing-genomics/sg-web")))
+                              out "/share/sparqling-genomics/web")))
               (wrap-program (string-append out "/bin/sg-web")
                 `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
                 `("GUILE_LOAD_COMPILED_PATH" ":" prefix
                   (,guile-load-compiled-path))
                 `("SG_WEB_ROOT" ":" prefix (,web-root)))))))))
    (native-inputs
-    `(("texlive" ,texlive)))
+    `(("texlive" ,texlive)
+      ("pkg-config" ,pkg-config)))
    (inputs
     `(("guile" ,guile-2.2)
-      ("gnutls" ,gnutls) ; Needed to query HTTPS endpoints.
-      ("guile-fibers" ,guile-fibers)
-      ("guile-json" ,guile-json)
       ("htslib" ,htslib)
       ("libgcrypt" ,libgcrypt)
+      ("libxml2" ,libxml2)
       ("openldap" ,openldap)
-      ("pkg-config" ,pkg-config)
       ("raptor2" ,raptor2)
       ("xz" ,xz)
       ("zlib" ,zlib)))
+   (propagated-inputs
+    `(("gnutls" ,gnutls))) ; Needed to query HTTPS endpoints.
    (home-page "https://github.com/UMCUGenetics/sparqling-genomics")
    (synopsis "Tools to use SPARQL to analyze genomics data")
    (description "This package provides various tools to extract RDF triples
 from genomic data formats, and a web interface to query SPARQL endpoints.")
-   (license license:gpl3+)))
+   ;; All programs except the web interface is licensed GPLv3+.  The web
+   ;; interface is licensed AGPLv3+.
+   (license (list license:gpl3+ license:agpl3+))))
