@@ -73,6 +73,67 @@
   #:use-module (umcu packages vcflib)
   #:use-module (umcu packages vcftools))
 
+(define (hmftools-component name version url-suffix hash)
+  (package
+   (name name)
+   (version version)
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/hartwigmedical/hmftools/"
+                  "releases/download/" url-suffix))
+            (file-name (basename url-suffix))
+            (sha256
+             (base32 hash))))
+   (build-system trivial-build-system)
+   (arguments
+    `(#:modules ((guix build utils))
+      #:builder
+      (begin
+        (use-modules (guix build utils))
+        (let* ((output-dir  (string-append (assoc-ref %outputs "out")
+                                           "/share/java/user-classes"))
+               (input-file  (assoc-ref %build-inputs "source"))
+               (destination (string-append
+                             output-dir "/" (basename input-file))))
+          (mkdir-p output-dir)
+          (copy-file input-file
+                     (string-append output-dir "/" (basename ,url-suffix)))
+          (symlink (basename ,url-suffix)
+                   (string-append output-dir "/" ,name ".jar"))))))
+   (native-search-paths
+    (list (search-path-specification
+           (variable "GUIX_JARPATH")
+           (files (list "share/java/user-classes")))))
+   (home-page "https://github.com/hartwigmedical/hmftools")
+   (synopsis (string-append
+              "Binary package for Hartwig Medical Foundations's " name))
+   (description (string-append
+                 "This package provides the binary for Hartwig Medical "
+                 "Foundation's" name "."))
+   (license license:expat)))
+
+(define-public hmftools-amber-2.5
+  (hmftools-component "amber" "2.5" "amber-v2-5/amber-2.5.jar"
+                      "1ym2525vn354clw2x6xk3ps0xrxhz9485sj8jw8iqb6vybzmkizp"))
+
+(define-public hmftools-amber-1.6
+  (hmftools-component "amber" "1.6" "amber-v1-6/amber-1.6.jar"
+                      "1xn29lv5cqydb0isnmhm6vs8g07c3y1k0ar03iyjha3zbcdgg7ry"))
+
+(define-public hmftools-cobalt-1.4
+  (hmftools-component "cobalt" "1.4" "cobalt-v1-4/cobalt-1.4.jar"
+                      "0z8y80vfnks7wl1qa2811067c99nn6ckgvpnnssy1h7n6gxzrphi"))
+
+(define-public hmftools-purple-2.17
+  (hmftools-component "purple" "2.17" "purple-v2-17/purple-2.17.jar"
+                      "0w54yp6h116s819j609w78pvz1p1a5vpzk6r3kzr44qkpjjr6pv7"))
+
+(define-public hmftools-strelka-post-process-v1.6
+  (hmftools-component "strelka-post-process" "1.6"
+                      "strelka-post-process-v1-6/strelka-post-process-1.6.jar"
+                      "0sy2xz8kvhzaal203assshhpp35kmydrz4qg16hawlpbxxmgx74d"))
+
 (define-public gridss-bin
   (package
     (name "gridss")
