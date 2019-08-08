@@ -3310,3 +3310,29 @@ based of those of Walter Zucchini.")
 categorical and continuous (time series) data, otherwise known as dependent
 mixture models.")
    (license license:gpl2+)))
+
+(define-public r-rnmf
+  (package
+   (name "r-rnmf")
+   (version "0.5.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "rNMF" version))
+            (sha256
+             (base32
+              "1nz6h0j5ywdh48m0swmhp34hbkycd7n13rclrxaw85qi9wc42597"))))
+   (properties
+    `((upstream-name . "rNMF")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-knitr" ,r-knitr)
+      ("r-nnls" ,r-nnls)))
+   (home-page "https://cran.r-project.org/web/packages/rNMF")
+   (synopsis "Robust Nonnegative Matrix Factorization")
+   (description
+    "An implementation of robust nonnegative matrix factorization (rNMF).  The
+rNMF algorithm decomposes a nonnegative high dimension data matrix into the
+product of two low rank nonnegative matrices, while detecting and trimming
+outliers.  The main function is rnmf().  The package also includes a
+visualization tool, see(), that arranges and prints vectorized images.")
+   (license license:gpl2+)))
