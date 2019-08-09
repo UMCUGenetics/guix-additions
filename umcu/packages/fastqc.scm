@@ -22,6 +22,7 @@
   #:use-module (guix download)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
+  #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages java)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages compression))
@@ -77,3 +78,16 @@ systematic processing of large numbers of files.")
     ;; FastQC is licensed GPLv3+, but one of its dependencies (JHDF5) is
     ;; licensed ASL2.0.
     (license (list license:gpl3+ license:asl2.0))))
+
+(define-public fastqc-0.11.8
+  (package (inherit fastqc)
+    (name "fastqc")
+    (version "0.11.8")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://github.com/s-andrews/FastQC/archive/v"
+                           version ".zip"))
+       (sha256
+        (base32
+         "1cbbwpdxhpv4b731k9wycibx9dnisz7w4bwn9yvjsh7bj2zszmjw"))))))
