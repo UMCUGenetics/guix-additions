@@ -62,6 +62,7 @@
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages xorg)
+  #:use-module (gnu packages nss)
   #:use-module (umcu packages mysql)
   #:use-module (umcu packages boost))
 
