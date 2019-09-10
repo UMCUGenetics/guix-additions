@@ -42,7 +42,6 @@
   #:use-module (gnu packages tls)
   #:use-module (gnu packages databases)
   #:use-module (gnu packages time)
-  #:use-module (gnu packages monitoring)
   #:use-module (umcu packages vcf-explorer)
   #:use-module (umcu packages mysql))
 
