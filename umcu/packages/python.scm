@@ -40,6 +40,9 @@
   #:use-module (gnu packages rdf)
   #:use-module (gnu packages qt)
   #:use-module (gnu packages tls)
+  #:use-module (gnu packages databases)
+  #:use-module (gnu packages time)
+  #:use-module (gnu packages monitoring)
   #:use-module (umcu packages vcf-explorer)
   #:use-module (umcu packages mysql))
 
@@ -1077,3 +1080,69 @@ without any programming knowledge.")
       "Uniform Manifold Approximation and Projection")
     (license license:bsd-3)))
 
+(define-public python-certipy
+  (package
+   (name "python-certipy")
+   (version "0.1.3")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "certipy" version))
+            (sha256
+             (base32
+              "0n980gqpzh0fm58h3i4mi2i10wgj606lscm1r5sk60vbf6vh8mv9"))))
+   (build-system python-build-system)
+   (propagated-inputs
+    `(("python-pyopenssl" ,python-pyopenssl)
+      ("python-pytest" ,python-pytest)
+      ("python-pytest" ,python-pytest)))
+   (home-page "https://github.com/LLNL/certipy")
+   (synopsis "Utility to create and sign CAs and certificates")
+   (description "Utility to create and sign CAs and certificates")
+   (license license:bsd-3)))
+
+(define-public python-pamela
+  (package
+   (name "python-pamela")
+   (version "1.0.0")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "pamela" version))
+            (sha256
+             (base32
+              "0v5brdm3c1fzbd8wgai3d40k5pv437i6nfw1d2qv06vxxydkijb5"))))
+   (build-system python-build-system)
+   (home-page "https://github.com/minrk/pamela")
+   (synopsis "PAM interface using ctypes")
+   (description "PAM interface using ctypes")
+   (license license:expat)))
+
+(define-public python-jupyterhub
+  (package
+   (name "python-jupyterhub")
+   (version "1.0.0")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "jupyterhub" version))
+            (sha256
+             (base32
+              "0zx6gw9yhgki05j21p6x1x2sf5a2mg2c2mx0ii8rl6q4b98ilm1k"))))
+   (build-system python-build-system)
+   (arguments `(#:tests? #f))
+   (propagated-inputs
+    `(("python-alembic" ,python-alembic)
+      ("python-async-generator" ,python-async-generator)
+      ("python-certipy" ,python-certipy)
+      ("python-dateutil" ,python-dateutil)
+      ("python-entrypoints" ,python-entrypoints)
+      ("python-jinja2" ,python-jinja2)
+      ("python-oauthlib" ,python-oauthlib)
+      ("python-pamela" ,python-pamela)
+      ("python-prometheus-client" ,python-prometheus-client)
+      ("python-requests" ,python-requests)
+      ("python-sqlalchemy" ,python-sqlalchemy)
+      ("python-tornado" ,python-tornado)
+      ("python-traitlets" ,python-traitlets)))
+   (home-page "https://jupyter.org")
+   (synopsis "JupyterHub: A multi-user server for Jupyter notebooks")
+   (description "JupyterHub: A multi-user server for Jupyter notebooks")
+   (license license:bsd-3)))
