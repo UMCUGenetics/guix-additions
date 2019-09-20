@@ -53,7 +53,6 @@
   #:use-module (umcu packages circos)
   #:use-module (umcu packages contra)
   #:use-module (umcu packages fastqc)
-  #:use-module (umcu packages freebayes)
   #:use-module (umcu packages freec)
   #:use-module (umcu packages gatk)
   #:use-module (umcu packages genenetwork)
