@@ -28,6 +28,7 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
   #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages bioconductor)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages java)
   #:use-module (gnu packages statistics)

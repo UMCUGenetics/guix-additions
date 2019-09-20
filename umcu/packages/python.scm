@@ -31,6 +31,7 @@
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths)
+  #:use-module (gnu packages monitoring)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-web)
