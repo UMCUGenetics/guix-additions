@@ -190,11 +190,9 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.11.0")
+    (version "1.12.0")
     (source #f)
     (build-system gnu-build-system)
-    (propagated-inputs
-     `(("guix" ,guix)))
     (inputs
      `(("bash-full" ,bash-custom)
        ("git" ,git)))
@@ -218,7 +216,7 @@ guix_root=\"/gnu\"
 guix_additional=\"/gnu/repositories/guix-additions\"
 guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
-guix=\"~a/bin/guix\"
+guix=\"/gnu/profiles/base/bin/guix\"
 git=\"~a/bin/git\"
 coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
@@ -229,7 +227,7 @@ grep=\"~a/bin/grep\"
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
 
 # Use /gnu as state directory.
-export NIX_STATE_DIR=$guix_root
+export GUIX_STATE_DIRECTORY=$guix_root
 
 # Ensure the latest Guix packages are used.  Do not override
 # the user's customizations (if any).
@@ -315,7 +313,6 @@ elif [ \"$1\" == \"load-profile\" ]; then
 else
   ${guix} $@
 fi~%"
-                         (assoc-ref inputs "guix")
                          (assoc-ref inputs "git")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
