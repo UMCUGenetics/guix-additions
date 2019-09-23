@@ -33,6 +33,7 @@
   #:use-module (gnu packages curl)
   #:use-module (gnu packages gnupg)
   #:use-module (gnu packages guile)
+  #:use-module (gnu packages guile-xyz)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages rdf)
