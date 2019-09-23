@@ -3604,8 +3604,15 @@ REPORT_STATUS	~a"
                (("qsub -P") "qsub -m as -M $opt->{MAIL} -V -P")
                ;; Also apply the 5GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";")
-               ))))))
+                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";"))
+
+             ;; The GATK build does not seem to have a log4j driver available
+             ;; by default.  By forcing it on the CLASSPATH whenever the
+             ;; pipeline is started, we can avoid recompiling GATK.
+             (wrap-program (string-append bin-dir "/pipeline.pl")
+              `("CLASSPATH" ":" = (,(string-append
+                                     (assoc-ref %build-inputs "java-log4j-core")
+                                     "/share/java/log4j-core.jar")))))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
@@ -3645,6 +3652,7 @@ REPORT_STATUS	~a"
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
        ("circos" ,circos)
+       ("java-log4j-core" ,java-log4j-core)
        ("perl-autovivification" ,perl-autovivification)
        ("perl-bareword-filehandles" ,perl-bareword-filehandles)
        ("perl-file-copy-recursive" ,perl-file-copy-recursive)
