@@ -40,51 +40,6 @@
   #:use-module (gnu packages tex)
   #:use-module (umcu packages guix))
 
-(define-public sesame
-  (package
-   (name "sesame")
-   (version "0.0.1")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://www.roelj.com/sesame-" version ".tar.gz"))
-            (sha256
-             (base32 "1qapjjlkwwsk1cich8m467y7b73b17p3g39pkxvcplymwad6pvix"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; There are no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (add-after 'install 'wrap-executable
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let ((out            (assoc-ref outputs "out"))
-                  (load-path      (string-append
-                                   (assoc-ref outputs "out") "/share/guile/site/2.2:"
-                                   (getenv "GUILE_LOAD_PATH")))
-                  (compiled-path  (string-append
-                                   (assoc-ref outputs "out") "/lib/guile/2.2/site-ccache:"
-                                   (getenv "GUILE_LOAD_COMPILED_PATH"))))
-              (wrap-program (string-append out "/bin/sesame")
-               `("PATH" ":" = (,(getenv "PATH")))
-               `("GUILE_LOAD_PATH" ":" = (,load-path))
-               `("GUILE_LOAD_COMPILED_PATH" ":" = (,compiled-path))))
-            #t)))))
-   (native-inputs
-    `(("autoconf" ,autoconf)
-      ("automake" ,automake)
-      ("pkg-config" ,pkg-config)))
-   (inputs
-    `(("guile" ,guile-2.2)
-      ("guile-sparql" ,guile-sparql)
-      ("guile-json" ,guile-json)
-      ("curl" ,curl)
-      ("tar" ,tar)
-      ("gzip" ,gzip)))
-   (home-page #f)
-   (synopsis "")
-   (description "")
-   (license license:gpl3+)))
-
 (define-public hmf-glue
   (package
    (name "hmf-glue")
@@ -238,42 +193,3 @@ information into a MySQL database. ")
     (description "This package provides management tools for running graph
 database instances on Utrecht's HPC.")
 (license license:gpl3+)))
-
-(define-public sparqling-svs
-  (let ((commit "dd7fa837287f24f4c49b1be66b25acc8e8a3b140"))
-    (package
-     (name "sparqling-svs")
-     (version (string-append "0.0.1-" (string-take commit 7)))
-     (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/UMCUGenetics/sparqling-svs/archive/"
-                    commit ".tar.gz"))
-              (sha256
-               (base32 "0krdmalizwdhnh2qz67bb16ckzw0271nlqh6j8aqgjbx6cx4wyqf"))))
-     (build-system gnu-build-system)
-     (arguments
-      `(#:phases
-        (modify-phases %standard-phases
-          (add-before 'configure 'autoreconf
-            (lambda _ (system "autoreconf -vif"))))))
-     (native-inputs
-      `(("autoconf" ,autoconf)
-        ("automake" ,automake)
-        ("pkg-config" ,pkg-config)
-        ("texlive" ,texlive)))
-     (inputs
-      `(("guile" ,guile-2.2)
-        ("htslib" ,htslib)
-        ("libgcrypt" ,libgcrypt)
-        ("pkg-config" ,pkg-config)
-        ("raptor2" ,raptor2)
-        ("redland" ,redland)
-        ("rasqal" ,rasqal)
-        ("zlib" ,zlib)
-        ("xz" ,xz)))
-     (home-page "https://github.com/UMCUGenetics/sparqling-svs")
-     (synopsis "Tools to use SPARQL to analyze genomic structural variation")
-     (description "This package provides various tools to extract RDF triples
-from genomic data formats.")
-     (license license:gpl3+))))
