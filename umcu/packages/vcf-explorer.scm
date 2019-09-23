@@ -48,6 +48,3 @@
     (synopsis "Simple framework for creating REST APIs")
     (description "Simple framework for creating REST APIs")
     (license license:bsd-3)))
-
-(define-public python2-flask-restful
-  (package-with-python2 python-flask-restful))
