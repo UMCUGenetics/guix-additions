@@ -120,44 +120,6 @@ gene/transcript structures in viewports of the grid graphics package.  This
 results in genomic information plotted together with your data.")
     (license license:artistic2.0)))
 
-(define-public r-multtest
-  (package
-    (name "r-multtest")
-    (version "2.40.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "multtest" version))
-       (sha256
-        (base32
-         "0vy9wk1111qm69xy4r4n01b9rw60dsrcj2169jd45yiq63cdq7bv"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-survival" ,r-survival)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-biobase" ,r-biobase)
-       ("r-mass" ,r-mass)))
-    (home-page "http://bioconductor.org/packages/multtest")
-    (synopsis "Resampling-based multiple hypothesis testing")
-    (description
-     "Non-parametric bootstrap and permutation resampling-based multiple
-testing procedures (including empirical Bayes methods) for controlling the
-family-wise error rate (FWER), generalized family-wise error rate (gFWER),
-tail probability of the proportion of false positives (TPPFP), and false
-discovery rate (FDR).  Several choices of bootstrap-based null distribution
-are implemented (centered, centered and scaled, quantile-transformed).  
-Single-step and step-wise methods are available.  Tests based on a variety of
-t- and F-statistics (including t-statistics based on regression parameters
-from linear and survival models as well as those based on correlation
-parameters) are included.  When probing hypotheses with t-statistics, users
-may also select a potentially faster null distribution which is multivariate
-normal with mean zero and variance covariance matrix derived from the vector
-influence function.  Results are reported in terms of adjusted p-values,
-confidence regions and test statistic cutoffs.  The procedures are directly
-applicable to identifying differentially expressed genes in DNA microarray
-experiments.")
-    (license license:lgpl3)))
-
 (define-public r-funcisnp-data
   (package
    (name "r-funcisnp-data")
@@ -219,7 +181,7 @@ regions.")
 (define-public r-pasilla
   (package
     (name "r-pasilla")
-    (version "1.6.0")
+    (version "1.12.0")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -227,7 +189,7 @@ regions.")
                     "/src/contrib/pasilla_" version ".tar.gz"))
               (sha256
                (base32
-                "0h6ll2csja5vnmylazb1qklz7ybk5hn0nxgkvxhhsmyqk9w7gk6m"))))
+                "0yp96vzqbi0kgjsml9d77wg76j0j89f960p457a645hy7dnpfwrg"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-dexseq" ,r-dexseq)
@@ -309,60 +271,6 @@ novel or previously described variants in public databases, making it suitable
 for tasks beyond the scope of its original design.  Lastly, it can be used to
 interrogate any genome curated within Bioconductor (currently there are 22).")
    (license license:gpl3+)))
-
-(define-public r-motiv
-  (package
-   (name "r-motiv")
-   (version "1.40.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "MotIV" version))
-            (sha256
-             (base32 "088z3vyx5h2c4ll4sway01cd4h0x2ayhbv55f6l2kss71v6k6byf"))))
-   (properties `((upstream-name . "MotIV")))
-   (build-system r-build-system)
-   (inputs
-    `(("gsl" ,gsl)))
-   (propagated-inputs
-    `(("r-s4vectors" ,r-s4vectors)
-      ("r-iranges" ,r-iranges)
-      ("r-biostrings" ,r-biostrings)
-      ("r-rgadem" ,r-rgadem)
-      ("r-lattice" ,r-lattice)))
-   (home-page "http://bioconductor.org/packages/MotIV/")
-   (synopsis "Motif Identification and validation")
-   (description "This package makes use of STAMP for comparing a set of motifs
-to a given database (e.g. JASPAR).  It can also be used to visualize motifs,
-motif distributions, modules and filter motifs.")
-   (license license:gpl2)))
-
-(define-public r-motifstack
-  (package
-   (name "r-motifstack")
-   (version "1.28.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "motifStack" version))
-            (sha256
-             (base32 "0qbv5pvn1g9xfn221vqjmp9vfxpkda1wxkn0kyn2nqyb80d4jf9f"))))
-   (properties `((upstream-name . "motifStack")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-grimport" ,r-grimport)
-      ("r-motiv" ,r-motiv)
-      ("r-ade4" ,r-ade4)
-      ("r-scales" ,r-scales)
-      ("r-htmlwidgets" ,r-htmlwidgets)
-      ("r-xml" ,r-xml)
-      ("r-biostrings" ,r-biostrings)))
-   (home-page "http://bioconductor.org/packages/motifStack/")
-   (synopsis "Plot stacked logos for DNA, RNA, and amino acid sequence")
-   (description "This package is designed for graphic representation of
-multiple motifs with different similarity scores.  It works with both DNA/RNA
-sequence motif and amino acid sequence motif.  In addition, it provides the
-flexibility for users to customize the graphic parameters such as the font type
-and symbol colors.")
-   (license license:gpl2+)))
 
 (define-public r-snplocs.hsapiens.dbsnp144.grch37
   (package
@@ -759,30 +667,6 @@ taurus (UCSC version bosTau8).")
     (description "This package provides functions to plot data associated with
 arbitrary genomic intervals along chromosomal ideogram.")
     (license license:artistic2.0)))
-
-(define-public r-readxl
-  (package
-   (name "r-readxl")
-   (version "1.3.1")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "readxl" version))
-            (sha256
-             (base32
-              "15mambxr8c7k2ikdfsl1w3vxvm54dsnk0cl1qvks6iig7rql3d14"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-cellranger" ,r-cellranger)
-      ("r-rcpp" ,r-rcpp)
-      ("r-progress" ,r-progress)
-      ("r-tibble" ,r-tibble)))
-   (home-page "http://readxl.tidyverse.org")
-   (synopsis "Read excel files")
-   (description "Import excel files into R.  Supports '.xls' via the embedded
-'libxls' C library <https://sourceforge.net/projects/libxls/> and '.xlsx' via
-the embedded 'RapidXML' C++ library <https://rapidxml.sourceforge.net>.  Works
-on Windows, Mac and Linux without external dependencies.")
-   (license license:gpl3)))
 
 (define-public r-ggpmisc
   (package
@@ -1273,29 +1157,6 @@ for each cluster in a dendrogram.")
     (description
       "This package provides a collection of open source libraries for numerical computing (numerical integration, optimization, etc.) and their integration with 'Rcpp'.")
     (license license:gpl2+)))
-
-(define-public r-proc
-  (package
-    (name "r-proc")
-    (version "1.15.3")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (cran-uri "pROC" version))
-        (sha256
-          (base32
-            "1jx8af9p6sxbypqvj1cci7q9sbyaw310inbjxibjcr3acj59h45h"))))
-    (properties `((upstream-name . "pROC")))
-    (build-system r-build-system)
-    (propagated-inputs
-      `(("r-ggplot2" ,r-ggplot2)
-        ("r-plyr" ,r-plyr)
-        ("r-rcpp" ,r-rcpp)))
-    (home-page "http://expasy.org/tools/pROC/")
-    (synopsis "Display and Analyze ROC Curves")
-    (description
-      "Tools for visualizing, smoothing and comparing receiver operating characteristic (ROC curves). (Partial) area under the curve (AUC) can be compared with statistical tests based on U-statistics or bootstrap.  Confidence intervals can be computed for (p)AUC or ROC curves.")
-    (license license:lgpl3+)))
 
 (define-public r-decipher
   (package
