@@ -6,7 +6,8 @@
   #:use-module (guix build-system python)
   #:use-module (gnu packages base)
   #:use-module (gnu packages python-xyz)
-  #:use-module (gnu packages python))
+  #:use-module (gnu packages python)
+  #:use-module (gnu packages sphinx))
 
 (define-public python2-pyvcf
   (package
