@@ -71,11 +71,11 @@
    (native-inputs
     `(("which" ,which)))
    (inputs
-    `(("python" ,python-3.6)
+    `(("python" ,python-3)
       ("python-setuptools" ,python-setuptools)
       ("python-cython" ,python-cython)
       ("hdf5" ,hdf5)
-      ("gcc" ,gcc-6)))
+      ("gcc" ,gcc-9)))
    (propagated-inputs
     `(("python-dateutil" ,python-dateutil)))
    (home-page "https://github.com/mateidavid/fast5")
