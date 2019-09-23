@@ -25,6 +25,7 @@
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages bioinformatics))
 
