@@ -83,13 +83,13 @@ utility operations.")
 (define-public r-gviz
   (package
     (name "r-gviz")
-    (version "1.22.1")
+    (version "1.28.3")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "Gviz" version))
               (sha256
                (base32
-                "182f88s18vx7wkd6s4sy4bvrkn81733ha9pfiifya92c2ipb6jan"))))
+                "0347r1ly0vzpilflzbyzsjdf4cday294lw3fxzx61clblrmws1ki"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-s4vectors" ,r-s4vectors)
@@ -120,111 +120,17 @@ gene/transcript structures in viewports of the grid graphics package.  This
 results in genomic information plotted together with your data.")
     (license license:artistic2.0)))
 
-(define-public r-amap
-  (package
-    (name "r-amap")
-    (version "0.8-14")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "amap" version))
-              (sha256
-               (base32
-                "1dz37z9v4zvyvqrs4xvpfv468jwvpxav60qn2w0049bw8llj6xdl"))))
-    (build-system r-build-system)
-    (inputs
-     `(("gfortran" ,gfortran)))
-    (home-page "http://mulcyber.toulouse.inra.fr/projects/amap/")
-    (synopsis "Another multidimensional analysis package")
-    (description "Tools for clustering and principal component analysis (with
-robust methods, and parallelized functions).")
-    (license license:gpl2+)))
-
-(define-public r-diffbind
-  (package
-    (name "r-diffbind")
-    (version "2.6.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "DiffBind" version))
-       (sha256
-        (base32
-         "1i6s1hxhcw0x7c2mhi297dcq89d0r4j30k83gxg27yaxjswni4b5"))))
-    (properties `((upstream-name . "DiffBind")))
-    (build-system r-build-system)
-    (inputs
-     `(("zlib" ,zlib)))
-    (propagated-inputs
-     `(("r-amap" ,r-amap)
-       ("r-biocparallel" ,r-biocparallel)
-       ("r-deseq2" ,r-deseq2)
-       ("r-dplyr" ,r-dplyr)
-       ("r-edger" ,r-edger)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-ggrepel" ,r-ggrepel)
-       ("r-gplots" ,r-gplots)
-       ("r-iranges" ,r-iranges)
-       ("r-lattice" ,r-lattice)
-       ("r-limma" ,r-limma)
-       ("r-locfit" ,r-locfit)
-       ("r-rcolorbrewer" , r-rcolorbrewer)
-       ("r-rcpp" ,r-rcpp)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-systempiper" ,r-systempiper)
-       ("r-zlibbioc" ,r-zlibbioc)))
-    (home-page "http://bioconductor.org/packages/DiffBind")
-    (synopsis "Differential binding analysis of ChIP-Seq peak data")
-    (description
-     "This package computes differentially bound sites from multiple
-ChIP-seq experiments using affinity (quantitative) data.  Also enables
-occupancy (overlap) analysis and plotting functions.")
-    (license license:lgpl3+)))
-
-(define-public r-ripseeker
-  (package
-    (name "r-ripseeker")
-    (version "1.18.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "RIPSeeker" version))
-       (sha256
-        (base32
-         "0bqkzwrncww7il36273chkd3gfxmii7p566ycki9qij419pwr35y"))))
-    (properties `((upstream-name . "RIPSeeker")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-s4vectors" ,r-s4vectors)
-       ("r-iranges" ,r-iranges)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-summarizedexperiment" ,r-summarizedexperiment)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-rtracklayer" ,r-rtracklayer)))
-    (home-page "http://bioconductor.org/packages/RIPSeeker")
-    (synopsis
-     "Identifying protein-associated transcripts from RIP-seq experiments")
-    (description
-     "This package infers and discriminates RIP peaks from RIP-seq alignments
-using two-state HMM with negative binomial emission probability.  While
-RIPSeeker is specifically tailored for RIP-seq data analysis, it also provides
-a suite of bioinformatics tools integrated within this self-contained software
-package comprehensively addressing issues ranging from post-alignments
-processing to visualization and annotation.")
-    (license license:gpl2+)))
-
 (define-public r-multtest
   (package
     (name "r-multtest")
-    (version "2.34.0")
+    (version "2.40.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "multtest" version))
        (sha256
         (base32
-         "0n11rd49xl2vn3ldmfips7d3yb70l8npjcqsxyswr9ypjhgzkv9j"))))
+         "0vy9wk1111qm69xy4r4n01b9rw60dsrcj2169jd45yiq63cdq7bv"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-survival" ,r-survival)
@@ -252,88 +158,17 @@ applicable to identifying differentially expressed genes in DNA microarray
 experiments.")
     (license license:lgpl3)))
 
-(define-public r-regioner
-  (package
-    (name "r-regioner")
-    (version "1.10.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "regioneR" version))
-       (sha256
-        (base32
-         "1vprp3l929hwzmvgskbhawfgnrymwc9n2rxd16rgagnv1dxnjxfp"))))
-    (properties `((upstream-name . "regioneR")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-memoise" ,r-memoise)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-bsgenome" ,r-bsgenome)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-iranges" ,r-iranges)))
-    (home-page "http://bioconductor.org/packages/regioneR")
-    (synopsis
-     "Association analysis of genomic regions based on permutation tests")
-    (description
-     "This package offers a statistical framework based on customizable
-permutation tests to assess the association between genomic region sets
-and other genomic features.")
-    (license license:artistic2.0)))
-
-(define-public r-venndiagram
-  (package
-    (name "r-venndiagram")
-    (version "1.6.18")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "VennDiagram" version))
-              (sha256
-               (base32
-                "05vhsk5ylspa6b919gk9v4rbwm9sc4lsfq0wz308a8dilkg8cqpa"))))
-    (properties `((upstream-name . "VennDiagram")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-futile-logger" ,r-futile-logger)))
-    (home-page "http://cran.r-project.org/web/packages/VennDiagram")
-    (synopsis "Generate High-Resolution Venn and Euler Plots")
-    (description
-     "This package provides a set of functions to generate high-resolution
-Venn and Euler plots.  Includes handling for several special cases, including
-two-case scaling, and extensive customization of plot shape and structure.")
-    (license license:gpl2+)))
-
-(define-public r-marray
-  (package
-   (name "r-marray")
-   (version "1.56.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "marray" version))
-            (sha256
-             (base32 "14c93i86yc7jn4ax8p4l0z6v9xisw1bv7gzb4a0gbxhxn7mddaic"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biobase" ,r-biobase)
-      ("r-limma" ,r-limma)))
-   (home-page "http://bioconductor.org/packages/marray")
-   (synopsis "Exploratory analysis for two-color spotted microarray data")
-   (description "This package contains class definitions for two-color spotted
-microarray data.  Fuctions for data input, diagnostic plots, normalization and
-quality checking.")
-   (license license:lgpl2.0+)))
-
 (define-public r-funcisnp-data
   (package
    (name "r-funcisnp-data")
-   (version "1.14.0")
+   (version "1.20.0")
    (source (origin
             (method url-fetch)
             (uri (string-append "http://bioconductor.org/packages/release/"
                                 "data/experiment/src/contrib/FunciSNP.data_"
                                 version ".tar.gz"))
             (sha256
-             (base32 "0zsffyhd9nxsg3a34sd2mycbvs8dsw96pqn1jj7zw5whldjihjwh"))))
+             (base32 "1qj8x39kb6wanlr3zs81qjc9byy2pgrs9g7xbb8lj0125srkvzig"))))
    (properties `((upstream-name . "FunciSNP.data")))
    (build-system r-build-system)
    (propagated-inputs
@@ -349,12 +184,12 @@ order to identify functional SNP in coding or non-coding regions.")
 (define-public r-funcisnp
   (package
    (name "r-funcisnp")
-   (version "1.22.0")
+   (version "1.28.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "FunciSNP" version))
             (sha256
-             (base32 "1lgvca8npk1092dyl5jhx46ir46b3ab5jgshj5b19dg0bdzi0fj1"))))
+             (base32 "0hvmfwyrk3j0ilw1cgy7f72bs94b2yk3lv6yxb7iwz55am6kavmm"))))
    (properties `((upstream-name . "FunciSNP")))
    (build-system r-build-system)
    (propagated-inputs
@@ -407,88 +242,15 @@ article 'Conservation of an RNA regulatory map between Drosophila and mammals'
 by Brooks et al., Genome Research 2011.")
     (license license:lgpl2.1+)))
 
-(define-public r-grimport
-  (package
-    (name "r-grimport")
-    (version "0.9-0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "grImport" version))
-       (sha256
-        (base32
-         "1d8fd7502qj7cirjqdkr1qj51rylw2fz5hs06avfvc2dxs2xwfw1"))))
-    (properties `((upstream-name . "grImport")))
-    (build-system r-build-system)
-    (inputs
-     `(("ghostscript" ,ghostscript)))
-    (propagated-inputs
-     `(("r-xml" ,r-xml)))
-    (home-page "http://cran.r-project.org/web/packages/grImport")
-    (synopsis "Importing Vector Graphics")
-    (description "This package provides functions for converting, importing,
-and drawing PostScript pictures in R plots.")
-    (license license:gpl2+)))
-
-(define-public r-tfmpvalue
-  (package
-    (name "r-tfmpvalue")
-    (version "0.0.6")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "TFMPvalue" version))
-       (sha256
-        (base32
-         "1892jmgqywm0jp5l5k88brp4h8szkbi9bxi0v1jni1929qnsmqyf"))))
-    (properties
-     `((upstream-name . "TFMPvalue")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-rcpp" ,r-rcpp)))
-    (home-page "https://github.com/ge11232002/TFMPvalue")
-    (synopsis
-     "Efficient and accurate P-value computation for position weight matrices")
-    (description "In putative Transcription Factor Binding Sites (TFBSs)
-identification from sequence/alignments, we are interested in the significance
-of certain match score.  TFMPvalue provides the accurate calculation of P-value
-with score threshold for position weight matrices, or the score with given
-P-value.  This package is an interface to code originally made available by
-Helene Touzet and Jean-Stephane Varre, 2007, Algorithms Mol Biol:2, 15.")
-    (license license:gpl2)))
-
-(define-public r-splitstackshape
-  (package
-   (name "r-splitstackshape")
-   (version "1.4.2")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "splitstackshape" version))
-     (sha256
-      (base32
-       "0m9karfh0pcy0jj3dzq87vybxv9gmcrq5m2k7byxpki95apbrsmg"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-data-table" ,r-data-table)))
-   (home-page "http://github.com/mrdwab/splitstackshape")
-   (synopsis "Stack and Reshape Datasets After Splitting Concatenated Values")
-   (description "Online data collection tools like Google Forms often export
-multiple-response questions with data concatenated in cells.  The concat.split
-(cSplit) family of functions splits such data into separate cells.  The package
-also includes functions to stack groups of columns and to reshape wide data,
-even when the data are \"unbalanced\".")
-   (license license:gpl3)))
-
 (define-public r-motifdb
   (package
    (name "r-motifdb")
-   (version "1.20.0")
+   (version "1.26.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "MotifDb" version))
             (sha256
-             (base32 "16gk7sbrk188kv3mdsnvcnfzvd2dyxm7wmmwvcqz560x0xn0l0k9"))))
+             (base32 "05rxcxdkdpg0qg5qlylf0in9qhi16gpl8c9sfm4j2z3rvfxl0g60"))))
    (properties `((upstream-name . "MotifDb")))
    (build-system r-build-system)
    (propagated-inputs
@@ -507,12 +269,12 @@ frequency matrices from nine public sources, for multiple organisms.")
 (define-public r-motifbreakr
   (package
    (name "r-motifbreakr")
-   (version "1.8.0")
+   (version "1.14.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "motifbreakR" version))
             (sha256
-             (base32 "1jfff6jgvrylhnpyc5zq1fah33xq8vf7hypv22vg7js6m8bmcx5j"))))
+             (base32 "1dwbhkjmdk9syxhymhdsp3bkzcvm70p3nasy1bai9vv86gx57l14"))))
    (properties `((upstream-name . "motifbreakR")))
    (build-system r-build-system)
    (propagated-inputs
@@ -548,37 +310,15 @@ for tasks beyond the scope of its original design.  Lastly, it can be used to
 interrogate any genome curated within Bioconductor (currently there are 22).")
    (license license:gpl3+)))
 
-(define-public r-rgadem
-  (package
-   (name "r-rgadem")
-   (version "2.26.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "rGADEM" version))
-            (sha256
-             (base32 "1rbw8k20ri6jhqn9mgkjzyjp7s1z58bgxd5hb35zcpyd7fb2aifw"))))
-   (properties `((upstream-name . "rGADEM")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biostrings" ,r-biostrings)
-      ("r-iranges" ,r-iranges)
-      ("r-bsgenome" ,r-bsgenome)
-      ("r-seqlogo" ,r-seqlogo)))
-   (home-page "http://bioconductor.org/packages/rGADEM")
-   (synopsis "De novo motif discovery")
-   (description "This package is an efficient de novo motif discovery tool for
-large-scale genomic sequence data.")
-   (license license:artistic2.0)))
-
 (define-public r-motiv
   (package
    (name "r-motiv")
-   (version "1.34.0")
+   (version "1.40.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "MotIV" version))
             (sha256
-             (base32 "0lvkzbw328mxyp2pd95ymi1nbk78jx880h00jxwdf17a5rkikgh6"))))
+             (base32 "088z3vyx5h2c4ll4sway01cd4h0x2ayhbv55f6l2kss71v6k6byf"))))
    (properties `((upstream-name . "MotIV")))
    (build-system r-build-system)
    (inputs
@@ -599,12 +339,12 @@ motif distributions, modules and filter motifs.")
 (define-public r-motifstack
   (package
    (name "r-motifstack")
-   (version "1.22.0")
+   (version "1.28.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "motifStack" version))
             (sha256
-             (base32 "0jx2wny3pbfmlwn1ndd7hgka1gzvikad16ncynrxxz3rdfl859pf"))))
+             (base32 "0qbv5pvn1g9xfn221vqjmp9vfxpkda1wxkn0kyn2nqyb80d4jf9f"))))
    (properties `((upstream-name . "motifStack")))
    (build-system r-build-system)
    (propagated-inputs
@@ -713,7 +453,7 @@ exclusive and shared locking.")
 (define-public r-phantompeakqualtools
   (package
     (name "r-phantompeakqualtools")
-    (version "1.2")
+    (version "1.2.1.1")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -721,7 +461,7 @@ exclusive and shared locking.")
                     "archive/" version ".tar.gz"))
               (sha256
                (base32
-                "0s0nk9y7jb0gm1kvbcxn5n6aiavwlkc779myrnqm1wb51flcrjw6"))))
+                "0ag881jbhic5x9r87yk1p4687divyzggk7agqrnwh71npvy4a52b"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f
@@ -753,13 +493,13 @@ exclusive and shared locking.")
 (define-public r-fda
   (package
    (name "r-fda")
-   (version "2.4.7")
+   (version "2.4.8")
    (source (origin
             (method url-fetch)
             (uri (cran-uri "fda" version))
             (sha256
              (base32
-              "0371c32kxxvfdh18ldgc2p76dr2436ay0n9prdjwm9v0azp4rp9k"))))
+              "0n39rzbhg1hipzn51rzmbchn2358qgapg08iv7lmiqj5y7i9qns2"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-matrix" ,r-matrix)))
@@ -787,13 +527,13 @@ there were errors in the code.")
 (define-public r-lsd
   (package
    (name "r-lsd")
-   (version "3.0")
+   (version "4.0-0")
    (source (origin
             (method url-fetch)
             (uri (cran-uri "LSD" version))
             (sha256
              (base32
-              "069p33aw6iwikp82b7b8wa77wlyjqwr4hcwvrgaxgwqdgn6jjg3k"))))
+              "0fsp3pwrnnic9mzkd6yxa4bnxbvg68712lb20vd42wf6jb39r2h3"))))
    (properties `((upstream-name . "LSD")))
    (build-system r-build-system)
    (home-page "http://cran.r-project.org/web/packages/LSD")
@@ -806,12 +546,12 @@ there were errors in the code.")
 (define-public r-fourcseq
   (package
    (name "r-fourcseq")
-   (version "1.12.0")
+   (version "1.18.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "FourCSeq" version))
             (sha256
-             (base32 "08fq289m8g7fgmsrph1gq45q6zpfnrzpm0n4qyf2vc5hsdgnm4qh"))))
+             (base32 "15fz9y4v0ddj6qax329g52fa5d7y810yjn3bisqqw8vn92qvjdw3"))))
    (properties `((upstream-name . "FourCSeq")))
    (build-system r-build-system)
    (propagated-inputs
@@ -909,13 +649,13 @@ to group instances from the same class together.")
 (define-public r-ecp
   (package
     (name "r-ecp")
-    (version "3.1.0")
+    (version "3.1.1")
     (source (origin
               (method url-fetch)
               (uri (cran-uri "ecp" version))
               (sha256
                (base32
-                "0siq5acpy4wmqzm6zvpqj1m8a05hgk5jhb1clv06y40kqk5kjrap"))))
+                "0s0286ky1imhhs89bp1ylx8wvii55v7wzg1g49l03az64971kayj"))))
     (build-system r-build-system)
     (propagated-inputs `(("r-rcpp" ,r-rcpp)))
     (home-page "http://cran.r-project.org/web/packages/ecp")
@@ -931,13 +671,13 @@ of estimated change- points as well as other summary information.")
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
-    (version "1.8.0")
+    (version "1.12.1")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AneuFinder" version))
               (sha256
                (base32
-                "07xdqal5i0qpcgr4hqdfq0hpzj7kg0wvjcngidqq9k0zci8na8gh"))))
+                "0inj83p9jzdblhl9xlzz07iqs0b6xrz1mkm357h8krn5aj3ar0x4"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
@@ -999,13 +739,13 @@ taurus (UCSC version bosTau8).")
 (define-public r-ideoviz
   (package
     (name "r-ideoviz")
-    (version "1.12.0")
+    (version "1.20.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "IdeoViz" version))
               (sha256
                (base32
-                "1ihfxp4dngwk72nxw36w15d28cpz4y0qxagap4km76i51c9jm855"))))
+                "0lgvkahpfmwzvdicavyvsv76pwcadfrsg6i2k5zllpd41jcgfv9z"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-biobase" ,r-biobase)
@@ -1023,17 +763,18 @@ arbitrary genomic intervals along chromosomal ideogram.")
 (define-public r-readxl
   (package
    (name "r-readxl")
-   (version "1.0.0")
+   (version "1.3.1")
    (source (origin
             (method url-fetch)
             (uri (cran-uri "readxl" version))
             (sha256
              (base32
-              "1bf7gxw9r11m4llyymplxiaa4gzgyj4bwmwad5in756pzq3jzmpv"))))
+              "15mambxr8c7k2ikdfsl1w3vxvm54dsnk0cl1qvks6iig7rql3d14"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-cellranger" ,r-cellranger)
       ("r-rcpp" ,r-rcpp)
+      ("r-progress" ,r-progress)
       ("r-tibble" ,r-tibble)))
    (home-page "http://readxl.tidyverse.org")
    (synopsis "Read excel files")
@@ -1043,40 +784,23 @@ the embedded 'RapidXML' C++ library <https://rapidxml.sourceforge.net>.  Works
 on Windows, Mac and Linux without external dependencies.")
    (license license:gpl3)))
 
-(define-public r-polynom
-  (package
-   (name "r-polynom")
-   (version "1.3-9")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "polynom" version))
-     (sha256
-      (base32
-       "1s4xxv5rvpigawknvq27v9vzvs83phfsj5h8mim2lmf5bj950nnk"))))
-   (build-system r-build-system)
-   (home-page "http://cran.r-project.org/web/packages/polynom")
-   (synopsis "Functions for univariate polynomial manipulations")
-   (description "This package provides a collection of functions to implement a
-class for univariate polynomial manipulations.")
-   (license license:gpl2)))
-
 (define-public r-ggpmisc
   (package
    (name "r-ggpmisc")
-   (version "0.2.16")
+   (version "0.3.1")
    (source
     (origin
      (method url-fetch)
      (uri (cran-uri "ggpmisc" version))
      (sha256
       (base32
-       "1hq5zpc3zf4hq49ykrzrgj92cmh6gjsq6kpzcvzvnm5wyh9yy2iq"))))
+       "1kcjdpq7xz3609prbcf3ikj87wgcq9rk1pzhb62bh885plczsfz2"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-broom" ,r-broom)
       ("r-dplyr" ,r-dplyr)
       ("r-ggplot2" ,r-ggplot2)
+      ("r-gridextra" ,r-gridextra)
       ("r-lubridate" ,r-lubridate)
       ("r-mass" ,r-mass)
       ("r-plyr" ,r-plyr)
@@ -1099,54 +823,16 @@ for diagnosing what data are passed to compute_group() and
 @code{compute_panel()} functions and to geometries.")
    (license license:gpl2+)))
 
-(define-public r-repr
-  (package
-   (name "r-repr")
-   (version "0.12.0")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "repr" version))
-            (sha256
-             (base32
-              "1p6a2ryb5iaf4i6nn1iav26bh83wmvncwpk25hyrzd5rxich1bq3"))))
-   (build-system r-build-system)
-   (home-page "http://cran.r-project.org/web/packages/repr")
-   (synopsis "Serializable representations")
-   (description "String and binary representations of objects for several
-formats/mime types.")
-   (license license:gpl3)))
-
-(define-public r-irdisplay
-  (package
-  (name "r-irdisplay")
-  (version "0.4.4")
-  (source (origin
-           (method url-fetch)
-           (uri (cran-uri "IRdisplay" version))
-           (sha256
-            (base32
-             "19l4flvik8zw2pany8dpjbrh0bji6bag6pmclgwqnq80532hnfp8"))))
-  (properties
-   `((upstream-name . "IRdisplay")))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-repr" ,r-repr)))
-  (home-page "http://cran.r-project.org/web/packages/IRdisplay")
-  (synopsis "Jupyter display machinery")
-  (description "An interface to the rich display capabilities of 'Jupyter'
-front-ends.  Designed to be used from a running 'IRkernel'")
-  (license license:expat)))
-
 (define-public r-pbdzmq
   (package
    (name "r-pbdzmq")
-   (version "0.3-2")
+   (version "0.3-3")
    (source (origin
             (method url-fetch)
             (uri (cran-uri "pbdZMQ" version))
             (sha256
              (base32
-              "0dzwwffinn9bbb73dmmh88c374f9057bl0a8dq97fbv63j4a5qpc"))))
+              "1jkfcfhspvqra7vbllrvkz3jx8j7d0ang6zzcdjgpb7200sc29mf"))))
    (properties `((upstream-name . "pbdZMQ")))
    (build-system r-build-system)
    (inputs
@@ -1164,81 +850,16 @@ level R wrapper functions to easily utilize 'ZeroMQ'.  We mainly focus on
 interactive client/server programming frameworks.")
    (license license:gpl3)))
 
-(define-public irkernel
-  (package
-   (name "irkernel")
-   (version "0.8.11")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/IRkernel/IRkernel/archive/"
-                  version ".tar.gz"))
-            (file-name (string-append name "-" version ".tar.gz"))
-            (sha256
-             (base32
-              "0qf4ra3r772xq7l52nch51d4alywbp946y3hmdzpzrysbr1prs8m"))))
-   (build-system r-build-system)
-   ;; TODO: Registering the kernel so that jupyter automatically detects it doesn't work.
-   ;; (arguments
-   ;;  `(#:phases
-   ;;    (modify-phases %standard-phases
-   ;;      (add-after 'install 'register-kernel
-   ;;        (lambda _
-   ;;          (with-output-to-file "register-kernel.R"
-   ;;            (lambda _
-   ;;              (format #t "library(\"IRkernel\")~%IRkernel::installspec(user = FALSE)~%")))
-   ;;          (system "Rscript register-kernel.R"))))))
-   (inputs
-    `(("python-jupyter-client" ,python-jupyter-client)))
-   (propagated-inputs
-    `(("r-repr" ,r-repr)
-      ("r-evaluate" ,r-evaluate)
-      ("r-irdisplay" ,r-irdisplay)
-      ("r-pbdzmq" ,r-pbdzmq)
-      ("r-crayon" ,r-crayon)
-      ("r-jsonlite" ,r-jsonlite)
-      ("r-uuid" ,r-uuid)
-      ("r-digest" ,r-digest)))
-   (home-page "https://github.com/IRkernel/IRkernel")
-   (synopsis "Native R kernel for Jupyter notebooks")
-   (description "The R kernel for the Jupyter environment executes R code which
-the front-end submits to the kernel via the network.")
-   (license license:expat)))
-
-(define-public r-ggsignif
-  (package
-  (name "r-ggsignif")
-  (version "0.4.0")
-  (source (origin
-           (method url-fetch)
-           (uri (cran-uri "ggsignif" version))
-           (sha256
-            (base32
-             "1rn58d7pb3axk6chiihryykrzw76adaa2yiafq4d0j6qbhax78f7"))))
-  (build-system r-build-system)
-  (propagated-inputs `(("r-ggplot2" ,r-ggplot2)))
-  (home-page "https://github.com/const-ae/ggsignif")
-  (synopsis "Significance brackets for ggplot2")
-  (description
-    "Enrich your ggplots with group-wise comparisons.  This package provides an
-easy way to indicate if two groups are significantly different.  Commonly this
-is shown by a bracket on top connecting the groups of interest which itself is
-annotated with the level of significance (NS, *, **, ***).  The package provides
-a single layer (geom_signif()) that takes the groups for comparison and the test
-(@code{t.test()}, @code{wilcox.text()} etc.) as arguments and adds the
-annotation to the plot.")
-  (license license:gpl3)))
-
 (define-public r-coverageview
   (package
     (name "r-coverageview")
-    (version "1.16.0")
+    (version "1.22.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "CoverageView" version))
               (sha256
                (base32
-                "1091mxiclb3zhr48bdj7z8gi3v69l4w25cfpfbxhhp70rffn9xfr"))))
+                "19va5jyahk6wi3jsvryzqqrxmqxxlzs1vl5nhylsbg9yp4jfa3a1"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-s4vectors" ,r-s4vectors)
@@ -1259,13 +880,13 @@ how the coverage distributed across the genome.")
 (define-public r-bezier
   (package
     (name "r-bezier")
-    (version "1.1")
+    (version "1.1.2")
     (source (origin
               (method url-fetch)
               (uri (cran-uri "bezier" version))
               (sha256
                (base32
-                "1bhqf1zbshkf1x8mgqp4mkgdxk9jxi51xj6i47kqkyn9gbdzch0c"))))
+                "1vw5128v8h973xwa1fdm9cw2jvrldj87nd55lddlp3qsz3ag4br6"))))
     (build-system r-build-system)
     (home-page "http://cran.r-project.org/web/packages/bezier")
     (synopsis "Bezier Curve and Spline Toolkit")
@@ -1278,13 +899,13 @@ degree elevation and curve fitting.")
 (define-public r-karyoploter
   (package
     (name "r-karyoploter")
-    (version "1.4.2")
+    (version "1.10.5")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "karyoploteR" version))
               (sha256
                (base32
-                "18g6dm6bl5qyr50gydlvq948cmvg21iyb6l33cyh7p4haajf7xaa"))))
+                "13nbc618fbbhmiqgih6hcmwqx98k6s8y512yc79x5z7w8f8w6bc0"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-regioner" ,r-regioner)
@@ -1297,6 +918,7 @@ degree elevation and curve fitting.")
        ("r-s4vectors" ,r-s4vectors)
        ("r-biovizbase" ,r-biovizbase)
        ("r-digest" ,r-digest)
+       ("r-bamsignals" ,r-bamsignals)
        ("r-bezier" ,r-bezier)))
     (home-page "http://bioconductor.org/packages/karyoploteR/")
     (synopsis "Plot customizable linear genomes displaying arbitrary data")
@@ -1308,93 +930,17 @@ coordinates.  In addition to the provided data plotting functions, it is easy
 to add new ones.")
     (license license:artistic2.0)))
 
-(define-public r-massspecwavelet
-  (package
-    (name "r-massspecwavelet")
-    (version "1.46.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "MassSpecWavelet" version))
-              (sha256
-               (base32
-                "0phrh0w1vh6kgl4vph79f3vyd569pn9kl6n1s4hll0ri61j8l0hz"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-waveslim" ,r-waveslim)))
-    (home-page "http://bioconductor.org/packages/MassSpecWavelet")
-    (synopsis "Mass spectrum processing by wavelet-based algorithms")
-    (description "This package provides methods for processing mass
-spectrometry spectrum by using wavelet based algorithm.")
-    (license license:gpl2+)))
-
-(define-public r-xcms
-  (package
-    (name "r-xcms")
-    (version "3.2.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "xcms" version))
-              (sha256
-               (base32
-                "0xqsx6cppjn0kv2smjri6kd3z4d3djlgxyxmbfayvwk9h4wsv1mg"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biobase" ,r-biobase)
-       ("r-biocparallel" ,r-biocparallel)
-       ("r-msnbase" ,r-msnbase)
-       ("r-mzr" ,r-mzr)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-protgenerics" ,r-protgenerics)
-       ("r-lattice" ,r-lattice)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-plyr" ,r-plyr)
-       ("r-rann" ,r-rann)
-       ("r-multtest" ,r-multtest)
-       ("r-massspecwavelet" ,r-massspecwavelet)
-       ("r-s4vectors" ,r-s4vectors)))
-    (home-page "http://bioconductor.org/packages/xcms")
-    (synopsis "LC/MS and GC/MS Data Analysis")
-    (description "This package provides a framework for processing and
-visualization of chromatographically separated and single-spectra mass
-spectral data.  It imports from AIA/ANDI NetCDF, mzXML, mzData and mzML
-files.  It preprocesses data for high-throughput, untargeted analyte
-profiling.")
-    (license license:gpl2+)))
-
-(define-public r-libcoin
-  (package
-   (name "r-libcoin")
-   (version "1.0-1")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "libcoin" version))
-     (sha256
-      (base32
-       "1i38v0pq5snx9clhgfiymk6lq87h41pajhp2dvin30snnq0py6qq"))))
-   (build-system r-build-system)
-   (propagated-inputs `(("r-mvtnorm" ,r-mvtnorm)))
-   (home-page
-    "http://cran.r-project.org/web/packages/libcoin")
-   (synopsis "Linear test statistics for permutation inference")
-   (description
-    "This package provides basic infrastructure for linear test statistics and
-permutation inference in the framework of Strasser and Weber (1999).  This
-package must not be used by end-users.  CRAN package @code{coin} implements all
-user interfaces and is ready to be used by anyone.")
-   (license license:gpl2)))
-
 (define-public r-inum
   (package
    (name "r-inum")
-   (version "1.0-0")
+   (version "1.0-1")
    (source
     (origin
      (method url-fetch)
      (uri (cran-uri "inum" version))
      (sha256
       (base32
-       "1b013ak4d0iiwk5a0s7vvsl34d0hs881iq7zrvah4skb89x82cpm"))))
+       "16d09391l65w557dkzhhx1aqn1ljamcmjj3yh42pwq037k0r8brw"))))
    (build-system r-build-system)
    (propagated-inputs `(("r-libcoin" ,r-libcoin)))
    (home-page
@@ -1409,14 +955,14 @@ in data frames.")
 (define-public r-partykit
   (package
    (name "r-partykit")
-   (version "1.2-2")
+   (version "1.2-5")
    (source
     (origin
      (method url-fetch)
      (uri (cran-uri "partykit" version))
      (sha256
       (base32
-       "118zrf9015kh0gicma98ddm80qhicdlhri2h1nwz0wlng9hkyxbg"))))
+       "17324y5v65i0va2mvm26gl89s01xwcffg34fwq1mvylk1xwk13pl"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-formula" ,r-formula)
@@ -1466,13 +1012,13 @@ arbitrary user specified variable selection approaches.")
 (define-public r-mboost
   (package
    (name "r-mboost")
-   (version "2.9-0")
+   (version "2.9-1")
    (source (origin
             (method url-fetch)
             (uri (cran-uri "mboost" version))
             (sha256
              (base32
-              "0hfw69h3j4hwwrdinmazl4abhij2drki5jp9i9qz30gyy16wf0f2"))))
+              "02ia3y0fxfjl02fb1nnl93j640fyl18jm15cgxyybhf27w4jdvb7"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-lattice" ,r-lattice)
@@ -1493,14 +1039,14 @@ additive and interaction models to potentially high-dimensional data.")
 (define-public r-glinternet
   (package
    (name "r-glinternet")
-   (version "1.0.8")
+   (version "1.0.10")
    (source
     (origin
      (method url-fetch)
      (uri (cran-uri "glinternet" version))
      (sha256
       (base32
-       "06ak80j01cbrr6s8hmcc734z476rrqzib0xqjgv7c3jbw0api71y"))))
+       "15dikazmhs7md7j8p45f67h3947br18hsrjl74cjk10vazd0ihng"))))
    (build-system r-build-system)
    (home-page "http://web.stanford.edu/~hastie/Papers/glinternet_jcgs.pdf")
    (synopsis "Learning interactions via hierarchical group-lasso regularization")
@@ -1681,79 +1227,17 @@ for each cluster in a dendrogram.")
     "Model-based trees for subgroup analyses in clinical trials and model-based forests for the estimation and prediction of personalised treatment effects (personalised models).  Currently partitioning of linear models, lm(), generalised linear models, glm(), and Weibull models, survreg(), is supported.  Advanced plotting functionality is supported for the trees and a test for parameter heterogeneity is provided for the personalised models.  For details on model-based trees for subgroup analyses see Seibold, Zeileis and Hothorn (2016) <doi:10.1515/ijb-2015-0032>; for details on model-based forests for estimation of individual treatment effects see Seibold, Zeileis and Hothorn (2017) <doi:10.1177/0962280217693034>.")
   (license #f)))
 
-(define-public r-ihw
-  (package
-    (name "r-ihw")
-    (version "1.8.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "IHW" version))
-       (sha256
-        (base32
-         "0knsyckqlg86di06a9jwqwhk1pl09kmmzi0m0hrzy8msd9d6h9si"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-slam",r-slam)
-        ("r-lpsymphony" ,r-lpsymphony)
-        ("r-fdrtool" ,r-fdrtool)
-        ("r-biocgenerics" ,r-biocgenerics)))
-    (home-page "https://bioconductor.org/packages/IHW/")
-    (synopsis "Independent Hypothesis Weighting")
-    (description "Independent hypothesis weighting (IHW) is a multiple testing procedure that increases power compared to the method of Benjamini and Hochberg by assigning data-driven weights to each hypothesis. The input to IHW is a two-column table of p-values and covariates. The covariate can be any continuous-valued or categorical variable that is thought to be informative on the statistical properties of each hypothesis test, while it is independent of the p-value under the null hypothesis.")
-    (license license:artistic2.0)))
-
-(define-public r-slam
-  (package
-    (name "r-slam")
-    (version "0.1-43")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (cran-uri "slam" version))
-        (sha256
-          (base32
-            "0hy4qzngcgafxxr6ld7n9a9wy979ji998gpcc32vidwyab66dj5h"))))
-    (build-system r-build-system)
-    (home-page
-      "http://cran.r-project.org/web/packages/slam")
-    (synopsis
-      "Sparse Lightweight Arrays and Matrices")
-    (description
-      "Data structures and algorithms for sparse arrays and matrices, based on index arrays and simple triplet representations, respectively.")
-    (license license:gpl2)))
-
-
-(define-public r-lpsymphony
-  (package
-    (name "r-lpsymphony")
-    (version "1.8.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "lpsymphony" version))
-       (sha256
-        (base32
-         "1h0qql7dn8l1rivsa1912ab2wnf2xr6qq1wfpln5wbjz6va96jnr"))))
-    (build-system r-build-system)
-        (home-page "https://bioconductor.org/packages/lpsymphony/")
-  (inputs
-     `(("gfortran" ,gfortran)))
-  (synopsis "Symphony integer linear programming solver in R")
-    (description "This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to SYMPHONY, an open-source linear programming solver written in C++. The main difference between this package and Rsymphony is that it includes the solver source code (SYMPHONY version 5.6), while Rsymphony expects to find header and library files on the users' system. Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY. For Windows, precompiled DLLs are included in this package.")
-    (license #f)))
-
 (define-public r-apeglm
   (package
     (name "r-apeglm")
-    (version "1.2.0")
+    (version "1.6.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "apeglm" version))
        (sha256
         (base32
-         "0pmqj3vwqxasxg6v22whxm7hr6liwyzh8rxaaki7pm35a0y2w9i8"))))
+         "0jx1xf83rvnpnphdz3s15lvx8hchs5yg825jzn2bszm0brq6bsqv"))))
     (build-system r-build-system)
         (home-page "https://bioconductor.org/packages/apeglm/")
     (propagated-inputs
@@ -1770,14 +1254,14 @@ for each cluster in a dendrogram.")
 (define-public r-rcppnumerical
   (package
     (name "r-rcppnumerical")
-    (version "0.3-2")
+    (version "0.3-3")
     (source
       (origin
         (method url-fetch)
         (uri (cran-uri "RcppNumerical" version))
         (sha256
           (base32
-            "0j0hvwsbidahk2zx3zk7fhc6m9cca27iq3ivx7vdvggz8iqzszrz"))))
+            "15qwjfwx6yrh9sl2gndqfxw0b3iwnkr2nrgrccb6phpj3pdp7vsq"))))
     (properties `((upstream-name . "RcppNumerical")))
     (build-system r-build-system)
     (propagated-inputs
@@ -1793,14 +1277,14 @@ for each cluster in a dendrogram.")
 (define-public r-proc
   (package
     (name "r-proc")
-    (version "1.12.1")
+    (version "1.15.3")
     (source
       (origin
         (method url-fetch)
         (uri (cran-uri "pROC" version))
         (sha256
           (base32
-            "05ad69a6fxy9k903cw3h4q59ch2jv6qfg9yjdbw3cgiiazcafrlj"))))
+            "1jx8af9p6sxbypqvj1cci7q9sbyaw310inbjxibjcr3acj59h45h"))))
     (properties `((upstream-name . "pROC")))
     (build-system r-build-system)
     (propagated-inputs
@@ -1816,13 +1300,13 @@ for each cluster in a dendrogram.")
 (define-public r-decipher
   (package
     (name "r-decipher")
-    (version "2.8.1")
+    (version "2.12.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "DECIPHER" version))
               (sha256
                (base32
-                "1rzi0bmnd9xl79b9zsj4csgky61xa4aylma5lj9l9p3qvqc5gz4b"))))
+                "01wdp8jb7ywha24vzgzpmqrkk1z6iyavfbf4bva3rcsj6bkch604"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-biostrings" ,r-biostrings)
@@ -1859,13 +1343,13 @@ copies (shadows).")
 (define-public r-geneoverlap
   (package
   (name "r-geneoverlap")
-  (version "1.18.0")
+  (version "1.20.0")
   (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "GeneOverlap" version))
             (sha256
              (base32
-              "1p87ngk0lfbb86hwx63x4xjnw77xslh5a7136l1dwia24r9dccls"))))
+              "0nhikxwdd0zn8iw6rlg3dmh2gkrw8v9qzfnjabjj5a5qrd9xrv7v"))))
   (build-system r-build-system)
   (propagated-inputs
    `(("r-rcolorbrewer" ,r-rcolorbrewer)
@@ -1879,13 +1363,13 @@ and visualize the results.")
 (define-public r-chipseeker
   (package
   (name "r-chipseeker")
-  (version "1.18.0")
+  (version "1.20.0")
   (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "ChIPseeker" version))
             (sha256
              (base32
-              "08d8m4svnyki4pg0mwy17p7wi7anw9ba347ck36x8lzbjb8xcmwg"))))
+              "0141v87s9hmgfsnkh005ai5fyrxld0y88575xn3qzg38slpdwv0j"))))
   (build-system r-build-system)
   (propagated-inputs
    `(("r-annotationdbi" ,r-annotationdbi)
@@ -1922,403 +1406,16 @@ to TSS regions, genomic annotation, distance to TSS, and overlap of peaks or
 genes.")
   (license license:artistic2.0)))
 
-(define-public r-enrichplot
-  (package
-  (name "r-enrichplot")
-  (version "1.2.0")
-  (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "enrichplot" version))
-            (sha256
-             (base32
-              "0cxqfpy6py4k3z3lnlkiwx89r4ymfpdc4hm25dfpazqgjflz5is7"))))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-annotationdbi" ,r-annotationdbi)
-     ("r-cowplot" ,r-cowplot)
-     ("r-dose" ,r-dose)
-     ("r-europepmc" ,r-europepmc)
-     ("r-ggplot2" ,r-ggplot2)
-     ("r-ggplotify" ,r-ggplotify)
-     ("r-ggraph", r-ggraph)
-     ("r-ggridges" ,r-ggridges)
-     ("r-gosemsim" ,r-gosemsim)
-     ("r-gridextra" ,r-gridextra)
-     ("r-igraph" ,r-igraph)
-     ("r-purrr" ,r-purrr)
-     ("r-rcolorbrewer" ,r-rcolorbrewer)
-     ("r-reshape2" ,r-reshape2)
-     ("r-upsetr" ,r-upsetr)))
-  (home-page "http://bioconductor.org/packages/GeneOverlap/")
-  (synopsis "Visualization of Functional Enrichment Result")
-  (description "The 'enrichplot' package implements several visualization
-methods for interpreting functional enrichment results obtained from ORA
-or GSEA analysis. All the visualization methods are developed based on
-'ggplot2' graphics.")
-  (license license:artistic2.0)))
-
-(define-public r-dose
-  (package
-  (name "r-dose")
-  (version "3.8.0")
-  (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "DOSE" version))
-            (sha256
-             (base32
-              "1ipdyzwk8znqmm1gby7ib8g5zsgzdjpv420ld6jmp7kz9x9pk1yf"))))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-annotationdbi" ,r-annotationdbi)
-     ("r-biocparallel" ,r-biocparallel)
-     ("r-do-db" ,r-do-db)
-     ("r-fgsea" ,r-fgsea)
-     ("r-ggplot2" ,r-ggplot2)
-     ("r-gosemsim" ,r-gosemsim)
-     ("r-qvalue" ,r-qvalue-2.14.0)
-     ("r-reshape2" ,r-reshape2)
-     ("r-s4vectors" ,r-s4vectors)))
-  (home-page "https://cran.r-project.org/web/packages/grid/")
-  (synopsis "Disease Ontology Semantic and Enrichment analysis")
-  (description "This package implements five methods proposed by Resnik,
-Schlicker, Jiang, Lin and Wang respectively for measuring semantic similarities
-among DO terms and gene products. Enrichment analyses including hypergeometric model
-and gene set enrichment analysis are also implemented for discovering disease
-associations of high-throughput biological data.")
-  (license license:artistic2.0)))
-
-(define-public r-fgsea
-  (package
-    (name "r-fgsea")
-    (version "1.8.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "fgsea" version))
-              (sha256
-               (base32
-                "0cxxvlmg340l5l5fz4abbwppiri0ibg4navvq5k3wg511mz8ma2q"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-rcpp" ,r-rcpp)
-       ("r-data-table" ,r-data-table)
-       ("r-biocparallel" ,r-biocparallel)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gridextra" ,r-gridextra)
-       ("r-fastmatch" ,r-fastmatch)
-       ("r-matrix" ,r-matrix)))
-    (home-page "http://bioconductor.org/packages/fgsea/")
-    (synopsis "Fast Gene Set Enrichment Analysis")
-    (description "The package implements an algorithm for fast gene set
-enrichment analysis.  Using the fast algorithm allows to make more
-permutations and get more fine grained p-values, which allows to use
-accurate stantard approaches to multiple hypothesis correction.")
-    (license license:expat)))
-
-(define-public r-gosemsim
-  (package
-    (name "r-gosemsim")
-    (version "2.8.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "GOSemSim" version))
-              (sha256
-               (base32
-                "0ckihpy8jmgn2np1avprz76v9z7i5hqm2gj514c6dmmq3csbc7ib"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-annotationdbi" ,r-annotationdbi)
-       ("r-go-db" ,r-go-db)))
-    (home-page "http://bioconductor.org/packages/GOSemSim/")
-    (synopsis "GO-terms Semantic Similarity Measures")
-    (description "The semantic comparisons of Gene Ontology (GO)
-annotations provide quantitative ways to compute similarities between
-genes and gene groups, and have became important basis for many
-bioinformatics analysis approaches. GOSemSim is an R package for semantic
-similarity computation among GO terms, sets of GO terms, gene products
-and gene clusters.  GOSemSim implemented five methods proposed by
-Resnik, Schlicker, Jiang, Lin and Wang respectively.")
-    (license license:artistic2.0)))
-
-(define-public r-upsetr
-  (package
-    (name "r-upsetr")
-    (version "1.3.3")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "UpSetR" version))
-       (sha256
-        (base32
-         "08vj7l92b8fpqyqwxshll2mhk3yhgyr74axvr2lf29z78bapymhz"))))
-    (properties `((upstream-name . "UpSetR")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-ggplot2" ,r-ggplot2)
-       ("r-gridextra" ,r-gridextra)
-       ("r-plyr" ,r-plyr)
-       ("r-scales" ,r-scales)))
-    (home-page "http://github.com/hms-dbmi/UpSetR")
-    (synopsis "More Scalable Alternative to Venn and Euler Diagrams for Visualizing Intersecting Sets")
-    (description "Creates visualizations of intersecting sets using a
-novel matrix design, along with visualizations of several common set, element and
-attribute related tasks.")
-    (license license:expat)))
-
-(define-public r-urltools
-  (package
-    (name "r-urltools")
-    (version "1.7.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "urltools" version))
-       (sha256
-        (base32
-         "01h3fwk5mzicy2isvdla9r0zxrxhaf902xx4dg3f16a1l4fgi1a4"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-rcpp" ,r-rcpp) ("r-triebeard" ,r-triebeard)))
-    (home-page
-     "https://github.com/Ironholds/urltools/")
-    (synopsis
-     "Vectorised Tools for URL Handling and Parsing")
-    (description
-     "This package provides a toolkit for all URL-handling needs, including
-encoding and decoding, parsing, parameter extraction and modification.  All
-functions are designed to be both fast and entirely vectorised.  It is
-intended to be useful for people dealing with web-related datasets, such as
-server-side logs, although may be useful for other situations involving
-large sets of URLs.")
-    (license license:expat)))
-
-
-(define-public r-gridgraphics
-  (package
-    (name "r-gridgraphics")
-    (version "0.3-0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "gridGraphics" version))
-       (sha256
-        (base32
-         "1p94flvq5h3x817pl1m0aj3sim87x6zdbpv9xrgdnqw3rxfzwgqs"))))
-    (properties `((upstream-name . "gridGraphics")))
-    (build-system r-build-system)
-    (home-page "https://github.com/pmur002/gridgraphics")
-    (synopsis "Redraw Base Graphics Using 'grid' Graphics")
-    (description
-     "Functions to convert a page of plots drawn with the 'graphics' package
-into identical output drawn with the 'grid' package.  The result looks like
-the original 'graphics'-based plot, but consists of 'grid' grobs and viewports
-that can then be manipulated with 'grid' functions (e.g., edit grobs and
-revisit viewports).")
-    (license license:gpl2+)))
-
-(define-public r-ggplotify
-  (package
-    (name "r-ggplotify")
-    (version "0.0.3")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "ggplotify" version))
-       (sha256
-        (base32
-         "14hqlpvnaq5psz1ljcpw9isa06827rg3fm5c1dx159rsjfi56yby"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-ggplot2" ,r-ggplot2)
-       ("r-gridgraphics" ,r-gridgraphics)
-       ("r-rvcheck" ,r-rvcheck)))
-    (home-page "https://github.com/GuangchuangYu/ggplotify")
-    (synopsis "Convert Plot to 'grob' or 'ggplot' Object")
-    (description "Convert plot function call (using expression or formula)
-to 'grob' or 'ggplot' object that compatible to the 'grid' and 'ggplot2'
-ecosystem.  With this package, we are able to e.g.  using 'cowplot' to align
-plots produced by 'base' graphics, 'grid', 'lattice', 'vcd' etc.  by converting
-them to 'ggplot' objects.")
-    (license license:artistic2.0)))
-
-(define-public r-ggraph
-  (package
-  (name "r-ggraph")
-  (version "1.0.2")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (cran-uri "ggraph" version))
-      (sha256
-        (base32
-          "0fpmp326mryd1k1qvacjadksrnhbla8h960i18lmrimzrag7692c"))))
-  (build-system r-build-system)
-  (propagated-inputs
-    `(("r-digest" ,r-digest)
-      ("r-dplyr" ,r-dplyr)
-      ("r-ggforce" ,r-ggforce)
-      ("r-ggplot2" ,r-ggplot2)
-      ("r-ggrepel" ,r-ggrepel)
-      ("r-gtable" ,r-gtable)
-      ("r-igraph" ,r-igraph)
-      ("r-mass" ,r-mass)
-      ("r-plyr" ,r-plyr)
-      ("r-rcpp" ,r-rcpp)
-      ("r-scales" ,r-scales)
-      ("r-viridis" ,r-viridis)))
-  (home-page
-    "http://cran.r-project.org/web/packages/ggraph")
-  (synopsis
-    "An Implementation of Grammar of Graphics for Graphs and Networks")
-  (description
-    "The grammar of graphics as implemented in ggplot2 is a poor fit for
-graph and network visualizations due to its reliance on tabular data
-input.  ggraph is an extension of the ggplot2 API tailored to graph
-visualizations and provides the same flexible approach to building up
-plots layer by layer.")
-  (license license:gpl3)))
-
-(define-public r-ggforce
-  (package
-    (name "r-ggforce")
-    (version "0.1.3")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "ggforce" version))
-       (sha256
-        (base32
-         "0wydxmy6sfl84q94dd27m7cpg9iy6vgwzy3nr3m3cf3rfjk87sn4"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-dplyr" ,r-dplyr)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gtable" ,r-gtable)
-       ("r-lazyeval" ,r-lazyeval)
-       ("r-mass" ,r-mass)
-       ("r-rcpp" ,r-rcpp)
-       ("r-scales" ,r-scales)
-       ("r-tweenr" ,r-tweenr)
-       ("r-units" ,r-units)))
-    (home-page
-     "http://cran.r-project.org/web/packages/ggforce")
-    (synopsis "Accelerating 'ggplot2'")
-    (description
-     "The aim of 'ggplot2' is to aid in visual data investigations.  This focus
-has led to a lack of facilities for composing specialised plots. 'ggforce' aims
-to be a collection of mainly new stats and geoms that fills this gap.  All
-additional functionality is aimed to come through the official extension system
-so using 'ggforce' should be a stable experience.")
-    (license license:gpl2+)))
-
-(define-public r-rvcheck
-  (package
-    (name "r-rvcheck")
-    (version "0.1.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "rvcheck" version))
-       (sha256
-        (base32
-         "116cs1ih5m55jyp0f5whjvnbn4gpi4550qkbwzw0mq254x2r8vdg"))))
-    (build-system r-build-system)
-    (propagated-inputs `(("r-rlang" ,r-rlang)))
-    (home-page
-     "http://cran.r-project.org/web/packages/rvcheck")
-    (synopsis "R Package Version Check")
-    (description "Check latest release version of R and R package
-(both in 'CRAN', 'Bioconductor' or 'Github').")
-    (license license:artistic2.0)))
-
-(define-public r-tweenr
-  (package
-    (name "r-tweenr")
-    (version "1.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "tweenr" version))
-       (sha256
-        (base32
-         "0r98ln17fdzdda66rsj6lqwi843anl6m7c287kbzc4gkj931cifh"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-farver" ,r-farver)
-       ("r-magrittr" ,r-magrittr)
-       ("r-rcpp" ,r-rcpp)
-       ("r-rlang" ,r-rlang)))
-    (home-page "https://github.com/thomasp85/tweenr")
-    (synopsis
-     "Interpolate Data for Smooth Animations")
-    (description
-     "In order to create smooth animation between states of data, tweening is necessary.
-This package provides a range of functions for creating tweened data that can be used as
-basis for animation.  Furthermore it adds a number of vectorized interpolaters for
-common R data types such as numeric, date and colour.")
-    (license license:expat)))
-
-(define-public r-units
-  (package
-    (name "r-units")
-    (version "0.6-1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "units" version))
-       (sha256
-        (base32
-         "0gafl1d89gvmpndmkb9ng7dqhvnb5cx9igza0rjdrdn285icb07i"))))
-    (build-system r-build-system)
-    (inputs
-     `(("udunits" ,udunits)))
-    (propagated-inputs
-     `(("r-rcpp" ,r-rcpp)))
-    (home-page "https://github.com/r-quantities/units/")
-    (synopsis "Measurement Units for R Vectors")
-    (description
-     "Support for measurement units in R vectors, matrices and arrays: automatic
-propagation, conversion, derivation and simplification of units; raising errors
-in case of unit incompatibility.  Compatible with the POSIXct, Date and difftime
-classes.  Uses the UNIDATA udunits library and unit database for unit
-compatibility checking and conversion.")
-    (license license:gpl2)))
-
-(define-public r-farver
-  (package
-    (name "r-farver")
-    (version "1.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "farver" version))
-       (sha256
-        (base32
-         "18r98j9n2l6zjjx6gqvrjj6j19r52k0mrn72p4vyy97ag8fs8hb1"))))
-    (build-system r-build-system)
-    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
-    (home-page "https://github.com/thomasp85/farver")
-    (synopsis
-     "Vectorised Colour Conversion and Comparison")
-    (description
-     "The encoding of colour can be handled in many different ways, using
-different colour spaces.  As different colour spaces have different uses,
-efficient conversion between these representations are important.  The
-'farver' package provides a set of functions that gives access to very
-fast colour space conversion and comparisons implemented in C++, and
-offers 100-fold speed improvements over the 'convertColor' function in
-the 'grDevices' package.")
-    (license license:expat)))
-
 (define-public r-reactomepa
   (package
     (name "r-reactomepa")
-    (version "1.26.0")
+    (version "1.28.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "ReactomePA" version))
               (sha256
                (base32
-                "1kglvgn1sjnx9rm45lxp0ji19vzb8qlvjs01agsdbvkn19im5nkm"))))
+                "0nm765z24lnhwkh88kf799nlid7xhqy3ab36vc0wbg6kpkcpbxkm"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-annotationdbi" ,r-annotationdbi)
@@ -2360,13 +1457,13 @@ assembled using data from reactome.")
 (define-public r-graphite
   (package
     (name "r-graphite")
-    (version "1.28.0")
+    (version "1.30.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "graphite" version))
               (sha256
                (base32
-                "1qc0c7fn54fq00fkpmzcw34lgqj5z1ry8wfzapha11an123psfaw"))))
+                "1sp2lplwwi70spzx8hfxyk1397zp1fx752wpnb1aasz5f2hpfv03"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-annotationdbi" ,r-annotationdbi)
@@ -2381,59 +1478,28 @@ HumanCyc, KEGG, NCI, Panther, PathBank, PharmGKB, Reactome and SMPDB
 databases.")
     (license license:agpl3)))
 
-(define-public r-clusterprofiler
-  (package
-  (name "r-clusterprofiler")
-  (version "3.10.0")
-  (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "clusterProfiler" version))
-            (sha256
-             (base32
-              "1h38prkl4yvk319x3iq6ljad6p8m3s8yxv1zii82m1qjrjaxdmz5"))))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-annotationhub" ,r-annotationhub)
-     ("r-dose" ,r-dose)
-     ("r-later" ,r-later)
-     ("r-enrichplot" ,r-enrichplot)
-     ("r-ggplot2" ,r-ggplot2)
-     ("r-gosemsim" ,r-gosemsim)
-     ("r-magrittr" ,r-magrittr)
-     ("r-plyr" ,r-plyr)
-     ("r-qvalue" ,r-qvalue-2.14.0)
-     ("r-rvcheck" ,r-rvcheck)
-     ("r-tidyr" ,r-tidyr)
-     ("r-go-db" ,r-go-db)))
-  (home-page "http://bioconductor.org/packages/clusterProfiler/")
-  (synopsis "statistical analysis and visualization of functional profiles
- for genes and gene clusters")
-  (description "This package implements methods to analyze and visualize
- functional profiles (GO and KEGG) of gene and gene clusters.")
-  (license license:artistic2.0)))
-
 (define-public r-qvalue-2.14.0
   (package (inherit r-qvalue)
     (name "r-qvalue")
-    (version "2.14.0")
+    (version "2.16.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "qvalue" version))
               (sha256
                (base32
-                "03qxshqwwq1rj23p6pjrz08jm3ziikvy9badi4mz2rcwy2nz783a"))))))
+                "00mahhwb4n2s6nycwkdkjs2qgyyyi7hyrby3qr269krprr6q3lh5"))))))
 
 (define-public r-spdata
   (package
    (name "r-spdata")
-   (version "0.2.9.4")
+   (version "0.3.2")
    (source
     (origin
      (method url-fetch)
      (uri (cran-uri "spData" version))
      (sha256
       (base32
-       "039rf7c5npv0xhw46ja5igravi3l0zcg9vfkngza1vn4zwgg1yi8"))))
+       "190msrrpn226x27pcnck4ac34f9k4xcn26cyz2apdri2nzkr6zbw"))))
    (properties `((upstream-name . "spData")))
    (build-system r-build-system)
    (home-page "https://github.com/Nowosad/spData")
@@ -2449,42 +1515,17 @@ analysis techniques.  cycle_hire() and cycle_hire_osm(), for example, is
 designed to illustrate point pattern analysis techniques.")
    (license #f)))
 
-(define-public r-deldir
-  (package
-   (name "r-deldir")
-   (version "0.1-15")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "deldir" version))
-     (sha256
-      (base32
-       "0407wfnjcfg7ca6ani96bbg5ksx8jkyijaprv7n4g7w21311242p"))))
-   (build-system r-build-system)
-   (native-inputs `(("gfortran" ,gfortran)))
-   (home-page
-    "http://cran.r-project.org/web/packages/deldir")
-   (synopsis
-    "Delaunay Triangulation and Dirichlet (Voronoi) Tessellation")
-   (description
-    "Calculates the Delaunay triangulation and the Dirichlet or Voronoi
-tessellation (with respect to the entire plane) of a planar point set.
-Plots triangulations and tessellations in various ways.  Clips tessellations
-to sub-windows.  Calculates perimeters of tessellations.  Summarises
-information about the tiles of the tessellation.")
-   (license license:gpl2+)))
-
 (define-public r-spdep
   (package
    (name "r-spdep")
-   (version "0.8-1")
+   (version "1.1-3")
    (source
     (origin
      (method url-fetch)
      (uri (cran-uri "spdep" version))
      (sha256
       (base32
-       "1c13y9zjklqr6y87kra9i9mcf5n0zvd80iqmhg5l9bdzpd6x3h8b"))))
+       "1f8cjffqqc6rnb3n4qym70ca6nz2kvrsd3g587wrqdr79nnbwnrk"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-boot" ,r-boot)
@@ -2497,6 +1538,7 @@ information about the tiles of the tessellation.")
       ("r-matrix" ,r-matrix)
       ("r-nlme" ,r-nlme)
       ("r-sp" ,r-sp)
+      ("r-sf" ,r-sf)
       ("r-spdata" ,r-spdata)))
    (home-page "https://github.com/r-spatial/spdep/")
    (synopsis
@@ -2543,16 +1585,17 @@ electrical networks.")
 (define-public r-kegggraph
   (package
    (name "r-kegggraph")
-   (version "1.42.0")
+   (version "1.44.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "KEGGgraph" version))
             (sha256
              (base32
-              "0ry0pfqc61r0cz98j6zlyhh4qh6568l0w0j61xmysayyp046mgy3"))))
+              "1vrzblywl5vp3k4vvp9wx8r3479ahvxd4773bc9nrmlbriz8yz5w"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-xml", r-xml)
+      ("r-rcurl" ,r-rcurl)
       ("r-graph", r-graph)))
    (home-page "http://bioconductor.org/packages/KEGGgraph/")
    (synopsis "KEGGgraph: A graph approach to KEGG PATHWAY")
@@ -2566,13 +1609,13 @@ including parsing, graph operation, visualization and etc.")
 (define-public r-pathview
   (package
    (name "r-pathview")
-   (version "1.22.1")
+   (version "1.24.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "pathview" version))
             (sha256
              (base32
-              "19xvlk4sm0jf2xdl1cm2v8i1acxp8xk2yzpjgwv8r6x5h13zqpf0"))))
+              "12jswp402bwmw3hnia3y0lvklfjpldc0f2893ircqx76n9cm17d9"))))
    (build-system r-build-system)
    (propagated-inputs
     `(("r-kegggraph", r-kegggraph)
@@ -2595,156 +1638,17 @@ integrates with pathway and gene set (enrichment) analysis tools for
  large-scale and fully automated analysis.")
    (license license:gpl3)))
 
-(define-public r-future
-  (package
-    (name "r-future")
-    (version "1.11.1.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "future" version))
-       (sha256
-        (base32
-         "1s4lyqg4mm1drzc6czaalmhmxfjgp4nznb14ql5xzny9rprgz43i"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-digest" ,r-digest)
-       ("r-globals" ,r-globals)
-       ("r-listenv" ,r-listenv)))
-    (home-page
-     "https://github.com/HenrikBengtsson/future")
-    (synopsis
-     "Unified Parallel and Distributed Processing in R for Everyone")
-    (description
-     "The purpose of this package is to provide a lightweight and unified Future API for sequential and parallel processing of R expression via futures.  The simplest way to evaluate an expression in parallel is to use `x %<-% { expression }` with `plan(multiprocess)`.  This package implements sequential, multicore, multisession, and cluster futures.  With these, R expressions can be evaluated on the local machine, in parallel a set of local machines, or distributed on a mix of local and remote machines.  Extensions to this package implement additional backends for processing futures via compute cluster schedulers etc.  Because of its unified API, there is no need to modify any code in order switch from sequential on the local machine to, say, distributed processing on a remote compute cluster.  Another strength of this package is that global variables and functions are automatically identified and exported as needed, making it straightforward to tweak existing code to make use of futures.")
-    (license #f)))
-
-(define-public r-rsvd
-  (package
-    (name "r-rsvd")
-    (version "1.0.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "rsvd" version))
-       (sha256
-        (base32
-         "0vjhrvnkl9rmvl8sv2kac5sd10z3fgxymb676ynxzc2pmhydy3an"))))
-    (build-system r-build-system)
-    (propagated-inputs `(("r-matrix" ,r-matrix)))
-    (home-page "https://github.com/erichson/rSVD")
-    (synopsis
-     "Randomized Singular Value Decomposition")
-    (description
-     "Low-rank matrix decompositions are fundamental tools and widely used for data analysis, dimension reduction, and data compression.  Classically, highly accurate deterministic matrix algorithms are used for this task.  However, the emergence of large-scale data has severely challenged our computational ability to analyze big data.  The concept of randomness has been demonstrated as an effective strategy to quickly produce approximate answers to familiar problems such as the singular value decomposition (SVD).  The rsvd package provides several randomized matrix algorithms such as the randomized singular value decomposition (rsvd), randomized principal component analysis (rpca), randomized robust principal component analysis (rrpca), randomized interpolative decomposition (rid), and the randomized CUR decomposition (rcur).  In addition several plot functions are provided.  The methods are discussed in detail by Erichson et al. (2016) <arXiv:1608.02148>.")
-    (license license:gpl3+)))
-
-(define-public r-future-apply
-  (package
-    (name "r-future-apply")
-    (version "1.1.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "future.apply" version))
-       (sha256
-        (base32
-         "0b6v9rxvnnz13sydbgkapw71hx98fwdczjchgqnspjmq2340kdc0"))))
-    (properties `((upstream-name . "future.apply")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-future" ,r-future)
-       ("r-globals" ,r-globals)))
-    (home-page
-     "https://github.com/HenrikBengtsson/future.apply")
-    (synopsis
-     "Apply Function to Elements in Parallel using Futures")
-    (description
-     "Implementations of apply(), eapply(), lapply(), Map(), mapply(), replicate(), sapply(), tapply(), and vapply() that can be resolved using any future-supported backend, e.g.  parallel on the local machine or distributed on a compute cluster.  These future_*apply() functions come with the same pros and cons as the corresponding base-R *apply() functions but with the additional feature of being able to be processed via the future framework.")
-    (license license:gpl2+)))
-
-;ERROR: dependencies ?future?, ?future.apply?, ?ggrepel?, ?rsvd? are not available for package ?Seurat?
-
-(define-public r-seurat
-  (package
-    (name "r-seurat")
-    (version "3.0")
-    (source (origin
-             (method git-fetch)
-             (uri (git-reference
-                   (url "https://github.com/satijalab/seurat.git")
-                   (commit "0f5eddcf3e614456523a21c95ecdf9c981b631fd")))
-             (file-name (git-file-name name version))
-             (sha256
-              (base32
-               "02wrizxh8hsiq59pn0bz19ahd6y1d45raprgzws35yh3a799wmy4"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-ape" ,r-ape)
-       ("r-cluster" ,r-cluster)
-       ("r-cowplot" ,r-cowplot)
-       ("r-dosnow" ,r-dosnow)
-       ("r-dplyr" ,r-dplyr)
-       ("r-dtw" ,r-dtw)
-       ("r-fitdistrplus" ,r-fitdistrplus)
-       ("r-foreach" ,r-foreach)
-       ("r-future" ,r-future)
-       ("r-future-apply" ,r-future-apply)
-       ("r-fpc" ,r-fpc)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-ggrepel" ,r-ggrepel)
-       ("r-ggridges" ,r-ggridges)
-       ("r-gplots" ,r-gplots)
-       ("r-hdf5r" ,r-hdf5r)
-       ("r-hmisc" ,r-hmisc)
-       ("r-httr" ,r-httr)
-       ("r-ica" ,r-ica)
-       ("r-igraph" ,r-igraph)
-       ("r-irlba" ,r-irlba)
-       ("r-lars" ,r-lars)
-       ("r-lmtest" ,r-lmtest)
-       ("r-mass" ,r-mass)
-       ("r-matrix" ,r-matrix)
-       ("r-metap" ,r-metap)
-       ("r-mixtools" ,r-mixtools)
-       ("r-pbapply" ,r-pbapply)
-       ("r-plotly" ,r-plotly)
-       ("r-png" ,r-png)
-       ("r-rann" ,r-rann)
-       ("r-rsvd" ,r-rsvd)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-rcpp" ,r-rcpp)
-       ("r-rcppeigen" ,r-rcppeigen)
-       ("r-rcppprogress" ,r-rcppprogress)
-       ("r-reshape2" ,r-reshape2)
-       ("r-reticulate" ,r-reticulate)
-       ("r-rocr" ,r-rocr)
-       ("r-rtsne" ,r-rtsne)
-       ("r-sdmtools" ,r-sdmtools)
-       ("r-tidyr" ,r-tidyr)
-       ("r-tsne" ,r-tsne)))
-    (home-page "http://www.satijalab.org/seurat")
-    (synopsis "Seurat is an R toolkit for single cell genomics")
-    (description
-     "This package is an R package designed for QC, analysis, and
-exploration of single cell RNA-seq data.  It easily enables widely-used
-analytical techniques, including the identification of highly variable genes,
-dimensionality reduction; PCA, ICA, t-SNE, standard unsupervised clustering
-algorithms; density clustering, hierarchical clustering, k-means, and the
-discovery of differentially expressed genes and markers.")
-    (license license:gpl3)))
-
 (define-public r-deepsnv
   (package
    (name "r-deepsnv")
-   (version "1.28.0")
+   (version "1.30.0")
    (source
     (origin
      (method url-fetch)
      (uri (bioconductor-uri "deepSNV" version))
      (sha256
       (base32
-       "0maswzsfv9rw01v9alq9jbifc8lg6g2h65338v9chb05dkj03baj"))))
+       "004kay4zbw73fizrx1gim933jy7z8dq1g2qmywvvf0l2q06ffw9r"))))
    (properties `((upstream-name . "deepSNV")))
    (build-system r-build-system)
    (inputs
@@ -2852,17 +1756,18 @@ based of those of Walter Zucchini.")
 (define-public r-depmixs4
   (package
    (name "r-depmixs4")
-   (version "1.3-5")
+   (version "1.4-0")
    (source (origin
             (method url-fetch)
             (uri (cran-uri "depmixS4" version))
             (sha256
              (base32
-              "155bxfyhkmwz3asx1q8myvn3qjb3i2aq7pnw0r7kxygxzn071hkq"))))
+              "0v8hvkg7ia7c6a0x7rw5fddm06vv1n0kwjk7g0kj3g18chvpnvw2"))))
    (properties
     `((upstream-name . "depmixS4")))
    (propagated-inputs
     `(("r-nnet" ,r-nnet)
+      ("r-nlme" ,r-nlme)
       ("r-mass" ,r-mass)
       ("r-rsolnp" ,r-rsolnp)))
    (build-system r-build-system)
