@@ -918,17 +918,18 @@ tree exploration")
 (define-public python-sparqlkernel
   (package
     (name "python-sparqlkernel")
-    (version "1.1.0")
+    (version "1.2.0")
     (source (origin
               (method url-fetch)
               (uri (pypi-uri "sparqlkernel" version))
               (sha256
                (base32
-                "0zci9lpm3ki3lbg7rccs734lk3caamkvar5gjbr1jy5f94a76glk"))))
+                "1d3c1byqq5bvnazvmiqilwnjwx8a1wf0mwivm0gxnrkg6siqxsk3"))))
     (build-system python-build-system)
     (native-inputs
      `(("python-traitlets" ,python-traitlets)
        ("python-notebook" ,python-notebook)
+       ("python-ipykernel" ,python-ipykernel)
        ("python-html5lib" ,python-html5lib-0.9)))
     (propagated-inputs
      `(("python-sparqlwrapper" ,python-sparqlwrapper)
