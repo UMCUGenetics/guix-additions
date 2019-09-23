@@ -31,6 +31,7 @@
   #:use-module (gnu packages bioconductor)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages boost)
+  #:use-module (gnu packages c)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages image)
@@ -280,26 +281,6 @@ permutation tests to assess the association between genomic region sets
 and other genomic features.")
     (license license:artistic2.0)))
 
-(define-public r-idr
-  (package
-    (name "r-idr")
-    (version "1.2")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "idr" version))
-              (sha256
-               (base32
-                "05nvgw1xdg670bsjjrxkgd1mrdkciccpw4krn0zcgdf2r21dzgwb"))))
-    (build-system r-build-system)
-    (home-page "http://cran.r-project.org/web/packages/idr")
-    (synopsis "Irreproducible discovery rate")
-    (description
-     "This is a package for estimating the copula mixture model and plotting
-correspondence curves in \"Measuring reproducibility of high-throughput
-experiments\" (2011), Annals of Applied Statistics, Vol. 5, No. 3, 1752-1779,
-by Li, Brown, Huang, and Bickel")
-    (license license:gpl2+)))
-
 (define-public r-venndiagram
   (package
     (name "r-venndiagram")
@@ -393,27 +374,6 @@ BSgenome, GO.db, multtest and stat packages.")
 microarray data.  Fuctions for data input, diagnostic plots, normalization and
 quality checking.")
    (license license:lgpl2.0+)))
-
-(define-public r-snowfall
-  (package
-   (name "r-snowfall")
-   (version "1.84-6.1")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "snowfall" version))
-            (sha256
-             (base32 "13941rlw1jsdjsndp1plzj1cq5aqravizkrqn6l25r9im7rnsi2w"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-snow" ,r-snow)))
-   (home-page "http://cran.r-project.org/web/packages/snowfall")
-   (synopsis "Easier cluster computing (based on snow).")
-   (description "Usability wrapper around snow for easier development of
-parallel R programs.  This package offers e.g. extended error checks, and
-additional functions.  All functions work in sequential mode, too, if no
-cluster is present or wished.  Package is also designed as connector to
-the cluster management tool sfCluster, but can also used without it.")  
-   (license license:gpl2+)))
 
 (define-public r-funcisnp-data
   (package
@@ -1400,49 +1360,6 @@ coordinates.  In addition to the provided data plotting functions, it is easy
 to add new ones.")
     (license license:artistic2.0)))
 
-(define-public r-moments
-  (package
-  (name "r-moments")
-  (version "0.14")
-  (source (origin
-           (method url-fetch)
-           (uri (cran-uri "moments" version))
-           (sha256
-            (base32
-             "0f9y58w1hxcz4bqivirx25ywlmc80gbi6dfx5cnhkpdg1pk82fra"))))
-  (build-system r-build-system)
-  (home-page "http://www.r-project.org")
-  (synopsis "Moments, cumulants, skewness, kurtosis and related tests")
-  (description "Functions to calculate: moments, Pearson's kurtosis,
-Geary's kurtosis and skewness; tests related to them (Anscombe-Glynn,
-D'Agostino, Bonett-Seier).")
-  (license license:gpl2+)))
-
-(define-public r-waveslim
-  (package
-    (name "r-waveslim")
-    (version "1.7.5")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "waveslim" version))
-       (sha256
-        (base32
-         "0lqslkihgrd7rbihqhhk57m9vkbnfsznkvk8430cvbcsn7vridii"))))
-    (build-system r-build-system)
-    (native-inputs `(("gfortran" ,gfortran)))
-    (home-page "http://waveslim.blogspot.com")
-    (synopsis "Basic wavelet routines for up to three-dimensional signal processing")
-    (description
-     "Basic wavelet routines for time series (1D), image (2D) and array (3D)
-analysis.  The code provided here is based on wavelet methodology developed in
-Percival and Walden (2000); Gencay, Selcuk and Whitcher (2001); the dual-tree
-complex wavelet transform (DTCWT) from Kingsbury (1999, 2001) as implemented by
-Selesnick; and Hilbert wavelet pairs (Selesnick 2001, 2002).  All figures in chapters
-4-7 of GSW (2001) are reproducible using this package and R code available at the book
-website(s) below.")
-    (license license:bsd-3)))
-
 (define-public r-massspecwavelet
   (package
     (name "r-massspecwavelet")
@@ -1573,27 +1490,6 @@ new and improved reimplementations of conditional inference trees
 (@code{ctree()}) and model-based recursive partitioning (@code{mob()}) from
 the @code{party} package are provided based on the new infrastructure.")
    (license #f)))
-
-(define-public r-nnls
-  (package
-   (name "r-nnls")
-   (version "1.4")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "nnls" version))
-            (sha256
-             (base32
-              "07vcrrxvswrvfiha6f3ikn640yg0m2b4yd9lkmim1g0jmsmpfp8f"))))
-   (build-system r-build-system)
-   (native-inputs
-    `(("gfortran" ,gfortran)))
-   (home-page
-    "http://cran.r-project.org/web/packages/nnls")
-   (synopsis "The Lawson-Hanson algorithm for non-negative least squares")
-   (description "This package provides an R interface to the Lawson-Hanson
-implementation of an algorithm for non-negative least squares (NNLS).  It also
-allows the combination of non-negative and non-positive constraints.")
-   (license license:gpl2+)))
 
 (define-public r-stabs
   (package
@@ -1989,26 +1885,6 @@ for each cluster in a dendrogram.")
 biological sequences.")
     (license license:gpl3)))
 
-(define-public r-hash
-  (package
-   (name "r-hash")
-   (version "2.2.6")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "hash" version))
-            (sha256
-             (base32
-              "0mkx59bmni3b283znvbndnkbar85fzavzdfgmwrhskidsqcz34yz"))))
-   (build-system r-build-system)
-   (home-page "http://cran.r-project.org/web/packages/hash")
-   (synopsis "Implementation of hash/associated arrays/dictionaries")
-   (description
-    "This package implements a data structure similar to hashes in Perl and
-dictionaries in Python but with a purposefully R flavor.  For objects of
-appreciable size, access using hashes outperforms native named lists and
-vectors.")
-   (license license:gpl2+)))
-
 (define-public r-boruta
   (package
   (name "r-boruta")
@@ -2163,31 +2039,6 @@ and gene set enrichment analysis are also implemented for discovering disease
 associations of high-throughput biological data.")
   (license license:artistic2.0)))
 
-(define-public r-do-db
-  (package
-  (name "r-do-db")
-  (version "2.9")
-  (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "http://bioconductor.org/packages/"
-                  "release/data/annotation/src/contrib/DO.db_"
-                  version ".tar.gz"))
-            (sha256
-             (base32
-              "10bqqa124l61ivzy4mdd3z3ar9a6537qbxw23pc4y9w8a6dwnavn"))))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-annotationdbi" ,r-annotationdbi)))
-  (home-page "http://bioconductor.org/packages/DO.db/")
-  (synopsis "Set of annotation maps describing the entire Disease Ontology")
-  (description "This package implements five methods proposed by Resnik,
-Schlicker, Jiang, Lin and Wang respectively for measuring semantic similarities
-among DO terms and gene products. Enrichment analyses including hypergeometric
-model and gene set enrichment analysis are also implemented for discovering
-disease associations of high-throughput biological data.")
-  (license license:artistic2.0)))
-
 (define-public r-fgsea
   (package
     (name "r-fgsea")
@@ -2265,41 +2116,6 @@ novel matrix design, along with visualizations of several common set, element an
 attribute related tasks.")
     (license license:expat)))
 
-(define-public r-europepmc
-  (package
-    (name "r-europepmc")
-    (version "0.3")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "europepmc" version))
-       (sha256
-        (base32
-         "1ngqs1sqzkbwv98dd5z4cxj8bnz41wyd0g060a2vpqi3s99s4i2h"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-dplyr" ,r-dplyr)
-       ("r-httr" ,r-httr)
-       ("r-jsonlite" ,r-jsonlite)
-       ("r-plyr" ,r-plyr)
-       ("r-progress" ,r-progress)
-       ("r-purrr" ,r-purrr)
-       ("r-urltools" ,r-urltools)
-       ("r-xml2" ,r-xml2)))
-    (home-page "http://github.com/ropensci/europepmc/")
-    (synopsis "R Interface to the Europe PubMed Central RESTful Web Service")
-    (description "An R Client for the Europe PubMed Central RESTful Web Service
-(see <https://europepmc.org/RestfulWebService> for more information).  It gives
-access to both metadata on life science literature and open access full texts.
-Europe PMC indexes all PubMed content and other literature sources including
-Agricola, a bibliographic database of citations to the agricultural literature,
-or Biological Patents.  In addition to bibliographic metadata, the client allows
-users to fetch citations and reference lists.  Links between life-science
-literature and other EBI databases, including ENA, PDB or ChEMBL are also
-accessible.  No registration or API key is required.  See the vignettes for
-usage examples.")
-    (license license:gpl3)))
-
 (define-public r-urltools
   (package
     (name "r-urltools")
@@ -2327,27 +2143,6 @@ server-side logs, although may be useful for other situations involving
 large sets of URLs.")
     (license license:expat)))
 
-(define-public r-triebeard
-  (package
-    (name "r-triebeard")
-    (version "0.3.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "triebeard" version))
-       (sha256
-        (base32
-         "1hqyz57gph02c9fdc07lxz113bbklif3g18sw8jan6pakhhdc7dz"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-rcpp" ,r-rcpp)))
-    (home-page "https://github.com/Ironholds/triebeard/")
-    (synopsis "'Radix' Trees in 'Rcpp'")
-    (description "'Radix trees', or 'tries', are key-value data structures
-optimised for efficient lookups, similar in purpose to hash tables. 'triebeard'
-provides an implementation of 'radix trees' for use in R programming and in
-developing packages with 'Rcpp'.")
-    (license license:expat)))
 
 (define-public r-gridgraphics
   (package
@@ -2614,29 +2409,6 @@ enrichment analysis and several functions for visualization.")
 assembled using data from reactome.")
     (license license:cc-by4.0)))
 
-(define-public udunits
-  (package
-    (name "udunits")
-    (version "2.2.26")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-"
-                    version ".tar.gz"))
-              (sha256
-               (base32
-                "0v9mqw4drnkzkm57331ail6yvs9485jmi37s40lhvmf7r5lli3rn"))))
-    (build-system gnu-build-system)
-    (native-inputs
-     `(("libtool" ,libtool)))
-    (inputs
-     `(("expat" ,expat)))
-    (home-page "https://www.unidata.ucar.edu/downloads/udunits")
-    (synopsis "Programatic handling of units of physical quantities")
-    (description "The UDUNITS package from Unidata is a C-based package for the
-programatic handling of units of physical quantities.")
-    (license license:expat)))
-
 (define-public r-graphite
   (package
     (name "r-graphite")
@@ -2729,55 +2501,6 @@ analysis techniques.  cycle_hire() and cycle_hire_osm(), for example, is
 designed to illustrate point pattern analysis techniques.")
    (license #f)))
 
-(define-public r-learnbayes
-  (package
-   (name "r-learnbayes")
-   (version "2.15.1")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "LearnBayes" version))
-     (sha256
-      (base32
-       "0ch54v2zz2yyyk0lvn5rfikdmyz1qh9j1wk3585wl8v58mc0h4cv"))))
-   (properties `((upstream-name . "LearnBayes")))
-   (build-system r-build-system)
-   (home-page
-    "http://cran.r-project.org/web/packages/LearnBayes")
-   (synopsis
-    "Functions for Learning Bayesian Inference")
-   (description
-    "This package provides a collection of functions helpful in learning the
-basic tenets of Bayesian statistical inference.  It contains functions for
-summarizing basic one and two parameter posterior distributions and predictive
-distributions.  It contains MCMC algorithms for summarizing posterior
-distributions defined by the user.  It also contains functions for regression
-models, hierarchical models, Bayesian tests, and illustrations of Gibbs
-sampling.")
-   (license license:gpl2+)))
-
-(define-public r-gmodels
-  (package
-  (name "r-gmodels")
-  (version "2.18.1")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (cran-uri "gmodels" version))
-      (sha256
-        (base32
-          "0s8kd8krqk4kwv2zqxpsfy3w8qdwf5naf4b5l383vidq9sil0qb2"))))
-  (build-system r-build-system)
-  (propagated-inputs
-    `(("r-gdata" ,r-gdata) ("r-mass" ,r-mass)))
-  (home-page
-    "http://cran.r-project.org/web/packages/gmodels")
-  (synopsis
-    "Various R Programming Tools for Model Fitting")
-  (description
-    "Various R programming tools for model fitting.")
-  (license license:gpl2)))
-
 (define-public r-deldir
   (package
    (name "r-deldir")
@@ -2847,71 +2570,6 @@ spatial regression models, semi-parametric and Moran 'eigenvector' spatial
 filtering, 'GM SAR' error models, and generalized spatial two stage least
 squares models.")
    (license license:gpl2+)))
-
-(define-public r-adegenet
-  (package
-   (name "r-adegenet")
-   (version "2.1.1")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "adegenet" version))
-     (sha256
-      (base32
-       "0ynfblp0hbd3dp3k86fn1wyhqr28lk6hs2bg4q7gyf0sfdfzwhrh"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-ade4" ,r-ade4)
-      ("r-ape" ,r-ape)
-      ("r-boot" ,r-boot)
-      ("r-dplyr" ,r-dplyr)
-      ("r-ggplot2" ,r-ggplot2)
-      ("r-igraph" ,r-igraph)
-      ("r-mass" ,r-mass)
-      ("r-reshape2" ,r-reshape2)
-      ("r-seqinr" ,r-seqinr)
-      ("r-shiny" ,r-shiny)
-      ("r-spdep" ,r-spdep)
-      ("r-vegan" ,r-vegan)))
-   (home-page
-    "https://github.com/thibautjombart/adegenet")
-   (synopsis
-    "Exploratory Analysis of Genetic and Genomic Data")
-   (description
-    "Toolset for the exploration of genetic and genomic data.  Adegenet
-provides formal (S4) classes for storing and handling various genetic data,
-including genetic markers with varying ploidy and hierarchical population
-structure ('genind' class), alleles counts by populations ('genpop'), and
-genome-wide SNP data ('genlight').  It also implements original multivariate
-methods (DAPC, sPCA), graphics, statistical tests, simulation tools, distance
-and similarity measures, and several spatial methods.  A range of both
-empirical and simulated datasets is also provided to illustrate various
-methods.")
-   (license license:gpl2+)))
-
-(define-public r-hierfstat
-  (package
-  (name "r-hierfstat")
-  (version "0.04-22")
-  (source (origin
-           (method url-fetch)
-           (uri (cran-uri "hierfstat" version))
-           (sha256
-            (base32
-             "1fav2v2996v5kb1ffa6v5wxfm921syxg6as034vd3j4jfhdibyfx"))))
-  (build-system r-build-system)
-  (propagated-inputs
-   `(("r-ade4" ,r-ade4)
-     ("r-adegenet" ,r-adegenet)
-     ("r-gtools" ,r-gtools)))
-  (home-page "http://www.r-project.org")
-  (synopsis "Estimation and Tests of Hierarchical F-Statistics")
-  (description "Allows the estimation of hierarchical F-statistics from haploid
-or diploid genetic data with any numbers  of levels in the hierarchy, following
-the algorithm of Yang (Evolution, 1998, 52(4):950-956; <DOI:10.2307/2411227>.
-Functions are also given to test via randomisations the significance of each F
-and variance components, using the likelihood-ratio statistics G.")
-  (license license:gpl2+)))
 
 (define-public r-diagram
   (package
@@ -2988,50 +2646,6 @@ pathway graph with the mapped data.  In addition, Pathview also seamlessly
 integrates with pathway and gene set (enrichment) analysis tools for
  large-scale and fully automated analysis.")
    (license license:gpl3)))
-
-(define-public r-listenv
-  (package
-    (name "r-listenv")
-    (version "0.7.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "listenv" version))
-       (sha256
-        (base32
-         "0ma5jsri2zqkrlsm9nqpikl7imbwfy1glsmk13mblw0q245h49k1"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-r-rsp" ,r-r-rsp)))
-    (home-page
-     "https://github.com/HenrikBengtsson/listenv")
-    (synopsis
-     "Environments Behaving (Almost) as Lists")
-    (description
-     "List environments are environments that have list-like properties.  For instance, the elements of a list environment are ordered and can be accessed and iterated over using index subsetting, e.g. 'x <- listenv(a = 1, b = 2); for (i in seq_along(x)) x[[i]] <- x[[i]] ^ 2; y <- as.list(x)'.")
-    (license #f)))
-
-(define-public r-globals
-  (package
-    (name "r-globals")
-    (version "0.12.4")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (cran-uri "globals" version))
-       (sha256
-        (base32
-         "0szyv1ayyk31bh3xqlkj43020w44xq6s4rw2bxwizyjssxm3b1br"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-codetools" ,r-codetools)))
-    (home-page
-     "https://github.com/HenrikBengtsson/globals")
-    (synopsis
-     "Identify Global Objects in R Expressions")
-    (description
-     "Identifies global (\"unknown\" or \"free\") objects in R expressions by code inspection using various strategies, e.g.  conservative or liberal.  The objective of this package is to make it as simple as possible to identify global objects for the purpose of exporting them in distributed compute environments.")
-    (license #f)))
 
 (define-public r-future
   (package

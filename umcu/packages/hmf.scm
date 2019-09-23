@@ -69,7 +69,6 @@
   #:use-module (umcu packages snpeff)
   #:use-module (umcu packages strelka)
   #:use-module (umcu packages varscan)
-  #:use-module (umcu packages vcflib)
   #:use-module (umcu packages vcftools))
 
 (define (hmftools-component name version url-suffix hash)
@@ -116,9 +115,9 @@
   (hmftools-component "amber" "2.5" "amber-v2-5/amber-2.5.jar"
                       "1ym2525vn354clw2x6xk3ps0xrxhz9485sj8jw8iqb6vybzmkizp"))
 
-(define-public hmftools-amber-1.6
-  (hmftools-component "amber" "1.6" "amber-v1-6/amber-1.6.jar"
-                      "1xn29lv5cqydb0isnmhm6vs8g07c3y1k0ar03iyjha3zbcdgg7ry"))
+;(define-public hmftools-amber-1.6
+;  (hmftools-component "amber" "1.6" "amber-v1-6/amber-1.6.jar"
+;                      "1xn29lv5cqydb0isnmhm6vs8g07c3y1k0ar03iyjha3zbcdgg7ry"))
 
 (define-public hmftools-cobalt-1.4
   (hmftools-component "cobalt" "1.4" "cobalt-v1-4/cobalt-1.4.jar"
