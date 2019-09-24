@@ -2999,6 +2999,7 @@ REPORT_STATUS	~a"
              ;; The GATK build does not seem to have a log4j driver available
              ;; by default.  By forcing it on the CLASSPATH whenever the
              ;; pipeline is started, we can avoid recompiling GATK.
+             (setenv "PATH" (string-append (assoc-ref %build-inputs "bash") "/bin"))
              (wrap-program (string-append bin-dir "/pipeline.pl")
               `("CLASSPATH" ":" = (,(string-append
                                      (assoc-ref %build-inputs "java-log4j-core")
