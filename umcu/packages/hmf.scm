@@ -110,6 +110,10 @@
                  "Foundation's" name "."))
    (license license:expat)))
 
+(define-public hmftools-sv-linx-1.4
+  (hmftools-component "sv-linx" "1.4" "sv-linx-v1.4/sv-linx_1.4.jar"
+                      "1zhfhm9z0zzprbyp3cj34zflmfbjlf8ifhij83smr2h4n06lhdh0"))
+
 (define-public hmftools-amber-2.5
   (hmftools-component "amber" "2.5" "amber-v2-5/amber-2.5.jar"
                       "1ym2525vn354clw2x6xk3ps0xrxhz9485sj8jw8iqb6vybzmkizp"))
