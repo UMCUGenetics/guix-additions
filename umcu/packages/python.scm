@@ -1128,3 +1128,177 @@ for Python.  The design goals are:
    (synopsis "A bash kernel for Jupyter")
    (description "A bash kernel for Jupyter")
    (license license:expat)))
+
+(define-public python-pytest-check-links
+  (package
+    (name "python-pytest-check-links")
+    (version "0.3.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "pytest_check_links" version))
+        (sha256
+          (base32
+            "12x3wmrdzm6wgk0vz02hb769h68nr49q47w5q1pj95pc89hsa34v"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+      `(("python-docutils" ,python-docutils)
+        ("python-html5lib" ,python-html5lib)
+        ("python-nbconvert" ,python-nbconvert)
+        ("python-nbformat" ,python-nbformat)
+        ("python-pytest" ,python-pytest)
+        ("python-six" ,python-six)
+        ("python-pbr" ,python-pbr)))
+    (home-page
+      "https://github.com/minrk/pytest-check-links")
+    (synopsis "Check links in files")
+    (description "Check links in files")
+    (license #f)))
+
+(define-public python-jupyterlab-server
+  (package
+    (name "python-jupyterlab-server")
+    (version "1.0.6")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jupyterlab_server" version))
+        (sha256
+          (base32
+            "1bax8iqwcc5p02h5ysdc48zvx7ll5jfzfsybhb3lfvyfpwkpb5yh"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+      `(("python-jinja2" ,python-jinja2)
+        ("python-json5" ,python-json5)
+        ("python-jsonschema" ,python-jsonschema)
+        ("python-notebook" ,python-notebook)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-requests" ,python-requests)))
+    (home-page "https://jupyter.org")
+    (synopsis "JupyterLab Server")
+    (description "JupyterLab Server")
+    (license license:bsd-3)))
+
+(define-public python-jupyterlab
+  (package
+    (name "python-jupyterlab")
+    (version "1.1.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jupyterlab" version))
+        (sha256
+          (base32
+            "06n4idmxbbr364hfv8yr3m1b06f4hwv504rbhplm7882y1dyxb17"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+      `(("python-jinja2" ,python-jinja2)
+        ("python-jupyterlab-server"
+         ,python-jupyterlab-server)
+        ("python-notebook" ,python-notebook)
+        ("python-tornado" ,python-tornado)))
+    (native-inputs
+      `(("python-pytest" ,python-pytest)
+        ("python-pytest-check-links"
+         ,python-pytest-check-links)
+        ("python-requests" ,python-requests)))
+    (home-page "http://jupyter.org")
+    (synopsis
+      "The JupyterLab notebook server extension.")
+    (description
+      "The JupyterLab notebook server extension.")
+    (license license:bsd-3)))
+
+(define-public python-json5
+  (package
+    (name "python-json5")
+    (version "0.8.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "json5" version))
+        (sha256
+          (base32
+            "1c3k5blbhq7g2lnbap26a846ag5x19ivisd3wfzz6bzdl46hyjqj"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/dpranke/pyjson5")
+    (synopsis
+      "A Python implementation of the JSON5 data format.")
+    (description
+      "A Python implementation of the JSON5 data format.")
+    (license #f)))
+
+(define-public python-batchspawner
+  (package
+    (name "python-batchspawner")
+    (version "0.8.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (string-append 
+              "https://github.com/jupyterhub/batchspawner/archive/"
+              version ".tar.gz"))
+        (sha256
+          (base32
+            "0rz1aq5b5vh3hy6q2yj7f6wrvfkzvm5rgqjigggy01xqxm7y0j08"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+      `(("python-jupyterhub" ,python-jupyterhub)
+       ("python-pamela" ,python-pamela)))
+    (home-page "http://jupyter.org")
+    (synopsis
+      "Batchspawner: A spawner for Jupyterhub to spawn notebooks using batch resource managers.")
+    (description
+      "Batchspawner: A spawner for Jupyterhub to spawn notebooks using batch resource managers.")
+    (license license:bsd-3)))
+
+(define-public python-jupyterhub-ldapauthenticator
+  (package
+    (name "python-jupyterhub-ldapauthenticator")
+    (version "1.2.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "jupyterhub-ldapauthenticator" version))
+        (sha256
+          (base32
+            "083yvnb6csxjmhxa0kw17db23bxihnax64vcz34k0hc38vi2xfjv"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-jupyterhub" ,python-jupyterhub)
+        ("python-ldap3" ,python-ldap3)
+        ("python-tornado" ,python-tornado)
+        ("python-traitlets" ,python-traitlets)))
+    (home-page
+      "https://github.com/yuvipanda/ldapauthenticator")
+    (synopsis "LDAP Authenticator for JupyterHub")
+    (description "LDAP Authenticator for JupyterHub")
+    (license #f)))
+
+(define-public python-ldap3
+  (package
+    (name "python-ldap3")
+    (version "2.6.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (pypi-uri "ldap3" version))
+        (sha256
+          (base32
+            "0ag5xqlki6pjk3f50b8ar8vynx2fmkna7rfampv3kdgwg8z6gjr7"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (propagated-inputs
+      `(("python-pyasn1" ,python-pyasn1)))
+    (home-page "https://github.com/cannatag/ldap3")
+    (synopsis
+      "A strictly RFC 4510 conforming LDAP V3 pure Python client library")
+    (description
+      "A strictly RFC 4510 conforming LDAP V3 pure Python client library")
+    (license #f)))
