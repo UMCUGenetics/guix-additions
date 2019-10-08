@@ -1665,46 +1665,127 @@ outliers.  The main function is rnmf().  The package also includes a
 visualization tool, see(), that arranges and prints vectorized images.")
    (license license:gpl2+)))
 
+(define-public r-protgenerics-1.17.4
+  (let ((commit "8bc2a4193f416f62b35c2a346242d0e0152eaad0"))
+    (package
+      (name "r-protgenerics")
+      (version (string-append "1.17.4-" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/lgatto/ProtGenerics.git")
+               (commit commit)))
+         (sha256
+          (base32
+           "1qp7ryp6c0zc8ag469ffcsmcmkln8d99002qb282da5c1xqp9jzh"))))
+      (properties `((upstream-name . "ProtGenerics")))
+      (build-system r-build-system)
+      (home-page "https://github.com/lgatto/ProtGenerics")
+      (synopsis "S4 generic functions for proteomics infrastructure")
+      (description
+       "This package provides S4 generic functions needed by Bioconductor
+proteomics packages.")
+      (license license:artistic2.0))))
+
+(define-public r-mzr-2.19.6
+  (let ((commit "dddbebcea9ab8d1ce09b7bad5f3b9334831bd42b"))
+    (package
+      (name "r-mzr")
+      (version (string-append "2.19.6-" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/sneumann/mzR.git")
+               (commit commit)))
+         (sha256
+          (base32
+           "0ls50axlcyb3rlyn1j49wk07pk7x59hzddlcznr8mzkpwwh0519k"))
+         (modules '((guix build utils)))
+         (snippet
+          '(begin
+             (delete-file-recursively "src/boost")
+             (delete-file "R/zzz.R")
+             #t))))
+      (properties `((upstream-name . "mzR")))
+      (build-system r-build-system)
+      (arguments
+       `(#:phases
+         (modify-phases %standard-phases
+           (add-after 'unpack 'use-system-boost
+             (lambda _
+               (substitute* "src/Makevars"
+                 (("\\./boost/libs.*") "")
+                 (("ARCH_OBJS=" line)
+                  (string-append line
+                                 "\nARCH_LIBS=-lboost_system -lboost_regex \
+-lboost_iostreams -lboost_thread -lboost_filesystem -lboost_chrono\n")))
+               #t)))))
+      (inputs
+       `(;; XXX Boost 1.69 will not work here.
+         ("boost" ,boost-for-mysql) ; use this instead of the bundled boost sources
+         ("zlib" ,zlib)))
+      (propagated-inputs
+       `(("r-biobase" ,r-biobase)
+         ("r-biocgenerics" ,r-biocgenerics)
+         ("r-ncdf4" ,r-ncdf4)
+         ("r-protgenerics" ,r-protgenerics-1.17.4)
+         ("r-rcpp" ,r-rcpp)
+         ("r-rhdf5lib" ,r-rhdf5lib)
+         ("r-zlibbioc" ,r-zlibbioc)))
+      (home-page "https://github.com/sneumann/mzR/")
+      (synopsis "Parser for mass spectrometry data files")
+      (description
+       "The mzR package provides a unified API to the common file formats and
+parsers available for mass spectrometry data.  It comes with a wrapper for the
+ISB random access parser for mass spectrometry mzXML, mzData and mzML files.
+The package contains the original code written by the ISB, and a subset of the
+proteowizard library for mzML and mzIdentML.  The netCDF reading code has
+previously been used in XCMS.")
+      (license license:artistic2.0))))
+
 (define-public r-xcms
-  (package
-    (name "r-xcms")
-    (version "3.7.4")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/sneumann/xcms.git")
-             (commit "2180f6144a615911a53acf66525f50005d2beacc")))
-       (sha256
-        (base32
-         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-devtools" ,r-devtools)
-       ("r-biobase" ,r-biobase)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-biocparallel" ,r-biocparallel)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-dplyr" ,r-dplyr)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-lattice" ,r-lattice)
-       ("r-massspecwavelet" ,r-massspecwavelet)
-       ("r-msnbase" ,r-msnbase)
-       ("r-multtest" ,r-multtest)
-       ("r-variantannotation" ,r-variantannotation)
-       ("r-biostrings" ,r-biostrings)
-       ("r-mzr" ,r-mzr)
-       ("r-plyr" ,r-plyr)
-       ("r-protgenerics" ,r-protgenerics)
-       ("r-rann" ,r-rann)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-robustbase" ,r-robustbase)
-       ("r-s4vectors" ,r-s4vectors)))
-    (home-page "https://bioconductor.org/packages/xcms/")
-    (synopsis "LC/MS and GC/MS mass spectrometry data analysis")
-    (description
-     "This package provides a framework for processing and visualization of
+  (let ((commit "2180f6144a615911a53acf66525f50005d2beacc"))
+    (package
+      (name "r-xcms")
+      (version (string-append "3.7.4-" (string-take commit 9)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/sneumann/xcms.git")
+               (commit commit)))
+         (sha256
+          (base32
+           "0scyjmyhgmrl3x95xpnl5641aidw8s1n7r54pv2q7ibgr42d7hx9"))))
+      (build-system r-build-system)
+      (propagated-inputs
+       `(("r-devtools" ,r-devtools)
+         ("r-biobase" ,r-biobase)
+         ("r-biocgenerics" ,r-biocgenerics)
+         ("r-biocparallel" ,r-biocparallel)
+         ("r-rtracklayer" ,r-rtracklayer)
+         ("r-dplyr" ,r-dplyr)
+         ("r-genomicranges" ,r-genomicranges)
+         ("r-lattice" ,r-lattice)
+         ("r-massspecwavelet" ,r-massspecwavelet)
+         ("r-msnbase" ,r-msnbase)
+         ("r-multtest" ,r-multtest)
+         ("r-variantannotation" ,r-variantannotation)
+         ("r-biostrings" ,r-biostrings)
+         ("r-mzr" ,r-mzr-2.19.6)
+         ("r-plyr" ,r-plyr)
+         ("r-protgenerics" ,r-protgenerics-1.17.4)
+         ("r-rann" ,r-rann)
+         ("r-rcolorbrewer" ,r-rcolorbrewer)
+         ("r-robustbase" ,r-robustbase)
+         ("r-s4vectors" ,r-s4vectors)))
+      (home-page "https://bioconductor.org/packages/xcms/")
+      (synopsis "LC/MS and GC/MS mass spectrometry data analysis")
+      (description
+       "This package provides a framework for processing and visualization of
 chromatographically separated and single-spectra mass spectral data.  It
 imports from AIA/ANDI NetCDF, mzXML, mzData and mzML files.  It preprocesses
 data for high-throughput, untargeted analyte profiling. FIX FOR JOANNA")
-    (license license:gpl2+)))
+      (license license:gpl2+))))
