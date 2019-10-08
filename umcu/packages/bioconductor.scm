@@ -1664,3 +1664,47 @@ product of two low rank nonnegative matrices, while detecting and trimming
 outliers.  The main function is rnmf().  The package also includes a
 visualization tool, see(), that arranges and prints vectorized images.")
    (license license:gpl2+)))
+
+(define-public r-xcms
+  (package
+    (name "r-xcms")
+    (version "3.7.4")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/sneumann/xcms.git")
+             (commit "2180f6144a615911a53acf66525f50005d2beacc")))
+       (sha256
+        (base32
+         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-devtools" ,r-devtools)
+       ("r-biobase" ,r-biobase)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-dplyr" ,r-dplyr)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-lattice" ,r-lattice)
+       ("r-massspecwavelet" ,r-massspecwavelet)
+       ("r-msnbase" ,r-msnbase)
+       ("r-multtest" ,r-multtest)
+       ("r-variantannotation" ,r-variantannotation)
+       ("r-biostrings" ,r-biostrings)
+       ("r-mzr" ,r-mzr)
+       ("r-plyr" ,r-plyr)
+       ("r-protgenerics" ,r-protgenerics)
+       ("r-rann" ,r-rann)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-robustbase" ,r-robustbase)
+       ("r-s4vectors" ,r-s4vectors)))
+    (home-page "https://bioconductor.org/packages/xcms/")
+    (synopsis "LC/MS and GC/MS mass spectrometry data analysis")
+    (description
+     "This package provides a framework for processing and visualization of
+chromatographically separated and single-spectra mass spectral data.  It
+imports from AIA/ANDI NetCDF, mzXML, mzData and mzML files.  It preprocesses
+data for high-throughput, untargeted analyte profiling. FIX FOR JOANNA")
+    (license license:gpl2+)))
