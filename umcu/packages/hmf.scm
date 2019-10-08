@@ -130,6 +130,10 @@
   (hmftools-component "purple" "2.17" "purple-v2-17/purple-2.17.jar"
                       "0w54yp6h116s819j609w78pvz1p1a5vpzk6r3kzr44qkpjjr6pv7"))
 
+(define-public hmftools-purple-2.34
+  (hmftools-component "purple" "2.34" "purple-v2.34/purple-2.34.jar"
+                      "1ar33n32mvkkb1mlawlycfiv7y1084yrw8gzipqf41a530ml8sfl"))
+
 (define-public hmftools-strelka-post-process-v1.6
   (hmftools-component "strelka-post-process" "1.6"
                       "strelka-post-process-v1-6/strelka-post-process-1.6.jar"
