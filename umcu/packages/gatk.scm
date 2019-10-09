@@ -274,6 +274,20 @@ capable of taking on projects of any size.")
              (sha256
               (base32
                "1w46s2jh1q7h1r8shjw09y8yw27q15wlkviiqby3wv20haaqqjcg"))))
+    (arguments
+    `(#:tests? #f ; This is a binary package only, so no tests.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'unpack)
+        (delete 'configure) ; Nothing to configure.
+        (delete 'build) ; This is a binary package only.
+        (replace 'install
+          (lambda _
+            (let ((out (string-append (assoc-ref %outputs "out")
+                                      "/share/java/" ,name "/")))
+              (mkdir-p out)
+              (copy-file (assoc-ref %build-inputs "source")
+                         (string-append out "/GenomeAnalysisTK.jar"))))))))
     (propagated-inputs
      `(("r-gsalib" ,r-gsalib)
        ("r-ggplot2" ,r-ggplot2)
