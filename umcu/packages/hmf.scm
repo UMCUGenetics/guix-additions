@@ -3019,8 +3019,8 @@ REPORT_STATUS	~a"
        ("bwa" ,bwa-0.7.5a)
        ("bwa-0.7.17" ,bwa)
        ("damage-estimator" ,hmf-damage-estimator)
-       ("gatk" ,gatk-bin-3.8-0)
-       ("gatk-queue" ,gatk-queue-bin-3.8-0)
+       ("gatk" ,gatk-bin-3.8.1-no-intel-deflation)
+       ("gatk-queue" ,gatk-queue-bin-3.8-1)
        ("gridss" ,gridss-bin)
        ("hmftools" ,hmftools-for-pipeline-v4.8)
        ("htslib" ,htslib)
@@ -3110,7 +3110,7 @@ REPORT_STATUS	~a"
        ("util-linux" ,util-linux)
        ("grid-engine" ,grid-engine-core)
        ,@(package-propagated-inputs bammetrics)
-       ,@(package-propagated-inputs gatk-bin-3.8-0)))
+       ,@(package-propagated-inputs gatk-bin-3.8.1-no-intel-deflation)))
     ;; Bash, Perl and R are not propagated into the profile.  The programs are
     ;; invoked using their absolute link from the 'tools.ini' file.  We must
     ;; make sure that the environment variables for these interpreters are

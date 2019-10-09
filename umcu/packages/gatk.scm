@@ -264,6 +264,29 @@ capable of taking on projects of any size.")
        ("r-hmm" ,r-hmm)
        ("gatk-queue-bin-3.8-1" ,gatk-queue-bin-3.8-1)))))
 
+(define-public gatk-bin-3.8.1-no-intel-deflation
+  (package (inherit gatk-bin-3.8-0)
+    (name "gatk")
+    (version "3.8.1-aa8764d6c")
+    (source (origin
+             (method url-fetch)
+             (uri "https://www.roelj.com/gatk-3.8.1-aa8764d6c.jar")
+             (sha256
+              (base32
+               "1w46s2jh1q7h1r8shjw09y8yw27q15wlkviiqby3wv20haaqqjcg"))))
+    (propagated-inputs
+     `(("r-gsalib" ,r-gsalib)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-gplots" ,r-gplots)
+       ("r-reshape" ,r-reshape)
+       ("r-optparse" ,r-optparse)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-naturalsort" ,r-naturalsort)
+       ("r-dplyr" ,r-dplyr)
+       ("r-data-table" ,r-data-table)
+       ("r-hmm" ,r-hmm)
+       ("gatk-queue-bin-3.8-1" ,gatk-queue-bin-3.8-1)))))
+
 (define-public gatk-bin-3.4-46
   (package (inherit gatk-bin-3.4-0)
    (name "gatk")
