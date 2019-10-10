@@ -1848,7 +1848,13 @@ genomics data developed by the Hartwig Medical Foundation.")
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
       `(("r" ,r-minimal)
-        ("r-copynumber" ,r-copynumber)))
+        ("r-copynumber" ,r-copynumber)
+        ("r-gviz" ,r-gviz)
+        ("r-tidyr" ,r-tidyr)
+        ("r-dplyr" ,r-dplyr)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-cowplot" ,r-cowplot)
+        ("r-magick" ,r-magick)))
      (native-search-paths
       (list (search-path-specification
              (variable "GUIX_JARPATH")
