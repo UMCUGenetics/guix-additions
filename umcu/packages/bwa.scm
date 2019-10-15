@@ -26,7 +26,8 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system cmake)
   #:use-module (gnu packages)
-  #:use-module (gnu packages compression))
+  #:use-module (gnu packages compression)
+  #:use-module (gnu packages pcre))
 
 (define-public bwa-0.7.5a
   (package
@@ -135,4 +136,26 @@ Thus the per-base error rate is similar to the raw input reads.")
    (synopsis "Tool to extract assembly statistics from FASTA and FASTQ files")
    (description "This package provides a tool to extract assembly statistics
 from FASTA and FASTQ files.")
+   (license license:gpl3)))
+
+(define-public fastq-tools
+  (package
+   (name "fastq-tools")
+   (version "0.8")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "http://homes.cs.washington.edu/~dcjones/fastq-tools/"
+                  name "-" version ".tar.gz"))
+            (sha256
+             (base32
+              "0jz1y40fs3x31bw10097a1nhm0vhbsyxmd4n7dwdsl275sc9l1nz"))))
+   (build-system gnu-build-system)
+   (arguments `(#:tests? #f))
+   (inputs
+    `(("pcre" ,pcre "bin")
+      ("zlib" ,zlib)))
+   (home-page "https://homes.cs.washington.edu/~dcjones/fastq-tools/")
+   (synopsis "")
+   (description "")
    (license license:gpl3)))
