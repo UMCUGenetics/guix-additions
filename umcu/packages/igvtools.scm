@@ -28,18 +28,18 @@
 (define-public igv
   (package
     (name "igv")
-    (version "2.3.92")
+    (version "2.7.2")
     (source
      (origin
        (method url-fetch)
        (uri (string-append
-             "http://data.broadinstitute.org/igv/projects/downloads/IGV_"
-             version ".zip"))
+             "http://data.broadinstitute.org/igv/projects/downloads/"
+             "2.7/IGV_Linux_" version ".zip"))
        (sha256
-        (base32 "0jrdqfkjb8ygb7rsw2ibwbqz6slfq7y3qbv5i0dyzh41drq9qjaf"))))
+        (base32 "08h9bzwwykchnqfhz9m60c5vsn2wxik3skj2xmx6afnwlna4786b"))))
     (build-system gnu-build-system)
     (propagated-inputs
-     `(("icedtea" ,icedtea-7)))
+     `(("openjdk11" ,openjdk11)))
     (native-inputs
      `(("unzip" ,unzip)))
     (arguments
@@ -51,11 +51,25 @@
          (replace 'install
            (lambda _
              (let* ((out (assoc-ref %outputs "out"))
-                    (bin (string-append out "/bin")))
-               (install-file "igv.jar" bin)
-               (install-file "igv.sh" bin)
-               (install-file "batik-codec__V1.7.jar" bin)
-               (install-file "goby-io-igv__V1.0.jar" bin)))))))
+                    (bin (string-append out "/bin"))
+                    (lib (string-append out "/lib"))
+                    (share (string-append out "/share/igv")))
+               (mkdir-p share)
+               (mkdir-p lib)
+               (mkdir-p bin)
+               (copy-recursively "lib" lib)
+               (substitute* "igv.sh"
+                 (("prefix=")
+                  (string-append "prefix=" lib " # "))
+                 (("\\$\\{prefix\\}/igv.args")
+                  (string-append share "/igv.args"))
+                 (("--module-path=\"\\$\\{prefix\\}/lib\"")
+                  (string-append "--module-path=" lib))
+                 (("exec java")
+                  (string-append "exec " (assoc-ref %build-inputs "openjdk11")
+                                 "/bin/java")))
+               (install-file "igv.args" share)
+               (install-file "igv.sh" bin)))))))
    (home-page "http://www.broadinstitute.org/software/igv/")
    (synopsis "Integrative Genomics Viewer")
    (description "The Integrative Genomics Viewer (IGV) is a high-performance
