@@ -7,10 +7,29 @@ Packages may move from here to the upstream Guix repository.
 Using this repository
 ---------------------
 
+There are two ways to use this repository.  Choose one.
+
+### Using `GUIX_PACKAGE_PATH`
+
 Add the repository to the `GUIX_PACKAGE_PATH` environment variable:
 ```bash
 git clone https://github.com/UMCUGenetics/guix-additions.git $HOME/guix-additions
 export GUIX_PACKAGE_PATH=$HOME/guix-additions
+```
+
+You have to keep track of updates in this repository yourself by running
+`git pull`.
+
+### As a “channel”
+
+Adding the following to `$HOME/.config/guix/channels.scm` automatically updates
+this repository whenever you run `guix pull`:
+
+```
+(cons (channel
+       (name 'guix-additions)
+       (url "https://github.com/UMCUGenetics/guix-additions.git"))
+      %default-channels)
 ```
 
 Writing package recipes
