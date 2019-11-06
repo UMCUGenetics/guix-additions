@@ -1302,3 +1302,29 @@ for Python.  The design goals are:
     (description
       "A strictly RFC 4510 conforming LDAP V3 pure Python client library")
     (license #f)))
+
+(define-public python-checkm-genome
+  (package
+    (name "python-checkm-genome")
+    (version "1.0.18")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "checkm-genome" version))
+              (sha256
+               (base32
+                "1dx214mbsz6dmn4zgf4df2q6k4kdsj8m0ykxygzs0h73npm33kqd"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f
+       #:python ,python-2))
+    (propagated-inputs
+     `(("python2-dendropy" ,python-dendropy)
+       ("python2-matplotlib" ,python-matplotlib)
+       ("python2-numpy" ,python-numpy)
+       ("python2-pysam" ,python-pysam)
+       ("python2-scipy" ,python-scipy)
+       ("python2-setuptools" ,python-setuptools)))
+    (home-page "http://pypi.python.org/pypi/checkm/")
+    (synopsis "Assess the quality of putative genome bins.")
+    (description "Assess the quality of putative genome bins.")
+    (license #f)))
