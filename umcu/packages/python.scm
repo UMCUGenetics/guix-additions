@@ -1328,3 +1328,26 @@ for Python.  The design goals are:
     (synopsis "Assess the quality of putative genome bins.")
     (description "Assess the quality of putative genome bins.")
     (license #f)))
+
+(define-public python-wrapspawner
+  (package
+    (name "python-wrapspawner")
+    (version "0-9c51368")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/jupyterhub/wrapspawner.git")
+                    (commit "9c51368710bf52eab874aeef4cf1c5738d506430")))
+              (sha256
+               (base32
+                "15yhjav76d8ns5hjvsdbxl9a8733qqwxskdr11k1a8h6k1xm3snc"))))
+    (arguments `(#:tests? #f))
+    (build-system python-build-system)
+    (home-page "https://github.com/jupyterhub/wrapspawner")
+    (synopsis "Wrapspawner for Jupyterhub.")
+    (description "This package includes WrapSpawner and ProfilesSpawner, which
+provide mechanisms for runtime configuration of spawners. The inspiration for
+their development was to allow users to select from a range of pre-defined
+batch job profiles, but their operation is completely generic.")
+    (license license:bsd-3)))
+
