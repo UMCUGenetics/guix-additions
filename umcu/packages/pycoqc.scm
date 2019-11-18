@@ -199,7 +199,13 @@
           "072zplf1waxnk7xrwrv0pwvvhf0mkmsgz1gv805zb9kgn8h8hyq0"))))
   (build-system python-build-system)
   (arguments
-   `(#:tests? #f))
+   `(#:tests? #f
+     #:phases
+     (modify-phases %standard-phases
+       (add-after 'unpack 'downgrade-tqdm
+         (lambda* (#:key inputs #:allow-other-keys)
+           (substitute* "pycoQC/__init__.py"
+             (("tqdm>=4.23") "tqdm==4.19.6")))))))
   (propagated-inputs
     `(("python-h5py" ,python-h5py)
       ("python-jinja2" ,python-jinja2)
