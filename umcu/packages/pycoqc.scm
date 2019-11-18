@@ -209,9 +209,9 @@
              (("pysam==0.15.3") "pysam>=0.15.0")
              (("h5py==2.9.0") "h5py>=2.8.0")
              (("plotly==4.1.0") "plotly>=3.9.0")
-             (("pandas==0.25.1") "pandas>=0.25.1")
+             (("pandas==0.25.1") "pandas>=0.24.2")
              (("scipy==1.3.1") "scipy>=1.3.1")
-             (("numpy==1.17.1") "numpy>=1.17.1")))))))
+             (("numpy==1.17.1") "numpy>=1.15.4")))))))
   (propagated-inputs
     `(("python-h5py" ,python-h5py)
       ("python-jinja2" ,python-jinja2)
