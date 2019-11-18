@@ -189,14 +189,14 @@
 (define-public python-pycoqc
  (package
   (name "python-pycoqc")
-  (version "2.2.3.3")
+  (version "2.5.0.3")
   (source
     (origin
       (method url-fetch)
       (uri (pypi-uri "pycoQC" version))
       (sha256
-        (base32
-          "072zplf1waxnk7xrwrv0pwvvhf0mkmsgz1gv805zb9kgn8h8hyq0"))))
+       (base32
+        "10skrk9ws7zqfg51c3d4nhia2va3m88p7kcasmh7n9gb3y470z1w"))))
   (build-system python-build-system)
   (arguments
    `(#:tests? #f
@@ -204,8 +204,14 @@
      (modify-phases %standard-phases
        (add-after 'unpack 'downgrade-tqdm
          (lambda* (#:key inputs #:allow-other-keys)
-           (substitute* "pycoQC/__init__.py"
-             (("tqdm>=4.23") "tqdm==4.19.6")))))))
+           (substitute* "setup.py"
+             (("tqdm==4.35") "tqdm>=4.19.6")
+             (("pysam==0.15.3") "pysam>=0.15.0")
+             (("h5py==2.9.0") "h5py>=2.8.0")
+             (("plotly==4.1.0") "plotly>=3.9.0")
+             (("pandas==0.25.1") "pandas>=0.25.1")
+             (("scipy==1.3.1") "scipy>=1.3.1")
+             (("numpy==1.17.1") "numpy>=1.17.1")))))))
   (propagated-inputs
     `(("python-h5py" ,python-h5py)
       ("python-jinja2" ,python-jinja2)
@@ -213,7 +219,8 @@
       ("python-pandas" ,python-pandas)
       ("python-plotly" ,python-plotly-3.9.0)
       ("python-scipy" ,python-scipy)
-      ("python-tqdm" ,python-tqdm)))
+      ("python-tqdm" ,python-tqdm)
+      ("python-pysam" ,python-pysam)))
   (home-page "https://github.com/a-slide/pycoQC")
   (synopsis "")
   (description "")
