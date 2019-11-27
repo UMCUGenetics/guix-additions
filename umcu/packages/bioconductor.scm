@@ -80,46 +80,6 @@
 utility operations.")
   (license license:gpl3)))
 
-(define-public r-gviz
-  (package
-    (name "r-gviz")
-    (version "1.28.3")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "Gviz" version))
-              (sha256
-               (base32
-                "0347r1ly0vzpilflzbyzsjdf4cday294lw3fxzx61clblrmws1ki"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-s4vectors" ,r-s4vectors)
-       ("r-iranges" ,r-iranges)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-xvector" ,r-xvector)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-biomart" ,r-biomart)
-       ("r-annotationdbi" ,r-annotationdbi)
-       ("r-biobase" ,r-biobase)
-       ("r-genomicfeatures" ,r-genomicfeatures)
-       ("r-bsgenome" ,r-bsgenome)
-       ("r-biostrings" ,r-biostrings)
-       ("r-biovizbase" ,r-biovizbase)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-latticeextra" ,r-latticeextra)
-       ("r-matrixstats" ,r-matrixstats)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-digest" ,r-digest)))
-    (home-page "http://bioconductor.org/packages/Gviz")
-    (synopsis "Plotting data and annotations along genomic coordinates")
-    (description "This package uses the biomaRt and the rtracklayer packages to
-perform live annotation queries to Ensembl and UCSC and translates this to e.g.
-gene/transcript structures in viewports of the grid graphics package.  This
-results in genomic information plotted together with your data.")
-    (license license:artistic2.0)))
-
 (define-public r-funcisnp-data
   (package
    (name "r-funcisnp-data")
