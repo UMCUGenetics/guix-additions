@@ -34,12 +34,14 @@
   #:use-module (gnu packages bash)
   #:use-module (gnu packages gawk)
   #:use-module (gnu packages guile)
+  #:use-module (gnu packages guile-xyz)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages networking)
-  #:use-module (gnu packages version-control))
+  #:use-module (gnu packages version-control)
+  #:use-module (gnu packages web))
 
 (define (patch-url seqno)
   "Return the URL of Bash patch number SEQNO."
@@ -336,6 +338,26 @@ communication.  It can be used for cluster deployments with a single build
 node.  This script was originally developed by Ricardo Wurmus.  This version
 has been slightly modified to work on the UMC Utrecht cluster set-up.")
     (license #f)))
+
+(define-public hpcguix-web-e8ba702
+  (let ((commit "e8ba7028fd3c95fad24f0760f90a10e94948521c")
+        (revision "0"))
+    (package (inherit hpcguix-web)
+      (name "hpcguix-web")
+      (version "0.0.1-0-e8ba702")
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/UMCUGenetics/hpcguix-web.git")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "08m0n04aczjmw6qc7igiar49vzls13qcdz5xgvzvhhq79dzbliqk"))))
+      (propagated-inputs
+       `(("guile" ,guile-2.2)
+         ("guile-commonmark" ,guile-commonmark)
+         ("guile-json" ,guile-json-1))))))
 
 (define-public iotop-logger
   (package
