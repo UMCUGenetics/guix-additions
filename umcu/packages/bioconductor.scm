@@ -1779,3 +1779,29 @@ clustering, substituting special text characters, viewing parts of a
 @code{data.frame}, constructing formulas from text and building design and
 response matrices.")
    (license license:bsd-3)))
+
+(define-public r-bisquerna
+  (package
+   (name "r-bisquerna")
+   (version "1.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "BisqueRNA" version))
+            (sha256
+             (base32
+              "1ks91gjfcnajg540930drcnqcrn4fi3735hywyy3y6i1q0wnq9vb"))))
+   (properties `((upstream-name . "BisqueRNA")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biobase" ,r-biobase)
+      ("r-lsei" ,r-lsei)))
+   (home-page "https://www.biorxiv.org/content/10.1101/669911v1")
+   (synopsis "Decomposition of Bulk Expression with Single-Cell Sequencing")
+   (description "This package provides tools to accurately estimate cell type
+abundances from heterogeneous bulk expression.  A reference-based method
+utilizes single-cell information to generate a signature matrix and
+transformation of bulk expression for accurate regression based estimates.
+A marker-based method utilizes known cell-specific marker genes to measure
+relative abundances across samples.")
+   (license license:gpl3)))
+
