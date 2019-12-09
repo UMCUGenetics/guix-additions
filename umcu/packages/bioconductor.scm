@@ -1805,3 +1805,32 @@ A marker-based method utilizes known cell-specific marker genes to measure
 relative abundances across samples.")
    (license license:gpl3)))
 
+(define-public r-loomr
+  (package
+   (name "r-loomr")
+   (version "0.2.0-beta")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/mojaveazure/loomR/archive/"
+                  version ".tar.gz"))
+            (sha256
+             (base32
+              "1grchjgiky5siifkl9hmj6v0sf7q2by62rfdj2k8s2zhmrpgb0yw"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-hdf5r" ,r-hdf5r)
+      ("r-r6" ,r-r6)
+      ("r-iterators" ,r-iterators)
+      ("r-itertools" ,r-itertools)
+      ("r-matrix" ,r-matrix)))
+   (home-page "http://loompy.org")
+   (synopsis "R interface for loom files")
+   (description "This package provides an interface for the single-cell
+RNAseq-oriented loom format.  Loom files are an HDF5-based format for storing
+and interacting with large single-cell RNAseq datasets.  This package provides
+an interface for working with loom files in a loom-specific way; we provide
+routines for validating loom files, iterating with chunks through data within
+the loom file, and provide a platform for other packages to build support for
+loom files.")
+   (license license:gpl3)))
