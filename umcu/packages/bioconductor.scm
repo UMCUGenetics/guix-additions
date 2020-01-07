@@ -1834,3 +1834,20 @@ routines for validating loom files, iterating with chunks through data within
 the loom file, and provide a platform for other packages to build support for
 loom files.")
    (license license:gpl3)))
+
+(define-public r-tree
+  (package
+   (name "r-tree")
+   (version "1.0-40")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "tree" version))
+            (sha256
+             (base32
+              "1rr6ws62j9h36f3nl713f8h3ndkh95mv46l055jvgmby5lw1dazz"))))
+   (properties `((upstream-name . "tree")))
+   (build-system r-build-system)
+   (home-page "https://cran.r-project.org/web/packages/tree")
+   (synopsis "Classification and Regression Trees")
+   (description "Classification and regression trees.")
+   (license license:gpl2+)))
