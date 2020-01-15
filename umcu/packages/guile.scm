@@ -77,7 +77,7 @@
             #t)))))
    (inputs
     `(("guile" ,guile-2.2)
-      ("guile-json" ,guile-json)
+      ("guile-json" ,guile-json-1)
       ("gwl" ,gwl)
       ("guix" ,guix)))
    (home-page "https://github.com/UMCUGenetics/hmf-glue")
