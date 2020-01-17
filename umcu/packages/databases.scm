@@ -37,6 +37,7 @@
        (uri (string-append
              "https://github.com/openlink/virtuoso-opensource/releases/"
              "download/v7.2.5/virtuoso-opensource-7.2.5.tar.gz"))
+       (patches (list (search-patch "virtuoso-ose-increase-maxrows.patch")))
        (sha256
         (base32 "0r1xakclkfi69pzh8z2k16z3x0m49pxp764icj0ad4w4bb97fr42"))))
     (build-system gnu-build-system)
@@ -45,16 +46,7 @@
        ;; TODO: Removing the libsrc/zlib source directory breaks the build.
        ;; This indicates that the internal zlib code may still be used.
        #:configure-flags '("--without-internal-zlib"
-                           "--with-readline")
-       #:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'increase-max-result-sets
-           (lambda _
-             ;; The effective maximum results that can be retrieved over HTTP
-             ;; is 1024*1024, which might be too low.  Here we increase that
-             ;; limit to 64*1024*1024-2.
-             (substitute* "libsrc/Wi/sparql_io.sql"
-               (("maxrows := 1024*1024") "maxrows := 64*1024*1024-2")))))))
+                           "--with-readline")))
     (inputs
      `(("openssl" ,openssl-1.0)
        ("net-tools" ,net-tools)
