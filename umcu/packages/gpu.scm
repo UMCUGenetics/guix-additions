@@ -71,3 +71,71 @@
 for RTX 2080 Ti cards.")
     ;; It's proprietary, so only poke at it with a loooong stick. :)
     (license #f)))
+
+(define-public cuda-toolkit
+  (package
+   (name "cuda-toolkit")
+   (version "10.2")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "http://developer.download.nvidia.com/compute/cuda/"
+                  version "/Prod/local_installers/cuda_" version
+                  ".89_440.33.01_linux.run"))
+            (sha256
+              (base32
+               "04fasl9sjkb1jvchvqgaqxprnprcz7a8r52249zp2ijarzyhf3an"))))
+   (build-system trivial-build-system)
+   (arguments
+    `(#:modules ((guix build utils))
+      #:builder
+      (let* ((installer (assoc-ref %build-inputs "source"))
+             (out       (assoc-ref %outputs "out"))
+             (fake-out  (string-append (getcwd) "/fake-out"))
+             (bin       (string-append out "/bin"))
+             (lib       (string-append out "/lib"))
+             (include   (string-append out "/include"))
+             (share     (string-append out "/share"))
+             (tmpdir    (string-append (getcwd) "/tmp"))
+             (core-util (lambda (util)
+                          (string-append
+                           (assoc-ref %build-inputs "coreutils") "/bin/" util)))
+             (bash   (string-append (assoc-ref %build-inputs "bash") "/bin/sh"))
+             (mkdir  (core-util "mkdir")))
+
+        (use-modules (guix build utils))
+        (setenv "PATH" (string-append (core-util "") ":"
+                                      (assoc-ref %build-inputs "tar") "/bin:"
+                                      (assoc-ref %build-inputs "xz") "/bin:"
+                                      (assoc-ref %build-inputs "gzip") "/bin"))
+        (setenv "TMPDIR" tmpdir)
+        (system* mkdir "-p" out bin lib include share tmpdir fake-out)
+        ;; Run the installer to extract the files.  It will fail
+        ;; to do anything else because it cannot find "cuda-installer",
+        ;; which ends up in the /tmp directory while the script expects
+        ;; it in the current working directory.
+        (system (string-append bash " " installer
+                               " --installpath=" fake-out
+                               " --override"
+                               " --driver"
+                               " --keep"
+                               " --toolkit"
+                               " --target " tmpdir))
+
+        ;; Copy the libraries to the output.
+        (and (copy-recursively "tmp/builds/cuda-toolkit/bin" bin)
+             (copy-recursively "tmp/builds/cuda-toolkit/targets/x86_64-linux/lib" lib)
+             (copy-recursively "tmp/builds/cuda-toolkit/targets/x86_64-linux/include" include)
+             (copy-recursively "tmp/builds/cuda-toolkit/share" share)))))
+   (native-inputs
+    `(("bash" ,bash)
+      ("coreutils" ,coreutils)
+      ("gzip" ,gzip)
+      ("tar" ,tar)
+      ("xz" ,xz)))
+   (home-page "https://www.nvidia.com")
+   (synopsis "Proprietary NVIDIA CUDA toolkit")
+   (description "This package contains the proprietary NVIDIA CUDA toolkit.")
+   ;; It's proprietary, so only poke at it with a loooong stick. :)
+   (license #f)))
+
