@@ -62,12 +62,8 @@
 
          #t)))
     (native-inputs
-     `(("bash" ,bash)
-       ("coreutils" ,coreutils)
-       ("grep" ,grep)
-       ("sed" ,sed)
+     `(("coreutils" ,coreutils)
        ("tar" ,tar)
-       ("which" ,which)
        ("xz" ,xz)))
     (home-page "https://www.nvidia.com")
     (synopsis "Proprietary NVIDIA driver for RTX 2080 Ti cards")
