@@ -193,3 +193,31 @@ information into a MySQL database. ")
     (description "This package provides management tools for running graph
 database instances on Utrecht's HPC.")
 (license license:gpl3+)))
+
+(define-public shallowcp
+  (package
+   (name "shallowcp")
+   (version "0.1")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/roelj/shallowcp/releases/download/"
+                  version "/shallowcp-" version ".tar.gz"))
+            (sha256
+             (base32
+              "0mivgpc1bnyl1jg5rajg569s4zpjzz8a2y4afmb4szli94444w1r"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; There are no tests.
+      #:phases
+      (modify-phases %standard-phases
+        ;; There's no compiler involved.
+        (delete 'build))))
+   (inputs
+    `(("guile" ,guile-2.2)
+      ("pkg-config" ,pkg-config)))
+   (home-page "https://github.com/roelj/shallowcp")
+   (synopsis "Tool for making shallow copies of a directory")
+   (description "This package provides @code{shallowcp}, which can create
+shallow copies of a directory (symlinks to files instead of a full copy).")
+   (license license:gpl3+)))
