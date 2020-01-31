@@ -725,3 +725,43 @@ file the lists the enriched domains and their posterior probabilities.")
    (description "This package provides tools for rapid prokaryotic
 genome annotation.")
    (license license:gpl3)))
+
+(define-public perl-attribute-util
+  (package
+   (name "perl-attribute-util")
+   (version "1.07")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append "https://cpan.metacpan.org/authors/id/D/DA/DANKOGAI/Attribute-Util-"
+           version ".tar.gz"))
+     (sha256
+      (base32 "1z79d845dy96lg0pxw0kr2za0gniwnpn963r7ccajfpj6k7jfw07"))))
+   (build-system perl-build-system)
+   (home-page "https://metacpan.org/pod/Attribute-Util")
+   (synopsis "An Abstract attribute")
+   (description "")
+   (license #f)))
+
+(define-public perl-config-inifiles
+  (package
+   (name "perl-config-inifiles")
+   (version "3.000002")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append "https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/Config-IniFiles-"
+           version ".tar.gz"))
+     (sha256
+      (base32 "02dsz3inh5jwgaxmbcz8qxwgin8mkhm6vj9jyzfmm3dr5pnxcbnr"))))
+   (build-system perl-build-system)
+   (propagated-inputs
+    `(("perl-module-build" , perl-module-build)
+     ("perl-io-stringy", perl-io-stringy)
+     ))
+   (home-page "https://metacpan.org/pod/Config::IniFiles")
+   (synopsis "Config::IniFiles provides a way to have readable configuration files outside your Perl script")
+   (description "
+   Config::IniFiles provides a way to have readable configuration files outside your Perl script. Configurations can be imported (inherited, stacked,...), sections can be grouped, and settings can be accessed from a tied hash.")
+   (license #f)))
+
