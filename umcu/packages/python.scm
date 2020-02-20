@@ -1233,6 +1233,323 @@ for Python.  The design goals are:
       "A Python implementation of the JSON5 data format.")
     (license #f)))
 
+(define-public python-boto
+  (package
+    (name "python-boto")
+    (version "2.49.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (string-append
+	      "https://github.com/boto/boto"
+	      version ".tar.gz"))
+	(sha256
+	  (base32 "051ka4lm1a7469gj8ibrr0pkckgd64gn0m2g7lr5my228m7zvgix"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "http://docs.pythonboto.org/")
+    (synopsis "Old version of Boto 3")
+    (description "Old version of Boto 3")
+  (license license:asl2.0)))
+
+(define-public python-botocore
+  (package
+  (name "python-botocore")
+  (version "1.15.1")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (string-append
+	    "https://github.com/boto/botocore/archive/"
+	    version ".tar.gz"))
+      (sha256
+        (base32 "0lcm4p667p98nr0jis7w3y7hhrl80vl9fxjk88zvazhad8q7czh9"))))
+  (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (inputs
+       `(("python-urllib3" ,python-urllib3)
+	 ("python-dateutil", python-dateutil)
+	 ("python-docutils", python-docutils)
+	 ("python-jmespath", python-jmespath)
+	 ("python-mock", python-mock)
+	 ("python-nose", python-nose)
+	 ("python-jsonschema", python-jsonschema)))
+  (home-page "https://github.com/boto/botocore")
+  (synopsis "The low-level, core functionality of boto 3.")
+  (description "A low-level interface to a growing number of Amazon Web Services. The botocore package is the foundation for the AWS CLI as well as boto3.
+
+On 10/09/2019 support for Python 2.6 and Python 3.3 was deprecated and support was dropped on 01/10/2020. To avoid disruption, customers using Botocore on Python 2.6 or 3.3 will need to upgrade their version of Python or pin the version of Botocore in use prior to 01/10/2020. For more information, see this blog post.")
+  (license license:asl2.0)))
+
+(define-public python-s3transfer
+  (package
+    (name "python-s3transfer")
+    (version "0.3.3")
+    (source 
+      (origin
+        (method url-fetch)
+	(uri (string-append
+	      "https://github.com/boto/s3transfer/archive/"
+	      version ".tar.gz"))
+	(sha256
+	  (base32 "0lgwhqwyz4552n21sp51gqhfhyy3zlxla2nzfla3s5rjmxx0z2qc"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (inputs
+       `(("python-botocore", python-botocore)
+	 ("python-urllib3", python-urllib3)
+	 ("python-dateutil", python-dateutil)
+	 ("python-docutils", python-docutils)
+	 ("python-jmespath", python-jmespath)
+	 ("python-mock", python-mock)))
+    (home-page "https://pypi.org/project/s3transfer/")
+    (synopsis "An Amazon S3 Transfer Manager for Python")
+    (description "S3transfer is a Python library for managing Amazon S3 transfers.
+
+Note
+
+This project is not currently GA. If you are planning to use this code in production, make sure to lock to a minor version as interfaces may break from minor version to minor version. For a basic, stable interface of s3transfer, try the interfaces exposed in boto3")
+    (license license:asl2.0)))
+
+(define-public python-boto3
+  (package
+    (name "python-boto3")
+    (version "1.12.1")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (string-append
+	      "https://github.com/boto/boto3/archive/"
+	      version ".tar.gz"))
+	(sha256
+	  (base32 "1yznwdvr1ijfm7flbrd4pblpdcqyvr3wdnspsmzbzsp54a3jwflk"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (inputs
+       `(("python-s3transfer", python-s3transfer)
+	 ("python-jmespath", python-jmespath)
+	 ("python-botocore", python-botocore)
+	 ("python-urllib3", python-urllib3)
+	 ("python-dateutil", python-dateutil)
+	 ("python-docutils", python-docutils)
+	 ("python-mock", python-mock)
+	 ("python-nose", python-nose)))
+    (home-page "https://boto3.amazonaws.com/v1/documentation/api/latest/index.html")
+    (synopsis "AWS SDK for Python http://aws.amazon.com/sdk-for-python/")
+    (description "Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK) for Python, which allows Python developers to write software that makes use of services like Amazon S3 and Amazon EC2. You can find the latest, most up to date, documentation at our doc site, including a list of services that are supported.")
+    (license license:asl2.0)))
+
+(define-public python-smart-open
+  (package
+    (name "python-smart-open")
+    (version "1.9.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri "https://github.com/RaRe-Technologies/smart_open/archive/2feb910a647e50069f960623fa38bd34b9846d69.tar.gz")
+	(sha256
+	  (base32 "0znq1389jscv66ivga1f4l6098arwrgfambizir8sygikp6rg49c"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (inputs
+       `(("python-boto3", python-boto3)))
+    (home-page "https://github.com/RaRe-Technologies/smart_open")
+    (synopsis "Utils for streaming large files (S3, HDFS, gzip, bz2...)")
+    (description "smart_open is a Python 2 & Python 3 library for efficient streaming of very large files from/to storages such as S3, GCS, HDFS, WebHDFS, HTTP, HTTPS, SFTP, or local filesystem. It supports transparent, on-the-fly (de-)compression for a variety of different formats.
+
+smart_open is a drop-in replacement for Python's built-in open(): it can do anything open can (100% compatible, falls back to native open wherever possible), plus lots of nifty extra stuff on top.")
+    (license license:gpl2)))
+
+(define-public python-google
+  (package
+    (name "python-google")
+    (version "2.0.3")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "google"
+	      version))
+	(sha256
+	  (base32 "0j5v4sg4c8s9k5nrnmcrq5zc40yiynmwbf6ysmp6dgikpxyrjzgz"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "https://breakingcode.wordpress.com/")
+    (synopsis "Python bindings to the Google search engine.")
+    (description "The author of this package has not provided a project description")
+    (license license:bsd-3)))
+
+(define-public python-google-cloud-core
+  (package
+    (name "python-google-cloud-core")
+    (version "1.3.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "google-cloud-core"
+	      version))
+	(sha256
+	  (base32 "1n19q57y4d89cjgmrg0f2a7yp7l1np2448mrhpndq354h389m3w7"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/googleapis/google-cloud-python")
+    (synopsis "Google Cloud API client core library")
+    (description "This library is not meant to stand-alone. Instead it defines common helpers (e.g. base Client classes) used by all of the google-cloud-* packages.")
+    (license license:asl2.0)))
+
+(define-public python-google-cloud-storage
+  (package
+    (name "python-google-cloud-storage")
+    (version "1.26.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "google-cloud-storage"
+	      version))
+      (sha256
+        (base32 "0caxqf6vda89cmc81fxhmfk3n61aypqz2sswnbsylzf436rsxpzz"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/googleapis/python-storage")
+    (synopsis "Google Cloud Storage API client library")
+    (description "Google Cloud Storage allows you to store data on Google infrastructure with very high reliability, performance and availability, and can be used to distribute large data objects to users via direct download.")
+    (license license:asl2.0)))
+
+(define-public python-google-api-core
+  (package
+    (name "python-google-api-core")
+    (version "1.16.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "google-api-core"
+	      version))
+	(sha256
+	  (base32 "1qh30ji399gngv2j1czzvi3h0mgx3lfdx2n8qp8vii7ihyh65scj"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/googleapis/google-cloud-python")
+    (synopsis "Google API client core library")
+    (description "This library is not meant to stand-alone. Instead it defines common helpers used by all Google API clients. For more information, see the documentation.")
+    (license license:asl2.0)))
+
+(define-public python-protobuf
+  (package
+    (name "python-protobuf")
+    (version "3.11.3")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "protobuf"
+	      version))
+	(sha256
+	  (base32 "07qby3yc2a8a1vsxnc79j687q4r68k1d3npni7bldwmd3m6rfz67"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-resumable-media", python-google-resumable-media)))
+    (arguments `(#:tests? #f))
+    (home-page "https://developers.google.com/protocol-buffers/")
+    (synopsis "Protocol Buffers")
+    (description "Protocol Buffers are Google’s data interchange format")
+    (license license:bsd-3)))
+
+(define-public python-google-resumable-media
+  (package
+    (name "python-google-resumable-media")
+    (version "0.5.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "google-resumable-media"
+	      version))
+	(sha256
+	  (base32 "0aldswz9lsw05a2gx26yjal6lcxhfqpn085zk1czvjz1my4d33ra"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-cachetools", python-cachetools)))
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/googleapis/google-resumable-media-python")
+    (synopsis "Utilities for Google Media Downloads and Resumable Uploads")
+    (description "Utilities for Google Media Downloads and Resumable Uploads. See the docs for examples and usage.")
+    (license license:expat)))
+
+(define-public python-cachetools
+  (package
+    (name "python-cachetools")
+    (version "4.0.0")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "cachetools"
+	      version))
+	(sha256
+	  (base32 "1601kakkw5y1zj8lbcr1y6cph30swwc5iw978577y9azm2bxslls"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/tkem/cachetools/")
+    (synopsis "Extensible memoizing collections and decorators")
+    (description "This module provides various memoizing collections and decorators, including variants of the Python Standard Library’s @lru_cache function decorator.")
+    (license license:asl2.0)))
+
+(define-public python-google-auth
+  (package
+    (name "python-google-auth")
+    (version "1.11.2")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+	      "google-auth"
+	      version))
+	(sha256
+	  (base32 "1mh7i4ybillnd2m8bm6b1mfwnkp25jdrkcypd3q00vjxyci2xqhy"))))
+    (build-system python-build-system)
+    (propagated-inputs
+      `(("python-google-protobuf", python-google-protobuf)))
+    (arguments `(#:tests? #f))
+    (home-page "https://github.com/googleapis/google-auth-library-python")
+    (synopsis "Google Authentication Library")
+    (description "This library simplifies using Google’s various server-to-server authentication mechanisms to access Google APIs.")
+    (license license:asl2.0)))
+
+(define-public python-gensim
+  (package
+    (name "python-gensim")
+    (version "3.8.1")
+    (source
+      (origin
+        (method url-fetch)
+	(uri (pypi-uri
+              "gensim"
+              version))
+	(sha256
+	  (base32 "1p6zn59gasz8qrb4hcwv016997yk5aw4pizwf37cgc6pm307y9rk"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f))
+    (inputs
+       `(("python-numpy" ,python-numpy)))
+    (home-page "https://radimrehurek.com/gensim/")
+    (synopsis "Topic modelling for humans")
+    (description "Gensim = \"Generate Similar\"
+Gensim started off as a collection of various Python scripts for the Czech Digital Mathematics Library dml.cz in 2008, where it served to generate a short list of the most similar articles to a given article.
+
+I also wanted to try these fancy \"Latent Semantic Methods\", but the libraries that realized the necessary computation were not much fun to work with.
+
+Naturally, I set out to reinvent the wheel. Our 2010 LREC publication describes the initial design decisions behind Gensim: clarity, efficiency and scalability. It is fairly representative of how Gensim works even today.
+
+Later versions of gensim improved this efficiency and scalability tremendously. In fact, I made algorithmic scalability of distributional semantics the topic of my PhD thesis.
+
+By now, Gensim is—to my knowledge—the most robust, efficient and hassle-free piece of software to realize unsupervised semantic modelling from plain text. It stands in contrast to brittle homework-assignment-implementations that do not scale on one hand, and robust java-esque projects that take forever just to run \"hello world\".
+
+In 2011, I started using Github for source code hosting and the Gensim website moved to its present domain. In 2013, Gensim got its current logo and website design.")
+    (license license:gpl2)))
+
 (define-public python-batchspawner
   (package
     (name "python-batchspawner")
