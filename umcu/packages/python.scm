@@ -1510,8 +1510,6 @@ smart_open is a drop-in replacement for Python's built-in open(): it can do anyt
 	(sha256
 	  (base32 "1mh7i4ybillnd2m8bm6b1mfwnkp25jdrkcypd3q00vjxyci2xqhy"))))
     (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-protobuf", python-google-protobuf)))
     (arguments `(#:tests? #f))
     (home-page "https://github.com/googleapis/google-auth-library-python")
     (synopsis "Google Authentication Library")
