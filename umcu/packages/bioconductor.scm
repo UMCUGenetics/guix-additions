@@ -1875,3 +1875,33 @@ loom files.")
      "This package provides full genome sequences for Homo sapiens (Human)
 as provided by UCSC (hg38, Dec. 2013) and stored in Biostrings objects.")
     (license license:artistic2.0)))
+
+
+(define-public r-cummerbund
+  (package
+   (name "r-cummerbund")
+   (version "2.28.0")
+   (source(origin
+           (method url-fetch)
+           (uri (bioconductor-uri "cummeRbund" version))
+           (sha256
+           (base32
+            "1fjc3bcclm4gsvw4nq6cv3a1kbrldvrxbkyfb9306708si1n4dwk"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biocgenerics" ,r-biocgenerics)
+     ("r-rsqlite" ,r-rsqlite)
+     ("r-ggplot2" ,r-ggplot2)
+     ("r-reshape" ,r-reshape)
+     ("r-fastcluster", r-fastcluster)
+     ("r-rtracklayer" ,r-rtracklayer)
+     ("r-gviz" ,r-gviz)
+     ("r-plyr" ,r-plyr)
+     ("r-s4vectors" ,r-s4vectors)
+     ("r-biobase" ,r-biobase)))
+
+   (home-page "http://bioconductor.org/packages/cummeRbund")
+   (synopsis "CummeRbund")
+   (description
+    "Analysis, exploration, manipulation, and visualization of Cufflinks high-throughput sequencing data.")
+   (license license:gpl2+)))
