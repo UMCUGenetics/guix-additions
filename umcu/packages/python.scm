@@ -43,6 +43,7 @@
   #:use-module (gnu packages tls)
   #:use-module (gnu packages databases)
   #:use-module (gnu packages time)
+  #:use-module (gnu packages linux)
   #:use-module (umcu packages vcf-explorer)
   #:use-module (umcu packages mysql))
 
@@ -1065,6 +1066,17 @@ for Python.  The design goals are:
              (base32
               "0v5brdm3c1fzbd8wgai3d40k5pv437i6nfw1d2qv06vxxydkijb5"))))
    (build-system python-build-system)
+   (arguments
+    `(#:phases
+      (modify-phases %standard-phases
+        (add-after 'unpack 'patch-libpam
+          (lambda* (#:key inputs outputs #:allow-other-keys)
+            (substitute* "pamela.py"
+              (("find_library\\(\"pam\"\\)")
+               (string-append "\"" (assoc-ref inputs "linux-pam")
+                              "/lib/libpam.so" "\""))))))))
+   (inputs
+    `(("linux-pam" ,linux-pam)))
    (home-page "https://github.com/minrk/pamela")
    (synopsis "PAM interface using ctypes")
    (description "PAM interface using ctypes")
