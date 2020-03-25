@@ -22,6 +22,7 @@
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system trivial)
   #:use-module (guix build-system perl)
+  #:use-module (guix build-system ruby)
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix packages)
@@ -35,6 +36,7 @@
   #:use-module (gnu packages cran)
   #:use-module (gnu packages databases)
   #:use-module (gnu packages gawk)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages linux)
@@ -50,12 +52,10 @@
   #:use-module (gnu packages)
   #:use-module (umcu packages bioconductor)
   #:use-module (umcu packages bwa)
-  #:use-module (umcu packages circos)
   #:use-module (umcu packages contra)
   #:use-module (umcu packages fastqc)
   #:use-module (umcu packages freec)
   #:use-module (umcu packages gatk)
-  #:use-module (umcu packages genenetwork)
   #:use-module (umcu packages grid-engine)
   #:use-module (umcu packages igvtools)
   #:use-module (umcu packages king)
@@ -196,6 +196,27 @@ evidence.")
   (package (inherit grep)
     (name "grep-with-pcre")
     (inputs `(("pcre" ,pcre)))))
+
+(define-public bio-vcf
+  (package
+   (name "bio-vcf")
+   (version "0.9.2")
+   (source (origin
+            (method url-fetch)
+            (uri (rubygems-uri "bio-vcf" version))
+            (sha256
+             (base32
+              "1007bn0w8l11q867lxsyqnk0vgvv12skvk9gyglv7g44knr5vh4j"))))
+   (build-system ruby-build-system)
+   (arguments `(#:tests? #f)) ; There are no tests.
+   (native-search-paths
+    (package-native-search-paths ruby))
+   (synopsis "Smart lazy multi-threaded parser for VCF format with useful
+filtering and output rewriting (JSON, RDF etc.)")
+   (description "Smart lazy multi-threaded parser for VCF format with useful
+filtering and output rewriting (JSON, RDF etc.)")
+   (home-page "http://github.com/pjotrp/bioruby-vcf")
+   (license license:expat)))
 
 (define-public r-qdnaseq-hmf
   (package (inherit r-qdnaseq)
