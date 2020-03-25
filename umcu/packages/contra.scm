@@ -20,14 +20,14 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
-  #:use-module (guix build utils)
   #:use-module (guix build-system gnu)
-  #:use-module (umcu packages samtools)
   #:use-module (gnu packages)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages python-science)
   #:use-module (gnu packages statistics)
-  #:use-module (gnu packages bioinformatics))
+  #:use-module (gnu packages bioinformatics)
+  #:use-module (umcu packages samtools))
 
 (define-public contra-2.0.6
   (package

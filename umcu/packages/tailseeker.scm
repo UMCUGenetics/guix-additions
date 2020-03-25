@@ -28,6 +28,7 @@
   #:use-module (gnu packages linux)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages python-science)
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths))
