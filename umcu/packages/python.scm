@@ -27,24 +27,27 @@
   #:use-module (gnu packages admin)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages check)
+  #:use-module (gnu packages cran)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages databases)
   #:use-module (gnu packages gcc)
+  #:use-module (gnu packages linux)
   #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths)
   #:use-module (gnu packages monitoring)
-  #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages pdf)
+  #:use-module (gnu packages protobuf)
   #:use-module (gnu packages python)
-  #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-crypto)
+  #:use-module (gnu packages python-science)
+  #:use-module (gnu packages python-web)
   #:use-module (gnu packages python-xyz)
-  #:use-module (gnu packages statistics)
-  #:use-module (gnu packages rdf)
   #:use-module (gnu packages qt)
-  #:use-module (gnu packages tls)
-  #:use-module (gnu packages databases)
+  #:use-module (gnu packages rdf)
+  #:use-module (gnu packages statistics)
   #:use-module (gnu packages time)
-  #:use-module (gnu packages linux)
-  #:use-module (umcu packages vcf-explorer)
+  #:use-module (gnu packages tls)
+  #:use-module (gnu packages xml)
   #:use-module (umcu packages mysql))
 
 (define-public python-py2bit
@@ -1448,27 +1451,6 @@ smart_open is a drop-in replacement for Python's built-in open(): it can do anyt
     (description "This library is not meant to stand-alone. Instead it defines common helpers used by all Google API clients. For more information, see the documentation.")
     (license license:asl2.0)))
 
-(define-public python-protobuf
-  (package
-    (name "python-protobuf")
-    (version "3.11.3")
-    (source
-      (origin
-        (method url-fetch)
-	(uri (pypi-uri
-	      "protobuf"
-	      version))
-	(sha256
-	  (base32 "07qby3yc2a8a1vsxnc79j687q4r68k1d3npni7bldwmd3m6rfz67"))))
-    (build-system python-build-system)
-    (propagated-inputs
-      `(("python-google-resumable-media", python-google-resumable-media)))
-    (arguments `(#:tests? #f))
-    (home-page "https://developers.google.com/protocol-buffers/")
-    (synopsis "Protocol Buffers")
-    (description "Protocol Buffers are Google’s data interchange format")
-    (license license:bsd-3)))
-
 (define-public python-google-resumable-media
   (package
     (name "python-google-resumable-media")
@@ -1678,3 +1660,517 @@ their development was to allow users to select from a range of pre-defined
 batch job profiles, but their operation is completely generic.")
     (license license:bsd-3)))
 
+(define-public python2-pyvcf
+  (package
+    (name "python2-pyvcf")
+    (version "0.6.8")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "PyVCF" version))
+              (sha256
+               (base32
+                "1ngryr12d3izmhmwplc46xhyj9i7yhrpm90xnsd2578p7m8p5n79"))))
+    (build-system python-build-system)
+    (arguments `(#:python ,python-2 ; Python 3 is not supported.
+                 #:tests? #f))
+    (propagated-inputs
+     `(("python2-setuptools" ,python-setuptools)
+       ("python2-psutil" ,python-psutil)))
+    (home-page "https://github.com/jamescasbon/PyVCF")
+    (synopsis "Variant Call Format (VCF) parser for Python")
+    (description "Variant Call Format (VCF) parser for Python")
+    (license #f)))
+
+(define-public python2-pydp
+  (package
+    (name "python2-pydp")
+    (version "0.2.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://bitbucket.org/aroth85/pydp/downloads/PyDP-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "03f56vh0yi3l8s7vpfsvp3ac8d1acf36jg31amknnarxfrg4cdir"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:python ,python-2))
+    (home-page "")
+    (synopsis "")
+    (description "")
+    ;; Custom license, which is probably non-free
+    (license #f)))
+
+(define-public python2-pyclone
+  (package
+    (name "python2-pyclone")
+    (version "0.13.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://bitbucket.org/aroth85/pyclone/downloads/PyClone-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1bzvrhsya4s9akcsyyafhqyn5cpl4b5hfk43q5ky4rdj9spybimm"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:python ,python-2))
+    (propagated-inputs
+     `(("python2-pyyaml" ,python2-pyyaml)
+       ("python2-pydp" ,python2-pydp)
+       ("python2-pandas" ,python2-pandas)
+       ("python2-numpy" ,python2-numpy)
+       ("python2-scipy" ,python2-scipy)
+       ("python2-matplotlib" ,python2-matplotlib)
+       ("python2-seaborn" ,python2-seaborn)))
+    (home-page "http://compbio.bccrc.ca/software/pyclone/")
+    (synopsis "Tool for inferring cellular prevalence of point mutations.")
+    (description "PyClone is a tool for inferring the cellular prevalence of
+point mutations from deeply sequenced data.  The model supports simultaneous
+analysis of multiple related samples and infers clusters of mutations whose
+cellular prevalences shift together.  Such clusters of mutations can be
+inferred as mutational genotypes of distinct clonal populations.")
+    ;; Custom license, which is probably non-free
+    (license #f)))
+
+(define-public python-argopt
+ (package
+   (name "python-argopt")
+   (version "0.5.0")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "argopt" version))
+       (sha256
+         (base32
+           "0r7xc9c5hs6jz0zja1z44x7inciw9lk7ya6q24sryf1l88pmprd4"))))
+   (build-system python-build-system)
+   (propagated-inputs
+     `(("python-coverage" ,python-coverage)
+       ("python-flake8" ,python-flake8)
+       ("python-nose" ,python-nose)))
+   (home-page "https://github.com/casperdcl/argopt")
+   (synopsis "doc to argparse driven by docopt")
+   (description "doc to argparse driven by docopt")
+   (license #f)))
+
+(define-public python-py-make
+ (package
+   (name "python-py-make")
+   (version "0.1.1")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "py-make" version))
+       (sha256
+         (base32
+           "1sg848j1v65i636qr8d9p4b29ps4zpb1p7382cdyav5bglcm259j"))))
+   (build-system python-build-system)
+   (propagated-inputs
+     `(("python-coverage" ,python-coverage)
+       ("python-flake8" ,python-flake8)
+       ("python-nose" ,python-nose)
+       ("python-docopt" ,python-docopt)))
+   (home-page "https://github.com/tqdm/pymake")
+   (synopsis
+     "Makefile execution powered by pure Python")
+   (description
+     "Makefile execution powered by pure Python")
+   (license #f)))
+
+(define-public python-mkdocs
+ (package
+   (name "python-mkdocs")
+   (version "1.0.4")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "mkdocs" version))
+       (sha256
+         (base32
+           "0fg9w6rdskwnn7knri7xzrd26k9svwqlxvdr0kk5spfpm8ll7lqp"))))
+   (build-system python-build-system)
+   (arguments
+    `(#:tests? #f))
+   (propagated-inputs
+     `(("python-click" ,python-click)
+       ("python-jinja2" ,python-jinja2)
+       ("python-livereload" ,python-livereload)
+       ("python-markdown" ,python-markdown)
+       ("python-pyyaml" ,python-pyyaml)
+       ("python-pytest" ,python-pytest)
+       ("python-tornado" ,python-tornado)))
+   (home-page "https://www.mkdocs.org")
+   (synopsis "Project documentation with Markdown.")
+   (description
+     "Project documentation with Markdown.")
+   (license license:bsd-3)))
+
+(define-public python-livereload
+ (package
+   (name "python-livereload")
+   (version "2.6.1")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "livereload" version))
+       (sha256
+         (base32
+           "0rhggz185bxc3zjnfpmhcvibyzi86i624za1lfh7x7ajsxw4y9c9"))))
+   (build-system python-build-system)
+   (propagated-inputs
+     `(("python-six" ,python-six)
+       ("python-tornado" ,python-tornado)))
+   (home-page
+     "https://github.com/lepture/python-livereload")
+   (synopsis
+     "Python LiveReload is an awesome tool for web developers")
+   (description
+     "Python LiveReload is an awesome tool for web developers")
+   (license license:bsd-3)))
+
+(define-public python-pydoc-markdown
+ (package
+   (name "python-pydoc-markdown")
+   (version "2.0.5")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "pydoc-markdown" version))
+       (sha256
+         (base32
+           "07yfafkibpb0lpn8garnrxxvbswxiv8m21h1s8nsacyalvaillgi"))))
+   (build-system python-build-system)
+   (propagated-inputs
+     `(("python-six" ,python-six)
+       ("python-pyyaml" ,python-pyyaml)
+       ("python-mkdocs" ,python-mkdocs)
+       ("python-markdown" ,python-markdown)))
+   (home-page
+     "https://github.com/NiklasRosenstein/pydoc-markdown")
+   (synopsis
+     "Create Python API documentation in Markdown format")
+   (description
+     "Create Python API documentation in Markdown format")
+   (license license:expat)))
+
+(define-public python-retrying
+ (package
+   (name "python-retrying")
+   (version "1.3.3")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "retrying" version))
+       (sha256
+         (base32
+           "0fwp86xv0rvkncjdvy2mwcvbglw4w9k0fva25i7zx8kd19b3kh08"))))
+   (build-system python-build-system)
+   (arguments
+    `(#:tests? #f))
+   (propagated-inputs
+     `(("python-six" ,python-six)
+       ("python-pytest" ,python-pytest)
+       ("python-tqdm" ,python-tqdm)))
+   (home-page "https://github.com/rholder/retrying")
+   (synopsis "Retrying")
+   (description "Retrying")
+   (license license:asl2.0)))
+
+(define-public python-plotly-3.9.0
+ (package
+   (name "python-plotly")
+   (version "3.9.0")
+   (source
+     (origin
+       (method url-fetch)
+       (uri (pypi-uri "plotly" version))
+       (sha256
+         (base32
+           "0zhnrls44xvb99shxr11vn8h2fk5xhgniwy2gy9wgxw2lji3b329"))))
+   (build-system python-build-system)
+   (arguments
+    `(#:tests? #f))
+   (propagated-inputs
+     `(("python-decorator" ,python-decorator)
+       ("python-nbformat" ,python-nbformat)
+       ("python-pytz" ,python-pytz)
+       ("python-requests" ,python-requests)
+       ("python-retrying" ,python-retrying)
+       ("python-six" ,python-six)))
+   (home-page "https://plot.ly/python/")
+   (synopsis
+     "An open-source, interactive graphing library for Python")
+   (description
+     "An open-source, interactive graphing library for Python")
+   (license license:expat)))
+
+(define-public python-pycoqc
+ (package
+  (name "python-pycoqc")
+  (version "2.5.0.3")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "pycoQC" version))
+      (sha256
+       (base32
+        "10skrk9ws7zqfg51c3d4nhia2va3m88p7kcasmh7n9gb3y470z1w"))))
+  (build-system python-build-system)
+  (arguments
+   `(#:tests? #f
+     #:phases
+     (modify-phases %standard-phases
+       (add-after 'unpack 'downgrade-tqdm
+         (lambda* (#:key inputs #:allow-other-keys)
+           (substitute* "setup.py"
+             (("tqdm==4.35") "tqdm>=4.19.6")
+             (("pysam==0.15.3") "pysam>=0.15.0")
+             (("h5py==2.9.0") "h5py>=2.8.0")
+             (("plotly==4.1.0") "plotly>=3.9.0")
+             (("pandas==0.25.1") "pandas>=0.24.2")
+             (("scipy==1.3.1") "scipy>=1.3.1")
+             (("numpy==1.17.1") "numpy>=1.15.4")))))))
+  (propagated-inputs
+    `(("python-h5py" ,python-h5py)
+      ("python-jinja2" ,python-jinja2)
+      ("python-numpy" ,python-numpy)
+      ("python-pandas" ,python-pandas)
+      ("python-plotly" ,python-plotly-3.9.0)
+      ("python-scipy" ,python-scipy)
+      ("python-tqdm" ,python-tqdm)
+      ("python-pysam" ,python-pysam)))
+  (home-page "https://github.com/a-slide/pycoQC")
+  (synopsis "")
+  (description "")
+  (license #f)))
+
+(define-public pyflow
+  (package
+    (name "pyflow")
+    (version "1.1.12")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/Illumina/pyflow/releases/download/v"
+                    version "/pyflow-" version ".tar.gz"))
+              (sha256
+               (base32
+                "14zw8kf24c7xiwxg0q98s2dlifc4fzrjwzx1dhb99zvdihnx5bg7"))))
+    (build-system python-build-system)
+    (arguments `(#:tests? #f)) ; There is no test suite.
+    (home-page "https://illumina.github.io/pyflow")
+    (synopsis "Tool to manage tasks in the context of a task dependency graph")
+    (description "This package is a Python module to manage tasks in the context
+of a task dependency graph.  It has some similarities to make.")
+    (license license:bsd-2)))
+
+(define-public pyflow-2
+  (package-with-python2 pyflow))
+
+(define-public python2-parabam
+(package
+  (name "python2-parabam")
+  (version "2.2.5")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (pypi-uri "parabam" version))
+      (sha256
+        (base32
+          "1a4pq7lligzg636qixx67c3kxcrpsyvxhakrfkxvhww8084b9rrj"))))
+  (build-system python-build-system)
+  (arguments
+    `(#:python ,python-2
+      #:tests? #f ))
+  (propagated-inputs
+    `(("python2-numpy" ,python2-numpy)
+      ("python2-pysam" ,python2-pysam)))
+  (home-page "")
+  (synopsis "Parallel BAM File Analysis")
+  (description "Parallel BAM File Analysis")
+  (license license:gpl3)))
+
+(define-public telomecat
+(package
+  (name "telomerecat" )
+  (version "3.2")
+  (source (origin
+    (method url-fetch)
+      (uri "https://files.pythonhosted.org/packages/ae/9c/08288b2a8ccd7d8092a8bd8198d014a0ccbafa1e5e77e872347a6424725e/telomerecat-3.2.tar.gz")
+        (sha256
+          (base32
+            "0m71w1s52rishfy9jbn76c7qh6jzga4xj1jxx7m5gq690q4m13fm"))))
+  (build-system python-build-system)
+  (arguments
+    `(#:python ,python-2
+      #:tests? #f ))
+  (propagated-inputs
+    `(("python2-pypdf2" ,python2-pypdf2)
+     ("python2-numpy" ,python2-numpy)
+     ("python2-pysam" ,python2-pysam)
+     ("python2-pandas" ,python2-pandas)
+     ("r-argparser" ,r-argparser)
+     ("python2" ,python-2.7)
+     ("python2-parabam" ,python2-parabam)))
+  (inputs
+    `(("unzip" ,unzip)))
+  (home-page "http://pypi.python.org/pypi/telomerehunter/")
+  (synopsis "Estimation of Telomere Content from WGS Data")
+  (description "TelomereHunter extracts, sorts and analyses telomeric reads
+                from WGS Data. It is designed to take BAM files from a tumor and/or a control
+                sample as input. The tool was developed at the German Cancer Research Center (DKFZ).")
+  (license #f)))
+
+(define-public python-telomerehunter
+(package
+  (name "telomerehunter")
+  (version "1.1.0")
+  (source (origin
+  (method url-fetch)
+  (uri "https://files.pythonhosted.org/packages/e5/67/ce6ac292a88a078a733dc3d9adb3f153834692effbf0851b93a6f3e49b7a/telomerehunter-1.1.0-py2-none-any.whl")
+   (sha256
+    (base32
+     "1055z4hs2hhsfwqnjm0kffkhh6ag041mp6l13i2gs5454xk02nwi"))))
+  (build-system python-build-system)
+  (arguments
+   `(#:python ,python-2
+     #:tests? #f
+     #:phases
+     (modify-phases %standard-phases
+       (replace 'unpack
+         (lambda* (#:key inputs #:allow-other-keys)
+           (let ((unzip (string-append (assoc-ref inputs "unzip")
+                                       "/bin/unzip")))
+             (system* unzip (assoc-ref %build-inputs "source")))))
+       (replace 'build
+         (lambda* (#:key inputs outputs #:allow-other-keys)
+           (let* ((python-libdir (string-append (assoc-ref outputs "out") 
+                                                "/lib/python2.7/site-packages"))
+                  (site-dir (string-append python-libdir "/telomerehunter"))
+                  (bindir (string-append (assoc-ref outputs "out") "/bin")))
+         (substitute* "telomerehunter/run_plot.sh"
+           (("R --no-save") (string-append (assoc-ref inputs "r") "/bin/R --no-save")))
+         (substitute* (list "telomerehunter/filter_telomere_reads.py"
+                            "telomerehunter/normalize_TVR_counts.R")
+           (("samtools ") (string-append (assoc-ref inputs "samtools") "/bin/samtools ")))
+         (mkdir-p python-libdir)
+         (copy-recursively "telomerehunter" site-dir)
+         (mkdir-p bindir)
+         (mkdir-p (string-append (assoc-ref outputs "out") "/site-library"))
+         (install-file "telomerehunter-1.1.0.data/scripts/telomerehunter" bindir)
+         (wrap-program (string-append bindir "/telomerehunter")
+          `("PYTHONPATH" ":" prefix (,bindir ,(getenv "PYTHONPATH")
+                                             ,site-dir))))))
+       (delete 'install))))
+  (inputs
+   `(("unzip" ,unzip)
+     ("samtools" ,samtools)))
+  (propagated-inputs
+    `(("r" ,r)
+     ("python2-pypdf2", python2-pypdf2)
+     ("python2-numpy", python2-numpy)
+     ("python2-pysam", python2-pysam)
+     ("r-ggplot2", r-ggplot2)
+     ("r-reshape2", r-reshape2)
+     ("r-gridextra", r-gridextra)
+     ("r-rcolorbrewer" ,r-rcolorbrewer)
+     ("r-cowplot", r-cowplot)
+     ("r-svglite", r-svglite)
+     ("r-dplyr", r-dplyr)))
+  (native-search-paths
+    (list (search-path-specification
+      (variable "R_LIBS_SITE")
+        (files (list "site-library/")))))
+  (home-page "http://pypi.python.org/pypi/telomerehunter/")
+  (synopsis "Estimation of Telomere Content from WGS Data")
+  (description "TelomereHunter extracts, sorts and analyses telomeric reads
+                from WGS Data. It is designed to take BAM files from a tumor and/or a control
+                sample as input. The tool was developed at the German Cancer Research Center (DKFZ).")
+  (license license:gpl3+)))
+
+(define-public python-pygithub
+  (package
+    (name "python-pygithub")
+    (version "1.29")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "PyGithub" version))
+              (sha256
+               (base32
+                "0zqaqnk847bdw6wvsllgmg71ngqfiyd41kwxcgrwdz9gfkwzjxji"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f)) ; no test target
+    (home-page "http://pygithub.github.io/PyGithub/v1/index.html")
+    (synopsis "Python wrapper to the Github API v3")
+    (description "PyGithub is a Python library to use the Github API (v3).
+With it, you can manage your Github resources (repositories, user profiles,
+organizations, etc.) from Python scripts.")
+    (license license:lgpl2.1)))
+
+(define-public python-gitpython
+  (package
+    (name "python-gitpython")
+    (version "2.0.9")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/gitpython-developers/GitPython/archive/"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1pxf1ijlnyhbp0bifm2lxzrxhn1v34ylf4klqxawsjnc81yphf57"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f)) ; no test target
+    (propagated-inputs
+     `(("python-gitdb2" ,python-gitdb2)))
+    (home-page "http://pygithub.github.io/PyGithub/v1/index.html")
+    (synopsis "Python library used to interact with Git repositories")
+    (description "")
+    (license license:bsd-3)))
+
+(define-public python-gitdb2
+  (package
+    (name "python-gitdb2")
+    (version "2.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "gitdb2" version))
+              (sha256
+               (base32
+                "0rmblgxx30yrwpfx4p7ffis6prjhfv0wjrj9z6jlv2qv82dj1wxr"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f)) ; no test target
+    (propagated-inputs
+     `(("python-smmap2" ,python-smmap2)))
+    (home-page "https://github.com/gitpython-developers/gitdb")
+    (synopsis "GitDB is a pure-Python git object database")
+    (description "")
+    (license license:bsd-3)))
+
+(define-public python-smmap2
+  (package
+    (name "python-smmap2")
+    (version "2.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "smmap2" version))
+              (sha256
+               (base32
+                "06s6d09qzfrns0mn2xgayby6dbk1vi92v97zg6l6xj6chm555jz6"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:tests? #f)) ; no test target
+    (home-page "https://github.com/gitpython-developers/gitdb")
+    (synopsis "Pure python implementation of a sliding window memory map
+manager")
+    (description "Smmap wraps an interface around mmap and tracks the mapped
+files as well as the amount of clients who use it.  If the system runs out of
+resources, or if a memory limit is reached, it will automatically unload
+unused maps to allow continued operation.")
+    (license license:bsd-3)))
