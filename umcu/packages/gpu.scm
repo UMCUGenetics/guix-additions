@@ -140,30 +140,3 @@ for RTX 2080 Ti cards.")
    (description "This package contains the proprietary NVIDIA CUDA toolkit.")
    ;; It's proprietary, so only poke at it with a loooong stick. :)
    (license #f)))
-
-(define-public abseil-cpp
-  ;; We use this commit because it contains changes to the build system to
-  ;; allow building shared libraries.
-  (let ((commit "a048203a881f11f4b7b8df5fb563aec85522f8db"))
-    (package
-     (name "abseil-cpp")
-     (version (string-append "20190808-" (string-take commit 7)))
-     (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/abseil/abseil-cpp.git")
-                    (commit commit)))
-              (file-name (git-file-name name version))
-              (sha256
-               (base32
-                "13v3bkfyhrcl9am0jcz4cfbfc5rn3acm9z4wm01pn36vcgvw2l4s"))))
-     (build-system cmake-build-system)
-     (arguments `(#:configure-flags (list "-DBUILD_SHARED_LIBS=ON")
-                  #:tests? #f)) ; Tests attempt to download googletest.
-     (home-page "https://abseil.io")
-     (synopsis "Augmented C++ standard library")
-     (description "Abseil is an open-source collection of C++ library code
-designed to augment the C++ standard library.  The Abseil library code is
-collected from Google's own C++ code base.")
-     (license license:asl2.0))))
-
