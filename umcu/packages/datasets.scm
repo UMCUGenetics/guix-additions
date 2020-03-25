@@ -36,8 +36,7 @@
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_"
-                  version "/clinvar.vcf.gz"))
+                  "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"))
             (sha256
              (base32
 	      "0pidjv3bf0ckf8wc3nw7zlvzyrh428xskkhz51y7xbbf6pdw0wdp"))))
