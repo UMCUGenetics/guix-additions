@@ -32,14 +32,14 @@
 (define-public vt
   (package
    (name "vt")
-   (version "0.5772")
+   (version "0.57721")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "https://github.com/atks/vt/archive/"
                   version ".tar.gz"))
             (sha256
-             (base32 "1rwpvb5qqwqk3215jw9c5240wdnh6f0y84a5a8vcbxx2g0254ixi"))))
+             (base32 "05sff1mq38ql1jl8rzj62607zzj79w1imy1hzaf56n2lxijd81lg"))))
    (build-system gnu-build-system)
    (arguments
     `(#:phases
