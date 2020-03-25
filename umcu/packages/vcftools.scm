@@ -35,7 +35,7 @@
 (define-public vcftools-0.1.14
   (package
     (name "vcftools")
-    (version "0.1.14")
+    (version "0.1.16")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -43,7 +43,7 @@
                      version ".tar.gz"))
               (sha256
                (base32
-                "1pvgv9vzlgny5h3ljcy7fl2iyn98v366kdxnxv0h36aycj20ai5s"))))
+                "00pk7jl8r12cczk8vyf1bmpm617y2bprxf9advzwnrgy7q3i6p2p"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f ; no "check" target
