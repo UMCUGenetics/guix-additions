@@ -433,7 +433,7 @@ numbers.")
 (define-public vmtouch
   (package
    (name "vmtouch")
-   (version "1.3.0")
+   (version "1.3.1")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -441,7 +441,7 @@ numbers.")
                   version ".tar.gz"))
             (file-name (string-append name "-" version ".tar.gz"))
             (sha256
-             (base32 "1src2byjwgjsbq3sd29r9qgmjwfb1f4c03p5cjqqwk42iw5rh5a6"))))
+             (base32 "1322r3lq02fimb6xkp8lp0fl08i1dzdxddws88b4av0lw4x7nyym"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
