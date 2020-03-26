@@ -2457,25 +2457,16 @@ REPORT_STATUS	~a"
                (("rcopy \\$slice_dir") "$File::Copy::Recursive::KeepMode = 0; rcopy $slice_dir"))
 
              (substitute* "HMF/Pipeline/Functions/Sge.pm"
-               ;; Over-allocate by 5G for each job, because some SGE
+               ;; Over-allocate by 7G for each job, because some SGE
                ;; implementations have memory overhead on each job.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\) . \" -m a")
-                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -V -l h_vmem=$h_vmem")
+                "my $h_vmem = (7 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -V -l h_vmem=$h_vmem")
                ;; Make sure that environment variables are passed along
                ;; to the jobs correctly.
                (("qsub -P") "qsub -m as -M $opt->{MAIL} -V -P")
-               ;; Also apply the 5GB over-allocation to GATK-Queue-spawned jobs.
+               ;; Also apply the 7GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (5 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";"))
-
-             ;; The GATK build does not seem to have a log4j driver available
-             ;; by default.  By forcing it on the CLASSPATH whenever the
-             ;; pipeline is started, we can avoid recompiling GATK.
-             (setenv "PATH" (string-append (assoc-ref %build-inputs "bash") "/bin"))
-             (wrap-program (string-append bin-dir "/pipeline.pl")
-              `("CLASSPATH" ":" = (,(string-append
-                                     (assoc-ref %build-inputs "java-log4j-core")
-                                     "/share/java/log4j-core.jar")))))))))
+                "my $h_vmem = (7 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";")))))))
     (inputs
      `(("bammetrics" ,bammetrics)
        ("bamutils" ,bamutils)
@@ -2515,7 +2506,7 @@ REPORT_STATUS	~a"
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
        ("circos" ,circos)
-       ("java-log4j-core" ,java-log4j-core)
+       ;("java-log4j-core" ,java-log4j-core)
        ("perl-autovivification" ,perl-autovivification)
        ("perl-bareword-filehandles" ,perl-bareword-filehandles)
        ("perl-file-copy-recursive" ,perl-file-copy-recursive)
