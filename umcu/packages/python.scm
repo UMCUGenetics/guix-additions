@@ -1256,8 +1256,7 @@ for Python.  The design goals are:
       (origin
         (method url-fetch)
 	(uri (string-append
-	      "https://github.com/boto/boto"
-	      version ".tar.gz"))
+              "https://github.com/boto/boto/archive/" version ".tar.gz"))
 	(sha256
 	  (base32 "051ka4lm1a7469gj8ibrr0pkckgd64gn0m2g7lr5my228m7zvgix"))))
     (build-system python-build-system)
