@@ -34,6 +34,7 @@
   #:use-module (gnu packages java)
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages ruby)
+  #:use-module (gnu packages onc-rpc)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python)
@@ -66,7 +67,7 @@
        ("tcsh" ,tcsh)
        ("inetutils" ,inetutils)
        ("hwloc" ,hwloc "lib")
-       ("openssl" ,openssl)
+       ("openssl" ,openssl-1.0)
        ("coreutils" ,coreutils)
        ("tcl" ,tcl)
        ("linux-pam" ,linux-pam)
@@ -74,6 +75,7 @@
        ("perl" ,perl)
        ("ruby" ,ruby)
        ("gawk" ,gawk)
+       ("libtirpc" ,libtirpc)
        ("icedtea" ,icedtea-8)))
     (arguments
      `(#:tests? #f
@@ -102,8 +104,11 @@
          (replace 'configure
            (lambda* (#:key inputs #:allow-other-keys)
              (chdir "source")
+             (setenv "SGE_INPUT_LDFLAGS" "-ltirpc")
              (setenv "SGE_INPUT_CFLAGS"
-                     (string-append "-I" (assoc-ref inputs "openssl") "/include"))
+                     (string-append
+                      "-I" (assoc-ref inputs "openssl") "/include "
+                      "-I" (assoc-ref inputs "libtirpc") "/include/tirpc"))
              (setenv "JAVA_HOME" (assoc-ref inputs "icedtea"))
              (system "scripts/bootstrap.sh")
              #t))
@@ -268,8 +273,11 @@ contributing code.")
          (replace 'configure
            (lambda* (#:key inputs #:allow-other-keys)
              (chdir "source")
+             (setenv "SGE_INPUT_LDFLAGS" "-ltirpc")
              (setenv "SGE_INPUT_CFLAGS"
-                     (string-append "-I" (assoc-ref inputs "openssl") "/include"))
+                     (string-append
+                      "-I" (assoc-ref inputs "openssl") "/include "
+                      "-I" (assoc-ref inputs "libtirpc") "/include/tirpc"))
              (setenv "JAVA_HOME" (assoc-ref inputs "icedtea"))
              (system "scripts/bootstrap.sh")
              #t))
