@@ -146,127 +146,8 @@ a-2.png owing to their third and fourth characters.")
 discrete time and discrete space Hidden Markov Models")
    (license license:gpl2+)))
 
-(define-public gatk-bin-3.4-0
-  (package
-   (name "gatk")
-   (version "3.4")
-   (source (origin
-             (method url-fetch)
-             ;; FIXME: You need to be logged in on a web page to download
-             ;; this release.  Please download the file manually and change
-             ;; the path below accordingly.
-            (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/GenomeAnalysisTK-"
-                  version ".tar.bz2"))
-            (sha256
-             (base32 "022wi4d64myp8nb4chpypb3pi8vnx1gsjhkncpjyd8pdks0p72sv"))))
-   (build-system gnu-build-system)
-   (propagated-inputs
-    `(("r-gsalib" ,r-gsalib)
-      ("r-ggplot2" ,r-ggplot2)
-      ("r-gplots" ,r-gplots)
-      ("r-reshape" ,r-reshape)
-      ("r-optparse" ,r-optparse)
-      ("r-dnacopy" ,r-dnacopy)
-      ("r-naturalsort" ,r-naturalsort)
-      ("r-dplyr" ,r-dplyr)
-      ("r-data-table" ,r-data-table)
-      ("r-hmm" ,r-hmm)))
-   (arguments
-    `(#:tests? #f ; This is a binary package only, so no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; Nothing to configure.
-        (delete 'build) ; This is a binary package only.
-        (replace 'install
-          (lambda _
-            (let ((out (string-append (assoc-ref %outputs "out")
-                                      "/share/java/" ,name "/")))
-              (mkdir-p out)
-              (chdir "..")
-              (install-file "GenomeAnalysisTK.jar" out)))))))
-   (home-page "https://www.broadinstitute.org/gatk/")
-   (synopsis "Package for analysis of high-throughput sequencing")
-   (description "The Genome Analysis Toolkit or GATK is a software package for
-analysis of high-throughput sequencing data, developed by the Data Science and
-Data Engineering group at the Broad Institute.  The toolkit offers a wide
-variety of tools, with a primary focus on variant discovery and genotyping as
-well as strong emphasis on data quality assurance.  Its robust architecture,
-powerful processing engine and high-performance computing features make it
-capable of taking on projects of any size.")
-   ;; There are additional restrictions, so it's nonfree.
-   (license license:expat)))
-
-(define-public gatk-bin-3.8-0
-  (package (inherit gatk-bin-3.4-0)
-    (name "gatk")
-    (version "3.8")
-    (source (origin
-             (method url-fetch)
-             (uri (string-append
-                   "https://software.broadinstitute.org/gatk/download/"
-                   "auth?package=GATK"))
-             (file-name (string-append name "-" version ".tar.bz2"))
-             (sha256
-              (base32
-               "1wdr0cwaww8053mkh70xxyiky82qir1xv25cflml9ihc3y2pn0fi"))))
-    (arguments
-    `(#:tests? #f ; This is a binary package only, so no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; Nothing to configure.
-        (delete 'build) ; This is a binary package only.
-        (replace 'install
-          (lambda _
-            (let ((out (string-append (assoc-ref %outputs "out")
-                                      "/share/java/" ,name "/")))
-              (mkdir-p out)
-              (install-file "GenomeAnalysisTK.jar" out)))))))
-    (propagated-inputs
-     `(("r-gsalib" ,r-gsalib)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gplots" ,r-gplots)
-       ("r-reshape" ,r-reshape)
-       ("r-optparse" ,r-optparse)
-       ("r-dnacopy" ,r-dnacopy)
-       ("r-naturalsort" ,r-naturalsort)
-       ("r-dplyr" ,r-dplyr)
-       ("r-data-table" ,r-data-table)
-       ("r-hmm" ,r-hmm)
-       ("gatk-queue-bin-3.8-0" ,gatk-queue-bin-3.8-0)))
-    (native-search-paths
-     (list (search-path-specification
-            (variable "GUIX_JARPATH")
-            (files (list "share/java/user-classes")))))))
-
-(define-public gatk-bin-3.8-1
-  (package (inherit gatk-bin-3.8-0)
-    (name "gatk")
-    (version "3.8-1-0-gf15c1c3ef")
-    (source (origin
-             (method url-fetch)
-             (uri (string-append
-                   "https://software.broadinstitute.org/gatk/download/"
-                   "auth?package=GATK-archive&version=" version))
-             (file-name (string-append name "-" version ".tar.bz2"))
-             (sha256
-              (base32
-               "0p5yikcl54j7krp0sh6vw0wg4zs2a2dlllivpnzkxjnhs8s9b0m0"))))
-    (propagated-inputs
-     `(("r-gsalib" ,r-gsalib)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gplots" ,r-gplots)
-       ("r-reshape" ,r-reshape)
-       ("r-optparse" ,r-optparse)
-       ("r-dnacopy" ,r-dnacopy)
-       ("r-naturalsort" ,r-naturalsort)
-       ("r-dplyr" ,r-dplyr)
-       ("r-data-table" ,r-data-table)
-       ("r-hmm" ,r-hmm)
-       ("gatk-queue-bin-3.8-1" ,gatk-queue-bin-3.8-1)))))
-
 (define-public gatk-bin-3.8.1-no-intel-deflation
-  (package (inherit gatk-bin-3.8-0)
+  (package
     (name "gatk")
     (version "3.8.1-aa8764d6c")
     (source (origin
@@ -275,6 +156,7 @@ capable of taking on projects of any size.")
              (sha256
               (base32
                "1w46s2jh1q7h1r8shjw09y8yw27q15wlkviiqby3wv20haaqqjcg"))))
+    (build-system gnu-build-system)
     (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
@@ -300,112 +182,30 @@ capable of taking on projects of any size.")
        ("r-dplyr" ,r-dplyr)
        ("r-data-table" ,r-data-table)
        ("r-hmm" ,r-hmm)
-       ("gatk-queue-bin-3.8-1" ,gatk-queue-bin-3.8-1)))))
-
-(define-public gatk-bin-3.4-46
-  (package (inherit gatk-bin-3.4-0)
-   (name "gatk")
-   (version "3.4-46-gbc02625")
-   (source (origin
-             (method url-fetch)
-             ;; FIXME: You need to be logged in on a web page to download
-             ;; this release.  Please download the file manually and change
-             ;; the path below accordingly.
-             (uri (string-append
-                   "https://software.broadinstitute.org/gatk/download/"
-                   "auth?package=GATK-archive&version=" version))
-             (file-name (string-append name "-" version ".tar.bz2"))
-            (sha256
-             (base32 "16g3dc75m31qc97dh3wrqh1rjjrlvk8jdx404ji8jpms6wlz6n76"))))
-   (propagated-inputs
-    `(("r-gsalib" ,r-gsalib)
-      ("r-ggplot2" ,r-ggplot2)
-      ("r-gplots" ,r-gplots)
-      ("r-reshape" ,r-reshape)
-      ("r-optparse" ,r-optparse)
-      ("r-dnacopy" ,r-dnacopy)
-      ("r-naturalsort" ,r-naturalsort)
-      ("r-dplyr" ,r-dplyr)
-      ("r-data-table" ,r-data-table)
-      ("r-hmm" ,r-hmm)
-      ("gatk-queue-bin-3.4-46" ,gatk-queue-bin-3.4-46)))))
-
-(define-public gatk-queue-bin-3.4-0
-  (package
-   (name "gatk-queue")
-   (version "3.4")
-   (source (origin
-             (method url-fetch)
-             ;; FIXME: You need to be logged in on a web page to download
-             ;; this release.  Please download the file manually and change
-             ;; the path below accordingly.
-            (uri (string-append
-                  "file:///hpc/local/CentOS7/cog_bioinf/GenomeAnalysisTK_GuixSource/Queue-"
-                  version ".tar.bz2"))
-            (sha256
-             (base32 "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; This is a binary package only, so no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; Nothing to configure.
-        (delete 'build) ; This is a binary package only.
-        (replace 'install
-          (lambda _
-            (chdir "..") ; The build system moves into the "resources" folder.
-            (let ((out (string-append (assoc-ref %outputs "out")
-                                      "/share/java/gatk/")))
-              (mkdir-p out)
-              (install-file "Queue.jar" out)))))))
-   (home-page "https://www.broadinstitute.org/gatk/")
-   (synopsis "Package for analysis of high-throughput sequencing")
-   (description "The Genome Analysis Toolkit or GATK is a software package for
+       ("gatk-queue-bin-3.8-1" ,gatk-queue-bin-3.8-1)))
+    (home-page "https://www.broadinstitute.org/gatk/")
+    (synopsis "Package for analysis of high-throughput sequencing")
+    (description "The Genome Analysis Toolkit or GATK is a software package for
 analysis of high-throughput sequencing data, developed by the Data Science and
 Data Engineering group at the Broad Institute.  The toolkit offers a wide
 variety of tools, with a primary focus on variant discovery and genotyping as
 well as strong emphasis on data quality assurance.  Its robust architecture,
 powerful processing engine and high-performance computing features make it
 capable of taking on projects of any size.")
-   ;; There are additional restrictions, so it's nonfree.
-   (license license:expat)))
-
-(define-public gatk-queue-bin-3.8-0
-  (package (inherit gatk-queue-bin-3.4-0)
-    (name "gatk-queue")
-    (version "3.8")
-    (source (origin
-             (method url-fetch)
-             (uri (string-append "https://software.broadinstitute.org/gatk/"
-                                 "download/auth?package=Queue"))
-             (file-name (string-append name "-" version ".tar.bz2"))
-             (sha256
-              (base32 "0ka2l77583rqad4s96spbk3npv42mgpzba9bqj8r50xn30yfpa8k"))))
-    (arguments
-    `(#:tests? #f ; This is a binary package only, so no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; Nothing to configure.
-        (delete 'build) ; This is a binary package only.
-        (replace 'install
-          (lambda _
-            (let ((out (string-append (assoc-ref %outputs "out")
-                                      "/share/java/gatk/")))
-              (mkdir-p out)
-              (install-file "../Queue.jar" out)))))))))
+    ;; There are additional restrictions, so it's nonfree.
+    (license license:expat)))
 
 (define-public gatk-queue-bin-3.8-1
-  (package (inherit gatk-queue-bin-3.8-0)
+  (package
     (name "gatk-queue")
     (version "3.8-1-0-gf15c1c3ef")
     (source (origin
-             (method url-fetch)
-             (uri (string-append
-                   "https://software.broadinstitute.org/gatk/download/"
-                   "auth?package=Queue-archive&version=" version))
-             (file-name (string-append name "-" version ".tar.bz2"))
-             (sha256
-              (base32 "0435lf2751w3l2m86m3h6girwr09kpiqahq3pj49gibqnyylx4sq"))))
+              (method url-fetch)
+              (uri (string-append
+                    "https://www.roelj.com/gatk-queue-" version ".tar.bz2"))
+              (sha256
+               (base32 "0435lf2751w3l2m86m3h6girwr09kpiqahq3pj49gibqnyylx4sq"))))
+    (build-system gnu-build-system)
     (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
       #:phases
@@ -417,24 +217,18 @@ capable of taking on projects of any size.")
             (let ((out (string-append (assoc-ref %outputs "out")
                                       "/share/java/gatk/")))
               (mkdir-p out)
-              (install-file "Queue.jar" out)))))))))
-
-(define-public gatk-queue-bin-3.4-46
-  (package (inherit gatk-queue-bin-3.4-0)
-   (name "gatk-queue")
-   (version "3.4-46-gbc02625")
-   (source (origin
-             (method url-fetch)
-             ;; FIXME: You need to be logged in on a web page to download
-             ;; this release.  Please download the file manually and change
-             ;; the path below accordingly.
-             (uri (string-append
-                   "https://software.broadinstitute.org/gatk/download/"
-                   "auth?package=Queue-archive&version=" version))
-             (file-name (string-append name "-" version ".tar.bz2"))
-            (sha256
-             (base32 "1d396y7jgiphvcbcy1r981m5lm5sb116a00h42drw103g63g6gr5"))))
-   ))
+              (install-file "Queue.jar" out)))))))
+    (home-page "https://www.broadinstitute.org/gatk/")
+    (synopsis "Package for analysis of high-throughput sequencing")
+    (description "The Genome Analysis Toolkit or GATK is a software package for
+analysis of high-throughput sequencing data, developed by the Data Science and
+Data Engineering group at the Broad Institute.  The toolkit offers a wide
+variety of tools, with a primary focus on variant discovery and genotyping as
+well as strong emphasis on data quality assurance.  Its robust architecture,
+powerful processing engine and high-performance computing features make it
+capable of taking on projects of any size.")
+    ;; There are additional restrictions, so it's nonfree.
+    (license license:expat)))
 
 ;;
 ;; FIXME: This package builds fine, but it doesn't include the R scripts needed by
