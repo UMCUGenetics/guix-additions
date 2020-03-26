@@ -45,8 +45,7 @@
   #:use-module (umcu packages caveman)
   #:use-module (umcu packages cgp-battenberg)
   #:use-module (umcu packages perl)
-  #:use-module (umcu packages samtools)
-  #:use-module (umcu packages vcftools))
+  #:use-module (umcu packages samtools))
 
 (define-public caveman
   (package

@@ -47,7 +47,6 @@
   #:use-module (gnu packages tcl)
   #:use-module (gnu packages web)
   #:use-module (umcu packages samtools)
-  #:use-module (umcu packages vcftools)
   #:use-module (umcu packages perl)
   #:use-module (srfi srfi-1))
 

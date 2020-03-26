@@ -67,9 +67,7 @@
   #:use-module (umcu packages samtools)
   #:use-module (umcu packages snpeff)
   #:use-module (umcu packages strelka)
-  #:use-module (umcu packages varscan)
-  #:use-module (umcu packages vcftools))
-
+  #:use-module (umcu packages varscan))
 
 (define-public gridss-bin
   (package
