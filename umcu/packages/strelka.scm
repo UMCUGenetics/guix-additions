@@ -138,7 +138,8 @@
        ("samtools" ,samtools)))
     (native-inputs
      `(("bash" ,bash)
-       ("python" ,python-2)))
+       ("python" ,python-2)
+       ("gcc" ,gcc-5)))
     (propagated-inputs
      `(("vcftools" ,vcftools)
        ("htslib" ,htslib)))
