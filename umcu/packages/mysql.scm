@@ -34,6 +34,7 @@
   #:use-module (gnu packages curl)
   #:use-module (gnu packages cyrus-sasl)
   #:use-module (gnu packages emacs)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages gettext)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gnupg)
@@ -102,10 +103,11 @@
          "-DINSTALL_SQLBENCHDIR=")))
     (native-inputs
      `(("bison" ,bison)
-       ("perl" ,perl)))
+       ("perl" ,perl)
+       ("gcc" ,gcc-5)))
     (inputs
      `(("libaio" ,libaio)
-       ("openssl" ,openssl)
+       ("openssl" ,openssl-1.0)
        ("zlib" ,zlib)
        ("ncurses" ,ncurses)))
     (home-page "http://www.mysql.com/")
