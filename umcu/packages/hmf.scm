@@ -72,7 +72,7 @@
 (define-public gridss-bin
   (package
     (name "gridss")
-    (version "1.8.0")
+    (version "1.8.1")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -80,7 +80,7 @@
                     version "/gridss-" version "-gridss-jar-with-dependencies.jar"))
               (file-name (string-append name "-" version ".jar"))
               (sha256
-               (base32 "0cicgv4yxr1qx63x75g9m14d4811axlj1lg8hs0lj2bzj801vd0b"))))
+               (base32 "04mqcmaj9xwl98dgcm303fdd9c4ibgrmpqlyw3bq5v8hv6bf39a8"))))
     (build-system gnu-build-system)
     (arguments
     `(#:tests? #f ; This is a binary package only, so no tests.
