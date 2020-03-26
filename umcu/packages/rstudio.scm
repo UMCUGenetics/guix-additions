@@ -37,6 +37,7 @@
   #:use-module (gnu packages flex)
   #:use-module (gnu packages fontutils)
   #:use-module (gnu packages freedesktop)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages gl)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gnuzilla)
@@ -134,7 +135,7 @@
        ("mtdev" ,mtdev)
        ("mysql" ,mysql-5.6.25)
        ("nss" ,nss)
-       ("openssl" ,openssl)
+       ("openssl" ,openssl-1.0)
        ("pcre2" ,pcre2)
        ("postgresql" ,postgresql)
        ("pulseaudio" ,pulseaudio)
@@ -153,7 +154,8 @@
        ("perl" ,perl)
        ("pkg-config" ,pkg-config)
        ("python" ,python-2)
-       ("ruby" ,ruby)))
+       ("ruby" ,ruby)
+       ("gcc" ,gcc-5)))
     (arguments
      `(#:phases
        (modify-phases %standard-phases
