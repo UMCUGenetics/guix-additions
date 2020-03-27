@@ -2261,7 +2261,6 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
                 (tarball       (assoc-ref %build-inputs "source"))
                 (current-dir   (getcwd))
                 (bin-dir       (string-append %output "/bin"))
-                (patch-bin     (string-append (assoc-ref %build-inputs "patch") "/bin/patch"))
                 (pipeline-dir  (string-append %output "/share/hmf-pipeline"))
                 (settings-dir  (string-append %output "/share/hmf-pipeline/settings"))
                 (qscripts-dir  (string-append %output "/share/hmf-pipeline/QScripts"))
@@ -2293,18 +2292,6 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
 
            ;; Extract scripts to their own custom directory.
            (extract-files scripts-dir "scripts")
-
-           ;; Apply the following patches to skip the read group validation.
-           (with-directory-excursion %output
-             (format #t "Applying patches... ")
-             (let ((patch1 (assoc-ref %build-inputs "patch1"))
-                   (patch2 (assoc-ref %build-inputs "patch2")))
-               (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
-                        (zero? (system (string-append patch-bin " -p1 < " patch2))))
-                   (format #t " Succeeded.~%")
-                   (begin
-                     (format #t " Failed.~%")
-                     (throw 'applying-patch-failure)))))
 
            ;; Patch the use of external tools
            (substitute* (list (string-append lib-dir "/HMF/Pipeline/Functions/Config.pm")
@@ -2492,21 +2479,11 @@ REPORT_STATUS	~a"
     (native-inputs
      `(("gzip" ,gzip)
        ("source" ,source)
-       ("tar" ,tar)
-       ("patch" ,patch)
-       ("patch1" ,(origin
-                    (method url-fetch)
-                    (uri (search-patch "hmf-pipeline-skip-readgroup-validation.patch"))
-                    (sha256 (base32 "1pdivvkbqiv80cjqnj0dgsq8yd2s62ch464cylad5n5ian8n1q5f"))))
-       ("patch2" ,(origin
-                    (method url-fetch)
-                    (uri (search-patch "hmf-pipeline-disable-required-pon.patch"))
-                    (sha256 (base32 "15znidznrvy00j10ig3caqp6dqm399y702sdgpsz15bmc9yzlq10"))))))
+       ("tar" ,tar)))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
        ("circos" ,circos)
-       ;("java-log4j-core" ,java-log4j-core)
        ("perl-autovivification" ,perl-autovivification)
        ("perl-bareword-filehandles" ,perl-bareword-filehandles)
        ("perl-file-copy-recursive" ,perl-file-copy-recursive)
