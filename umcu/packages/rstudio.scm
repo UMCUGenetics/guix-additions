@@ -319,7 +319,8 @@ developers using C++ or QML, a CSS & JavaScript like language.")
               (base32
                "0yh3an9rc7fh013cw3bm318ap6428icsmnj38hhg1w6lpwr2gwm2"))))
     (propagated-inputs `())
-    (native-inputs `(("perl" ,perl)))
+    (native-inputs `(("perl" ,perl)
+                     ("gcc" ,gcc-5)))
     (inputs
      `(("mesa" ,mesa)
        ("qtbase" ,qtbase-for-rstudio)
