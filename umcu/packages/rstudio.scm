@@ -1407,6 +1407,7 @@ time Web content can be enhanced with native controls.")
       ("unzip" ,unzip)
       ("ant" ,ant)
       ("jdk" ,icedtea "jdk")
+      ("gcc" ,gcc-5)
       ("gin"
        ,(origin
          (method url-fetch)
