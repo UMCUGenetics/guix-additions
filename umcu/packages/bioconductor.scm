@@ -1267,14 +1267,14 @@ integrates with pathway and gene set (enrichment) analysis tools for
 (define-public r-deepsnv
   (package
    (name "r-deepsnv")
-   (version "1.30.0")
+   (version "1.32.0")
    (source
     (origin
      (method url-fetch)
      (uri (bioconductor-uri "deepSNV" version))
      (sha256
       (base32
-       "004kay4zbw73fizrx1gim933jy7z8dq1g2qmywvvf0l2q06ffw9r"))))
+       "0kanxnb3xhhxki2b447lkcivh1jc3zgjbnam3m4dkp5nbb4yag49"))))
    (properties `((upstream-name . "deepSNV")))
    (build-system r-build-system)
    (inputs
