@@ -2300,10 +2300,6 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
            ;; Extract scripts to their own custom directory.
            (extract-files scripts-dir "scripts")
 
-           ;; Disable the IMPRECISE variants option in libgridss.
-           (substitute* (string-append scripts-dir "/libgridss.R")
-             (("include_pon_imprecise_calls=TRUE") "include_pon_imprecise_calls=FALSE"))
-
            ;; Patch the use of external tools
            (substitute* (list (string-append lib-dir "/HMF/Pipeline/Functions/Config.pm")
                               (string-append lib-dir "/HMF/Pipeline/Functions/Validate.pm"))
