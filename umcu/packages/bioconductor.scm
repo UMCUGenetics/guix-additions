@@ -1298,18 +1298,19 @@ integrates with pathway and gene set (enrichment) analysis tools for
 (define-public r-structuralvariantannotation
   (package
     (name "r-structuralvariantannotation")
-    (version "1.2.0")
+    (version "d6173c3d9dd1fa314c91092b51920925b22268c6")
     (source
      (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "StructuralVariantAnnotation" version))
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/PapenfussLab/StructuralVariantAnnotation.git")
+             (commit version)))
        (sha256
         (base32
-         "1h9mrijs9c7qfk723p79xbz3j2npx1a5dn3sn1ag4k7znbnnqcql"))))
+         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
     (build-system r-build-system)
     (propagated-inputs
-     `(("r-assertthat" ,r-assertthat)
-       ("r-biocgenerics" ,r-biocgenerics)
+     `(("r-biocgenerics" ,r-biocgenerics)
        ("r-biostrings" ,r-biostrings)
        ("r-devtools" ,r-devtools)
        ("r-dplyr" ,r-dplyr)
