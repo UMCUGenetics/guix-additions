@@ -2268,6 +2268,7 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
                 (tarball       (assoc-ref %build-inputs "source"))
                 (current-dir   (getcwd))
                 (bin-dir       (string-append %output "/bin"))
+                (patch-bin     (string-append (assoc-ref %build-inputs "patch") "/bin/patch"))
                 (pipeline-dir  (string-append %output "/share/hmf-pipeline"))
                 (settings-dir  (string-append %output "/share/hmf-pipeline/settings"))
                 (qscripts-dir  (string-append %output "/share/hmf-pipeline/QScripts"))
@@ -2299,6 +2300,16 @@ Medical pipeline.  Please see the README.pdf file for usage restrictions.")
 
            ;; Extract scripts to their own custom directory.
            (extract-files scripts-dir "scripts")
+
+           ;; Apply the following patches.
+           (with-directory-excursion %output
+             (format #t "Applying patches... ")
+             (let ((patch1 (assoc-ref %build-inputs "p1")))
+               (if (zero? (system (string-append patch-bin " -p1 < " patch1)))
+                   (format #t " Succeeded.~%")
+                   (begin
+                     (format #t " Failed.~%")
+                     (throw 'applying-patch-failure)))))
 
            ;; Patch the use of external tools
            (substitute* (list (string-append lib-dir "/HMF/Pipeline/Functions/Config.pm")
@@ -2486,7 +2497,15 @@ REPORT_STATUS	~a"
     (native-inputs
      `(("gzip" ,gzip)
        ("source" ,source)
-       ("tar" ,tar)))
+       ("tar" ,tar)
+       ("patch" ,patch)
+       ("p1" ,(origin
+               (method url-fetch)
+               (uri
+                (search-patch "hmf-pipeline-v4.8-remove-dsb-filter.patch"))
+               (sha256
+                (base32
+                 "01pi7d7vjqwvfy54zznxcw9rc31jbzpbz67zc9ng2kidgh2jns9p"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)

@@ -1,0 +1,55 @@
+diff -dcrB pipeline-4.8-orig/scripts/gridss_somatic_filter.R pipeline-4.8/scripts/gridss_somatic_filter.R
+*** a/share/hmf-pipeline/scripts/gridss_somatic_filter.R	2020-03-31 11:18:29.515542744 +0200
+--- b/share/hmf-pipeline/scripts/gridss_somatic_filter.R	2020-03-31 11:19:14.112389166 +0200
+***************
+*** 166,190 ****
+  # Given the focal nature of chromoplexy, ChainFinder works because it just
+  # finds the focal events, not because the model is correct.
+  # TODO: show this by modelling additional focal DSBs
+! write(paste0("Calculating dsb links ", argv$input), stderr())
+! dsb_link_df = linked_by_dsb(bpgr) %>%
+!   group_by(linked_by) %>%
+!   mutate(pass=passes_final_filters(vcf[vcfId])) %>%
+!   mutate(pass=any(pass)) %>%
+!   ungroup() %>%
+!   filter(pass) %>%
+!   mutate(type="dsb")
+  
+  write(paste0("Removing duplicated/conflicting links ", argv$input), stderr())
+  # linking priorities:
+  # - asm independent of other linkages
+  # - transitive independent of other linkages
+! # - ins, inv, dsb linkages
+  event_link_df = bind_rows(
+    bebeins_link_df,
+    bebpins_link_df,
+!   inv_link_df,
+!   dsb_link_df) %>%
+    dplyr::select(vcfId, linked_by) %>%
+    mutate(QUAL=rowRanges(vcf)[vcfId]$QUAL) %>%
+    group_by(linked_by) %>%
+--- 166,189 ----
+  # Given the focal nature of chromoplexy, ChainFinder works because it just
+  # finds the focal events, not because the model is correct.
+  # TODO: show this by modelling additional focal DSBs
+! write(paste0("Skip calculating dsb links ", argv$input), stderr())
+! ## dsb_link_df = linked_by_dsb(bpgr) %>%
+! ##   group_by(linked_by) %>%
+! ##   mutate(pass=passes_final_filters(vcf[vcfId])) %>%
+! ##   mutate(pass=any(pass)) %>%
+! ##   ungroup() %>%
+! ##   filter(pass) %>%
+! ##   mutate(type="dsb")
+  
+  write(paste0("Removing duplicated/conflicting links ", argv$input), stderr())
+  # linking priorities:
+  # - asm independent of other linkages
+  # - transitive independent of other linkages
+! # - ins, inv linkages
+  event_link_df = bind_rows(
+    bebeins_link_df,
+    bebpins_link_df,
+!   inv_link_df) %>%
+    dplyr::select(vcfId, linked_by) %>%
+    mutate(QUAL=rowRanges(vcf)[vcfId]$QUAL) %>%
+    group_by(linked_by) %>%
