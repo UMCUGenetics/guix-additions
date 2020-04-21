@@ -136,6 +136,19 @@ mappability data (files created by GEM).")
        (sha256
         (base32 "0z657hbpnc76pkli7g1ka07q4bpl41zarjhq6fwh6g9s368id15j"))))))
 
+(define-public freec-11.5
+  (package (inherit freec-10.5)
+    (version "11.5")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "https://github.com/BoevaLab/FREEC/archive/v"
+                           version ".tar.gz"))
+       (file-name (string-append "freec-" version ".tar.gz"))
+       (sha256
+        (base32 "19q5wzbhlzk0wbz41n82vd75a59rfs1qxvgqlpjmrsr8nrnlrwih"))))))
+
+
 (define-public freec-mappability-tracks
   (package
     (name "freec-mappability-tracks")
