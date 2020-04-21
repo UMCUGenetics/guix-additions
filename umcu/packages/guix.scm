@@ -23,7 +23,6 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix git-download)
-  #:use-module (guix build utils)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages autotools)
@@ -34,12 +33,14 @@
   #:use-module (gnu packages bash)
   #:use-module (gnu packages gawk)
   #:use-module (gnu packages guile)
+  #:use-module (gnu packages guile-xyz)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages networking)
-  #:use-module (gnu packages version-control))
+  #:use-module (gnu packages version-control)
+  #:use-module (gnu packages web))
 
 (define (patch-url seqno)
   "Return the URL of Bash patch number SEQNO."
@@ -337,6 +338,26 @@ node.  This script was originally developed by Ricardo Wurmus.  This version
 has been slightly modified to work on the UMC Utrecht cluster set-up.")
     (license #f)))
 
+(define-public hpcguix-web-e8ba702
+  (let ((commit "e8ba7028fd3c95fad24f0760f90a10e94948521c")
+        (revision "0"))
+    (package (inherit hpcguix-web)
+      (name "hpcguix-web")
+      (version "0.0.1-0-e8ba702")
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/UMCUGenetics/hpcguix-web.git")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "08m0n04aczjmw6qc7igiar49vzls13qcdz5xgvzvhhq79dzbliqk"))))
+      (propagated-inputs
+       `(("guile" ,guile-2.2)
+         ("guile-commonmark" ,guile-commonmark)
+         ("guile-json" ,guile-json-1))))))
+
 (define-public iotop-logger
   (package
     (name "iotop-logger")
@@ -412,7 +433,7 @@ numbers.")
 (define-public vmtouch
   (package
    (name "vmtouch")
-   (version "1.3.0")
+   (version "1.3.1")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -420,7 +441,7 @@ numbers.")
                   version ".tar.gz"))
             (file-name (string-append name "-" version ".tar.gz"))
             (sha256
-             (base32 "1src2byjwgjsbq3sd29r9qgmjwfb1f4c03p5cjqqwk42iw5rh5a6"))))
+             (base32 "1322r3lq02fimb6xkp8lp0fl08i1dzdxddws88b4av0lw4x7nyym"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.

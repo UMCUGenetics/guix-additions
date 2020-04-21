@@ -24,6 +24,7 @@
   #:use-module (guix build-system trivial)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression))
@@ -180,6 +181,8 @@ mappability data (files created by GEM).")
       (sha256
        (base32 "1z9rs1fv29adbkwb2ns76v2j29zm2134916c53jqlpjqf6qzm6sw"))))
     (build-system gnu-build-system)
+    (native-inputs
+     `(("gcc" ,gcc-5)))
     (arguments
      `(#:phases
        (modify-phases %standard-phases

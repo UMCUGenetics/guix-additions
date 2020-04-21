@@ -32,15 +32,14 @@
 (define-public clinvar
   (package
    (name "clinvar-vcf")
-   (version "GRCh38")
+   (version "GRCh38-20200316")
    (source (origin
             (method url-fetch)
             (uri (string-append
-                  "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_"
-                  version "/clinvar.vcf.gz"))
+                  "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"))
             (sha256
              (base32
-              "0w81b0xn0hz6yrcmy7c6h07qpjblv8hnxlbvlv9a00bri19wq3y4"))))
+	      "0pidjv3bf0ckf8wc3nw7zlvzyrh428xskkhz51y7xbbf6pdw0wdp"))))
    (build-system trivial-build-system)
    (arguments
     `(#:modules ((guix build utils))
@@ -71,14 +70,14 @@ as efficiently and effectively as possible.")
 
 (define-public clinvar-grch37
   (package (inherit clinvar)
-    (version "GRCh37-20180724")
+    (version "GRCh37-20200316")
     (source (origin
              (method url-fetch)
              (uri (string-append
                    "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz"))
              (sha256
               (base32
-               "11gv8y8q50nvk86c7bs09bpi2ch6xn43hpcm0apk4kfkvs2k6iqr"))))
+               "1kvvj5i14xc1w7v5pb5x0rlkj1mixv1apa9m4nqg501schavmih1"))))
    (arguments
     `(#:modules ((guix build utils))
       #:builder
@@ -96,9 +95,9 @@ as efficiently and effectively as possible.")
     (version "human_9606")
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/"
-                    "VCF/00-All.vcf.gz"))
+              (uri ;"ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/"
+                   ;"VCF/00-All.vcf.gz"
+                   "https://www.roelj.com/00-All.vcf.gz")
               (sha256
                (base32
                 "0f2zzi0br0c1dvlx6wfgfm6f7rgp0kb19gb6p0kxzbs3n92viiqa"))))
@@ -329,7 +328,7 @@ as efficiently and effectively as possible.")
 (define-public dbnsfp
   (package
     (name "dbnsfp")
-    (version "2.9")
+    (version "2.9.3")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -337,7 +336,7 @@ as efficiently and effectively as possible.")
                     version ".zip"))
               (sha256
                (base32
-                "1bs2jpz8d2a9nkc72hhwynzavylr1srsbdrfmmcqpb4pgzqyzk24"))))
+                "132z7rayqdwc04b8bw19amvwyhg67vyscyv1zrb486r49icf73mz"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils))
@@ -401,7 +400,8 @@ in the human genome.")
    (version "GRCh37")
    (source (origin
             (method url-fetch)
-            (uri "http://www.genome.gov/admin/gwascatalog.txt")
+            ;(uri "http://www.genome.gov/admin/gwascatalog.txt")
+            (uri "http://www.roelj.com/gwascatalog.txt")
             (sha256
              (base32
               "137xb3r3w6k8syj6dh6a856fvszcjlylwpzp98m35w5q52vxhdnx"))))

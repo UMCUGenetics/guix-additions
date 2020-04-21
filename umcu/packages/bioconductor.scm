@@ -80,46 +80,6 @@
 utility operations.")
   (license license:gpl3)))
 
-(define-public r-gviz
-  (package
-    (name "r-gviz")
-    (version "1.28.3")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "Gviz" version))
-              (sha256
-               (base32
-                "0347r1ly0vzpilflzbyzsjdf4cday294lw3fxzx61clblrmws1ki"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-s4vectors" ,r-s4vectors)
-       ("r-iranges" ,r-iranges)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-xvector" ,r-xvector)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-biomart" ,r-biomart)
-       ("r-annotationdbi" ,r-annotationdbi)
-       ("r-biobase" ,r-biobase)
-       ("r-genomicfeatures" ,r-genomicfeatures)
-       ("r-bsgenome" ,r-bsgenome)
-       ("r-biostrings" ,r-biostrings)
-       ("r-biovizbase" ,r-biovizbase)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-latticeextra" ,r-latticeextra)
-       ("r-matrixstats" ,r-matrixstats)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-digest" ,r-digest)))
-    (home-page "http://bioconductor.org/packages/Gviz")
-    (synopsis "Plotting data and annotations along genomic coordinates")
-    (description "This package uses the biomaRt and the rtracklayer packages to
-perform live annotation queries to Ensembl and UCSC and translates this to e.g.
-gene/transcript structures in viewports of the grid graphics package.  This
-results in genomic information plotted together with your data.")
-    (license license:artistic2.0)))
-
 (define-public r-funcisnp-data
   (package
    (name "r-funcisnp-data")
@@ -316,25 +276,6 @@ correct position but this injection will exclude chrM (i.e. nothing will be
 injected in that sequence).")
     (license license:artistic2.0)))
 
-(define-public r-flock
-  (package
-    (name "r-flock")
-    (version "0.7")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "flock" version))
-              (sha256
-               (base32
-                "1zg93p74icj4bhxnmnssj2xp6vw4yaksyavq03497v33xfpdxss7"))))
-    (build-system r-build-system)
-    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
-    (home-page "http://cran.r-project.org/web/packages/flock")
-    (synopsis "Process Synchronization Using File Locks")
-    (description "Implements synchronization between R processes (spawned by
-using the @code{parallel} package for instance) using file locks.  Supports both
-exclusive and shared locking.")
-    (license license:asl2.0)))
-
 (define r-spp-custom
   (package
     (name "r-spp-custom")
@@ -397,40 +338,6 @@ exclusive and shared locking.")
     (synopsis "")
     (description "")
     (license #f)))
-
-(define-public r-fda
-  (package
-   (name "r-fda")
-   (version "2.4.8")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "fda" version))
-            (sha256
-             (base32
-              "0n39rzbhg1hipzn51rzmbchn2358qgapg08iv7lmiqj5y7i9qns2"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-matrix" ,r-matrix)))
-   (home-page "http://www.functionaldata.org")
-   (synopsis "Functional Data Analysis")
-   (description
-    "These functions were developed to support functional data analysis as
-described in Ramsay, J.  O.  and Silverman, B.  W. (2005) Functional Data
-Analysis.  New York: Springer.  They were ported from earlier versions in
-Matlab and S-PLUS.  An introduction appears in Ramsay, J.  O., Hooker,
-Giles, and Graves, Spencer (2009) Functional Data Analysis with R and
-Matlab (Springer).  The package includes data sets and script files working
-many examples including all but one of the 76 figures in this latter book.
-Matlab versions of the code and sample analyses are no longer distributed
-through CRAN, as they were when the book was published.  For those, ftp
-from <http://www.psych.mcgill.ca/misc/fda/downloads/FDAfuns/> There you find
-a set of .zip files containing the functions and sample analyses, as well as
-two .txt files giving instructions for installation and some additional
-information.  The changes from Version 2.4.1 are fixes of bugs in density.fd
-and removal of functions create.polynomial.basis, polynompen, and polynomial.
-These were deleted because the monomial basis does the same thing and because
-there were errors in the code.")
-   (license license:gpl2+)))
 
 (define-public r-lsd
   (package
@@ -706,33 +613,6 @@ converting time series to data frames suitable for plotting with
 for diagnosing what data are passed to compute_group() and 
 @code{compute_panel()} functions and to geometries.")
    (license license:gpl2+)))
-
-(define-public r-pbdzmq
-  (package
-   (name "r-pbdzmq")
-   (version "0.3-3")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "pbdZMQ" version))
-            (sha256
-             (base32
-              "1jkfcfhspvqra7vbllrvkz3jx8j7d0ang6zzcdjgpb7200sc29mf"))))
-   (properties `((upstream-name . "pbdZMQ")))
-   (build-system r-build-system)
-   (inputs
-    `(("zlib" ,zlib)
-      ("zeromq" ,zeromq)))
-    (native-inputs
-     `(("pkg-config" ,pkg-config)))
-   (home-page "http://r-pbd.org/")
-   (synopsis
-    "Programming with Big Data -- Interface to 'ZeroMQ'")
-   (description
-    "@code{ZeroMQ} is a well-known library for high-performance asynchronous
-messaging in scalable, distributed applications.  This package provides high
-level R wrapper functions to easily utilize 'ZeroMQ'.  We mainly focus on
-interactive client/server programming frameworks.")
-   (license license:gpl3)))
 
 (define-public r-coverageview
   (package
@@ -1267,54 +1147,6 @@ to TSS regions, genomic annotation, distance to TSS, and overlap of peaks or
 genes.")
   (license license:artistic2.0)))
 
-(define-public r-reactomepa
-  (package
-    (name "r-reactomepa")
-    (version "1.28.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "ReactomePA" version))
-              (sha256
-               (base32
-                "0nm765z24lnhwkh88kf799nlid7xhqy3ab36vc0wbg6kpkcpbxkm"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-annotationdbi" ,r-annotationdbi)
-       ("r-dose" ,r-dose)
-       ("r-enrichplot" ,r-enrichplot)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-ggraph" ,r-ggraph)
-       ("r-reactome-db" ,r-reactome-db)
-       ("r-igraph" ,r-igraph)
-       ("r-graphite" ,r-graphite)))
-    (home-page "https://guangchuangyu.github.io/software/ReactomePA")
-    (synopsis "Reactome Pathway Analysis")
-    (description "This package provides functions for pathway analysis based on
-REACTOME pathway database. It implements enrichment analysis, gene set
-enrichment analysis and several functions for visualization.")
-    (license license:gpl2)))
-
-(define-public r-reactome-db
-  (package
-    (name "r-reactome-db")
-    (version "1.66.0")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "http://www.bioconductor.org/packages/release/data/"
-                    "annotation/src/contrib/reactome.db_" version ".tar.gz"))
-              (sha256
-               (base32
-                "093bara4hk0590gxrz8ingbym79bs5hcf4plarrqdcldlljqfsyl"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-annotationdbi" ,r-annotationdbi)))
-    (home-page "https://guangchuangyu.github.io/software/ReactomePA")
-    (synopsis "Set of annotation maps for reactome")
-    (description "This package provides a set of annotation maps for reactome
-assembled using data from reactome.")
-    (license license:cc-by4.0)))
-
 (define-public r-graphite
   (package
     (name "r-graphite")
@@ -1376,73 +1208,6 @@ analysis techniques.  cycle_hire() and cycle_hire_osm(), for example, is
 designed to illustrate point pattern analysis techniques.")
    (license #f)))
 
-(define-public r-spdep
-  (package
-   (name "r-spdep")
-   (version "1.1-3")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "spdep" version))
-     (sha256
-      (base32
-       "1f8cjffqqc6rnb3n4qym70ca6nz2kvrsd3g587wrqdr79nnbwnrk"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-boot" ,r-boot)
-      ("r-coda" ,r-coda)
-      ("r-deldir" ,r-deldir)
-      ("r-expm" ,r-expm)
-      ("r-gmodels" ,r-gmodels)
-      ("r-learnbayes" ,r-learnbayes)
-      ("r-mass" ,r-mass)
-      ("r-matrix" ,r-matrix)
-      ("r-nlme" ,r-nlme)
-      ("r-sp" ,r-sp)
-      ("r-sf" ,r-sf)
-      ("r-spdata" ,r-spdata)))
-   (home-page "https://github.com/r-spatial/spdep/")
-   (synopsis
-    "Spatial Dependence: Weighting Schemes, Statistics and Models")
-   (description
-    "This package provides a collection of functions to create spatial weights
-matrix objects from polygon 'contiguities', from point patterns by distance and
-tessellations, for summarizing these objects, and for permitting their use in
-spatial data analysis, including regional aggregation by minimum spanning tree;
-a collection of tests for spatial 'autocorrelation', including global
-'Morans I', 'APLE', 'Gearys C', 'Hubert/Mantel' general cross product
-statistic, Empirical Bayes estimates and 'Assun????o/Reis' Index, 'Getis/Ord'
-G and multicoloured join count statistics, local 'Moran's I' and 'Getis/Ord' G,
-'saddlepoint' approximations, exact tests for global and local 'Moran's I' and
-'LOSH' local indicators of spatial heteroscedasticity; and functions for
-estimating spatial simultaneous 'autoregressive' ('SAR') lag and error models,
-impact measures for lag models, weighted and 'unweighted' 'SAR' and 'CAR'
-spatial regression models, semi-parametric and Moran 'eigenvector' spatial
-filtering, 'GM SAR' error models, and generalized spatial two stage least
-squares models.")
-   (license license:gpl2+)))
-
-(define-public r-diagram
-  (package
-   (name "r-diagram")
-   (version "1.6.4")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "diagram" version))
-            (sha256
-             (base32
-              "0f6ffprn5k0ir1s7m9s7izc64aa17r3gnygagz5bihrlsvawaavw"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-shape" ,r-shape)))
-   (home-page "http://cran.r-project.org/web/packages/diagram")
-   (synopsis "Functions for visualising simple graphs and flow diagrams")
-   (description
-    "This package can be used to Visualise simple graphs (networks) based on a
-transition matrix, utilities to plot flow diagrams, visualising webs, and
-electrical networks.")
-   (license license:gpl2+)))
-
 (define-public r-kegggraph
   (package
    (name "r-kegggraph")
@@ -1502,14 +1267,14 @@ integrates with pathway and gene set (enrichment) analysis tools for
 (define-public r-deepsnv
   (package
    (name "r-deepsnv")
-   (version "1.30.0")
+   (version "1.32.0")
    (source
     (origin
      (method url-fetch)
      (uri (bioconductor-uri "deepSNV" version))
      (sha256
       (base32
-       "004kay4zbw73fizrx1gim933jy7z8dq1g2qmywvvf0l2q06ffw9r"))))
+       "0kanxnb3xhhxki2b447lkcivh1jc3zgjbnam3m4dkp5nbb4yag49"))))
    (properties `((upstream-name . "deepSNV")))
    (build-system r-build-system)
    (inputs
@@ -1819,3 +1584,129 @@ clustering, substituting special text characters, viewing parts of a
 @code{data.frame}, constructing formulas from text and building design and
 response matrices.")
    (license license:bsd-3)))
+
+(define-public r-bisquerna
+  (package
+   (name "r-bisquerna")
+   (version "1.0")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "BisqueRNA" version))
+            (sha256
+             (base32
+              "1ks91gjfcnajg540930drcnqcrn4fi3735hywyy3y6i1q0wnq9vb"))))
+   (properties `((upstream-name . "BisqueRNA")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biobase" ,r-biobase)
+      ("r-lsei" ,r-lsei)))
+   (home-page "https://www.biorxiv.org/content/10.1101/669911v1")
+   (synopsis "Decomposition of Bulk Expression with Single-Cell Sequencing")
+   (description "This package provides tools to accurately estimate cell type
+abundances from heterogeneous bulk expression.  A reference-based method
+utilizes single-cell information to generate a signature matrix and
+transformation of bulk expression for accurate regression based estimates.
+A marker-based method utilizes known cell-specific marker genes to measure
+relative abundances across samples.")
+   (license license:gpl3)))
+
+(define-public r-loomr
+  (package
+   (name "r-loomr")
+   (version "0.2.0-beta")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/mojaveazure/loomR/archive/"
+                  version ".tar.gz"))
+            (sha256
+             (base32
+              "1grchjgiky5siifkl9hmj6v0sf7q2by62rfdj2k8s2zhmrpgb0yw"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-hdf5r" ,r-hdf5r)
+      ("r-r6" ,r-r6)
+      ("r-iterators" ,r-iterators)
+      ("r-itertools" ,r-itertools)
+      ("r-matrix" ,r-matrix)))
+   (home-page "http://loompy.org")
+   (synopsis "R interface for loom files")
+   (description "This package provides an interface for the single-cell
+RNAseq-oriented loom format.  Loom files are an HDF5-based format for storing
+and interacting with large single-cell RNAseq datasets.  This package provides
+an interface for working with loom files in a loom-specific way; we provide
+routines for validating loom files, iterating with chunks through data within
+the loom file, and provide a platform for other packages to build support for
+loom files.")
+   (license license:gpl3)))
+
+(define-public r-tree
+  (package
+   (name "r-tree")
+   (version "1.0-40")
+   (source (origin
+            (method url-fetch)
+            (uri (cran-uri "tree" version))
+            (sha256
+             (base32
+              "1rr6ws62j9h36f3nl713f8h3ndkh95mv46l055jvgmby5lw1dazz"))))
+   (properties `((upstream-name . "tree")))
+   (build-system r-build-system)
+   (home-page "https://cran.r-project.org/web/packages/tree")
+   (synopsis "Classification and Regression Trees")
+   (description "Classification and regression trees.")
+   (license license:gpl2+)))
+
+(define-public r-bsgenome-hsapiens-ucsc-hg38
+  (package
+    (name "r-bsgenome-hsapiens-ucsc-hg38")
+    (version "1.4.1")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "BSgenome.Hsapiens.UCSC.hg38"
+                                     version 'annotation))
+              (sha256
+               (base32
+                "1ql08pvi4vv0ynvg4qs9kysw1c7s3crkgin6zxvgzqk6fray9mvi"))))
+    (properties
+     `((upstream-name . "BSgenome.Hsapiens.UCSC.hg38")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-bsgenome" ,r-bsgenome)))
+    (home-page
+     "https://www.bioconductor.org/packages/BSgenome.Hsapiens.UCSC.hg38/")
+    (synopsis "Full genome sequences for Homo sapiens")
+    (description
+     "This package provides full genome sequences for Homo sapiens (Human)
+as provided by UCSC (hg38, Dec. 2013) and stored in Biostrings objects.")
+    (license license:artistic2.0)))
+
+
+(define-public r-cummerbund
+  (package
+   (name "r-cummerbund")
+   (version "2.28.0")
+   (source(origin
+           (method url-fetch)
+           (uri (bioconductor-uri "cummeRbund" version))
+           (sha256
+           (base32
+            "1fjc3bcclm4gsvw4nq6cv3a1kbrldvrxbkyfb9306708si1n4dwk"))))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-biocgenerics" ,r-biocgenerics)
+     ("r-rsqlite" ,r-rsqlite)
+     ("r-ggplot2" ,r-ggplot2)
+     ("r-reshape" ,r-reshape)
+     ("r-fastcluster", r-fastcluster)
+     ("r-rtracklayer" ,r-rtracklayer)
+     ("r-gviz" ,r-gviz)
+     ("r-plyr" ,r-plyr)
+     ("r-s4vectors" ,r-s4vectors)
+     ("r-biobase" ,r-biobase)))
+
+   (home-page "http://bioconductor.org/packages/cummeRbund")
+   (synopsis "CummeRbund")
+   (description
+    "Analysis, exploration, manipulation, and visualization of Cufflinks high-throughput sequencing data.")
+   (license license:gpl2+)))

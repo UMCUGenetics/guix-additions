@@ -31,6 +31,7 @@
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages compression)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages python)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages shells))
@@ -128,7 +129,8 @@ across a broad spectrum of applications.")
     (native-inputs
      `(("perl" ,perl)
        ("python" ,python-2)
-       ("tcsh" ,tcsh)))
+       ("tcsh" ,tcsh)
+       ("gcc" ,gcc-5)))
     (arguments
      `(#:tests? #f
        #:make-flags

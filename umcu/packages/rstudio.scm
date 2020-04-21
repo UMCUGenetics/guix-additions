@@ -37,6 +37,7 @@
   #:use-module (gnu packages flex)
   #:use-module (gnu packages fontutils)
   #:use-module (gnu packages freedesktop)
+  #:use-module (gnu packages gcc)
   #:use-module (gnu packages gl)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gnuzilla)
@@ -134,7 +135,7 @@
        ("mtdev" ,mtdev)
        ("mysql" ,mysql-5.6.25)
        ("nss" ,nss)
-       ("openssl" ,openssl)
+       ("openssl" ,openssl-1.0)
        ("pcre2" ,pcre2)
        ("postgresql" ,postgresql)
        ("pulseaudio" ,pulseaudio)
@@ -153,7 +154,8 @@
        ("perl" ,perl)
        ("pkg-config" ,pkg-config)
        ("python" ,python-2)
-       ("ruby" ,ruby)))
+       ("ruby" ,ruby)
+       ("gcc" ,gcc-5)))
     (arguments
      `(#:phases
        (modify-phases %standard-phases
@@ -317,7 +319,8 @@ developers using C++ or QML, a CSS & JavaScript like language.")
               (base32
                "0yh3an9rc7fh013cw3bm318ap6428icsmnj38hhg1w6lpwr2gwm2"))))
     (propagated-inputs `())
-    (native-inputs `(("perl" ,perl)))
+    (native-inputs `(("perl" ,perl)
+                     ("gcc" ,gcc-5)))
     (inputs
      `(("mesa" ,mesa)
        ("qtbase" ,qtbase-for-rstudio)
@@ -1404,6 +1407,7 @@ time Web content can be enhanced with native controls.")
       ("unzip" ,unzip)
       ("ant" ,ant)
       ("jdk" ,icedtea "jdk")
+      ("gcc" ,gcc-5)
       ("gin"
        ,(origin
          (method url-fetch)

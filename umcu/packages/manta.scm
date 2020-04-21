@@ -32,7 +32,7 @@
   #:use-module (gnu packages graphviz)
   #:use-module (gnu packages pth)
   #:use-module (gnu packages python)
-  #:use-module (umcu packages pyflow)
+  #:use-module (umcu packages python)
   #:use-module (umcu packages boost)
   #:use-module (umcu packages samtools))
 

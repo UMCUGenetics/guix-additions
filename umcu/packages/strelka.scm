@@ -46,8 +46,7 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages web)
-  #:use-module (umcu packages boost)
-  #:use-module (umcu packages vcftools))
+  #:use-module (umcu packages boost))
 
 (define-public strelka-1.0.15
   (package
@@ -138,7 +137,8 @@
        ("samtools" ,samtools)))
     (native-inputs
      `(("bash" ,bash)
-       ("python" ,python-2)))
+       ("python" ,python-2)
+       ("gcc" ,gcc-5)))
     (propagated-inputs
      `(("vcftools" ,vcftools)
        ("htslib" ,htslib)))
@@ -165,7 +165,7 @@ indels from the aligned sequencing reads of matched tumor-normal samples")
       (patches (list (search-patch "strelka-disable-tests.patch")
                      (search-patch "strelka-disable-install.patch")))))
     (propagated-inputs
-     `(("vcftools" ,vcftools-0.1.14)
+     `(("vcftools" ,vcftools)
        ("htslib" ,htslib)))))
 
 (define-public codemin

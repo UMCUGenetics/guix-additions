@@ -24,7 +24,6 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
-  #:use-module (guix build utils)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages compression))
@@ -40,7 +39,7 @@
       (uri "http://people.virginia.edu/~wc9c/KING/Linux-king.tar.gz")
       (file-name (string-append name "-" version "-bin.tar.gz"))
       (sha256
-       (base32 "1wpnphn6ah7j3a2k2805adi4dd8hpcyjx9gpkn0m92yy432dwxi2"))))
+       (base32 "0asrgj4m20mll0psk2238asda4w1brzb5wlqjmaijknhflw60pj0"))))
     (build-system gnu-build-system)
     ;; The executable is linked to 64-bit libraries.
     (supported-systems '("x86_64-linux"))
