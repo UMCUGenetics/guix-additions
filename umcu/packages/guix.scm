@@ -353,10 +353,17 @@ has been slightly modified to work on the UMC Utrecht cluster set-up.")
                 (sha256
                  (base32
                   "08m0n04aczjmw6qc7igiar49vzls13qcdz5xgvzvhhq79dzbliqk"))))
+      (arguments
+       `(#:phases
+         (modify-phases %standard-phases
+          (add-after 'unpack 'enable-guile-3
+            (lambda _
+              (substitute* "configure.ac"
+                (("GUILE_PKG\\(\\[2.2\\]\\)") "GUILE_PKG([3.0 2.2])")))))))
       (propagated-inputs
-       `(("guile" ,guile-2.2)
-         ("guile-commonmark" ,guile-commonmark)
-         ("guile-json" ,guile-json-1))))))
+       `(("guile" ,guile-3.0)
+         ("guile-commonmark" ,guile3.0-commonmark)
+         ("guile-json" ,guile3.0-json))))))
 
 (define-public iotop-logger
   (package
