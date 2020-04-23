@@ -354,12 +354,57 @@ has been slightly modified to work on the UMC Utrecht cluster set-up.")
                  (base32
                   "08m0n04aczjmw6qc7igiar49vzls13qcdz5xgvzvhhq79dzbliqk"))))
       (arguments
-       `(#:phases
+       `(#:modules ((guix build gnu-build-system)
+                    (guix build utils)
+                    (srfi srfi-26)
+                    (ice-9 popen)
+                    (ice-9 rdelim))
+         #:phases
          (modify-phases %standard-phases
           (add-after 'unpack 'enable-guile-3
             (lambda _
               (substitute* "configure.ac"
-                (("GUILE_PKG\\(\\[2.2\\]\\)") "GUILE_PKG([3.0 2.2])")))))))
+                (("GUILE_PKG\\(\\[2.2\\]\\)") "GUILE_PKG([3.0 2.2])"))))
+          (add-before 'configure 'set-variables
+             (lambda _
+               ;; This prevents a few warnings
+               (setenv "GUILE_AUTO_COMPILE" "0")
+               (setenv "XDG_CACHE_HOME" (getcwd))
+               #t))
+          (add-after 'install 'wrap-program
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+              (let* ((out      (assoc-ref outputs "out"))
+                     (guix     (assoc-ref inputs "guix"))
+                     (guile    (assoc-ref inputs "guile"))
+                     (gcrypt   (assoc-ref inputs "guile-gcrypt"))
+                     (git      (assoc-ref inputs "guile-git"))
+                     (bs       (assoc-ref inputs "guile-bytestructures"))
+                     (json     (assoc-ref inputs "guile-json"))
+                     (guile-cm (assoc-ref inputs
+                                          "guile-commonmark"))
+                     (deps (list guile gcrypt git bs guile-cm guix json))
+                     (effective
+                      (read-line
+                       (open-pipe* OPEN_READ
+                                   (string-append guile "/bin/guile")
+                                   "-c" "(display (effective-version))")))
+                     (path   (string-join
+                              (map (cut string-append <>
+                                        "/share/guile/site/"
+                                        effective)
+                                   deps)
+                              ":"))
+                     (gopath (string-join
+                              (map (cut string-append <>
+                                        "/lib/guile/" effective
+                                        "/site-ccache")
+                                   deps)
+                              ":")))
+                (wrap-program (string-append out "/bin/run")
+                  `("GUILE_LOAD_PATH" ":" prefix (,path))
+                  `("GUILE_LOAD_COMPILED_PATH" ":" prefix (,gopath)))
+
+                #t))))))
       (inputs
        `(("guix" ,guile3.0-guix)))
       (propagated-inputs
