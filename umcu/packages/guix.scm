@@ -360,6 +360,8 @@ has been slightly modified to work on the UMC Utrecht cluster set-up.")
             (lambda _
               (substitute* "configure.ac"
                 (("GUILE_PKG\\(\\[2.2\\]\\)") "GUILE_PKG([3.0 2.2])")))))))
+      (inputs
+       `(("guix" ,guile3.0-guix)))
       (propagated-inputs
        `(("guile" ,guile-3.0)
          ("guile-commonmark" ,guile3.0-commonmark)
