@@ -916,7 +916,7 @@ not available.")))
      (substitute-keyword-arguments (package-arguments qtsvg-for-rstudio)
        ((#:tests? _ #f) #f))) ; TODO: Enable the tests
     (inputs
-     `(("qtbase" ,qtbase)
+     `(("qtbase" ,qtbase-for-rstudio)
        ("qtdeclarative" ,qtdeclarative-for-rstudio)))
     (synopsis "Qt Graphical Effects module")
     (description "The Qt Graphical Effects module provides a set of QML types
@@ -973,7 +973,7 @@ backend for QtQuick scene graph.")
        ("freetype" ,freetype)
        ("libxrender" ,libxrender)
        ("sdl2" ,sdl2)
-       ("qtbase" ,qtbase)
+       ("qtbase" ,qtbase-for-rstudio)
        ("qtdeclarative" ,qtdeclarative-for-rstudio)))
     (synopsis "Qt Gamepad module")
     (description "The Qt Gamepad module is an add-on library that enables Qt
