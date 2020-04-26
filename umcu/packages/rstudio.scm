@@ -945,7 +945,7 @@ coloring, and many more.")))
               '(delete-file-recursively "tools/opengldummy/3rdparty"))))
     (native-inputs `())
     (inputs
-     `(("qtbase" ,qtbase)
+     `(("qtbase" ,qtbase-for-rstudio)
        ("qtdeclarative" ,qtdeclarative-for-rstudio)))
     (synopsis "Qt Declarative Render module")
     (description "The Qt Declarative Render 2D module provides a Raster
