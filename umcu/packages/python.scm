@@ -360,33 +360,34 @@ implemented using Requests")
       (description "Utility scripts to work with Genologics Clarity LIMS")
       (license #f))))
 
-
 (define-public python-scikit-rebate
   (package
     (name "python-scikit-rebate")
-    (version "0.3.4")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "skrebate" version))
-       (sha256
-        (base32
-         "0xa3smiah1q0wmmq8krfvc3mgk5fq0cb968xydsgh75ykrpp5zij"))))
+    (version "0.6")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "skrebate" version))
+              (sha256
+               (base32
+                "1h7qs9gjxpzqabzhb8rmpv3jpmi5iq41kqdibg48299h94iikiw7"))))
     (build-system python-build-system)
+    ;; Pandas is only needed to run the tests.
+    (native-inputs
+     `(("python-pandas" ,python-pandas)))
     (propagated-inputs
      `(("python-numpy" ,python-numpy)
        ("python-scipy" ,python-scipy)
-       ("python-scikit-learn" ,python-scikit-learn)))
+       ("python-scikit-learn" ,python-scikit-learn)
+       ("python-joblib" ,python-joblib)))
     (home-page "https://epistasislab.github.io/scikit-rebate/")
     (synopsis "Relief-based feature selection algorithms for Python")
-    (description
-     "Scikit-rebate is a scikit-learn-compatible Python implementation of
-ReBATE, a suite of Relief-based feature selection algorithms for Machine
-Learning.  These algorithms excel at identifying features that are predictive
-of the outcome in supervised learning problems, and are especially good at
-identifying feature interactions that are normally overlooked by standard
-feature selection algorithms.")
-    (license license:bsd-3)))
+    (description "Scikit-rebate is a scikit-learn-compatible Python
+implementation of ReBATE, a suite of Relief-based feature selection algorithms
+for Machine Learning.  These algorithms excel at identifying features that are
+predictive of the outcome in supervised learning problems, and are especially
+good at identifying feature interactions that are normally overlooked by
+standard feature selection algorithms.")
+    (license license:expat)))
 
 (define-public python2-scikit-rebate
   (package-with-python2 python-scikit-rebate))
