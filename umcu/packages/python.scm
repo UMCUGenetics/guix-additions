@@ -2245,3 +2245,27 @@ unused maps to allow continued operation.")
    (description
      "Calculate statistics for Oxford Nanopore sequencing data and alignments")
    (license license:expat)))
+
+(define-public python-bitarray
+  (package
+    (name "python-bitarray")
+    (version "1.2.1")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "bitarray" version))
+              (sha256
+               (base32
+                "1kxrlxfj9nrx512sfwifwl9z4v6ky3qschl0zmk3s3dvc3s7bmif"))))
+    (build-system python-build-system)
+    (home-page "https://github.com/ilanschnell/bitarray")
+    (synopsis "Efficient arrays of booleans")
+    (description "This package provides an object type which efficiently
+represents an array of booleans.  Bitarrays are sequence types and behave very
+much like usual lists.  Eight bits are represented by one byte in a contiguous
+block of memory.  The user can select between two representations:
+little-endian and big-endian.  All of the functionality is implemented in C.
+Methods for accessing the machine representation are provided.  This can be
+useful when bit level access to binary files is required, such as portable
+bitmap image files.  Also, when dealing with compressed data which uses
+variable bit length encoding, you may find this module useful.")
+    (license license:psfl)))
