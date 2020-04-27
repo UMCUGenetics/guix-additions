@@ -446,17 +446,15 @@ to group instances from the same class together.")
 (define-public r-aneufinderdata
   (package
    (name "r-aneufinderdata")
-   (version "1.8.0")
+   (version "1.14.0")
    (source (origin
             (method url-fetch)
-            (uri (string-append "http://bioconductor.org/packages"
-                                "/release/data/experiment/src/contrib/"
-                                "AneuFinderData_" version ".tar.gz"))
+            (uri (bioconductor-uri "AneuFinderData" version 'experiment))
             (sha256
              (base32
-              "17snbhlvb64mqcq26kawd92wpckjzxbl78chp87hrwsfhf7my6hm"))))
+              "1ar2n45bhns0m651p6xlff5ja56s2a906c01qsyza348pjh5fmi7"))))
    (build-system r-build-system)
-   (home-page "http://bioconductor.org/packages/AneuFinderData")
+   (home-page "https://bioconductor.org/packages/AneuFinderData/")
    (synopsis "Data package for AneuFinder")
    (description "This package contains data used by AneuFinder.")
    (license license:artistic2.0)))
@@ -486,13 +484,13 @@ of estimated change- points as well as other summary information.")
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
-    (version "1.12.1")
+    (version "1.14.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AneuFinder" version))
               (sha256
                (base32
-                "0inj83p9jzdblhl9xlzz07iqs0b6xrz1mkm357h8krn5aj3ar0x4"))))
+                "054m9scwnw0snk9vw3f2a1r1zrd9qqs05khd9n7i7jmivnzx5qrb"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
@@ -516,7 +514,7 @@ of estimated change- points as well as other summary information.")
        ("r-reordercluster" ,r-reordercluster)
        ("r-mclust" ,r-mclust)
        ("r-cowplot" ,r-cowplot)))
-    (home-page "http://bioconductor.org/packages/AneuFinder")
+    (home-page "https://bioconductor.org/packages/AneuFinder/")
     (synopsis "Copy number variation analysis in single-cell-sequencing data")
     (description "This package implements functions for copy number variant
 calling, plotting, export and analysis from whole-genome single cell
