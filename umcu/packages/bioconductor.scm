@@ -1684,27 +1684,28 @@ as provided by UCSC (hg38, Dec. 2013) and stored in Biostrings objects.")
   (package
    (name "r-cummerbund")
    (version "2.28.0")
-   (source(origin
-           (method url-fetch)
-           (uri (bioconductor-uri "cummeRbund" version))
-           (sha256
-           (base32
-            "1fjc3bcclm4gsvw4nq6cv3a1kbrldvrxbkyfb9306708si1n4dwk"))))
+   (source (origin
+             (method url-fetch)
+             (uri (bioconductor-uri "cummeRbund" version))
+             (sha256
+              (base32
+               "1fjc3bcclm4gsvw4nq6cv3a1kbrldvrxbkyfb9306708si1n4dwk"))))
    (build-system r-build-system)
    (propagated-inputs
-    `(("r-biocgenerics" ,r-biocgenerics)
-     ("r-rsqlite" ,r-rsqlite)
-     ("r-ggplot2" ,r-ggplot2)
-     ("r-reshape" ,r-reshape)
-     ("r-fastcluster", r-fastcluster)
-     ("r-rtracklayer" ,r-rtracklayer)
-     ("r-gviz" ,r-gviz)
-     ("r-plyr" ,r-plyr)
-     ("r-s4vectors" ,r-s4vectors)
-     ("r-biobase" ,r-biobase)))
-
-   (home-page "http://bioconductor.org/packages/cummeRbund")
-   (synopsis "CummeRbund")
-   (description
-    "Analysis, exploration, manipulation, and visualization of Cufflinks high-throughput sequencing data.")
-   (license license:gpl2+)))
+    `(("r-biobase" ,r-biobase)
+      ("r-biocgenerics" ,r-biocgenerics)
+      ("r-fastcluster", r-fastcluster)
+      ("r-ggplot2" ,r-ggplot2)
+      ("r-gviz" ,r-gviz)
+      ("r-plyr" ,r-plyr)
+      ("r-reshape2" ,r-reshape2)
+      ("r-rsqlite" ,r-rsqlite)
+      ("r-rtracklayer" ,r-rtracklayer)
+      ("r-s4vectors" ,r-s4vectors)))
+   (home-page "https://bioconductor.org/packages/cummeRbund/")
+   (synopsis "Analyze Cufflinks high-throughput sequencing data")
+   (description "This package allows for persistent storage, access,
+exploration, and manipulation of Cufflinks high-throughput sequencing
+data.  In addition, provides numerous plotting functions for commonly
+used visualizations.")
+   (license license:artistic2.0)))
