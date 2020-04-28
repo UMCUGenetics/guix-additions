@@ -45,8 +45,7 @@
   #:use-module (gnu packages shells)
   #:use-module (gnu packages python)
   #:use-module (gnu packages tls)
-  #:use-module (gnu packages web)
-  #:use-module (umcu packages boost))
+  #:use-module (gnu packages web))
 
 (define-public strelka-1.0.15
   (package

@@ -19,7 +19,6 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix git-download)
-  #:use-module (guix build utils)
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system trivial)
@@ -59,14 +58,91 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages sdl)
+  #:use-module (gnu packages shells)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages sqlite)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages xorg)
-  #:use-module (umcu packages mysql)
-  #:use-module (umcu packages boost))
+  #:use-module (umcu packages mysql))
+
+(define-public boost-1.63.0
+  (package
+    (name "boost")
+    (version "1.63.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "mirror://sourceforge/boost/boost/" version "/boost_"
+                    (string-map (lambda (x) (if (eq? x #\.) #\_ x)) version)
+                    ".tar.bz2"))
+              (sha256
+               (base32
+                "1c5kzhcqahnic55dxcnw7r80qvwx5sfa2sa97yzv7xjrywljbbmy"))))
+    (build-system gnu-build-system)
+    (inputs `(("zlib" ,zlib)))
+    (native-inputs
+     `(("perl" ,perl)
+       ("python" ,python-2)
+       ("tcsh" ,tcsh)
+       ("gcc" ,gcc-5)))
+    (arguments
+     `(#:tests? #f
+       #:make-flags
+       (list "threading=multi" "link=shared"
+
+             ;; Set the RUNPATH to $libdir so that the libs find each other.
+             (string-append "linkflags=-Wl,-rpath="
+                            (assoc-ref %outputs "out") "/lib")
+
+             ;; Boost's 'context' library is not yet supported on mips64, so
+             ;; we disable it.  The 'coroutine' library depends on 'context',
+             ;; so we disable that too.
+             ,@(if (string-prefix? "mips64" (or (%current-target-system)
+                                                (%current-system)))
+                   '("--without-context"
+                     "--without-coroutine" "--without-coroutine2")
+                   '()))
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'bootstrap)
+         (replace
+             'configure
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((out (assoc-ref outputs "out")))
+               (substitute* '("libs/config/configure"
+                              "libs/spirit/classic/phoenix/test/runtest.sh"
+                              "tools/build/doc/bjam.qbk"
+                              "tools/build/src/engine/execunix.c"
+                              "tools/build/src/engine/Jambase"
+                              "tools/build/src/engine/jambase.c")
+                 (("/bin/sh") (which "sh")))
+
+               (setenv "SHELL" (which "sh"))
+               (setenv "CONFIG_SHELL" (which "sh"))
+
+               (zero? (system* "./bootstrap.sh"
+                               (string-append "--prefix=" out)
+                               "--with-toolset=gcc")))))
+         (replace
+             'build
+           (lambda* (#:key outputs make-flags #:allow-other-keys)
+             (zero? (apply system* "./b2"
+                           (format #f "-j~a" (parallel-job-count))
+                           make-flags))))
+         (replace
+             'install
+           (lambda* (#:key outputs make-flags #:allow-other-keys)
+             (zero? (apply system* "./b2" "install" make-flags)))))))
+
+    (home-page "http://boost.org")
+    (synopsis "Peer-reviewed portable C++ source libraries")
+    (description
+     "A collection of libraries intended to be widely useful, and usable
+across a broad spectrum of applications.")
+    (license (license:x11-style "http://www.boost.org/LICENSE_1_0.txt"
+                                "Some components have other similar licences."))))
 
 ;;
 ;; When RStudio upgraded to Qt 5.11, they use Qt5WebEngine, which isn't

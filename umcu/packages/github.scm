@@ -11,15 +11,12 @@
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
-  #:use-module (gnu packages boost)
   #:use-module (gnu packages curl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages xml)
-  #:use-module (gnu packages tls)
-  #:use-module (umcu packages boost)
-  #:use-module (umcu packages python))
+  #:use-module (gnu packages tls))
 
 (define-public xqilla
   (package
