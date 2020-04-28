@@ -24,6 +24,7 @@
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build utils)
   #:use-module (gnu packages)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
@@ -33,10 +34,13 @@
   #:use-module (gnu packages gnupg)
   #:use-module (gnu packages guile)
   #:use-module (gnu packages guile-xyz)
+  #:use-module (gnu packages openldap)
   #:use-module (gnu packages package-management)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages rdf)
   #:use-module (gnu packages tex)
+  #:use-module (gnu packages tls)
+  #:use-module (gnu packages xml)
   #:use-module (umcu packages guix))
 
 (define-public hmf-glue
@@ -220,3 +224,62 @@ database instances on Utrecht's HPC.")
    (description "This package provides @code{shallowcp}, which can create
 shallow copies of a directory (symlinks to files instead of a full copy).")
    (license license:gpl3+)))
+
+(define-public sparqling-genomics
+  (package
+   (name "sparqling-genomics")
+   (version "0.99.10")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://github.com/UMCUGenetics/sparqling-genomics/"
+                  "releases/download/" version "/sparqling-genomics-"
+                  version ".tar.gz"))
+            (sha256
+             (base32
+              "114sjnm850gj63jsiqk22dc5g4pd297qigj4ggpavb20k0k7yn30"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:configure-flags (list (string-append
+                               "--with-libldap-prefix="
+                               (assoc-ref %build-inputs "openldap")))
+      #:parallel-build? #f ; It breaks building the documentation.
+      #:phases
+      (modify-phases %standard-phases
+        (add-after 'install 'wrap-executable
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let* ((out  (assoc-ref outputs "out"))
+                   (guile-load-path
+                    (string-append out "/share/guile/site/2.2:"
+                                   (getenv "GUILE_LOAD_PATH")))
+                   (guile-load-compiled-path
+                    (string-append out "/lib/guile/2.2/site-ccache:"
+                                   (getenv "GUILE_LOAD_COMPILED_PATH")))
+                   (web-root (string-append
+                              out "/share/sparqling-genomics/web")))
+              (wrap-program (string-append out "/bin/sg-web")
+                `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
+                `("GUILE_LOAD_COMPILED_PATH" ":" prefix
+                  (,guile-load-compiled-path))
+                `("SG_WEB_ROOT" ":" prefix (,web-root)))))))))
+   (native-inputs
+    `(("texlive" ,texlive)
+      ("pkg-config" ,pkg-config)))
+   (inputs
+    `(("guile" ,guile-2.2)
+      ("htslib" ,htslib)
+      ("libgcrypt" ,libgcrypt)
+      ("libxml2" ,libxml2)
+      ("openldap" ,openldap)
+      ("raptor2" ,raptor2)
+      ("xz" ,xz)
+      ("zlib" ,zlib)))
+   (propagated-inputs
+    `(("gnutls" ,gnutls))) ; Needed to query HTTPS endpoints.
+   (home-page "https://github.com/UMCUGenetics/sparqling-genomics")
+   (synopsis "Tools to use SPARQL to analyze genomics data")
+   (description "This package provides various tools to extract RDF triples
+from genomic data formats, and a web interface to query SPARQL endpoints.")
+   ;; All programs except the web interface is licensed GPLv3+.  The web
+   ;; interface is licensed AGPLv3+.
+   (license (list license:gpl3+ license:agpl3+))))
