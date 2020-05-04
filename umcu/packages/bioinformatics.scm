@@ -1796,14 +1796,14 @@ capable of taking on projects of any size.")
 (define-public gatk4
   (package
     (name "gatk4")
-    (version "4.1.3.0")
+    (version "4.1.5.0")
     (source (origin
               (method url-fetch)
               (uri (string-append
                     "https://github.com/broadinstitute/gatk/releases/download/"
                     version "/gatk-" version ".zip"))
               (sha256
-               (base32 "02nzqdc2d6v2sp9fz1y7aywx9r0mmgin57v2lkm032jsn41lzzan"))))
+               (base32 "0aw8v4fsy4cmaji2rl7p42l58w2glrjxipygqk3m9k70rb155hbg"))))
     (build-system trivial-build-system)
     (arguments
      `(#:modules ((guix build utils))
@@ -1818,11 +1818,11 @@ capable of taking on projects of any size.")
            (mkdir-p bin)
            (system (string-append unzip " " tarball))
            (chdir (string-append "gatk-" ,version))
-           (install-file "gatk-package-4.1.3.0-local.jar" out)
-           (symlink (string-append out "/gatk-package-4.1.3.0-local.jar")
+           (install-file "gatk-package-4.1.5.0-local.jar" out)
+           (symlink (string-append out "/gatk-package-4.1.5.0-local.jar")
                     (string-append out "/gatk.jar"))
-           (install-file "gatk-package-4.1.3.0-spark.jar" out)
-           (symlink (string-append out "/gatk-package-4.1.3.0-spark.jar")
+           (install-file "gatk-package-4.1.5.0-spark.jar" out)
+           (symlink (string-append out "/gatk-package-4.1.5.0-spark.jar")
                     (string-append out "/gatk-spark.jar"))
            (substitute* "gatk"
              (("/usr/bin/env python") (string-append
