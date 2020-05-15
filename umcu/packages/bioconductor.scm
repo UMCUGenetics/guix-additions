@@ -1296,30 +1296,26 @@ integrates with pathway and gene set (enrichment) analysis tools for
 (define-public r-structuralvariantannotation
   (package
     (name "r-structuralvariantannotation")
-    (version "d6173c3d9dd1fa314c91092b51920925b22268c6")
+    (version "1.4.0")
     (source
      (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/PapenfussLab/StructuralVariantAnnotation.git")
-             (commit version)))
+       (method url-fetch)
+       (uri (bioconductor-uri "StructuralVariantAnnotation" version))
        (sha256
         (base32
-         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
+         "1qkr6mxqyknf0sgn7k7laqmwgf27g81d80k7qikxiln8fimwj8xa"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-biocgenerics" ,r-biocgenerics)
        ("r-biostrings" ,r-biostrings)
-       ("r-devtools" ,r-devtools)
        ("r-dplyr" ,r-dplyr)
        ("r-genomicranges" ,r-genomicranges)
-       ("r-roxygen2" ,r-roxygen2)
        ("r-rtracklayer" ,r-rtracklayer)
-       ("r-s4vectors" ,r-s4vectors)
        ("r-stringr" ,r-stringr)
        ("r-testthat" ,r-testthat)
+       ("r-assertthat" ,r-assertthat)
        ("r-variantannotation" ,r-variantannotation)))
-    (home-page "https://github.com/PapenfussLab/StructuralVariantAnnotation")
+    (home-page "https://bioconductor.org/packages/StructuralVariantAnnotation/")
     (synopsis "R package designed to simplify structural variant analysis")
     (description
      "This package contains useful helper functions for dealing with structural
