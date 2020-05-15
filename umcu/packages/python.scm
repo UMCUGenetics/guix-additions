@@ -1912,14 +1912,14 @@ inferred as mutational genotypes of distinct clonal populations.")
 (define-public python-pycoqc
  (package
   (name "python-pycoqc")
-  (version "2.5.0.3")
+  (version "2.5.0.21")
   (source
     (origin
       (method url-fetch)
       (uri (pypi-uri "pycoQC" version))
       (sha256
        (base32
-        "10skrk9ws7zqfg51c3d4nhia2va3m88p7kcasmh7n9gb3y470z1w"))))
+        "02lqck381nk8bvczxjc8inr5ihhxziwwp7zdp1l43h8q2wix67k9"))))
   (build-system python-build-system)
   (arguments
    `(#:tests? #f
@@ -1930,6 +1930,7 @@ inferred as mutational genotypes of distinct clonal populations.")
            (substitute* "setup.py"
              (("tqdm==4.35") "tqdm>=4.19.6")
              (("pysam==0.15.3") "pysam>=0.15.0")
+             (("jinja2==2.10.1") "jinja2>=2.10.1")
              (("h5py==2.9.0") "h5py>=2.8.0")
              (("plotly==4.1.0") "plotly>=3.9.0")
              (("pandas==0.25.1") "pandas>=0.24.2")
