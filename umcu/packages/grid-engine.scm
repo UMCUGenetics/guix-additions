@@ -194,48 +194,6 @@ Sun's old gridengine project after Oracle shut down the site and stopped
 contributing code.")
     (license (list license:asl2.0 license:gpl2+))))
 
-(define-public guile-drmaa
-  (let ((commit "4ceb4093821ce8fca794e723dc50e03c3f2b33c3"))
-    (package
-      (name "guile-drmaa")
-      (version "0.0.1")
-      (source
-       (origin
-         (method url-fetch)
-         (uri (string-append
-               "https://github.com/UMCUGenetics/guile-drmaa/releases/download/v"
-               version "/guile-drmaa-" version ".tar.gz"))
-         (sha256
-          (base32 "1xny2iynspd94i2ps84w177s2iy1ylp08h3dm9bw3crc295889y0"))))
-      (build-system gnu-build-system)
-      (arguments
-       `(#:tests? #f ; There are no tests.
-         #:phases
-         (modify-phases %standard-phases
-           (add-after 'install 'install-scheme-module
-             (lambda* (#:key outputs #:allow-other-keys)
-               (let ((module-dir (string-append (assoc-ref outputs "out")
-                                                "/share/guile/site/2.0")))
-                 (mkdir-p module-dir)
-                 (substitute* "drmaa.scm"
-                   (("libguile_drmaa.so") (string-append
-                                           (assoc-ref outputs "out")
-                                           "/lib/libguile_drmaa.so")))
-                 (install-file "drmaa.scm" module-dir)
-
-                 ;; Remove unneeded copy of drmaa.scm in /share/.
-                 (delete-file (string-append (assoc-ref outputs "out")
-                                             "/share/drmaa.scm"))))))))
-      (native-inputs
-       `(("pkg-config" ,pkg-config)))
-      (inputs
-       `(("guile" ,guile-2.0)
-         ("grid-engine-core" ,grid-engine-core)))
-      (home-page #f)
-      (synopsis #f)
-      (description #f)
-      (license license:gpl3+))))
-
 (define-public grid-engine-core-8.1.8
   (package (inherit grid-engine-core)
     (version "8.1.8")
