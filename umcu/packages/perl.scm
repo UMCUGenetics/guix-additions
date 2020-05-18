@@ -710,7 +710,7 @@ file the lists the enriched domains and their posterior probabilities.")
       ("infernal" ,infernal)
       ("minced" ,minced)
       ("findutils" ,findutils)
-      ("icedtea" ,icedtea)))
+      ("icedtea" ,icedtea-8)))
    (native-search-paths
     (list (search-path-specification
            (variable "PROKKA_DBDIR")
