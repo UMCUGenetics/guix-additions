@@ -451,7 +451,7 @@ writes to the disk for various processes.")
 (define-public collectl
   (package
    (name "collectl")
-   (version "4.1.2")
+   (version "4.3.1")
    (source (origin
              (method url-fetch)
              (uri (string-append
@@ -459,7 +459,7 @@ writes to the disk for various processes.")
                    "/collectl-" version ".src.tar.gz"))
              (sha256
               (base32
-               "0cf44kwazxfh98yshyi1jcw34lzfy5ahqxpgqqsxa6ps7zlm89lp"))))
+               "1wc9k3rmhqzh6cx5dcpqhlc3xcpadsn2ic54r19scdjbjx6jd1r1"))))
    (build-system gnu-build-system)
    (arguments
     `(#:tests? #f ; There are no tests.
@@ -473,8 +473,13 @@ writes to the disk for various processes.")
                                           (assoc-ref outputs "out")))
               (("DESTDIR/usr") "DESTDIR"))))
         (replace 'install
-                 (lambda _
-                   (system* "./INSTALL"))))))
+          (lambda* (#:key outputs #:allow-other-keys)
+            (substitute* "collectl"
+             (("\\$configFile='';")
+              (string-append "$configFile='"
+                             (assoc-ref outputs "out")
+                             "/etc';")))
+            (system* "./INSTALL"))))))
    (inputs
     `(("perl" ,perl)))
    (home-page "http://collectl.sourceforge.net")
