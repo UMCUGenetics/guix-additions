@@ -50,23 +50,6 @@
   #:use-module (umcu packages hmf)
   #:use-module (umcu packages perl))
 
-(define-public perl-storable
-  (package
-   (name "perl-storable")
-   (version "2.51")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append "mirror://cpan/authors/id/A/AM/AMS/Storable-"
-           version ".tar.gz"))
-     (sha256
-      (base32 "1gphq8yhqzrwwlx2i5a8914ccw41ywmpl7gc648s5frb269bfrm5"))))
-   (build-system perl-build-system)
-   (home-page "http://search.cpan.org/dist/Storable")
-   (synopsis "Persistence for Perl data structures")
-   (description "")
-   (license #f)))
-
 (define-public perl-set-intervaltree
   (package
    (name "perl-set-intervaltree")
