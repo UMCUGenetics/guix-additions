@@ -21,9 +21,11 @@
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
   #:use-module (gnu packages admin)
+  #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
   #:use-module (gnu packages compression)
@@ -35,6 +37,7 @@
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages onc-rpc)
+  #:use-module (gnu packages parallel)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
   #:use-module (gnu packages python)
@@ -306,3 +309,32 @@ contributing code.")
                  (lambda _
                    (format #t "Name: drmaa~%Description: DRMAA interface~%Version: 8.1.8~%Requires:~%Libs: -L~a -ldrmaa~%Cflags: -I~a" lib include)))
                #t))))))))
+
+(define-public qsub-slurm
+  (let ((commit "4c298594b84d2e611efc7ad1c4d1bd6327a4c5af"))
+    (package
+     (name "qsub-slurm")
+     (version "0.0.01")
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/roelj/qsub-slurm.git")
+                    (commit commit)))
+              (sha256
+               (base32
+                "1m2id7hjqgiajbgxjd9322dcda2w1xib2ma0wa71g4x9zw2msl65"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:tests? #f))
+     (native-inputs
+      `(("autoconf" ,autoconf)
+        ("automake" ,automake)
+        ("pkg-config" ,pkg-config)))
+     (inputs
+      `(("slurm" ,slurm)
+        ("guile" ,guile-3.0)))
+     (home-page "https://github.com/roelj/qsub-slurm")
+     (synopsis "Compatibility tool to move from SGE to SLURM.")
+     (description "This package an alternative @code{qsub} command that
+will submit jobs to SLURM.")
+     (license license:gpl3+))))
