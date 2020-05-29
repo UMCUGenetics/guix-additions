@@ -2209,7 +2209,7 @@ PDF/HTML reports.  It has been developed to run on the Utrecht HPC.")
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f ; There are no tests.
-       #:make-flags `("USER_WARNINGS=-Wall"
+       #:make-flags `("USER_WARNINGS=-std=gnu++98"
                       ,(string-append "INSTALLDIR="
                                       (assoc-ref %outputs "out") "/bin"))
        #:phases
@@ -2737,7 +2737,14 @@ REPORT_STATUS	~a"
                 (search-patch "hmf-pipeline-v4.8-remove-dsb-filter.patch"))
                (sha256
                 (base32
-                 "01pi7d7vjqwvfy54zznxcw9rc31jbzpbz67zc9ng2kidgh2jns9p"))))))
+                 "01pi7d7vjqwvfy54zznxcw9rc31jbzpbz67zc9ng2kidgh2jns9p"))))
+       ("p2" ,(origin
+               (method url-fetch)
+               (uri
+                (search-patch "hmf-pipeline-on-slurm.patch"))
+               (sha256
+                (base32
+                 "0awxf78449rjd488k4q0rg89pnjn87drzizk2aw41a42vmk4m6sx"))))))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
@@ -2868,8 +2875,10 @@ produce meaningful genomic data from Hartwig Medical.")
            ;; Apply the following patches.
            (with-directory-excursion %output
              (format #t "Applying patches... ")
-             (let ((patch1 (assoc-ref %build-inputs "p1")))
-               (if (zero? (system (string-append patch-bin " -p1 < " patch1)))
+             (let ((patch1 (assoc-ref %build-inputs "p1"))
+                   (patch2 (assoc-ref %build-inputs "p2")))
+               (if (and (zero? (system (string-append patch-bin " -p1 < " patch1)))
+                        (zero? (system (string-append patch-bin " -p1 < " patch2))))
                    (format #t " Succeeded.~%")
                    (begin
                      (format #t " Failed.~%")
