@@ -2193,6 +2193,18 @@ BAM files using @code{sambamba}.")
 PDF/HTML reports.  It has been developed to run on the Utrecht HPC.")
     (license license:expat)))
 
+(define-public bammetrics-slurm
+  (package (inherit bammetrics)
+    (name "bammetrics")
+    (version "2.1.4-slurm")
+    (inputs
+     `(("sambamba" ,sambamba)
+       ("perl" ,perl)
+       ("r-minimal" ,r-minimal)
+       ("picard" ,picard-bin-1.141)
+       ("icedtea" ,icedtea-8)
+       ("grid-engine-core" ,qsub-slurm)))))
+
 (define-public bamutils
   (package
     (name "bamutils")
@@ -3045,7 +3057,29 @@ REPORT_STATUS	~a"
                (("qsub -P") "qsub -m as -M $opt->{MAIL} -V -P")
                ;; Also apply the 7GB over-allocation to GATK-Queue-spawned jobs.
                (("my \\$qsub = generic\\(\\$opt, \\$function\\);")
-                "my $h_vmem = (7 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";")))))))       
+                "my $h_vmem = (7 + $opt->{$function.\"_MEM\"}).\"G\"; my $qsub = generic($opt, $function) . \" -m as -M $opt->{MAIL} -l h_vmem=$h_vmem\";")))))))
+    (inputs
+     `(("bammetrics" ,bammetrics-slurm)
+       ("bamutils" ,bamutils)
+       ("bash" ,bash)
+       ("bwa" ,bwa-0.7.5a)
+       ("bwa-0.7.17" ,bwa)
+       ("damage-estimator" ,hmf-damage-estimator)
+       ("gatk" ,gatk-bin-3.8.1-no-intel-deflation)
+       ("gatk-queue" ,gatk-queue-bin-3.8-1)
+       ("gridss" ,gridss-bin)
+       ("hmftools" ,hmftools-for-pipeline-v4.8)
+       ("htslib" ,htslib)
+       ("icedtea-8" ,icedtea-8)
+       ("igvtools" ,igvtools-bin-2.3.60)
+       ("king" ,king-bin-2.1.2)
+       ("perl" ,perl)
+       ("picard" ,picard-bin-1.141)
+       ("python" ,python-2)
+       ("make" ,gnu-make)
+       ("findutils" ,findutils)
+       ("diffutils" ,diffutils)
+       ("r-minimal" ,r-minimal)))
     (propagated-inputs
      `(("bash" ,bash)
        ("bcftools" ,bcftools)
