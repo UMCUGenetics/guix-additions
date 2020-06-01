@@ -311,10 +311,10 @@ contributing code.")
                #t))))))))
 
 (define-public qsub-slurm
-  (let ((commit "9d87a5f75b58b97bf5e57ba823ef817257f1f9f6"))
+  (let ((commit "f07946cc362a62fb80cfe1d0e30943f714c26e24"))
     (package
      (name "qsub-slurm")
-     (version "0.0.2")
+     (version "0.0.3")
      (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -322,7 +322,7 @@ contributing code.")
                     (commit commit)))
               (sha256
                (base32
-                "0ysw3y472ckp9q4g9asybvl2a4c1bpxnpn30sqx3zppjvkbrxv7w"))))
+                "0qbi5dq95s7yd29khbdl1qi0kwg73ajjn0rrnp4giw1i4swm05kw"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f))
