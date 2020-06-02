@@ -3589,9 +3589,7 @@ as efficiently and effectively as possible.")
     (version "human_9606")
     (source (origin
               (method url-fetch)
-              (uri ;"ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/"
-                   ;"VCF/00-All.vcf.gz"
-                   "https://www.roelj.com/00-All.vcf.gz")
+              (uri "ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/VCF/00-All.vcf.gz")
               (sha256
                (base32
                 "0f2zzi0br0c1dvlx6wfgfm6f7rgp0kb19gb6p0kxzbs3n92viiqa"))))
