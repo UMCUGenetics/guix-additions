@@ -2882,6 +2882,12 @@ produce meaningful genomic data from Hartwig Medical.")
            ;; Extract scripts to their own custom directory.
            (extract-files scripts-dir "scripts")
 
+           ;; Add an extra script for Slurm.
+           (call-with-output-file (string-append
+                                   scripts-dir "/bin-true-job-helper.sh")
+             (lambda (port)
+               (format port "#!/bin/sh~%/bin/true~%")))
+
            ;; Apply the following patches.
            (with-directory-excursion %output
              (format #t "Applying patches... ")
@@ -2924,7 +2930,11 @@ produce meaningful genomic data from Hartwig Medical.")
                (("/usr/bin/env perl") perlbin)
                ;; Use "sh" instead of "bash" to prevent loading bash
                ;; configuration files that modify the program's environment.
-               (("/usr/bin/env bash") shbin)))
+               (("/usr/bin/env bash") shbin))
+
+             (substitute* "PostStats.sh.tt"
+               (("-b y /bin/true")
+                (string-append "-b y " scripts-dir "/bin-true-job-helper.sh"))))
 
            (with-directory-excursion settings-dir
              ;; Add a prefix to the 'INIFILE' directory specification.
