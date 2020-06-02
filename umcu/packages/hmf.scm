@@ -2227,8 +2227,6 @@ PDF/HTML reports.  It has been developed to run on the Utrecht HPC.")
        #:phases
        (modify-phases %standard-phases
          (delete 'configure))))
-    (native-inputs
-     `(("gcc" ,gcc-5)))
     (inputs
      `(("zlib" ,zlib)))
     (home-page "https://genome.sph.umich.edu/wiki/BamUtil")
