@@ -1293,6 +1293,40 @@ integrates with pathway and gene set (enrichment) analysis tools for
     "This package provides provides quantitative variant callers for detecting subclonal mutations in ultra-deep (>=100x coverage) sequencing experiments.  The deepSNV algorithm is used for a comparative setup with a control experiment of the same loci and uses a beta-binomial model and a likelihood ratio test to discriminate sequencing errors and subclonal SNVs.  The shearwater algorithm computes a Bayes classifier based on a beta-binomial model for variant calling with multiple samples for precisely estimating model parameters - such as local error rates and dispersion - and prior knowledge, e.g.  from variation data bases such as COSMIC.")
    (license license:gpl3)))
 
+(define-public r-structuralvariantannotation-for-hmf-pipeline
+  (package
+    (name "r-structuralvariantannotation")
+    (version "0.0.0-d6173c3d9dd1fa314c91092b51920925b22268c6")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "StructuralVariantAnnotation" version))
+       (sha256
+        (base32
+         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biocgenerics" ,r-biocgenerics)
+       ("r-biostrings" ,r-biostrings)
+       ("r-devtools" ,r-devtools)
+       ("r-dplyr" ,r-dplyr)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-roxygen2" ,r-roxygen2)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-stringr" ,r-stringr)
+       ("r-testthat" ,r-testthat)
+       ("r-assertthat" ,r-assertthat)
+       ("r-variantannotation" ,r-variantannotation)))
+    (home-page "https://github.com/PapenfussLab/StructuralVariantAnnotation")
+    (synopsis "R package designed to simplify structural variant analysis")
+    (description
+     "This package contains useful helper functions for dealing with structural
+variants in VCF format.  The packages contains functions for parsing VCFs from
+a number of popular callers as well as functions for dealing with breakpoints
+involving two separate genomic loci encoded as GRanges objects.")
+    (license license:gpl3)))
+
 (define-public r-structuralvariantannotation
   (package
     (name "r-structuralvariantannotation")

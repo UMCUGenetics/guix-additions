@@ -56,40 +56,6 @@
   #:use-module (umcu packages mysql)
   #:use-module (umcu packages perl))
 
-(define-public r-structuralvariantannotation-for-hmf-pipeline
-  (package
-    (name "r-structuralvariantannotation")
-    (version "0.0.0-d6173c3d9dd1fa314c91092b51920925b22268c6")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "StructuralVariantAnnotation" version))
-       (sha256
-        (base32
-         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biocgenerics" ,r-biocgenerics)
-       ("r-biostrings" ,r-biostrings)
-       ("r-devtools" ,r-devtools)
-       ("r-dplyr" ,r-dplyr)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-roxygen2" ,r-roxygen2)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-stringr" ,r-stringr)
-       ("r-testthat" ,r-testthat)
-       ("r-assertthat" ,r-assertthat)
-       ("r-variantannotation" ,r-variantannotation)))
-    (home-page "https://github.com/PapenfussLab/StructuralVariantAnnotation")
-    (synopsis "R package designed to simplify structural variant analysis")
-    (description
-     "This package contains useful helper functions for dealing with structural
-variants in VCF format.  The packages contains functions for parsing VCFs from
-a number of popular callers as well as functions for dealing with breakpoints
-involving two separate genomic loci encoded as GRanges objects.")
-    (license license:gpl3)))
-
 (define-public gridss-bin
   (package
     (name "gridss")
