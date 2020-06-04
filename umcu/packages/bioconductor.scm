@@ -1296,14 +1296,16 @@ integrates with pathway and gene set (enrichment) analysis tools for
 (define-public r-structuralvariantannotation-for-hmf-pipeline
   (package
     (name "r-structuralvariantannotation")
-    (version "0.0.0-d6173c3d9dd1fa314c91092b51920925b22268c6")
+    (version "0.0.0-d6173c3")
     (source
      (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "StructuralVariantAnnotation" version))
+       (method git-fetch)
+       (uri (git-reference
+	     (url "https://github.com/PapenfussLab/StructuralVariantAnnotation.git")
+	     (commit "d6173c3d9dd1fa314c91092b51920925b22268c6")))
        (sha256
-        (base32
-         "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
+	(base32
+	 "12s4l5f778mnncbikqva941hzr07c59gnkd633hd03q3h57hm5xg"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-biocgenerics" ,r-biocgenerics)
