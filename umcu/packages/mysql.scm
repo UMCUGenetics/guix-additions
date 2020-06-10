@@ -81,8 +81,7 @@
     (build-system cmake-build-system)
     (arguments
      '(#:configure-flags
-       '("-DCMAKE_CXX_FLAGS=-fpermissive"
-         "-DBUILD_CONFIG=mysql_release"
+       '("-DBUILD_CONFIG=mysql_release"
          "-DWITH_SSL=system"
          "-DWITH_ZLIB=system"
          "-DDEFAULT_CHARSET=utf8"
@@ -104,7 +103,8 @@
          "-DINSTALL_SQLBENCHDIR=")))
     (native-inputs
      `(("bison" ,bison)
-       ("perl" ,perl)))
+       ("perl" ,perl)
+       ("gcc" ,gcc-5)))
     (inputs
      `(("libaio" ,libaio)
        ("openssl" ,openssl-1.0)
