@@ -85,11 +85,12 @@
     (native-inputs
      `(("perl" ,perl)
        ("python" ,python-2)
-       ("tcsh" ,tcsh)))
+       ("tcsh" ,tcsh)
+       ("gcc" ,gcc-5)))
     (arguments
      `(#:tests? #f
        #:make-flags
-       (list "threading=multi" "link=shared" "cxxflags=-std=c++14"
+       (list "threading=multi" "link=shared"
 
              ;; Set the RUNPATH to $libdir so that the libs find each other.
              (string-append "linkflags=-Wl,-rpath="

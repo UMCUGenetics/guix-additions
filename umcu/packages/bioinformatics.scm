@@ -94,7 +94,6 @@
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (srfi srfi-1)
-  #:use-module ((umcu packages rstudio) #:select (boost-1.63.0))
   #:use-module (umcu packages perl)
   #:use-module (umcu packages python))
 
@@ -3425,7 +3424,7 @@ reads.")
             #t)))))
     (inputs
      `(("cmake" ,cmake)
-       ("boost" ,boost-1.63.0)
+       ("boost" ,boost)
        ("pyflow" ,pyflow-2)
        ("python" ,python-2)
        ("cppcheck" ,cppcheck)
