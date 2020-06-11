@@ -191,7 +191,7 @@ without modification.")
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.12.0")
+    (version "1.13.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
@@ -288,11 +288,13 @@ elif [ \"$1\" == \"load-profile\" ]; then
       locale_variables=$(export -p | ${grep} \"^declare -x LANG\" || echo \"# No LANG variable found.\")
       locpath_variables=$(export -p | ${grep} \"^declare -x GUIX_LOCPATH\" || echo \"# No GUIX_LOCPATH variable found.\")
       display_variables=$(export -p | ${grep} \"^declare -x DISPLAY\" || echo \"# No DISPLAY variable found.\")
+      xauth_variables=$(export -p | ${grep} \"^declare -x XAUTHORITY\" || echo \"# No XAUTHORITY variable found.\")
       last_profile=\"${profile_arguments[-1]}\"
       profile_paths=\"$(echo ${profile_arguments[@]} | ${coreutils}/bin/tr ' ' ':')\"
       ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\";
                                                        echo \"export TERM=xterm\";
                                                        echo \"$display_variables\";
+                                                       echo \"$xauth_variables\";
                                                        echo \"$locpath_variables\";
                                                        echo \"$sge_variables\";
                                                        echo \"$malloc_variables\";
