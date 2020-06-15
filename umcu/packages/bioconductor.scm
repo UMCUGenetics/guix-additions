@@ -1897,3 +1897,27 @@ used visualizations.")
     (description
       "Contains the function 'ggsurvplot()' for drawing easily beautiful and 'ready-to-publish' survival curves with the 'number at risk' table and 'censoring count plot'.  Other functions are also available to plot adjusted curves for `Cox` model and to visually examine 'Cox' model assumptions.")
     (license license:gpl2)))
+
+(define-public r-heatmap3
+  (package
+   (name "r-heatmap3")
+   (version "1.1.7")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (cran-uri "heatmap3" version))
+     (sha256
+      (base32
+       "1gdjc5b4f4nf5zpfdl0ch352p3bwbcw5hkd5vlarxvb2qkf9pcxs"))))
+   (properties `((upstream-name . "heatmap3")))
+   (build-system r-build-system)
+   (propagated-inputs
+    `(("r-fastcluster" ,r-fastcluster)))
+   (native-inputs
+    `(("r-knitr" ,r-knitr)))
+   (home-page "https://cran.r-project.org/web/packages/heatmap3")
+   (synopsis "Improved Heatmap Package")
+   (description
+    "An improved heatmap package.  Completely compatible with the original
+R function 'heatmap', and provides more powerful and convenient features.")
+   (license license:gpl2+)))
