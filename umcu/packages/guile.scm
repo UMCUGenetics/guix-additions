@@ -28,6 +28,7 @@
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages certs)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages curl)
   #:use-module (gnu packages gnupg)
@@ -227,7 +228,7 @@ shallow copies of a directory (symlinks to files instead of a full copy).")
 (define-public sparqling-genomics
   (package
    (name "sparqling-genomics")
-   (version "0.99.10")
+   (version "0.99.11")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -236,39 +237,57 @@ shallow copies of a directory (symlinks to files instead of a full copy).")
                   version ".tar.gz"))
             (sha256
              (base32
-              "114sjnm850gj63jsiqk22dc5g4pd297qigj4ggpavb20k0k7yn30"))))
+              "15mi3mvypcdsz6ysczwxismr2iizckji18qnckpbdrm6x4c34pad"))))
    (build-system gnu-build-system)
    (arguments
     `(#:configure-flags (list (string-append
                                "--with-libldap-prefix="
                                (assoc-ref %build-inputs "openldap")))
-      #:parallel-build? #f ; It breaks building the documentation.
+      #:modules ((guix build gnu-build-system)
+                 ((guix build guile-build-system)
+                  #:select (target-guile-effective-version))
+                 (guix build utils))
+      #:imported-modules ((guix build guile-build-system)
+                          ,@%gnu-build-system-modules)
       #:phases
       (modify-phases %standard-phases
         (add-after 'install 'wrap-executable
-          (lambda* (#:key outputs #:allow-other-keys)
+          (lambda* (#:key inputs outputs #:allow-other-keys)
             (let* ((out  (assoc-ref outputs "out"))
+                   (guile-version (target-guile-effective-version))
                    (guile-load-path
-                    (string-append out "/share/guile/site/2.2:"
+                    (string-append out "/share/guile/site/"
+                                   guile-version ":"
                                    (getenv "GUILE_LOAD_PATH")))
                    (guile-load-compiled-path
-                    (string-append out "/lib/guile/2.2/site-ccache:"
+                    (string-append out "/lib/guile/"
+                                   guile-version "/site-ccache:"
                                    (getenv "GUILE_LOAD_COMPILED_PATH")))
                    (web-root (string-append
-                              out "/share/sparqling-genomics/web")))
+                              out "/share/sparqling-genomics/web"))
+                   (certs (assoc-ref inputs "nss-certs"))
+                   (certs-dir (string-append certs "/etc/ssl/certs")))
               (wrap-program (string-append out "/bin/sg-web")
                 `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
                 `("GUILE_LOAD_COMPILED_PATH" ":" prefix
                   (,guile-load-compiled-path))
-                `("SG_WEB_ROOT" ":" prefix (,web-root)))))))))
+                `("SG_WEB_ROOT" ":" prefix (,web-root))
+                `("SSL_CERT_DIR" ":" prefix (,certs-dir)))
+              (wrap-program (string-append out "/bin/sg-auth-manager")
+                `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
+                `("GUILE_LOAD_COMPILED_PATH" ":" prefix
+                  (,guile-load-compiled-path))
+                `("SSL_CERT_DIR" ":" prefix (,certs-dir)))))))))
    (native-inputs
     `(("texlive" ,texlive)
+      ("autoconf" ,autoconf)
+      ("automake" ,automake)
       ("pkg-config" ,pkg-config)))
    (inputs
-    `(("guile" ,guile-2.2)
+    `(("guile" ,guile-3.0)
       ("htslib" ,htslib)
-      ("libgcrypt" ,libgcrypt)
       ("libxml2" ,libxml2)
+      ("nss-certs" ,nss-certs)
       ("openldap" ,openldap)
       ("raptor2" ,raptor2)
       ("xz" ,xz)
