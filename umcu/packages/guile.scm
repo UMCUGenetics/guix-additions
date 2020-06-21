@@ -271,13 +271,13 @@ shallow copies of a directory (symlinks to files instead of a full copy).")
                 `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
                 `("GUILE_LOAD_COMPILED_PATH" ":" prefix
                   (,guile-load-compiled-path))
-                `("SG_WEB_ROOT" ":" prefix (,web-root))
-                `("SSL_CERT_DIR" ":" prefix (,certs-dir)))
+                `("SG_WEB_ROOT" ":" = (,web-root))
+                `("SSL_CERT_DIR" ":" = (,certs-dir)))
               (wrap-program (string-append out "/bin/sg-auth-manager")
                 `("GUILE_LOAD_PATH" ":" prefix (,guile-load-path))
                 `("GUILE_LOAD_COMPILED_PATH" ":" prefix
                   (,guile-load-compiled-path))
-                `("SSL_CERT_DIR" ":" prefix (,certs-dir)))))))))
+                `("SSL_CERT_DIR" ":" = (,certs-dir)))))))))
    (native-inputs
     `(("texlive" ,texlive)
       ("autoconf" ,autoconf)
@@ -285,6 +285,7 @@ shallow copies of a directory (symlinks to files instead of a full copy).")
       ("pkg-config" ,pkg-config)))
    (inputs
     `(("guile" ,guile-3.0)
+      ("gnutls" ,gnutls) ; Needed for HTTPS.
       ("htslib" ,htslib)
       ("libxml2" ,libxml2)
       ("nss-certs" ,nss-certs)
@@ -292,8 +293,6 @@ shallow copies of a directory (symlinks to files instead of a full copy).")
       ("raptor2" ,raptor2)
       ("xz" ,xz)
       ("zlib" ,zlib)))
-   (propagated-inputs
-    `(("gnutls" ,gnutls))) ; Needed to query HTTPS endpoints.
    (home-page "https://github.com/UMCUGenetics/sparqling-genomics")
    (synopsis "Tools to use SPARQL to analyze genomics data")
    (description "This package provides various tools to extract RDF triples
