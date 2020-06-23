@@ -862,5 +862,52 @@ chunks of adjustable size to optimise for runtime/memory usage requirements.")
     (home-page "https://github.com/cancerit/cgpCaVEManWrapper")
     (synopsis "Reference implementation of CGP workflow for CaVEMan")
     (description "This package provides the reference implementation of CGP
-workflow for CaVEMan SNV analysis.")
+                  workflow for CaVEMan SNV analysis.")
     (license license:agpl3+)))
+
+(define-public perl-if
+  (package
+    (name "perl-if")
+    (version "0.0608")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (string-append
+               "mirror://cpan/authors/id/X/XS/XSAWYERX/if-"
+               version
+               ".tar.gz"))
+        (sha256
+          (base32
+            "001p9ddi9hr1cnbbhng8ck9lf2dzh4sql01060krjkcwj486w81p"))))
+    (build-system perl-build-system)
+    (home-page "https://metacpan.org/release/if")
+    (synopsis
+      "Perl if statement allows you to control the execution of your code based on conditions.")
+    (description 
+      "Perl if statement allows you to control the execution of your code based on conditions.")
+    (license (package-license perl))))
+
+(define-public perl-text-soundex
+  (package
+    (name "perl-text-soundex")
+    (version "3.05")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (string-append
+               "mirror://cpan/authors/id/R/RJ/RJBS/Text-Soundex-"
+               version
+               ".tar.gz"))
+        (sha256
+          (base32
+            "1vb0vg1109gfzaak74ynw5s00ml28f33j612g2lxw98b52s5bpgn"))))
+    (build-system perl-build-system)
+    (propagated-inputs `(("perl-if" ,perl-if)))
+    (home-page
+      "https://metacpan.org/release/Text-Soundex")
+    (synopsis
+      "Implementation of the soundex algorithm.")
+    (description 
+      "Soundex is a phonetic algorithm for indexing names by sound, as pronounced in English. The goal is for names with the same pronunciation to be encoded to the same representation so that they can be matched despite minor differences in spelling. Soundex is the most widely known of all phonetic algorithms and is often used (incorrectly) as a synonym for "phonetic algorithm". Improvements to Soundex are the basis for many modern phonetic algorithms. (Wikipedia, 2007)")
+    (license (package-license perl))))
+
