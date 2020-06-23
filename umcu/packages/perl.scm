@@ -862,7 +862,7 @@ chunks of adjustable size to optimise for runtime/memory usage requirements.")
     (home-page "https://github.com/cancerit/cgpCaVEManWrapper")
     (synopsis "Reference implementation of CGP workflow for CaVEMan")
     (description "This package provides the reference implementation of CGP
-                  workflow for CaVEMan SNV analysis.")
+workflow for CaVEMan SNV analysis.")
     (license license:agpl3+)))
 
 (define-public perl-if
