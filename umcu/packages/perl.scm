@@ -908,6 +908,5 @@ workflow for CaVEMan SNV analysis.")
     (synopsis
       "Implementation of the soundex algorithm.")
     (description 
-      "Soundex is a phonetic algorithm for indexing names by sound, as pronounced in English. The goal is for names with the same pronunciation to be encoded to the same representation so that they can be matched despite minor differences in spelling. Soundex is the most widely known of all phonetic algorithms and is often used (incorrectly) as a synonym for "phonetic algorithm". Improvements to Soundex are the basis for many modern phonetic algorithms. (Wikipedia, 2007)")
+      "Soundex is a phonetic algorithm for indexing names by sound, as pronounced in English. The goal is for names with the same pronunciation to be encoded to the same representation so that they can be matched despite minor differences in spelling. Soundex is the most widely known of all phonetic algorithms and is often used (incorrectly) as a synonym for 'phonetic algorithm'. Improvements to Soundex are the basis for many modern phonetic algorithms. (Wikipedia, 2007)")
     (license (package-license perl))))
-
