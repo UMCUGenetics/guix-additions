@@ -1894,7 +1894,7 @@ capable of taking on projects of any size.")
 (define-public score-client
   (package
    (name "score-client")
-   (version "3.0.0")
+   (version "5.0.0")
    (source (origin
             (method url-fetch)
             (uri (string-append
@@ -1902,7 +1902,7 @@ capable of taking on projects of any size.")
                   "overture/score-client/" version "/score-client-" version
                   "-dist.tar.gz"))
             (sha256
-             (base32 "0hsn7gm8znv5rq8p62d1md8cyh5n5kgiqmvvacq7kdlvnqydha9d"))))
+             (base32 "05pvffd43aqdh92g1p37p9p00wciqxp45n5gyybxvpgs1cfdqsfm"))))
    ;; We use the GNU build system mainly for its patch-shebang phases.
    (build-system gnu-build-system)
    (arguments
