@@ -1940,7 +1940,13 @@ capable of taking on projects of any size.")
 
               (copy-recursively "bin" bin)
               (copy-recursively "conf" etc)
-              (copy-recursively "lib" lib)))))))
+              (copy-recursively "lib" lib)
+
+              (wrap-program (string-append out "/bin/score-client")
+                `("_JAVA_OPTIONS" ":" = (,(string-append
+                                           "-Djavax.net.ssl.trustStore="
+                                           (assoc-ref inputs "openjdk")
+                                           "/lib/security/cacerts"))))))))))
    (inputs
     `(("openjdk" ,openjdk11)))
    (home-page "https://docs.icgc.org/software/download/#score-client")
