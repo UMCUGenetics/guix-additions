@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016, 2017, 2018, 2019 2020 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2016, 2017, 2018, 2019, 2020 Roel Janssen <roel@gnu.org>
 ;;;
 ;;; GNU Guix is free software; you can redistribute it and/or modify it
 ;;; under the terms of the GNU General Public License as published by
@@ -1889,6 +1889,44 @@ capable of taking on projects of any size.")
     (home-page "")
     (synopsis "")
     (description "")
+    (license #f)))
+
+(define-public google-cloud-sdk
+  (package
+    (name "google-cloud-sdk")
+    (version "298.0.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/"
+                    "google-cloud-sdk-" version "-linux-x86_64.tar.gz"))
+              (sha256
+               (base32 "07pgmg7kr64gdm7yf2z34xv8jr0db277r6gsh3847gqs6d8z8n0d"))))
+    ;; We use the GNU build system mainly for its patch-shebang phases.
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f ; This is just copying a binary, so no tests to perform.
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure) ; No configuration, just copying.
+         (delete 'build)     ; No building, just copying.
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let* ((out      (assoc-ref outputs "out"))
+                    (bin      (string-append out "/bin"))
+                    (lib      (string-append out "/lib"))
+                    (platform (string-append out "/platform"))
+                    (share    (string-append out "/share/google-cloud-sdk")))
+               (for-each mkdir-p (list out share))
+               (copy-recursively "bin" bin)
+               (copy-recursively "lib" lib)
+               (copy-recursively "platform" platform)))))))
+    (propagated-inputs
+     `(("python" ,python-2)
+       ("coreutils" ,coreutils)))
+    (home-page "https://cloud.google.com/sdk")
+    (synopsis "Google Cloud SDK")
+    (description "This package provides the Google Cloud SDK.")
     (license #f)))
 
 (define-public score-client
