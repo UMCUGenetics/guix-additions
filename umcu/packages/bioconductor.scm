@@ -1921,3 +1921,72 @@ used visualizations.")
     "An improved heatmap package.  Completely compatible with the original
 R function 'heatmap', and provides more powerful and convenient features.")
    (license license:gpl2+)))
+
+(define-public r-naniar
+  (package
+    (name "r-naniar")
+    (version "0.5.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "naniar" version))
+        (sha256
+          (base32
+            "02b4mmb69k2scbr7lq83ymv782x1kd5i1z3b2863c2c6zwgilngb"))))
+    (properties `((upstream-name . "naniar")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-dplyr" ,r-dplyr)
+        ("r-forcats" ,r-forcats)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-glue" ,r-glue)
+        ("r-magrittr" ,r-magrittr)
+        ("r-purrr" ,r-purrr)
+        ("r-rlang" ,r-rlang)
+        ("r-tibble" ,r-tibble)
+        ("r-tidyr" ,r-tidyr)
+        ("r-upsetr" ,r-upsetr)
+        ("r-viridis" ,r-viridis)
+        ("r-visdat" ,r-visdat)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://github.com/njtierney/naniar")
+    (synopsis
+      "Data Structures, Summaries, and Visualisations for Missing Data")
+    (description
+      "Missing values are ubiquitous in data and need to be explored and
+handled in the initial stages of analysis. 'naniar' provides data structures
+and functions that facilitate the plotting of missing values and examination
+of imputations.  This allows missing data dependencies to be explored with
+minimal deviation from the common work patterns of 'ggplot2' and tidy data.
+The work is fully discussed at Tierney & Cook (2018) <arXiv:1809.02264>.")
+    (license expat)))
+
+(define-public r-visdat
+  (package
+    (name "r-visdat")
+    (version "0.5.3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "visdat" version))
+        (sha256
+          (base32
+            "1ikqp29nncbw1xlwyb9dqqgcdk9q0bs3wxhnhnjpb11vcjv7cz2j"))))
+    (properties `((upstream-name . "visdat")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-dplyr" ,r-dplyr)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-glue" ,r-glue)
+        ("r-magrittr" ,r-magrittr)
+        ("r-purrr" ,r-purrr)
+        ("r-readr" ,r-readr)
+        ("r-tibble" ,r-tibble)
+        ("r-tidyr" ,r-tidyr)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "http://visdat.njtierney.com/")
+    (synopsis "Preliminary Visualisation of Data")
+    (description
+      "Create preliminary exploratory data visualisations of an entire dataset
+to identify problems or unexpected features using 'ggplot2'.")
+    (license expat)))
