@@ -3163,3 +3163,43 @@ REPORT_STATUS	~a"
     (description "Pipeline of tools to process raw fastq data and
 produce meaningful genomic data from Hartwig Medical.  This version
 uses SLURM instead of SGE as its parallel execution engine.")))
+
+;; ----------------------------------------------------------------------------
+;; HMF-PIPELINE 5.XX
+;; ----------------------------------------------------------------------------
+;; So the “open source” strategy seems to involve handing out binaries that
+;; are customized for individual users.  The following package contains such
+;; a customized binary.  Use at your own risk.
+;
+
+(define-public hmf-google-pipeline
+  (package
+    (name "hmf-google-pipeline")
+    (version "5.12")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://www.roelj.com/pipeline"
+                    version "-with-dependencies.jar"))
+              (sha256
+               (base32
+                "0n6463klmpfpa6vsmf1vliyq9aawz6dqjqr2y41i07s48n5ndly9"))))
+    (build-system trivial-build-system)
+    ;; In addition to the JAR file, a disk image in the Google Cloud is also
+    ;; required.  It is likely that this JAR file doesn't work without it.
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((source-file (assoc-ref %build-inputs "source"))
+               (output-dir  (string-append %output "/share/hmf-pipeline")))
+           (mkdir-p output-dir)
+           (copy-file source-file
+                      (string-append output-dir "/pipeline"
+                                     ,version "-with-dependencies.jar"))))))
+    (home-page #f)
+    (synopsis "Unpublished version of the Google-only pipeline from HMF")
+    (description "Unless you know exactly what you're doing, don't use
+this package.")
+    (license #f)))
