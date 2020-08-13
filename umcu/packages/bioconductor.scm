@@ -1990,3 +1990,25 @@ The work is fully discussed at Tierney & Cook (2018) <arXiv:1809.02264>.")
       "Create preliminary exploratory data visualisations of an entire dataset
 to identify problems or unexpected features using 'ggplot2'.")
     (license expat)))
+
+(define-public r-survival-3.2-3
+  (package
+    (name "r-survival-3.2-3")
+    (version "3.2-3")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "survival" version))
+        (sha256
+          (base32
+            "07h76r2y23w889257krlijcw4n4d7ssx92x7i5qb1xyv5gyvl3rx"))))
+    (properties `((upstream-name . "survival")))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-matrix" ,r-matrix)))
+    (home-page
+      "https://github.com/therneau/survival")
+    (synopsis "Survival Analysis")
+    (description
+    "Contains the core survival analysis routines, including definition of Surv objects, Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models, and parametric accelerated failure time models.")
+    (license expat)))
+
