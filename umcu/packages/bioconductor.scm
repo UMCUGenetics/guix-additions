@@ -1993,7 +1993,7 @@ to identify problems or unexpected features using 'ggplot2'.")
 
 (define-public r-survival-3.2-3
   (package
-    (name "r-survival-3.2-3")
+    (name "r-survival")
     (version "3.2-3")
     (source
       (origin
@@ -2009,6 +2009,8 @@ to identify problems or unexpected features using 'ggplot2'.")
       "https://github.com/therneau/survival")
     (synopsis "Survival Analysis")
     (description
-    "Contains the core survival analysis routines, including definition of Surv objects, Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models, and parametric accelerated failure time models.")
+      "Contains the core survival analysis routines, including definition of
+Surv objects, Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models,
+and parametric accelerated failure time models.")
     (license expat)))
 
