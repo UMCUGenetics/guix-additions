@@ -3183,7 +3183,7 @@ uses SLURM instead of SGE as its parallel execution engine.")))
                     version "-with-dependencies.jar"))
               (sha256
                (base32
-                "0n6463klmpfpa6vsmf1vliyq9aawz6dqjqr2y41i07s48n5ndly9"))))
+                "11cdpxr48d81b80ih8x3cnbkqsgk2l7c976gc3gvwx59kr8anbvj"))))
     (build-system trivial-build-system)
     ;; In addition to the JAR file, a disk image in the Google Cloud is also
     ;; required.  It is likely that this JAR file doesn't work without it.
