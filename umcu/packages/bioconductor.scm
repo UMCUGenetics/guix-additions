@@ -2014,3 +2014,97 @@ Surv objects, Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models,
 and parametric accelerated failure time models.")
     (license expat)))
 
+(define-public r-ashr
+  (package
+    (name "r-ashr")
+    (version "2.2-47")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "ashr" version))
+        (sha256
+          (base32
+            "1rqb5j30ylaf1h4l66x4jxyn5inrvhc42d90qd5mgkxsq0ghdlr4"))))
+    (properties `((upstream-name . "ashr")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-etrunct" ,r-etrunct)
+        ("r-invgamma" ,r-invgamma)
+        ("r-matrix" ,r-matrix)
+        ("r-mixsqp" ,r-mixsqp)
+        ("r-rcpp" ,r-rcpp)
+        ("r-squarem" ,r-squarem)
+        ("r-truncnorm" ,r-truncnorm)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://github.com/stephens999/ashr")
+    (synopsis
+      "Methods for Adaptive Shrinkage, using Empirical Bayes")
+    (description
+      "The R package 'ashr' implements an Empirical Bayes approach for large-scale hypothesis testing and false discovery rate (FDR) estimation based on the methods proposed in M.  Stephens, 2016, \"False discovery rates: a new deal\", <DOI:10.1093/biostatistics/kxw041>.  These methods can be applied whenever two sets of summary statistics---estimated effects and standard errors---are available, just as 'qvalue' can be applied to previously computed p-values.  Two main interfaces are provided: ash(), which is more user-friendly; and ash.workhorse(), which has more options and is geared toward advanced users.  The ash() and ash.workhorse() also provides a flexible modeling interface that can accommodate a variety of likelihoods (e.g., normal, Poisson) and mixture priors (e.g., uniform, normal).")
+    (license expat)))
+
+(define-public r-etrunct
+  (package
+    (name "r-etrunct")
+    (version "0.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "etrunct" version))
+        (sha256
+          (base32
+            "0ayazgyqlc8jcqr03cwfmfhm4pck6xri1r6vkgqy4arqkrrnrcqr"))))
+    (properties `((upstream-name . "etrunct")))
+    (build-system r-build-system)
+    (home-page
+      "https://cran.r-project.org/web/packages/etrunct")
+    (synopsis
+      "Computes Moments of Univariate Truncated t Distribution")
+    (description
+    "Computes moments of univariate truncated t distribution.  There is only one exported function, e_trunct(), which should be seen for details.")
+    (license expat)))
+
+(define-public r-invgamma
+  (package
+    (name "r-invgamma")
+    (version "1.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "invgamma" version))
+        (sha256
+          (base32
+            "12ga2y4wc9bc5zz6vimvxwgjpsx3ys3209nq63gscbw559ydxa5a"))))
+    (properties `((upstream-name . "invgamma")))
+    (build-system r-build-system)
+    (home-page "https://github.com/dkahle/invgamma")
+    (synopsis "The Inverse Gamma Distribution")
+    (description
+    "Light weight implementation of the standard distribution functions for the inverse gamma distribution, wrapping those for the gamma distribution in the stats package.")
+    (license expat)))
+
+(define-public r-mixsqp
+  (package
+    (name "r-mixsqp")
+    (version "0.3-43")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "mixsqp" version))
+        (sha256
+          (base32
+            "1qics04w0swyp216d6g8dmsph8q2kpadpacp66h2qih3521js12q"))))
+    (properties `((upstream-name . "mixsqp")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-irlba" ,r-irlba)
+        ("r-rcpp" ,r-rcpp)
+        ("r-rcpparmadillo" ,r-rcpparmadillo)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+      "https://github.com/stephenslab/mixsqp")
+    (synopsis
+      "Sequential Quadratic Programming for Fast Maximum-Likelihood Estimation of Mixture Proportions")
+    (description
+      "This package provides an optimization method based on sequential quadratic programming (SQP) for maximum likelihood estimation of the mixture proportions in a finite mixture model where the component densities are known.  The algorithm is expected to obtain solutions that are at least as accurate as the state-of-the-art MOSEK interior-point solver (called by function \"KWDual\" in the 'REBayes' package), and they are expected to arrive at solutions more quickly when the number of samples is large and the number of mixture components is not too large.  This implements the \"mix-SQP\" algorithm, with some improvements, described in Y.  Kim, P.  Carbonetto, M.  Stephens & M.  Anitescu (2020) <DOI:10.1080/10618600.2019.1689985>.")
+    (license expat)))
