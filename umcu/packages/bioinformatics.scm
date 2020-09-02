@@ -1926,7 +1926,8 @@ capable of taking on projects of any size.")
        ("coreutils" ,coreutils)))
     (home-page "https://cloud.google.com/sdk")
     (synopsis "Google Cloud SDK")
-    (description "This package provides the Google Cloud SDK.")
+    (description "This package provides the Google Cloud SDK which includes the
+command-line programs gsutil and gcloud among others.")
     (license #f)))
 
 (define-public score-client
