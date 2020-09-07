@@ -1662,9 +1662,9 @@ their development was to allow users to select from a range of pre-defined
 batch job profiles, but their operation is completely generic.")
     (license license:bsd-3)))
 
-(define-public python2-pyvcf
+(define-public python-pyvcf
   (package
-    (name "python2-pyvcf")
+    (name "python-pyvcf")
     (version "0.6.8")
     (source (origin
               (method url-fetch)
@@ -1673,15 +1673,17 @@ batch job profiles, but their operation is completely generic.")
                (base32
                 "1ngryr12d3izmhmwplc46xhyj9i7yhrpm90xnsd2578p7m8p5n79"))))
     (build-system python-build-system)
-    (arguments `(#:python ,python-2 ; Python 3 is not supported.
-                 #:tests? #f))
+    (arguments `(#:tests? #f)) ; The tests cannot find its files.
     (propagated-inputs
-     `(("python2-setuptools" ,python-setuptools)
-       ("python2-psutil" ,python-psutil)))
+     `(("python-setuptools" ,python-setuptools)
+       ("python-psutil" ,python-psutil)))
     (home-page "https://github.com/jamescasbon/PyVCF")
     (synopsis "Variant Call Format (VCF) parser for Python")
     (description "Variant Call Format (VCF) parser for Python")
     (license #f)))
+
+(define-public python2-pyvcf
+  (package-with-python2 python-pyvcf))
 
 (define-public python2-pydp
   (package
