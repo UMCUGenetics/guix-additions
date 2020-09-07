@@ -4823,3 +4823,37 @@ NGS data.")
     (synopsis "")
     (description "")
     (license license:agpl3+)))
+
+(define-public last
+  (package
+   (name "last")
+   (version "1080")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append "http://last.cbrc.jp/last-" version ".zip"))
+            (sha256
+               (base32
+                "0az6xiqkbdcq858m1dlwvf7f7pa5fjldckkawcj8a38a2fq9drds"))))
+   (build-system gnu-build-system)
+   (native-inputs
+    `(("unzip" ,unzip)
+      ("sed" ,sed)))
+   (inputs
+    `(("zlib" ,zlib)))
+   (arguments
+    `(#:tests? #f
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure)
+        (add-after 'unpack 'set-c-compiler
+         (lambda* (#:key outputs #:allow-other-keys)
+           (substitute* "src/makefile"
+            (("# -Wconversion") "CC=gcc"))
+           (substitute* "makefile"
+            (("prefix = /usr/local")
+             (string-append
+              "prefix = " (assoc-ref outputs "out")))))))))
+   (home-page "http://last.cbrc.jp/")
+   (synopsis "Genome-scale sequence comparison")
+   (description "")
+   (license license:gpl3)))
