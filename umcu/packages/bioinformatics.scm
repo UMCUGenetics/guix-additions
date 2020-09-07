@@ -4857,3 +4857,23 @@ NGS data.")
    (synopsis "Genome-scale sequence comparison")
    (description "")
    (license license:gpl3)))
+
+(define-public python-nanosv
+  (package
+   (name "python-nanosv")
+   (version "1.2.4")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "NanoSV" version))
+            (sha256
+             (base32
+              "1wl2daj0bwrl8fx5xi8j8hfs3mp3vg3qycy66538n032v1qkc6xg"))))
+   (build-system python-build-system)
+   (propagated-inputs
+    `(("python-configparser" ,python-configparser)
+      ("python-pysam" ,python-pysam)
+      ("python-pyvcf" ,python-pyvcf)))
+   (home-page "https://github.com/mroosmalen/nanosv")
+   (synopsis "Structural variation detection tool for Oxford Nanopore data.")
+   (description "Structural variation detection tool for Oxford Nanopore data.")
+   (license license:expat)))
