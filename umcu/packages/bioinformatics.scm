@@ -32,6 +32,7 @@
   #:use-module (gnu packages databases)
   #:use-module (gnu packages documentation)
   #:use-module (gnu packages fontutils)
+  #:use-module (gnu packages gawk)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages ghostscript)
   #:use-module (gnu packages glib)
@@ -94,6 +95,7 @@
   #:use-module (guix packages)
   #:use-module (guix utils)
   #:use-module (srfi srfi-1)
+  #:use-module (umcu packages grid-engine)
   #:use-module (umcu packages perl)
   #:use-module (umcu packages python))
 
@@ -4877,3 +4879,240 @@ NGS data.")
    (synopsis "Structural variation detection tool for Oxford Nanopore data.")
    (description "Structural variation detection tool for Oxford Nanopore data.")
    (license license:expat)))
+
+(define-public primer3-1.1.4
+  (package
+    (name "primer3")
+    (version "1.1.4")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/primer3-org/primer3/archive/v"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "1nkxyw811xbb7gid0dbcw4k7yg3q1mw6hv96076xx0j10ishmh1w"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure)
+         (add-before 'build 'change-directory
+           (lambda _ (chdir "src")))
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let* ((out (assoc-ref outputs "out"))
+                    (bin (string-append out "/bin")))
+               (mkdir-p bin)
+               (for-each (lambda (file) (install-file file bin))
+                         '("primer3_core" "oligotm" "ntdpal"))))))))
+    (inputs
+     `(("perl" ,perl)))
+    (home-page "https://github.com/primer3-org/primer3")
+    (synopsis "Tool to design PCR primers")
+    (description "Design PCR primers from DNA sequence. Widely used (190k 
+Google hits for \"primer3\").  From mispriming libraries to sequence quality
+ data to the generation of internal oligos, primer3 does it.")
+    (license license:gpl2)))
+
+(define-public sharc
+  (let ((commit "3ebe22496073fe31662cc2ea7fe562faea4df1c6"))
+    (package
+     (name "sharc")
+     (version "1.0")
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/UMCUGenetics/SHARC.git")
+                    (commit commit)))
+              (file-name (string-append name "-" commit))
+              (sha256
+               (base32
+                "1jwx658i7f3xc0xmcwhsz4ay1ayyrydqpsqg98lxnpmxcippzm55"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:tests? #f ; There are no tests
+        #:phases
+        (modify-phases %standard-phases
+          (delete 'configure)
+          (delete 'build)
+          (add-after 'unpack 'patch-external-programs
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let* ((out        (assoc-ref outputs "out"))
+                    (share      (string-append out "/share/sharc"))
+                    (venvdir    (string-append share "/venv/bin"))
+                    (scriptsdir (string-append share "/scripts"))
+                    (primerdir  (string-append scriptsdir "/primers"))
+                    (stepsdir   (string-append share "/steps"))
+                    (filesdir   (string-append share "/files")))
+             (substitute* "sharc.sh"
+              (("/hpc/cog_bioinf/cuppen/personal_data/jvalleinclan/tools_kloosterman/minimap2_v2.12/minimap2")
+               (string-append (assoc-ref inputs "minimap2") "/bin/minimap2"))
+              (("SHARCDIR=\\$\\(dirname \\$\\{BASH_SOURCE\\[0\\]\\}\\)")
+               (string-append "SHARCDIR='" out "'"))
+              (("VENV=\\$SHARCDIR/venv/bin/activate")
+               (string-append "VENV=" venvdir "/activate"))
+              (("STEPSDIR=\\$SHARCDIR/steps")
+               (string-append "STEPSDIR=" stepsdir))
+              (("SCRIPTSDIR=\\$SHARCDIR/scripts")
+               (string-append "SCRIPTSDIR=" scriptsdir))
+              (("FILESDIR=\\$SHARCDIR/files")
+               (string-append "FILESDIR=" filesdir))
+              (("python \\$PON_SCRIPT") "PY2 $PON_SCRIPT")
+              (("\\$PRIMER_DESIGN_DIR/primer3/src/primer3_core")
+               (string-append (assoc-ref inputs "primer3") "/bin/primer3_core")))
+
+             (substitute* '("steps/bed_annotation.sh"
+                            "steps/calculate_coverage.sh"
+                            "steps/create_bed_annotation_jobs.sh"
+                            "steps/database_filter.sh"
+                            "steps/minimap2.sh"
+                            "steps/nanosv.sh"
+                            "steps/primer_design.sh"
+                            "steps/primer_ranking.sh"
+                            "steps/randomForest.sh"
+                            "steps/sharc_filter.sh"
+                            "steps/somatic_feature_selection.sh"
+                            "steps/somatic_ranking.sh"
+                            "steps/top20_report.sh"
+                            "steps/vcf_fasta.sh"
+                            "steps/vcf_filter.sh"
+                            "steps/vcf_primer_filter.sh"
+                            "steps/vcf_split.sh"
+                            "sharc.sh")
+               (("/hpc/local/CentOS7/cog_bioinf/sambamba_v0.6.5/sambamba")
+                (string-append (assoc-ref inputs "sambamba") "/bin/sambamba"))
+               (("#!/bin/bash")
+                (string-append "#!" (assoc-ref inputs "bash") "/bin/bash"))
+               (("Rscript")
+                (string-append (assoc-ref inputs "r") "/bin/Rscript"))
+               (("qsub")
+                (string-append (assoc-ref inputs "grid-engine-core") "/bin/qsub -V"))
+               (("python ")
+                (string-append (assoc-ref inputs "python") "/bin/python3 "))
+               (("PY2")
+                (string-append (assoc-ref inputs "python-2") "/bin/python"))
+               (("NanoSV ")
+                (string-append (assoc-ref inputs "python-nanosv") "/bin/NanoSV "))
+               (("module load R") ""))
+
+             (substitute* "scripts/run_randomForest.R"
+               (("/hpc/cog_bioinf/kloosterman/common_scripts/sharc/scripts") scriptsdir)
+               (("randomforest_vl_v3_3overlap_p96_r99.5_pc0.39.Rdata")
+                "randomforest_v3_3overlap_p96_r99.5_pc0.39.Rdata"))
+
+             ;; Use Guix's Python.
+             (substitute* '("scripts/add_predict_annotation.py"
+                            "scripts/create_features_table.py"
+                            "scripts/get_closest_feature.py"
+                            "scripts/primer_ranking.py"
+                            "scripts/somatic_feature_selection_backup.py"
+                            "scripts/somatic_feature_selection.py"
+                            "scripts/somatic_ranking_backup.py"
+                            "scripts/somatic_ranking.py"
+                            "scripts/top20_report.py"
+                            "scripts/vcf_primer_filter.py"
+                            "scripts/vcf_to_fasta.py")
+              (("/usr/bin/python") (string-append
+                                    (assoc-ref inputs "python")
+                                    "/bin/python3")))
+
+              (substitute* "scripts/annotate_sv_vcf_file.py"
+                (("/usr/bin/python") (string-append
+                                       (assoc-ref inputs "python-2")
+                                       "/bin/python")))
+
+              (substitute* "scripts/primers/primerBATCH1"
+                (("/hpc/cuppen/projects/TP0001_General/COLO/analysis/jvalleinclan/bin/tools_kloosterman/primer3/primers")
+                 primerdir))
+
+              #t)))
+
+          (replace 'install
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+              (let* ((out        (assoc-ref outputs "out"))
+                     (bin        (string-append out "/bin"))
+                     (share      (string-append out "/share/sharc"))
+                     (venvdir    (string-append share "/venv/bin"))
+                     (scriptsdir (string-append share "/scripts"))
+                     (stepsdir   (string-append share "/steps"))
+                     (filesdir   (string-append share "/files")))
+                (mkdir-p bin)
+                (mkdir-p venvdir)
+                (mkdir-p scriptsdir)
+                (mkdir-p stepsdir)
+                (mkdir-p filesdir)
+                (copy-recursively "scripts" scriptsdir)
+                (copy-recursively "steps" stepsdir)
+                (copy-recursively "files" filesdir)
+
+                ;; Create an empty virtual environment
+                (call-with-output-file (string-append venvdir "/activate")
+                  (lambda (port)
+                    (format port "export DEACTIVATE_PATH=$PATH~%")
+                    (format port "export PATH=$PATH:~s~%" venvdir)
+                    (format port "printf \"Environment activated.\\n\";~%")))
+                (let ((deactivate (string-append venvdir "/deactivate")))
+                  (call-with-output-file deactivate
+                    (lambda (port)
+                      (format port "#!~a/bin/bash~%" (assoc-ref inputs "bash"))
+                      (format port "export PATH=${DEACTIVATE_PATH}~%")
+                      (format port "printf \"Environment deactivated.\\n\";~%exit 0;~%")))
+                  (chmod deactivate #o555))
+                (install-file "sharc.sh" bin)
+                (with-directory-excursion bin
+                  (symlink "sharc.sh" "sharc"))))))))
+     (native-inputs
+      `(("bash" ,bash)))
+     (inputs
+      `(("awk" ,gawk)
+        ("coreutils" ,coreutils)
+        ("grep" ,grep)
+        ("grid-engine-core" ,qsub-slurm)
+        ("minimap2" ,minimap2)
+        ("primer3" ,primer3-1.1.4)
+        ("python" ,python)
+        ("python-2" ,python-2)
+        ("r" ,r-minimal)
+        ("sambamba" ,sambamba)
+        ("sed" ,sed)))
+     (propagated-inputs
+      `(("emboss" ,emboss)
+        ("python-aniso8601" ,python-aniso8601)
+        ("python-certifi" ,python-certifi)
+        ("python-chardet" ,python-chardet)
+        ("python-configparser" ,python-configparser)
+        ("python-flask" ,python-flask)
+        ("python-flask-restful" ,python-flask-restful)
+        ("python-idna" ,python-idna)
+        ("python-itsdangerous" ,python-itsdangerous)
+        ("python-jinja2" ,python-jinja2)
+        ("python-markupsafe" ,python-markupsafe)
+        ("python-nanosv" ,python-nanosv)
+        ("python-pymongo" ,python-pymongo)
+        ("python-pysam" ,python-pysam)
+        ("python-pytz" ,python-pytz)
+        ("python-pyvcf" ,python-pyvcf)
+        ("python-requests" ,python-requests)
+        ("python-six" ,python-six)
+        ("python-urllib3" ,python-urllib3)
+        ("python-werkzeug" ,python-werkzeug)
+        ("r" ,r)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-randomforest", r-randomforest)
+        ("r-rocr" ,r-rocr)))
+     (native-search-paths
+      (append (package-native-search-paths bash)
+              (package-native-search-paths python)
+              (package-native-search-paths r)))
+     (search-paths native-search-paths)
+     (home-page "https://github.com/UMCUGenetics/SHARC")
+     (synopsis "Somatic SV pipeline for tumor-only Nanopore sequencing data")
+     (description "SHARC is a pipeline for somatic SV calling and filtering
+from tumor-only Nanopore sequencing data. It performs mapping, SV calling,
+SV filtering, random forest classification, blacklist filtering and SV
+prioritization, followed by automated primer design for PCR amplicons of
+80-120 bp that are useful to track cancer ctDNA molecules in liquid
+biopsies.")
+     (license license:gpl3))))
