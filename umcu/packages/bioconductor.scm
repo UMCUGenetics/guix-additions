@@ -2108,3 +2108,306 @@ and parametric accelerated failure time models.")
     (description
       "This package provides an optimization method based on sequential quadratic programming (SQP) for maximum likelihood estimation of the mixture proportions in a finite mixture model where the component densities are known.  The algorithm is expected to obtain solutions that are at least as accurate as the state-of-the-art MOSEK interior-point solver (called by function \"KWDual\" in the 'REBayes' package), and they are expected to arrive at solutions more quickly when the number of samples is large and the number of mixture components is not too large.  This implements the \"mix-SQP\" algorithm, with some improvements, described in Y.  Kim, P.  Carbonetto, M.  Stephens & M.  Anitescu (2020) <DOI:10.1080/10618600.2019.1689985>.")
     (license expat)))
+
+(define-public r-rnexml
+  (package
+    (name "r-rnexml")
+    (version "2.4.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "RNeXML" version))
+        (sha256
+          (base32
+            "1wsl4xq9w5bp3wk69dw57bg0qcw1vs6ajwya4p0w1r00ck5pwrib"))))
+    (properties `((upstream-name . "RNeXML")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-ape" ,r-ape)
+        ("r-dplyr" ,r-dplyr)
+        ("r-httr" ,r-httr)
+        ("r-lazyeval" ,r-lazyeval)
+        ("r-plyr" ,r-plyr)
+        ("r-reshape2" ,r-reshape2)
+        ("r-stringi" ,r-stringi)
+        ("r-stringr" ,r-stringr)
+        ("r-tidyr" ,r-tidyr)
+        ("r-uuid" ,r-uuid)
+        ("r-xml" ,r-xml)
+        ("r-xml2" ,r-xml2)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://docs.ropensci.org/RNeXML")
+    (synopsis
+      "Semantically Rich I/O for the 'NeXML' Format")
+    (description
+      "This package provides access to phyloinformatic data in 'NeXML' format.  The package should add new functionality to R such as the possibility to manipulate 'NeXML' objects in more various and refined way and compatibility with 'ape' objects.")
+    (license license:bsd-3)))
+ 
+(define-public r-rncl
+  (package
+    (name "r-rncl")
+    (version "0.8.4")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "rncl" version))
+        (sha256
+          (base32
+            "0ss9jqrvv7bhvl5j74cjrp8r866d9dlavrbbfscwz3mhkgfx06bb"))))
+    (properties `((upstream-name . "rncl")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-progress" ,r-progress) ("r-rcpp" ,r-rcpp)))
+    (home-page "https://github.com/fmichonneau/rncl")
+    (synopsis
+      "An Interface to the Nexus Class Library")
+    (description
+      "An interface to the Nexus Class Library which allows parsing of NEXUS, Newick and other phylogenetic tree file formats.  It provides elements of the file that can be used to build phylogenetic objects such as ape's 'phylo' or phylobase's 'phylo4(d)'.  This functionality is demonstrated with 'read_newick_phylo()' and 'read_nexus_phylo()'.")
+    (license license:bsd-2)))
+ 
+(define-public r-phylobase
+  (package
+    (name "r-phylobase")
+    (version "0.8.10")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "phylobase" version))
+        (sha256
+          (base32
+            "0jzr1gdvmi4l640hwwzh9bxqmpja69bn3ygnaqx37awvyh7khi2s"))))
+    (properties `((upstream-name . "phylobase")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-ade4" ,r-ade4)
+        ("r-ape" ,r-ape)
+        ("r-rcpp" ,r-rcpp)
+        ("r-rncl" ,r-rncl)
+        ("r-rnexml" ,r-rnexml)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+      "https://github.com/fmichonneau/phylobase")
+    (synopsis
+      "Base Package for Phylogenetic Structures and Comparative Data")
+    (description
+      "This package provides a base S4 class for comparative methods, incorporating one or more trees and trait data.")
+    (license license:gpl2+)))
+ 
+(define-public r-zinbwave
+  (package
+    (name "r-zinbwave")
+    (version "1.10.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (bioconductor-uri "zinbwave" version))
+        (sha256
+          (base32
+            "16giyks17hv6svl9kvhgd2vp14mbg3b3bp7z16bzcjf9adhf0wi5"))))
+    (properties `((upstream-name . "zinbwave")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-biocparallel" ,r-biocparallel)
+        ("r-edger" ,r-edger)
+        ("r-genefilter" ,r-genefilter)
+        ("r-matrix" ,r-matrix)
+        ("r-singlecellexperiment"
+         ,r-singlecellexperiment)
+        ("r-softimpute" ,r-softimpute)
+        ("r-summarizedexperiment"
+         ,r-summarizedexperiment)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+      "https://bioconductor.org/packages/zinbwave")
+    (synopsis
+      "Zero-Inflated Negative Binomial Model for RNA-Seq Data")
+    (description
+      " Implements a general and flexible zero-inflated negative binomial model that can be used to provide a low-dimensional representations of single-cell RNA-seq data.  The model accounts for zero inflation (dropouts), over-dispersion, and the count nature of the data.  The model also accounts for the difference in library sizes and optionally for batch effects and/or other covariates, avoiding the need for pre-normalize the data.")
+    (license license:artistic2.0)))
+ 
+(define-public r-locfdr
+  (package
+    (name "r-locfdr")
+    (version "1.1-8")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "locfdr" version))
+        (sha256
+          (base32
+            "1falkbp2xz07am8jlhwlvyqvxnli4nwl188kd0g58vdfjcjy3mj2"))))
+    (properties `((upstream-name . "locfdr")))
+    (build-system r-build-system)
+    (home-page
+      "https://cran.r-project.org/web/packages/locfdr")
+    (synopsis "Computes Local False Discovery Rates")
+    (description
+      "Computation of local false discovery rates.")
+    (license license:gpl2)))
+ 
+(define-public r-howmany
+  (package
+    (name "r-howmany")
+    (version "0.3-1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "howmany" version))
+        (sha256
+          (base32
+            "045ck8qahfg2swbgyf7dpl32ryq1m4sbalhr7m5qdgpm62vz8h7f"))))
+    (properties `((upstream-name . "howmany")))
+    (build-system r-build-system)
+    (home-page
+      "http://www.stats.ox.ac.uk/~meinshau/")
+    (synopsis
+      "A lower bound for the number of correct rejections")
+    (description
+      "When testing multiple hypotheses simultaneously, this package provides functionality to calculate a lower bound for the number of correct rejections (as a function of the number of rejected hypotheses), which holds simultaneously -with high probability- for all possible number of rejections.  As a special case, a lower bound for the total number of false null hypotheses can be inferred.  Dependent test statistics can be handled for multiple tests of associations.  For independent test statistics, it is sufficient to provide a list of p-values.")
+    (license (list license:gpl2+ license:gpl3+))))
+ 
+(define-public r-clusterexperiment
+  (package
+    (name "r-clusterexperiment")
+    (version "2.8.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (bioconductor-uri "clusterExperiment" version))
+        (sha256
+          (base32
+            "1ib4j5xfdx6pxgxl86dir8275k3s4xzxjzvrh7d61hb81gdyk0mw"))))
+    (properties
+      `((upstream-name . "clusterExperiment")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-ape" ,r-ape)
+        ("r-biocgenerics" ,r-biocgenerics)
+        ("r-cluster" ,r-cluster)
+        ("r-delayedarray" ,r-delayedarray)
+        ("r-edger" ,r-edger)
+        ("r-hdf5array" ,r-hdf5array)
+        ("r-howmany" ,r-howmany)
+        ("r-kernlab" ,r-kernlab)
+        ("r-limma" ,r-limma)
+        ("r-locfdr" ,r-locfdr)
+        ("r-matrix" ,r-matrix)
+        ("r-matrixstats" ,r-matrixstats)
+        ("r-nmf" ,r-nmf)
+        ("r-phylobase" ,r-phylobase)
+        ("r-pracma" ,r-pracma)
+        ("r-rcolorbrewer" ,r-rcolorbrewer)
+        ("r-rcpp" ,r-rcpp)
+        ("r-rspectra" ,r-rspectra)
+        ("r-s4vectors" ,r-s4vectors)
+        ("r-scales" ,r-scales)
+        ("r-singlecellexperiment"
+         ,r-singlecellexperiment)
+        ("r-stringr" ,r-stringr)
+        ("r-summarizedexperiment"
+         ,r-summarizedexperiment)
+        ("r-zinbwave" ,r-zinbwave)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+      "https://bioconductor.org/packages/clusterExperiment")
+    (synopsis
+      "Compare Clusterings for Single-Cell Sequencing")
+    (description
+      "This package provides functionality for running and comparing many different clusterings of single-cell sequencing data or other large mRNA Expression data sets.")
+    (license license:artistic2.0)))
+ 
+(define-public r-princurve
+  (package
+    (name "r-princurve")
+    (version "2.1.5")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "princurve" version))
+        (sha256
+          (base32
+            "0ifjwdpvydhn60aya84f5j0ymsq427j89j9a3g8pbigk6qnxj0g5"))))
+    (properties `((upstream-name . "princurve")))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page
+      "https://github.com/rcannood/princurve")
+    (synopsis
+      "Fit a Principal Curve in Arbitrary Dimension")
+    (description
+      "Fitting a principal curve to a data matrix in arbitrary dimensions.  Hastie and Stuetzle (1989) <doi:10.2307/2289936>.")
+    (license license:gpl2)))
+ 
+(define-public r-slingshot
+  (package
+    (name "r-slingshot")
+    (version "1.6.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (bioconductor-uri "slingshot" version))
+        (sha256
+          (base32
+            "0gh91fkikw7y22sb00yvbjjssr64f4swikcz2ydri84c4jv8nvqa"))))
+    (properties `((upstream-name . "slingshot")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-ape" ,r-ape)
+        ("r-igraph" ,r-igraph)
+        ("r-matrixstats" ,r-matrixstats)
+        ("r-princurve" ,r-princurve)
+        ("r-singlecellexperiment"
+         ,r-singlecellexperiment)
+        ("r-summarizedexperiment"
+         ,r-summarizedexperiment)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+      "https://bioconductor.org/packages/slingshot")
+    (synopsis
+      "Tools for ordering single-cell sequencing")
+    (description
+      "This package provides functions for inferring continuous, branching lineage structures in low-dimensional data.  Slingshot was designed to model developmental trajectories in single-cell RNA sequencing data and serve as a component in an analysis pipeline after dimensionality reduction and clustering.  It is flexible enough to handle arbitrarily many branching events and allows for the incorporation of prior knowledge through supervised graph construction.")
+    (license license:artistic2.0)))
+ 
+(define-public r-tradeseq
+  (package
+    (name "r-tradeseq")
+    (version "1.2.01")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (bioconductor-uri "tradeSeq" version))
+        (sha256
+          (base32
+            "1jqy2xn58j89lfsah9gvkphq9a5a8s7h6g5025r13n7ksh3whfbp"))))
+    (properties `((upstream-name . "tradeSeq")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-biobase" ,r-biobase)
+        ("r-biocparallel" ,r-biocparallel)
+        ("r-clusterexperiment" ,r-clusterexperiment)
+        ("r-dplyr" ,r-dplyr)
+        ("r-edger" ,r-edger)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-igraph" ,r-igraph)
+        ("r-magrittr" ,r-magrittr)
+        ("r-mgcv" ,r-mgcv)
+        ("r-monocle" ,r-monocle)
+        ("r-pbapply" ,r-pbapply)
+        ("r-princurve" ,r-princurve)
+        ("r-rcolorbrewer" ,r-rcolorbrewer)
+        ("r-s4vectors" ,r-s4vectors)
+        ("r-singlecellexperiment"
+         ,r-singlecellexperiment)
+        ("r-slingshot" ,r-slingshot)
+        ("r-summarizedexperiment"
+         ,r-summarizedexperiment)
+        ("r-tibble" ,r-tibble)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+      "https://statomics.github.io/tradeSeq/index.html")
+    (synopsis
+      "trajectory-based differential expression analysis for sequencing data")
+    (description
+      "tradeSeq provides a flexible method for fitting regression models that can be used to find genes that are differentially expressed along one or multiple lineages in a trajectory.  Based on the fitted models, it uses a variety of tests suited to answer different questions of interest, e.g.  the discovery of genes for which expression is associated with pseudotime, or which are differentially expressed (in a specific region) along the trajectory.  It fits a negative binomial generalized additive model (GAM) for each gene, and performs inference on the parameters of the GAM.")
+    (license expat)))
