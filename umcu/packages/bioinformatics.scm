@@ -3667,14 +3667,14 @@ be run from intermediate steps if files are formated appropriately")
 (define-public clinvar
   (package
    (name "clinvar-vcf")
-   (version "GRCh38-20200316")
+   (version "GRCh38-20200919")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"))
             (sha256
              (base32
-	      "0pidjv3bf0ckf8wc3nw7zlvzyrh428xskkhz51y7xbbf6pdw0wdp"))))
+	      "06wdfg6wkksra4if1hil78p9707l9zq8h74cc4mpqrhl1vv8j8sq"))))
    (build-system trivial-build-system)
    (arguments
     `(#:modules ((guix build utils))
@@ -3705,14 +3705,14 @@ as efficiently and effectively as possible.")
 
 (define-public clinvar-grch37
   (package (inherit clinvar)
-    (version "GRCh37-20200520")
+    (version "GRCh37-20200919")
     (source (origin
              (method url-fetch)
              (uri (string-append
                    "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz"))
              (sha256
               (base32
-               "15vgip02bmkiq86l284as60rpzgqsqyqnkrmjzildgdyvc8d7rv4"))))
+               "0srdr8mwf2wnch8v5gkdj0lqqmm50inzysh9cb4gb7ndrbwhharv"))))
    (arguments
     `(#:modules ((guix build utils))
       #:builder
