@@ -1668,7 +1668,10 @@ an interface for working with loom files in a loom-specific way; we provide
 routines for validating loom files, iterating with chunks through data within
 the loom file, and provide a platform for other packages to build support for
 loom files.")
-   (license license:gpl3)))
+   ;; The author specified "GPL3" without intending to release the
+   ;; code under "GPL3". The actual license is probably non-free,
+   ;; so use of this package is highly discouraged.
+   (license #f)))
 
 (define-public r-tree
   (package
