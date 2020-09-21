@@ -54,79 +54,6 @@
   #:use-module (guix utils)
   #:use-module (umcu packages mysql))
 
-(define-public python-py2bit
-  (package
-   (name "python-py2bit")
-   (version "0.2.1")
-   (source (origin
-            (method url-fetch)
-            (uri (pypi-uri "py2bit" version))
-            (sha256
-             (base32
-              "1cdf4qlmgwsh1f4k0wdv2sr8x9qn4366p0k3614vbd0fpqiarxrl"))))
-   (build-system python-build-system)
-   (home-page "https://github.com/dpryan79/py2bit")
-   (synopsis "A package for accessing 2bit files using lib2bit")
-   (description "A package for accessing 2bit files using lib2bit")
-   (license license:expat)))
-
-
-(define-public python-deeptoolsintervals
-  (package
-    (name "python-deeptoolsintervals")
-    (version "0.1.9")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "deeptoolsintervals" version))
-              (sha256
-               (base32
-                "1xnl80nblysj6dylj4683wgrfa425rkx4dp5k65hvwdns9pw753x"))))
-    (build-system python-build-system)
-    (inputs
-     `(("zlib" ,zlib)))
-    (home-page "https://github.com/deeptools/deeptools_intervals")
-    (synopsis "Create GTF-based interval trees with associated meta-data")
-    (description
-     "This package provides a Python module creating/accessing GTF-based
-interval trees with associated meta-data.  It is primarily used by the
-@code{deeptools} package.")
-    (license license:expat)))
-
-(define-public python-deeptools
-  (package
-    (name "python-deeptools")
-    (version "3.4.3")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "deepTools" version))
-              (sha256
-               (base32
-                "1azgjniss5ff6a90nicdjkxyjwqmi3gzfn09gra42hwlz19hipxb"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     `(("python-matplotlib" ,python-matplotlib)
-       ("python-numpy" ,python-numpy)
-       ("python-numpydoc" ,python-numpydoc)
-       ("python-py2bit" ,python-py2bit)
-       ("python-pybigwig" ,python-pybigwig)
-       ("python-pysam" ,python-pysam)
-       ("python-scipy" ,python-scipy)
-       ("python-deeptoolsintervals" ,python-deeptoolsintervals)
-       ("python-plotly" ,python-plotly)))
-    (home-page "https://pypi.python.org/pypi/deepTools/")
-    (synopsis "Useful tools for exploring deep sequencing data")
-    (description "This package addresses the challenge of handling large amounts
-of data that are now routinely generated from DNA sequencing centers.
-@code{deepTools} contains useful modules to process the mapped reads data for
-multiple quality checks, creating normalized coverage files in standard bedGraph
-and bigWig file formats, that allow comparison between different files.  Finally,
-using such normalized and standardized files, deepTools can create many
-publication-ready visualizations to identify enrichments and for functional
-annotations of the genome.")
-    ;; The file deeptools/cm.py is licensed under the BSD license.  The
-    ;; remainder of the code is licensed under the MIT license.
-    (license (list license:bsd-3 license:expat))))
-
 (define-public python-macs2
   (package
     (name "python-macs2")
@@ -364,38 +291,6 @@ implemented using Requests")
       (description "Utility scripts to work with Genologics Clarity LIMS")
       (license #f))))
 
-(define-public python-scikit-rebate
-  (package
-    (name "python-scikit-rebate")
-    (version "0.6")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "skrebate" version))
-              (sha256
-               (base32
-                "1h7qs9gjxpzqabzhb8rmpv3jpmi5iq41kqdibg48299h94iikiw7"))))
-    (build-system python-build-system)
-    ;; Pandas is only needed to run the tests.
-    (native-inputs
-     `(("python-pandas" ,python-pandas)))
-    (propagated-inputs
-     `(("python-numpy" ,python-numpy)
-       ("python-scipy" ,python-scipy)
-       ("python-scikit-learn" ,python-scikit-learn)
-       ("python-joblib" ,python-joblib)))
-    (home-page "https://epistasislab.github.io/scikit-rebate/")
-    (synopsis "Relief-based feature selection algorithms for Python")
-    (description "Scikit-rebate is a scikit-learn-compatible Python
-implementation of ReBATE, a suite of Relief-based feature selection algorithms
-for Machine Learning.  These algorithms excel at identifying features that are
-predictive of the outcome in supervised learning problems, and are especially
-good at identifying feature interactions that are normally overlooked by
-standard feature selection algorithms.")
-    (license license:expat)))
-
-(define-public python2-scikit-rebate
-  (package-with-python2 python-scikit-rebate))
-
 (define-public python-logging
   (package
     (name "python-logging")
@@ -491,90 +386,6 @@ desirable.  This is the problem the icgc-get tool helps to solve.")
               (sha256
                (base32
                 "12z24m5gkn8i0fszzdixbdkwvyq6ysf9ajhsqfdj8ibchggzli12"))))))
-
-(define-public python-pyperclip
-  (package
-    (name "python-pyperclip")
-    (version "1.5.27")
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://github.com/asweigart/pyperclip.git")
-                    (commit "7deec0b6464bbda18ce2f700980edba2d6c51e10")))
-              (sha256
-               (base32
-                "1w17szqv1dlfhwwfss66afld4s7xz8yv65q9xaspfdarqrxyp19f"))))
-    (arguments `(#:tests? #f))
-    (build-system python-build-system)
-    (home-page "https://github.com/asweigart/pyperclip")
-    (synopsis "Cross-platform clipboard module for Python.")
-    (description "This package provides a cross-platform clipboard module for
-Python. It currently only handles plain text.")
-    (license license:bsd-3)))
-
-(define-public python2-pyperclip
-  (package-with-python2 python-pyperclip))
-
-(define-public python-cmd2
-  (package
-    (name "python-cmd2")
-    (version "0.7.7")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "cmd2" version))
-              (sha256
-               (base32
-                "0widbir8ay1fd4zm8l0rjq78j1cvbammbz8xs32crbanqsgzpqml"))))
-    (build-system python-build-system)
-    (inputs
-     `(("python-pytest" ,python-pytest)
-       ("python-mock" ,python-mock)))
-    (propagated-inputs
-     `(("python-six" ,python-six)
-       ("python-pyperclip" ,python-pyperclip)
-       ("python-pyparsing" ,python-pyparsing)))
-    (home-page "https://github.com/python-cmd2/cmd2")
-    (synopsis "Building interactive command line applications in Python")
-    (description "This package provides a tool for building interactive command
-line applications in Python")
-    (license license:expat)))
-
-(define-public python2-cmd2
-  (package-with-python2 python-cmd2))
-
-(define-public python-cmd2-0.6.8
-  (package (inherit python-cmd2)
-    (version "0.6.8")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "cmd2" version))
-              (sha256
-               (base32
-                "1a346zcd46c8gwbbp2cxsmvgfkyy26kwxjzdnkv7n47w6660sy5c"))))
-    (arguments `(#:tests? #f))))
-
-(define-public python2-cmd2-0.6.8
-  (package-with-python2 python-cmd2-0.6.8))
-
-(define-public python-sortedcontainers
-  (package
-    (name "python-sortedcontainers")
-    (version "1.5.7")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "sortedcontainers" version))
-       (sha256
-        (base32
-         "1sjh8lccbmvwna91mlhl5m3z4320p07h063b8x8br4p4cll49w0g"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (propagated-inputs
-     `(("python-tox" ,python-tox)))
-    (home-page "http://www.grantjenks.com/docs/sortedcontainers/")
-    (synopsis "Python Sorted Container Types: SortedList, SortedDict, and SortedSet")
-    (description "Python Sorted Container Types: SortedList, SortedDict, and SortedSet")
-    (license license:asl2.0)))
 
 (define-public python-intervaltree-2.0.4
   (package (inherit python-intervaltree)
@@ -860,24 +671,6 @@ tree exploration")
      (description "")
      (license license:gpl3+))))
 
-(define-public python-pymysql
-  (package
-   (name "python-pymysql")
-   (version "0.8.0")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (pypi-uri "PyMySQL" version))
-     (sha256
-      (base32
-       "0h0glwlahamb0d7x0v1ai4c2n7675s7nhjg410lx8xvh75k4mnij"))))
-   (build-system python-build-system)
-   (arguments `(#:tests? #f)) ; Needs a running MySQL database.
-   (home-page "https://github.com/PyMySQL/PyMySQL/")
-   (synopsis "Pure Python MySQL Driver")
-   (description "Pure Python MySQL Driver")
-   (license license:expat)))
-
 (define-public python-mappy
   (package
     (name "python-mappy")
@@ -1016,78 +809,6 @@ queries.")
                 "1v90sjpbkj7wpzn52yxpasb84fhkw1v85nw2nwxz2bgzfxn93byp"))
               (patches (search-patches "0001-htseq-increase-memory-limit.patch"))))))
 
-(define-public python-umap-learn
-  (package
-    (name "python-umap-learn")
-    (version "0.3.7")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "umap-learn" version))
-        (sha256
-          (base32
-            "1fgym8as0s7wjm4hw324xjfbx6y6bsnfwwhrvxxaij3cqk6wk0cw"))))
-    (build-system python-build-system)
-    (propagated-inputs
-    `(("python-numpy" ,python-numpy)
-      ("python-scipy" ,python-scipy)
-      ("python-scikit-learn" ,python-scikit-learn)
-      ("python-nose" ,python-nose)
-      ("python-numba" ,python-numba)))
-    (home-page "http://github.com/lmcinnes/umap")
-    (synopsis
-      "Uniform Manifold Approximation and Projection")
-    (description
-      "Uniform Manifold Approximation and Projection")
-    (license license:bsd-3)))
-
-(define-public python-certipy
-  (package
-   (name "python-certipy")
-   (version "0.1.3")
-   (source (origin
-            (method url-fetch)
-            (uri (pypi-uri "certipy" version))
-            (sha256
-             (base32
-              "0n980gqpzh0fm58h3i4mi2i10wgj606lscm1r5sk60vbf6vh8mv9"))))
-   (build-system python-build-system)
-   (propagated-inputs
-    `(("python-pyopenssl" ,python-pyopenssl)
-      ("python-pytest" ,python-pytest)
-      ("python-pytest" ,python-pytest)))
-   (home-page "https://github.com/LLNL/certipy")
-   (synopsis "Utility to create and sign CAs and certificates")
-   (description "Utility to create and sign CAs and certificates")
-   (license license:bsd-3)))
-
-(define-public python-pamela
-  (package
-   (name "python-pamela")
-   (version "1.0.0")
-   (source (origin
-            (method url-fetch)
-            (uri (pypi-uri "pamela" version))
-            (sha256
-             (base32
-              "0v5brdm3c1fzbd8wgai3d40k5pv437i6nfw1d2qv06vxxydkijb5"))))
-   (build-system python-build-system)
-   (arguments
-    `(#:phases
-      (modify-phases %standard-phases
-        (add-after 'unpack 'patch-libpam
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (substitute* "pamela.py"
-              (("find_library\\(\"pam\"\\)")
-               (string-append "\"" (assoc-ref inputs "linux-pam")
-                              "/lib/libpam.so" "\""))))))))
-   (inputs
-    `(("linux-pam" ,linux-pam)))
-   (home-page "https://github.com/minrk/pamela")
-   (synopsis "PAM interface using ctypes")
-   (description "PAM interface using ctypes")
-   (license license:expat)))
-
 (define-public python-jupyterhub
   (package
    (name "python-jupyterhub")
@@ -1147,33 +868,6 @@ queries.")
    (description "A bash kernel for Jupyter")
    (license license:expat)))
 
-(define-public python-pytest-check-links
-  (package
-    (name "python-pytest-check-links")
-    (version "0.3.0")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "pytest_check_links" version))
-        (sha256
-          (base32
-            "12x3wmrdzm6wgk0vz02hb769h68nr49q47w5q1pj95pc89hsa34v"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (propagated-inputs
-      `(("python-docutils" ,python-docutils)
-        ("python-html5lib" ,python-html5lib)
-        ("python-nbconvert" ,python-nbconvert)
-        ("python-nbformat" ,python-nbformat)
-        ("python-pytest" ,python-pytest)
-        ("python-six" ,python-six)
-        ("python-pbr" ,python-pbr)))
-    (home-page
-      "https://github.com/minrk/pytest-check-links")
-    (synopsis "Check links in files")
-    (description "Check links in files")
-    (license #f)))
-
 (define-public python-jupyterlab-server
   (package
     (name "python-jupyterlab-server")
@@ -1231,26 +925,6 @@ queries.")
       "The JupyterLab notebook server extension.")
     (license license:bsd-3)))
 
-(define-public python-json5
-  (package
-    (name "python-json5")
-    (version "0.8.5")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "json5" version))
-        (sha256
-          (base32
-            "1c3k5blbhq7g2lnbap26a846ag5x19ivisd3wfzz6bzdl46hyjqj"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (home-page "https://github.com/dpranke/pyjson5")
-    (synopsis
-      "A Python implementation of the JSON5 data format.")
-    (description
-      "A Python implementation of the JSON5 data format.")
-    (license #f)))
-
 (define-public python-boto
   (package
     (name "python-boto")
@@ -1269,36 +943,7 @@ queries.")
     (description "Old version of Boto 3")
   (license license:asl2.0)))
 
-(define-public python-botocore
-  (package
-  (name "python-botocore")
-  (version "1.15.1")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (string-append
-	    "https://github.com/boto/botocore/archive/"
-	    version ".tar.gz"))
-      (sha256
-        (base32 "0lcm4p667p98nr0jis7w3y7hhrl80vl9fxjk88zvazhad8q7czh9"))))
-  (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (inputs
-       `(("python-urllib3" ,python-urllib3)
-	 ("python-dateutil", python-dateutil)
-	 ("python-docutils", python-docutils)
-	 ("python-jmespath", python-jmespath)
-	 ("python-mock", python-mock)
-	 ("python-nose", python-nose)
-	 ("python-jsonschema", python-jsonschema)))
-  (home-page "https://github.com/boto/botocore")
-  (synopsis "The low-level, core functionality of boto 3.")
-  (description "A low-level interface to a growing number of Amazon Web Services. The botocore package is the foundation for the AWS CLI as well as boto3.
-
-On 10/09/2019 support for Python 2.6 and Python 3.3 was deprecated and support was dropped on 01/10/2020. To avoid disruption, customers using Botocore on Python 2.6 or 3.3 will need to upgrade their version of Python or pin the version of Botocore in use prior to 01/10/2020. For more information, see this blog post.")
-  (license license:asl2.0)))
-
-(define-public python-s3transfer
+(define-public python-s3transfer-0.3.3
   (package
     (name "python-s3transfer")
     (version "0.3.3")
@@ -1590,28 +1235,6 @@ In 2011, I started using Github for source code hosting and the Gensim website m
       "https://github.com/yuvipanda/ldapauthenticator")
     (synopsis "LDAP Authenticator for JupyterHub")
     (description "LDAP Authenticator for JupyterHub")
-    (license #f)))
-
-(define-public python-ldap3
-  (package
-    (name "python-ldap3")
-    (version "2.6.1")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "ldap3" version))
-        (sha256
-          (base32
-            "0ag5xqlki6pjk3f50b8ar8vynx2fmkna7rfampv3kdgwg8z6gjr7"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (propagated-inputs
-      `(("python-pyasn1" ,python-pyasn1)))
-    (home-page "https://github.com/cannatag/ldap3")
-    (synopsis
-      "A strictly RFC 4510 conforming LDAP V3 pure Python client library")
-    (description
-      "A strictly RFC 4510 conforming LDAP V3 pure Python client library")
     (license #f)))
 
 (define-public python-checkm-genome
@@ -2189,30 +1812,6 @@ unused maps to allow continued operation.")
    (description
      "Calculate statistics for Oxford Nanopore sequencing data and alignments")
    (license license:expat)))
-
-(define-public python-bitarray
-  (package
-    (name "python-bitarray")
-    (version "1.2.1")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "bitarray" version))
-              (sha256
-               (base32
-                "1kxrlxfj9nrx512sfwifwl9z4v6ky3qschl0zmk3s3dvc3s7bmif"))))
-    (build-system python-build-system)
-    (home-page "https://github.com/ilanschnell/bitarray")
-    (synopsis "Efficient arrays of booleans")
-    (description "This package provides an object type which efficiently
-represents an array of booleans.  Bitarrays are sequence types and behave very
-much like usual lists.  Eight bits are represented by one byte in a contiguous
-block of memory.  The user can select between two representations:
-little-endian and big-endian.  All of the functionality is implemented in C.
-Methods for accessing the machine representation are provided.  This can be
-useful when bit level access to binary files is required, such as portable
-bitmap image files.  Also, when dealing with compressed data which uses
-variable bit length encoding, you may find this module useful.")
-    (license license:psfl)))
 
 (define-public python2-conifer
   (package
