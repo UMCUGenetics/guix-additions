@@ -4643,14 +4643,14 @@ copy number estimation.")
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o644)))
          (add-after 'reset-gzip-timestamps 'fix-permissions-after
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
@@ -4728,14 +4728,14 @@ NGS data.")
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o644)))
          (add-after 'reset-gzip-timestamps 'fix-permissions-after
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
