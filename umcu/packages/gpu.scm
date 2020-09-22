@@ -140,3 +140,47 @@ for RTX 2080 Ti cards.")
    (description "This package contains the proprietary NVIDIA CUDA toolkit.")
    ;; It's proprietary, so only poke at it with a loooong stick. :)
    (license #f)))
+
+(define-public cuda-cudnn
+  (package
+    (name "cuda-cudnn")
+    (version "8.0")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "http://developer.download.nvidia.com/compute/redist/"
+                    "cudnn/v6.0/cudnn-" version "-linux-x64-v6.0.tgz"))
+              (sha256
+               (base32
+                "173zpgrk55ri8if7s5yngsc89ajd6hz4pss4cdxlv6lcyh5122cv"))))
+    (build-system trivial-build-system)
+    (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (let* ((tarball   (assoc-ref %build-inputs "source"))
+              (out       (assoc-ref %outputs "out"))
+              (lib       (string-append out "/lib"))
+              (include   (string-append out "/include")))
+
+         (use-modules (guix build utils))
+         (setenv "PATH" (string-append (assoc-ref %build-inputs "tar") "/bin:"
+                                       (assoc-ref %build-inputs "gzip") "/bin"))
+         (system* "tar" "-xvf" tarball)
+         (mkdir-p lib)
+
+         ;; Copy the libraries to the output.
+         (and (install-file "cuda/lib64/libcudnn.so.6.0.21" lib)
+              (install-file "cuda/lib64/libcudnn_static.a"  lib)
+              (install-file "cuda/include/cudnn.h"          include))
+         (with-directory-excursion lib
+           (symlink "libcudnn.so.6.0.21" "libcudnn.so.6")
+           (symlink "libcudnn.so.6.0.21" "libcudnn.so")))))
+    (native-inputs
+     `(("gzip" ,gzip)
+       ("tar" ,tar)))
+    (home-page "https://www.nvidia.com")
+    (synopsis "Proprietary NVIDIA CUDA neural network library")
+    (description "This package contains the proprietary NVIDIA CUDA neural
+network libraries.")
+    ;; It's proprietary, so only poke at it with a loooong stick. :)
+    (license #f)))
