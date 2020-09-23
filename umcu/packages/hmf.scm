@@ -40,6 +40,7 @@
   #:use-module (gnu packages gtk)
   #:use-module (gnu packages java)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages maven)
   #:use-module (gnu packages pcre)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages python)
@@ -316,7 +317,7 @@ filtering and output rewriting (JSON, RDF etc.)")
                 #t))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -509,7 +510,7 @@ genomics data developed by the Hartwig Medical Foundation.")
                 #t))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -713,7 +714,7 @@ genomics data developed by the Hartwig Medical Foundation.")
                 #t))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -932,7 +933,7 @@ genomics data developed by the Hartwig Medical Foundation.")
                 #t))))))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -1164,7 +1165,7 @@ genomics data developed by the Hartwig Medical Foundation.")
         ("mysql" ,mysql-5.6.25)))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -1385,7 +1386,7 @@ specific version is compatible with the 4.8 pipeline release.")
         ("mysql" ,mysql-5.6.25)))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -1788,7 +1789,7 @@ genomics data developed by the Hartwig Medical Foundation.")
         ("mysql" ,mysql-5.6.25)))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
@@ -2034,7 +2035,7 @@ specific version is compatible with the 4.8 pipeline release.")
         ("mysql" ,mysql-5.6.25)))
      (inputs
       `(("icedtea" ,icedtea-8 "jdk")
-        ("maven" ,maven-bin)
+        ("maven" ,maven)
         ("circos" ,circos)))
      ;; Amber uses an R script for BAF segmentation.
      (propagated-inputs
