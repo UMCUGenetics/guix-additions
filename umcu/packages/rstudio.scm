@@ -81,22 +81,33 @@
              (uri (git-reference
                    (url "https://github.com/rstudio/rstudio.git")
                    (commit (string-append "v" version))))
+             (file-name (git-file-name name version))
              (sha256
               (base32
-               "0zarhsm3cghz4fn4c53y2zy05z3cxqzp87h16ya8v7hyxapaqfy6"))
-             (file-name (string-append name "-" version "-checkout"))))
+               "0zarhsm3cghz4fn4c53y2zy05z3cxqzp87h16ya8v7hyxapaqfy6"))))
    (build-system cmake-build-system)
    (arguments
-    `(#:configure-flags '("-DRSTUDIO_TARGET=Server")
+    `(#:configure-flags
+      '("-DRSTUDIO_TARGET=Server"
+        "-DCMAKE_BUILD_TYPE=Release")
+      #:modules ((guix build cmake-build-system)
+                 (guix build utils)
+                 (ice-9 match))
       #:tests? #f ; no tests
       #:phases
       (modify-phases %standard-phases
-        (add-before 'build 'set-java-home
+        (add-before 'build 'set-environment-variables
           (lambda* (#:key inputs #:allow-other-keys)
             (setenv "JAVA_HOME" (assoc-ref inputs "jdk"))
+            (match (string-split ,version #\.)
+              ((major minor patch)
+               (setenv "RSTUDIO_VERSION_MAJOR" major)
+               (setenv "RSTUDIO_VERSION_MINOR" minor)
+               (setenv "RSTUDIO_VERSION_PATCH" patch)))
+            (setenv "PACKAGE_OS" "GNU Guix")
             #t))
         (add-after 'unpack 'fix-dependencies
-          (lambda* (#:key inputs #:allow-other-keys)
+          (lambda _
             ;; Disable checks for bundled dependencies.  We take care of them by other means.
             (substitute* "src/cpp/session/CMakeLists.txt"
               (("if\\(NOT EXISTS \"\\$\\{RSTUDIO_DEPENDENCIES_DIR\\}/common/rmarkdown\"\\)") "if (FALSE)")
@@ -124,32 +135,35 @@
                                         (install-file (string-append clang "/include") dir)
                                         #t))))
         (add-after 'unpack 'unpack-dictionaries
-           (lambda* (#:key inputs #:allow-other-keys)
-             (with-directory-excursion "dependencies/common"
+          (lambda* (#:key inputs #:allow-other-keys)
+            (with-directory-excursion "dependencies/common"
                (mkdir "dictionaries")
                (mkdir "pandoc") ; TODO: only to appease the cmake stuff
-               (zero? (system* "unzip" "-qd" "dictionaries"
-                               (assoc-ref inputs "dictionaries"))))))
+               (invoke "unzip" "-qd" "dictionaries"
+                       (assoc-ref inputs "dictionaries")))
+            #t))
         (add-after 'unpack 'unpack-mathjax
           (lambda* (#:key inputs #:allow-other-keys)
-             (with-directory-excursion "dependencies/common"
-               (mkdir "mathjax-27")
-               (zero? (system* "unzip" "-qd" "mathjax-27"
-                               (assoc-ref inputs "mathjax"))))))
+            (with-directory-excursion "dependencies/common"
+              (mkdir "mathjax-27")
+              (invoke "unzip" "-qd" "mathjax-27"
+                      (assoc-ref inputs "mathjax")))
+            #t))
         (add-after 'unpack 'unpack-gin
           (lambda* (#:key inputs #:allow-other-keys)
             (with-directory-excursion "src/gwt"
               (install-file (assoc-ref inputs "junit") "lib")
               (mkdir-p "lib/gin/1.5")
-              (zero? (system* "unzip" "-qd" "lib/gin/1.5"
-                              (assoc-ref inputs "gin"))))))
+              (invoke "unzip" "-qd" "lib/gin/1.5"
+                      (assoc-ref inputs "gin")))
+            #t))
         (add-after 'unpack 'unpack-gwt
           (lambda* (#:key inputs #:allow-other-keys)
             (with-directory-excursion "src/gwt"
               (mkdir-p "lib/gwt")
-	      (system* "unzip" "-qd" "lib/gwt"
-		       (assoc-ref inputs "gwt"))
-               (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
+	      (invoke "unzip" "-qd" "lib/gwt"
+		      (assoc-ref inputs "gwt"))
+              (rename-file "lib/gwt/gwt-2.7.0" "lib/gwt/2.7.0"))
 	    #t)))))
    (native-inputs
     `(("pkg-config" ,pkg-config)
