@@ -4917,7 +4917,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
     (license license:gpl2)))
 
 (define-public sharc
-  (let ((commit "1ca59328c3c925cb8504f2f650b1702e36b6fcd8"))
+  (let ((commit "f1735d7d780d1a301ada9bb5f28eb488d0e02647"))
     (package
      (name "sharc")
      (version "1.0")
@@ -4929,7 +4929,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
               (file-name (string-append name "-" commit))
               (sha256
                (base32
-                "07zwzb36c1bvzkm7h1jz89791fl5dmhqixw640l4z3c3m023661y"))))
+                "0zw79sp09ysrdidnayp9li9mg2ycvvmjkix0bjw81r3qshg1kwyl"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f ; There are no tests
