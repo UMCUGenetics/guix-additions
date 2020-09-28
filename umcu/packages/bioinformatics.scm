@@ -591,62 +591,6 @@ Python 3 support.")
 (define-public python2-shellescape
   (package-with-python2 python-shellescape))
 
-(define-public python2-htmlgen-gn ; guix obsolete
-(package
-  (name "python2-htmlgen-gn")
-  (version "2.2.2")
-  (source (origin
-           (method url-fetch)
-           ;; http://files.genenetwork.org/software/contrib/htmlgen-2.2.2-gn.tar.gz
-           (uri (string-append
-                 "http://files.genenetwork.org/software/contrib/htmlgen-"
-version "-gn.tar.gz"))
-           (sha256
-            (base32
-             "1lwsk56rymhrma46cbyh3g64ksmq1vsih3qkrc2vh0lpba825y7r"))
-           ;;(patches (list
-           ;;          (search-patch "python2-htmlgen-Applied-Deb-patch.patch")
-           ;;          (search-patch "python2-htmlgen-Fix-test-for-random.patch")
-            ))
-  (build-system python-build-system)
-  (outputs '("out"))
-  (native-inputs
-   `(("make" ,gnu-make)
-     ))
-  (propagated-inputs
-   `(("python2" ,python-2)))
-  (arguments
-   `(#:phases (modify-phases %standard-phases
-     (replace 'build
-              (lambda _
-                (system* "python2" "-m" "compileall" ".")))
-     (replace 'install
-              (lambda* (#:key outputs #:allow-other-keys)
-                       (let* ((out (assoc-ref outputs "out"))
-                              (include (string-append out "/include"))
-                              (lib2 (string-append out "/lib/htmlgen"))
-                              (lib (string-append (assoc-ref %outputs "out") "/lib/python2.7/site-packages/htmlgen"))
-                              (pkgconfig (string-append out "/lib/pkgconfig"))
-                              (doc (string-append out "/share/doc")))
-                         ;; Install libs and headers.
-                         ;; (copy-file "HTMLgen.pyc" "HTMLgen2.pyc")
-                         (install-file "HTMLgen.pyc" lib)
-                         (install-file "HTMLgen2.pyc" lib)
-                         (install-file "imgsize.pyc" lib)
-                         (install-file "ImageH.pyc" lib)
-                         (install-file "ImagePaletteH.pyc" lib)
-                         (install-file "__init__.pyc" lib)
-              ))) ; install
-     ) ; phases
-     #:tests? #f))
-  (home-page
-    "https://packages.debian.org/unstable/python/python-htmlgen")
-  (synopsis "Genenetwork version of Python2 HTMLgen (defunkt
-project)")
-  (description #f)
-  (license #f)))
-
-
 (define-public python2-parallel ; guix fix number of things
   (package
     (name "python2-parallel")
