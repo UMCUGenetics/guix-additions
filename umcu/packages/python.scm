@@ -1555,51 +1555,6 @@ unused maps to allow continued operation.")
      "Calculate statistics for Oxford Nanopore sequencing data and alignments")
    (license license:expat)))
 
-(define-public python2-conifer
-  (package
-    (name "python2-conifer")
-    (version "0.2.2")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "mirror://sourceforge/conifer/"
-                    "CoNIFER%20" version "/conifer_v" version ".tar.gz"))
-              (sha256
-               (base32
-                "03hij9gw8l9669q3ghhpw7spr00v6hscky7da7k0a7fnsyn0c4qn"))))
-    (build-system trivial-build-system)
-    (arguments
-     `(#:modules ((guix build utils))
-       #:builder
-       (begin
-         (use-modules (guix build utils))
-         (let* ((out (assoc-ref %outputs "out"))
-                (script-dir (string-append out "/lib/python2.7/site-packages/"))
-                (bin-dir (string-append out "/bin/"))
-                (tar  (string-append (assoc-ref %build-inputs "tar") "/bin/tar"))
-                (PATH (string-append (assoc-ref %build-inputs "gzip") "/bin")))
-           (mkdir-p script-dir)
-           (mkdir-p bin-dir)
-           (setenv "PATH" PATH)
-           (system* tar "xvf" (assoc-ref %build-inputs "source"))
-           (install-file "conifer_v0.2.2/conifer_functions.py" script-dir)
-           (install-file "conifer_v0.2.2/conifer.py" bin-dir)))))
-    (native-inputs
-     `(("gzip" ,gzip)
-       ("tar" ,tar)))
-    (propagated-inputs
-     `(("python2-matplotlib" ,python2-matplotlib)
-       ("python2-numpy" ,python2-numpy)
-       ("python2-pysam" ,python2-pysam)
-       ("python2-numexpr" ,python2-numexpr)
-       ("python2-tables" ,python2-tables)
-       ("python2-scipy" ,python2-scipy)))
-    (home-page "http://conifer.sourceforge.net/")
-    (synopsis "Copy number inference from exome reads")
-    (description "CoNIFER uses exome sequencing data to find copy number
-variants (CNVs) and genotype the copy-number of duplicated genes.")
-    (license license:gpl3)))
-
 (define-public python-scaden
 (package
   (name "python-scaden")
