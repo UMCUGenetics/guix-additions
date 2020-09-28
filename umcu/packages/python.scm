@@ -437,17 +437,18 @@ tree exploration")
 (define-public python-ont-tombo
   (package
     (name "python-ont-tombo")
-    (version "1.2.1")
+    (version "1.5.1")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "ont-tombo" version))
        (sha256
         (base32
-         "0v3v2j98nlddjlc8l8d0ihcmkbqjphzfnlarkn33219zj3787c94"))))
+         "1023hadgcsgi53kz53ql45207hfizf9sw57z0qij3ay1bx68zbpm"))))
     (build-system python-build-system)
     (native-inputs
-     `(("python-nose2" ,python-nose2)))
+     `(("python-nose2" ,python-nose2)
+       ("python-tqdm" ,python-tqdm)))
     (propagated-inputs
      `(("python-cython" ,python-cython)
        ("python-future" ,python-future)
