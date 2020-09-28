@@ -291,9 +291,9 @@ implemented using Requests")
       (description "Utility scripts to work with Genologics Clarity LIMS")
       (license #f))))
 
-(define-public python-logging
+(define-public python2-logging
   (package
-    (name "python-logging")
+    (name "python2-logging")
     (version "0.4.9.6")
     (source (origin
               (method url-fetch)
@@ -301,14 +301,13 @@ implemented using Requests")
               (sha256
                (base32
                 "05r4iz1qb2vdrv0kg7yv0ibp7wyryldvv18h60nh91ghfc3vbxi6"))))
+    (arguments
+     `(#:python ,python-2))
     (build-system python-build-system)
     (home-page "http://www.red-dove.com/python_logging.html")
     (synopsis "A logging module for Python")
     (description "A logging module for Python")
     (license #f)))
-
-(define-public python2-logging
-  (package-with-python2 python-logging))
 
 (define-public python-sv2
   (package
