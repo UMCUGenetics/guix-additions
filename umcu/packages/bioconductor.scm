@@ -138,33 +138,34 @@ and chromatin feature to identify functional SNP in coding or non-coding
 regions.")
    (license license:gpl3+)))
 
-(define r-spp-custom
+(define-public r-spp
   (package
-    (name "r-spp-custom")
-    (version "1.14")
+    (name "r-spp")
+    (version "1.16.0")
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "https://github.com/kundajelab/phantompeakqualtools/raw/master/spp_"
-                    version ".tar.gz"))
+              (uri (cran-uri "spp" version))
               (sha256
-               (base32 "02sj0482ph0sn9lpmxcmldsrj3sph70r4jp5k0idgbl27qbfcfyh"))))
+               (base32
+                "08zxxgyp0h6733b08jmml7k4rhfd3mi5dda3jrzid0s184y0z29w"))))
+    (properties `((upstream-name . "spp")))
     (build-system r-build-system)
-    (inputs
-     `(("boost" ,boost)
-       ("zlib" ,zlib)))
+    (inputs `(("zlib" ,zlib)))
     (propagated-inputs
-     `(("r-catools" ,r-catools)
+     `(("r-bh" ,r-bh)
+       ("r-catools" ,r-catools)
+       ("r-rcpp" ,r-rcpp)
        ("r-rsamtools" ,r-rsamtools)))
-    (home-page "https://github.com/kundajelab/phantompeakqualtools")
-    (synopsis "")
-    (description "")
-    (license #f)))
+    (home-page "https://cran.r-project.org/web/packages/spp")
+    (synopsis "ChIP-Seq Processing Pipeline")
+    (description "Analysis of ChIP-seq and other functional sequencing
+ data [Kharchenko PV (2008) <DOI:10.1038/nbt.1508>].")
+    (license license:gpl2)))
 
 (define-public r-phantompeakqualtools
   (package
     (name "r-phantompeakqualtools")
-    (version "1.2.1.1")
+    (version "1.2.2")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -172,7 +173,7 @@ regions.")
                     "archive/" version ".tar.gz"))
               (sha256
                (base32
-                "0ag881jbhic5x9r87yk1p4687divyzggk7agqrnwh71npvy4a52b"))))
+                "1l8cw6g0z8c9vlw1s0q5rmh7lzasa67i7bkz9pf7psgg9av664mk"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f
@@ -191,7 +192,7 @@ regions.")
        ("r-snowfall" ,r-snowfall)
        ("r-bitops" ,r-bitops)
        ("r-rsamtools" ,r-rsamtools)
-       ("r-spp-custom" ,r-spp-custom)
+       ("r-spp" ,r-spp)
        ("gawk" ,gawk)
        ("samtools" ,samtools)
        ("boost" ,boost)
