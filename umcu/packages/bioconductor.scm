@@ -419,26 +419,6 @@ Michael Lim & Trevor Hastie (2015)")
     "Routines for the polynomial spline fitting routines hazard regression, hazard estimation with flexible tails, logspline, lspec, polyclass, and polymars, by C.  Kooperberg and co-authors.")
   (license license:gpl2+)))
 
-(define-public r-sandwich
-(package
-  (name "r-sandwich")
-  (version "2.4-0")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (cran-uri "sandwich" version))
-      (sha256
-        (base32
-          "1h6c12cfv2x42laxf6ifxfk9hqzagvvvimzak88fv8vnxnf5nc9l"))))
-  (build-system r-build-system)
-  (propagated-inputs `(("r-zoo" ,r-zoo)))
-  (home-page
-    "http://cran.r-project.org/web/packages/sandwich")
-  (synopsis "Robust Covariance Matrix Estimators")
-  (description
-    "Model-robust standard error estimators for cross-sectional, time series, clustered, panel, and longitudinal data.")
-  (license #f)))
-
 (define-public r-th-data
 (package
   (name "r-th-data")
