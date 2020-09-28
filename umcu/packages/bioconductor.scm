@@ -233,6 +233,31 @@ regions.")
 exposing these as @code{TxDb} objects.")
     (license license:artistic2.0)))
 
+(define-public r-ecp
+  (package
+    (name "r-ecp")
+    (version "3.1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "ecp" version))
+              (sha256
+               (base32
+                "11f9p869xr0zg779i46gmflxlq4xclk9wxbab0nj2fan26pn4sfy"))))
+    (properties `((upstream-name . "ecp")))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page "https://cran.r-project.org/web/packages/ecp")
+    (synopsis
+     "Non-Parametric Multiple Change-Point Analysis of Multivariate Data")
+    (description
+     "This package provies an implementation of various procedures for finding
+multiple change-points.  Two methods make use of dynamic programming and
+pruning, with no distributional assumptions other than the existence of certain
+absolute moments in one method.  Hierarchical and exact search methods are
+included.  All methods return the set of estimated change- points as well as
+other summary information.")
+    (license license:gpl2+)))
+
 (define-public r-aneufinderdata
   (package
    (name "r-aneufinderdata")
