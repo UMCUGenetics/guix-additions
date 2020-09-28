@@ -1759,15 +1759,15 @@ the cloud environments of ICGC.")
 (define-public igv
   (package
     (name "igv")
-    (version "2.7.2")
+    (version "2.8.10")
     (source
      (origin
        (method url-fetch)
        (uri (string-append
              "http://data.broadinstitute.org/igv/projects/downloads/"
-             "2.7/IGV_Linux_" version ".zip"))
+             "2.8/IGV_Linux_" version ".zip"))
        (sha256
-        (base32 "08h9bzwwykchnqfhz9m60c5vsn2wxik3skj2xmx6afnwlna4786b"))))
+        (base32 "1qrhsvl6z5h1kg3pji08fzqj08c6l2lxj0qv7hbvys3mymz4lfzv"))))
     (build-system gnu-build-system)
     (propagated-inputs
      `(("openjdk11" ,openjdk11)))
@@ -1809,21 +1809,6 @@ datasets.  It supports a wide variety of data types, including array-based and
 next-generation sequence data, and genomic annotations.")
    ;; No license specified.
    (license license:non-copyleft)))
-
-(define-public igv-3.0-beta
-  (package (inherit igv)
-    (name "igv")
-    (version "3.0-beta")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             "http://data.broadinstitute.org/igv/projects/downloads/"
-             "3.0_beta/IGV_3.0_beta.zip"))
-       (sha256
-        (base32 "1vpaj4zpa77pzix2dplrc1lz398bdv8yvg2p48f4i8px14qpdlvn"))))
-    (propagated-inputs
-     `(("icedtea" ,icedtea-8)))))
     
 (define-public igvtools-bin-2.3.71
   (package
