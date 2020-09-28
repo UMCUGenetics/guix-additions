@@ -312,15 +312,15 @@ implemented using Requests")
 (define-public python-sv2
   (package
     (name "python-sv2")
-    (version "1.4.0")
+    (version "1.5")
     (source (origin
               (method url-fetch)
               (uri (string-append
-                    "https://github.com/dantaki/SV2/releases/download/sv2"
+                    "https://github.com/dantaki/SV2/releases/download/v"
                     version "/sv2-" version ".tar.gz"))
               (sha256
                (base32
-                "0gdms14rda4n7mr84mv4sn5i93l8jvhc7nrk6qj93zjw4bv2d1n5"))))
+                "0shm0vcsads0a7g1v0h4vx7lk3scfjdk8qrqzpkpmyrv01fix3bb"))))
     (build-system python-build-system)
     (arguments
      `(#:tests? #f ; There are no tests.
