@@ -235,13 +235,13 @@ exposing these as @code{TxDb} objects.")
 (define-public r-aneufinderdata
   (package
    (name "r-aneufinderdata")
-   (version "1.14.0")
+   (version "1.16.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "AneuFinderData" version 'experiment))
             (sha256
              (base32
-              "1ar2n45bhns0m651p6xlff5ja56s2a906c01qsyza348pjh5fmi7"))))
+              "19nfx345k8hlllfrhs71bvbnzg3lhr9p9lg4z5lr73kqpxfgx1jc"))))
    (build-system r-build-system)
    (home-page "https://bioconductor.org/packages/AneuFinderData/")
    (synopsis "Data package for AneuFinder")
@@ -251,13 +251,13 @@ exposing these as @code{TxDb} objects.")
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
-    (version "1.14.0")
+    (version "1.16.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AneuFinder" version))
               (sha256
                (base32
-                "054m9scwnw0snk9vw3f2a1r1zrd9qqs05khd9n7i7jmivnzx5qrb"))))
+                "0ii085zd244p3v0ai2q7yvf0mynvf5v3n5zxmbznifs9ij7nzsz7"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
