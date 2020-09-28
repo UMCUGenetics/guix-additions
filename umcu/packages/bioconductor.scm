@@ -983,63 +983,6 @@ visualization tool, see(), that arranges and prints vectorized images.")
 proteomics packages.")
       (license license:artistic2.0))))
 
-(define-public r-mzr-2.19.6
-  (let ((commit "dddbebcea9ab8d1ce09b7bad5f3b9334831bd42b"))
-    (package
-      (name "r-mzr")
-      (version (string-append "2.19.6-" (string-take commit 9)))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/sneumann/mzR.git")
-               (commit commit)))
-         (sha256
-          (base32
-           "0ls50axlcyb3rlyn1j49wk07pk7x59hzddlcznr8mzkpwwh0519k"))
-         (modules '((guix build utils)))
-         (snippet
-          '(begin
-             (delete-file-recursively "src/boost")
-             (delete-file "R/zzz.R")
-             #t))))
-      (properties `((upstream-name . "mzR")))
-      (build-system r-build-system)
-      (arguments
-       `(#:phases
-         (modify-phases %standard-phases
-           (add-after 'unpack 'use-system-boost
-             (lambda _
-               (substitute* "src/Makevars"
-                 (("\\./boost/libs.*") "")
-                 (("ARCH_OBJS=" line)
-                  (string-append line
-                                 "\nARCH_LIBS=-lboost_system -lboost_regex \
--lboost_iostreams -lboost_thread -lboost_filesystem -lboost_chrono\n")))
-               #t)))))
-      (inputs
-       `(;; XXX Boost 1.69 will not work here.
-         ("boost" ,boost-for-mysql) ; use this instead of the bundled boost sources
-         ("zlib" ,zlib)))
-      (propagated-inputs
-       `(("r-biobase" ,r-biobase)
-         ("r-biocgenerics" ,r-biocgenerics)
-         ("r-ncdf4" ,r-ncdf4)
-         ("r-protgenerics" ,r-protgenerics-1.17.4)
-         ("r-rcpp" ,r-rcpp)
-         ("r-rhdf5lib" ,r-rhdf5lib)
-         ("r-zlibbioc" ,r-zlibbioc)))
-      (home-page "https://github.com/sneumann/mzR/")
-      (synopsis "Parser for mass spectrometry data files")
-      (description
-       "The mzR package provides a unified API to the common file formats and
-parsers available for mass spectrometry data.  It comes with a wrapper for the
-ISB random access parser for mass spectrometry mzXML, mzData and mzML files.
-The package contains the original code written by the ISB, and a subset of the
-proteowizard library for mzML and mzIdentML.  The netCDF reading code has
-previously been used in XCMS.")
-      (license license:artistic2.0))))
-
 (define-public r-loomr
   (package
    (name "r-loomr")
