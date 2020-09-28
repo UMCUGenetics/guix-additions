@@ -1512,49 +1512,6 @@ capable of taking on projects of any size.")
     "Probabilistic Programming in Python: Bayesian Modeling and Probabilistic Machine Learning with Theano")
   (license license:asl2.0)))
 
-(define-public python-keras-preprocessing
-  (package
-    (name "python-keras-preprocessing")
-    (version "1.0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "Keras_Preprocessing" version))
-       (sha256
-        (base32
-         "152i7k01xd3r7kin2s329ddi23b0ym6rb2ha1shnxh7cfxivljc6"))))
-    (build-system python-build-system)
-    (inputs
-     `(("python-six" ,python-six)
-       ("python-scipy" ,python-scipy)))
-    (home-page
-     "https://github.com/keras-team/keras-preprocessing")
-    (synopsis
-     "Easy data preprocessing and data augmentation for deep learning models")
-    (description
-     "Easy data preprocessing and data augmentation for deep learning models")
-    (license license:expat)))
-
-(define-public python-keras
-  (package
-    (name "python-keras")
-    (version "2.2.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "Keras" version))
-       (sha256
-        (base32
-         "1grl2znv1yssrci3r0vc4qzbqzhjfkkqjdg3bqd7y8dgaz8rk12v"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    ;(propagated-inputs
-    ; `(("python-keras-preprocessing" ,python-keras-preprocessing)))
-    (home-page "https://github.com/keras-team/keras")
-    (synopsis "Deep Learning for humans")
-    (description "Deep Learning for humans")
-    (license license:expat)))
-
 (define-public gatk4
   (package
     (name "gatk4")
