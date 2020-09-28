@@ -2376,13 +2376,13 @@ manner.")
 (define-public xqilla
   (package
    (name "xqilla")
-   (version "2.3.3")
+   (version "2.3.4")
    (source (origin
             (method url-fetch)
             (uri (string-append "mirror://sourceforge/xqilla/XQilla-"
                                 version ".tar.gz"))
             (sha256
-             (base32 "1mjgcyar3qyizpnb0h9lxaj6p9yq4vj09qd8qan1bwv6z6sbjxlg"))))
+             (base32 "1sq2b43hqzk9jq11sr0xc498z933a0rpfwvjp5z2xzii2rwk29i9"))))
    (build-system gnu-build-system)
    (arguments
     `(#:configure-flags (list (string-append
