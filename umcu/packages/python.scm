@@ -310,45 +310,6 @@ implemented using Requests")
 (define-public python2-logging
   (package-with-python2 python-logging))
 
-(define-public epigwas
-  (package
-   (name "epigwas")
-   (version "01")
-   (source (origin
-            (method url-fetch)
-            (uri "http://archive.broadinstitute.org/mpg/epigwas/soft.tar.gz")
-            (sha256
-             (base32 "1v3b0xdccck3h7fydmd6rvy3ksln44a7a7nqlbwklcwkz1fb4pvq"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; Nothing to configure.
-        (delete 'build) ; Nothing to build.
-        (replace 'install
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (let ((scripts (string-append (assoc-ref outputs "out")
-                                          "/share/epigwas/scripts/")))
-              (mkdir-p scripts)
-              (copy-recursively "." scripts)
-              (substitute* (string-append scripts "phenoCellSpec_v01/markCellSpecif.py")
-                (("parseData") "data"))))))))
-   (home-page "http://archive.broadinstitute.org/mpg/epigwas/")
-   (synopsis "Scripts for phenotypic cell type specificity")
-   (description "Phenotypic cell-type specificity identifies chromatin
- marks that overlap phenotypically associated SNPs in cell type specific
-way.  That is, if SNPs associated to a phenotype regulate gene expression
-in a cell type specific manner, they would overlap chromatin mark peaks
-that highlight active gene regulation in the cell type(s) relevant to this
-phenotype.  Presumably, identification of critical cell types and marks can
-be used to fine-map loci to their best causal variant. Here we provide
-scripts that allow users to test:
-* Chromatin marks for their phenotypic cell type specificity;
-* Specific cell-types for overlap of selected chromatin marks with SNPs
-  associated to particular pehnotypes.")
-   (license #f)))
-
 (define-public python-sv2
   (package
     (name "python-sv2")
