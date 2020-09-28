@@ -2891,7 +2891,8 @@ length and 3′-end modifications using a high-throughput sequencer.")
              (base32 "0d4fp0jq3b3d97jz81hv0kd3av12ycbjk28mirhbmwh32zm2d54k"))
             (patches (list (search-patch "manta-use-system-zlib.patch")
                            (search-patch "manta-use-system-htslib.patch")
-                           (search-patch "manta-use-system-samtools.patch")))))
+                           (search-patch "manta-use-system-samtools.patch")
+                           (search-patch "manta-1.1.0-use-system-boost.patch")))))
    (build-system cmake-build-system)
    (arguments
     `(#:tests? #f
