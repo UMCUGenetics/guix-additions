@@ -26,6 +26,7 @@
   #:use-module (gnu packages boost)
   #:use-module (gnu packages check)
   #:use-module (gnu packages cmake)
+  #:use-module (gnu packages commencement)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages curl)
@@ -2509,7 +2510,7 @@ acid changes).")
     (native-inputs
      `(("bash" ,bash)
        ("python" ,python-2)
-       ("gcc" ,gcc-5)))
+       ("gcc" ,gcc-toolchain-5)))
     (propagated-inputs
      `(("vcftools" ,vcftools)
        ("htslib" ,htslib)))
