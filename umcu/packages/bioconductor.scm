@@ -620,14 +620,16 @@ and visualize the results.")
 (define-public r-chipseeker
   (package
   (name "r-chipseeker")
-  (version "1.20.0")
+  (version "1.24.0")
   (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "ChIPseeker" version))
             (sha256
              (base32
-              "0141v87s9hmgfsnkh005ai5fyrxld0y88575xn3qzg38slpdwv0j"))))
+              "04lvw4bglab7vrhz5frn8vvp311dhr19ff2r97l1qharh22bnyq2"))))
   (build-system r-build-system)
+  (inputs
+   `(("r-knitr" ,r-knitr)))
   (propagated-inputs
    `(("r-annotationdbi" ,r-annotationdbi)
      ("r-biocgenerics" ,r-biocgenerics)
