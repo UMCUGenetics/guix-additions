@@ -49,7 +49,6 @@
   #:use-module (gnu packages lua)
   #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths)
-  #:use-module (gnu packages maven)
   #:use-module (gnu packages mpi)
   #:use-module (gnu packages multiprecision)
   #:use-module (gnu packages ncurses)
@@ -1331,6 +1330,43 @@ mappability data (files created by GEM).")
 used with FREEC.")
     (license license:gpl2+)))
 
+(define-public maven-bin
+  ;; XXX: This package is only a binary inclusion of Maven.  It is different
+  ;; from any other Guix package and you should NOT use this package.
+  (package
+   (name "maven")
+   (version "3.5.4")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append "http://apache.cs.uu.nl/maven/maven-3/" version
+                                "/binaries/apache-maven-" version "-bin.tar.gz"))
+            (sha256
+             (base32 "0kd1jzlz3b2kglppi85h7286vdwjdmm7avvpwgppgjv42g4v2l6f"))))
+   ;; We use the GNU build system mainly for its patch-shebang phases.
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f ; This is just copying a binary, so no tests to perform.
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure) ; No configuration, just copying.
+        (delete 'build)     ; No building, just copying.
+        (replace 'install
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let ((outdir (assoc-ref outputs "out")))
+              (mkdir-p (string-append outdir))
+              (copy-recursively "." outdir)
+              (delete-file (string-append outdir "/README.txt"))
+              (delete-file (string-append outdir "/NOTICE"))
+              (delete-file (string-append outdir "/LICENSE"))))))))
+   (propagated-inputs
+    `(("which" ,which)))
+   (home-page "https://maven.apache.org/")
+   (synopsis "Build and dependency management tool for Java")
+   (description "Apache Maven is a software project management and comprehension tool.
+Based on the concept of a project object model (POM), Maven can manage a project's
+build, reporting and documentation from a central piece of information.")
+   (license license:asl2.0)))
+
 (define-public r-gsalib
   (package
    (name "r-gsalib")
@@ -1585,7 +1621,7 @@ capable of taking on projects of any size.")
             "1rrc7clad01mw83zyfgc4bnfn0nqvfc0mabd8wnj61p64xrigny9"))))))
     (inputs
      `(("icedtea" ,icedtea-7 "jdk")
-       ("maven" ,maven)
+       ("maven" ,maven-bin)
        ("bash" ,bash)
        ("perl" ,perl)
        ("r" ,r)))
