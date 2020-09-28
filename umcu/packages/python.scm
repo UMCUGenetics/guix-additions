@@ -517,9 +517,6 @@ tree exploration")
 queries.")
     (license license:bsd-3)))
 
-(define-public python2-sparqlkernel
-  (package-with-python2 python-sparqlkernel))
-
 (define-public python-pyega3
   (package
    (name "python-pyega3")
