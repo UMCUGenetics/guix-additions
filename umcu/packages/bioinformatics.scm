@@ -1284,52 +1284,6 @@ mappability data (files created by GEM).")
     (description "")
     (license #f)))
 
-(define-public gccount
-  (package
-    (name "gccount")
-    (version "0")
-    (source (origin
-      (method url-fetch)
-      (uri "http://bioinfo-out.curie.fr/projects/freec/src/gccount.tar.gz")
-      (file-name (string-append name "-" version ".tar.gz"))
-      (sha256
-       (base32 "1z9rs1fv29adbkwb2ns76v2j29zm2134916c53jqlpjqf6qzm6sw"))))
-    (build-system gnu-build-system)
-    (native-inputs
-     `(("gcc" ,gcc-5)))
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         ;; There's no configure phase because there are no external
-         ;; dependencies.
-         (delete 'configure)
-         ;; There are no tests.
-         (delete 'check)
-         (replace
-          'unpack
-          (lambda* (#:key source #:allow-other-keys)
-            (and
-             (zero? (system* "mkdir" "source"))
-             (with-directory-excursion "source"
-               (zero? (system* "tar" "xvf" source))))))
-         (replace
-          'build
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "source"
-              (substitute* "main.cpp"
-                (("// main.cpp") "#include <unistd.h>"))
-              (zero? (system* "make")))))
-         (replace
-          'install
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
-              (install-file "source/gccount" bin)))))))
-    (home-page "http://bioinfo-out.curie.fr/projects/freec/")
-    (synopsis "Utility to generate a GC-content profile.")
-    (description "This package provides the 'gccount' utility that can be
-used with FREEC.")
-    (license license:gpl2+)))
-
 (define-public maven-bin
   ;; XXX: This package is only a binary inclusion of Maven.  It is different
   ;; from any other Guix package and you should NOT use this package.
