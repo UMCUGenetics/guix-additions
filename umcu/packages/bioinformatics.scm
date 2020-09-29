@@ -4264,3 +4264,7 @@ biopsies.")
    (description "This package provides in uncompressed version of the gnomAD
  structural variant sites.")
    (license license:cc0)))
+
+(define-public glibc-locales-2.27
+  (package (inherit (make-glibc-locales glibc-2.27))
+           (name "glibc-locales-2.27")))
