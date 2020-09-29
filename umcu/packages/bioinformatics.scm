@@ -4268,3 +4268,7 @@ biopsies.")
 (define-public glibc-locales-2.27
   (package (inherit (make-glibc-locales glibc-2.27))
            (name "glibc-locales-2.27")))
+
+(define-public glibc-locales-2.28
+  (package (inherit (make-glibc-locales glibc-2.28))
+           (name "glibc-locales-2.28")))
