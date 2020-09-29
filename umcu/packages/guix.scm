@@ -61,7 +61,7 @@
            (lambda* (#:key inputs #:allow-other-keys)
              (with-output-to-file "guixr"
                (lambda _
-                 (format #t "#!/bin/bash
+                 (format #t "#!~a/bin/bash
 
 set -u
 set -e
@@ -170,6 +170,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
 else
   ${guix} $@
 fi~%"
+                         (assoc-ref inputs "bash-full")
                          (assoc-ref inputs "git")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
