@@ -4213,6 +4213,24 @@ prioritization, followed by automated primer design for PCR amplicons of
 biopsies.")
      (license license:gpl3))))
 
+(define-public sharc-local
+  (package (inherit sharc)
+     (name "sharc")
+     (version "1.0-local")
+     (inputs
+      `(("awk" ,gawk)
+        ("coreutils" ,coreutils)
+        ("grep" ,grep)
+        ("grid-engine-core" ,qsub-local)
+        ("minimap2" ,minimap2)
+        ("primer3" ,primer3-1.1.4)
+        ("python" ,python)
+        ("python-2" ,python-2)
+        ("r" ,r-minimal)
+        ("sambamba" ,sambamba)
+        ("sed" ,sed)
+        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))))
+
 (define-public gnomad-sv-sites-2.1
   (package
    (name "gnomad-sv-sites")
