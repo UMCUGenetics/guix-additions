@@ -4009,7 +4009,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
     (license license:gpl2)))
 
 (define-public sharc
-  (let ((commit "f1735d7d780d1a301ada9bb5f28eb488d0e02647"))
+  (let ((commit "e8594ddaef0aa68565fa36100182f97c8f42da3b"))
     (package
      (name "sharc")
      (version "1.0")
@@ -4021,7 +4021,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
               (file-name (string-append name "-" commit))
               (sha256
                (base32
-                "0zw79sp09ysrdidnayp9li9mg2ycvvmjkix0bjw81r3qshg1kwyl"))))
+                "06lg0rvb3varl1jmcfrczmp1abg8s1zk53y9qh9kg1fhfrx6x6m5"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f ; There are no tests
@@ -4053,7 +4053,10 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (string-append "FILESDIR=" filesdir))
               (("python \\$PON_SCRIPT") "PY2 $PON_SCRIPT")
               (("\\$PRIMER_DESIGN_DIR/primer3/src/primer3_core")
-               (string-append (assoc-ref inputs "primer3") "/bin/primer3_core")))
+               (string-append (assoc-ref inputs "primer3") "/bin/primer3_core"))
+              (("\\$\\{FILESDIR\\}/gnomad_v2.1_sv.sites.vcf")
+               (string-append (assoc-ref inputs "gnomad-sv-sites")
+                              "/share/gnomad/gnomad_v2.1_sv.sites.vcf")))
 
              (substitute* '("steps/bed_annotation.sh"
                             "steps/calculate_coverage.sh"
@@ -4168,7 +4171,8 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
         ("python-2" ,python-2)
         ("r" ,r-minimal)
         ("sambamba" ,sambamba)
-        ("sed" ,sed)))
+        ("sed" ,sed)
+        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))
      (propagated-inputs
       `(("emboss" ,emboss)
         ("python-aniso8601" ,python-aniso8601)
