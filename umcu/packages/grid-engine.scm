@@ -338,32 +338,3 @@ contributing code.")
      (description "This package an alternative @code{qsub} command that
 will submit jobs to SLURM.")
      (license license:gpl3+))))
-
-(define-public slurm-drmaa-1.1.1
-  (package
-    (name "slurm-drmaa")
-    (version "1.1.1")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/natefoo/slurm-drmaa/releases/download/"
-                    version "/slurm-drmaa-" version ".tar.gz"))
-              (sha256
-               (base32
-                "19r4cm88pcpm3wli4cc61zq7354pg67cg866f3a430p15hm1knrn"))))
-    (build-system gnu-build-system)
-    (arguments `(#:tests? #f)) ; The tests require "bats".
-    (inputs
-     `(("slurm" ,slurm)))
-    (native-inputs
-     `(("which" ,which)))
-    (home-page "https://github.com/natefoo/slurm-drmaa")
-    (synopsis "Distributed resource management application API for SLURM")
-    (description
-     "PSNC DRMAA for Simple Linux Utility for Resource Management (SLURM) is
-an implementation of Open Grid Forum DRMAA 1.0 (Distributed Resource
-Management Application API) specification for submission and control of jobs
-to SLURM.  Using DRMAA, grid applications builders, portal developers and ISVs
-can use the same high-level API to link their software with different
-cluster/resource management systems.")
-    (license license:gpl3+)))
