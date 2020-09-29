@@ -340,7 +340,7 @@ will submit jobs to SLURM.")
      (license license:gpl3+))))
 
 (define-public qsub-local
-  (let ((commit "3869c1b9a2cb5f6dc1963eef4f35aa5edca2e3f1"))
+  (let ((commit "cb5ca3604b9036e0030ac6dd2b9e59ed146c767a"))
     (package
      (name "qsub-local")
      (version "0.0.1")
@@ -351,7 +351,7 @@ will submit jobs to SLURM.")
                     (commit commit)))
               (sha256
                (base32
-                "1dj241jbqa78nqi2fw8hnjybbywxdgiqh99akffy5rck5z1x0zzc"))))
+                "0is6bksnpgadpb5yvi8kav1qyqqbq7ms89n9y8dfzn4lwg6r8632"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f))
