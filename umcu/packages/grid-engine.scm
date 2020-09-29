@@ -338,3 +338,32 @@ contributing code.")
      (description "This package an alternative @code{qsub} command that
 will submit jobs to SLURM.")
      (license license:gpl3+))))
+
+(define-public qsub-local
+  (let ((commit "3869c1b9a2cb5f6dc1963eef4f35aa5edca2e3f1"))
+    (package
+     (name "qsub-local")
+     (version "0.0.1")
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/roelj/qsub-local.git")
+                    (commit commit)))
+              (sha256
+               (base32
+                "1dj241jbqa78nqi2fw8hnjybbywxdgiqh99akffy5rck5z1x0zzc"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:tests? #f))
+     (native-inputs
+      `(("autoconf" ,autoconf)
+        ("automake" ,automake)
+        ("pkg-config" ,pkg-config)))
+     (inputs
+      `(("bash" ,bash)
+        ("guile" ,guile-3.0)))
+     (home-page "https://github.com/roelj/qsub-local")
+     (synopsis "Compatibility tool to run SGE pipelines locally.")
+     (description "This package an alternative @code{qsub} command that
+will directory run the script.")
+     (license license:gpl3+))))
