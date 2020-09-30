@@ -148,6 +148,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
       ${coreutils}/bin/env - ~a/bin/bash --init-file <(echo \"$locale_variables\";
                                                        echo \"export TERM=xterm\";
                                                        echo \"$display_variables\";
+                                                       echo \"export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin\";
                                                        echo \"$xauth_variables\";
                                                        echo \"$locpath_variables\";
                                                        echo \"$sge_variables\";
