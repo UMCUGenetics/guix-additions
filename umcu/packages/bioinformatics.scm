@@ -4079,7 +4079,20 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (("/hpc/local/CentOS7/cog_bioinf/sambamba_v0.6.5/sambamba")
                 (string-append (assoc-ref inputs "sambamba") "/bin/sambamba"))
                (("#!/bin/bash")
-                (string-append "#!" (assoc-ref inputs "bash") "/bin/bash"))
+                (format #f "#!~a/bin/bash~%~%~{export ~:a~%~}"
+                        (assoc-ref inputs "bash")
+                        `(,(let ((python-inputs
+                                  (delete #f
+                                   (map (lambda (pair)
+                                          (if (string-prefix? "python-" (car pair))
+                                              (format #f "~a/lib/python~a/site-packages"
+                                                      (cdr pair) "3.8")
+                                              #f))
+                                        inputs))))
+                             (format #f "PYTHONPATH=\"~a~{:~a~}\""
+                                     (car python-inputs)
+                                     (cdr python-inputs)))
+                          ,(format #f "R_LIBS_SITE=~s" (getenv "R_LIBS_SITE")))))
                (("Rscript")
                 (string-append (assoc-ref inputs "r") "/bin/Rscript"))
                (("qsub")
@@ -4091,6 +4104,10 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (("NanoSV ")
                 (string-append (assoc-ref inputs "python-nanosv") "/bin/NanoSV "))
                (("module load R") ""))
+
+             (substitute* "steps/create_bed_annotation_jobs.sh"
+              (("bash \\$STEPSDIR")
+               (string-append (assoc-ref inputs "bash") "/bin/bash $STEPSDIR")))
 
              (substitute* "scripts/run_randomForest.R"
                (("/hpc/cog_bioinf/kloosterman/common_scripts/sharc/scripts") scriptsdir)
@@ -4113,6 +4130,12 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                                     (assoc-ref inputs "python")
                                     "/bin/python3")))
 
+             (substitute* '("scripts/primers/primerBATCH1"
+                            "scripts/primers/amplicons3.pl"
+                            "scripts/primers/format_primers1.pl")
+              (("/usr/bin/perl")
+               (string-append (assoc-ref inputs "perl") "/bin/perl")))
+
               (substitute* "scripts/annotate_sv_vcf_file.py"
                 (("/usr/bin/python") (string-append
                                        (assoc-ref inputs "python-2")
@@ -4121,6 +4144,9 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
               (substitute* "scripts/primers/primerBATCH1"
                 (("/hpc/cuppen/projects/TP0001_General/COLO/analysis/jvalleinclan/bin/tools_kloosterman/primer3/primers")
                  primerdir))
+
+              (substitute* "scripts/primers/amplicons3.pl"
+                (("eprimer3 ") (string-append (assoc-ref inputs "emboss") "/bin/eprimer3 ")))
 
               #t)))
 
@@ -4158,23 +4184,17 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                 (install-file "sharc.sh" bin)
                 (with-directory-excursion bin
                   (symlink "sharc.sh" "sharc"))))))))
-     (native-inputs
-      `(("bash" ,bash)))
      (inputs
       `(("awk" ,gawk)
+        ("bash" ,bash)
         ("coreutils" ,coreutils)
+        ("emboss" ,emboss)
         ("grep" ,grep)
         ("grid-engine-core" ,qsub-slurm)
         ("minimap2" ,minimap2)
         ("primer3" ,primer3-1.1.4)
+        ("perl" ,perl)
         ("python" ,python)
-        ("python-2" ,python-2)
-        ("r" ,r-minimal)
-        ("sambamba" ,sambamba)
-        ("sed" ,sed)
-        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))
-     (propagated-inputs
-      `(("emboss" ,emboss)
         ("python-aniso8601" ,python-aniso8601)
         ("python-certifi" ,python-certifi)
         ("python-chardet" ,python-chardet)
@@ -4194,13 +4214,18 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
         ("python-six" ,python-six)
         ("python-urllib3" ,python-urllib3)
         ("python-werkzeug" ,python-werkzeug)
-        ("r" ,r)
+        ("python-2" ,python-2)
+        ("r" ,r-minimal)
         ("r-ggplot2" ,r-ggplot2)
         ("r-randomforest", r-randomforest)
-        ("r-rocr" ,r-rocr)))
+        ("r-rocr" ,r-rocr)
+        ("sambamba" ,sambamba)
+        ("sed" ,sed)
+        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))
      (native-search-paths
       (append (package-native-search-paths bash)
               (package-native-search-paths python)
+              (package-native-search-paths perl)
               (package-native-search-paths r)))
      (search-paths native-search-paths)
      (home-page "https://github.com/UMCUGenetics/SHARC")
@@ -4219,14 +4244,39 @@ biopsies.")
      (version "1.0-local")
      (inputs
       `(("awk" ,gawk)
+        ("bash" ,bash)
         ("coreutils" ,coreutils)
+        ("emboss" ,emboss)
         ("grep" ,grep)
-        ("grid-engine-core" ,qsub-local)
+        ("grid-engine-core" ,qsub-slurm)
         ("minimap2" ,minimap2)
         ("primer3" ,primer3-1.1.4)
+        ("perl" ,perl)
         ("python" ,python)
+        ("python-aniso8601" ,python-aniso8601)
+        ("python-certifi" ,python-certifi)
+        ("python-chardet" ,python-chardet)
+        ("python-configparser" ,python-configparser)
+        ("python-flask" ,python-flask)
+        ("python-flask-restful" ,python-flask-restful)
+        ("python-idna" ,python-idna)
+        ("python-itsdangerous" ,python-itsdangerous)
+        ("python-jinja2" ,python-jinja2)
+        ("python-markupsafe" ,python-markupsafe)
+        ("python-nanosv" ,python-nanosv)
+        ("python-pymongo" ,python-pymongo)
+        ("python-pysam" ,python-pysam)
+        ("python-pytz" ,python-pytz)
+        ("python-pyvcf" ,python-pyvcf)
+        ("python-requests" ,python-requests)
+        ("python-six" ,python-six)
+        ("python-urllib3" ,python-urllib3)
+        ("python-werkzeug" ,python-werkzeug)
         ("python-2" ,python-2)
         ("r" ,r-minimal)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-randomforest", r-randomforest)
+        ("r-rocr" ,r-rocr)
         ("sambamba" ,sambamba)
         ("sed" ,sed)
         ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))))
