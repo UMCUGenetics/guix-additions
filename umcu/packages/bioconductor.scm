@@ -138,171 +138,34 @@ and chromatin feature to identify functional SNP in coding or non-coding
 regions.")
    (license license:gpl3+)))
 
-(define-public r-pasilla
+(define-public r-spp
   (package
-    (name "r-pasilla")
-    (version "1.12.0")
+    (name "r-spp")
+    (version "1.16.0")
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "http://bioconductor.org/packages/release/data/experiment"
-                    "/src/contrib/pasilla_" version ".tar.gz"))
+              (uri (cran-uri "spp" version))
               (sha256
                (base32
-                "0yp96vzqbi0kgjsml9d77wg76j0j89f960p457a645hy7dnpfwrg"))))
+                "08zxxgyp0h6733b08jmml7k4rhfd3mi5dda3jrzid0s184y0z29w"))))
+    (properties `((upstream-name . "spp")))
     (build-system r-build-system)
+    (inputs `(("zlib" ,zlib)))
     (propagated-inputs
-     `(("r-dexseq" ,r-dexseq)
-       ("r-biocstyle" ,r-biocstyle)
-       ("r-rmarkdown" ,r-rmarkdown)
-       ("r-knitr" ,r-knitr)))
-    (home-page "http://bioconductor.org/packages/pasilla/")
-    (synopsis "Data package with per-exon and per-gene read counts")
-    (description "This package provides per-exon and per-gene read counts
-computed for selected genes from RNA-seq data that were presented in the
-article 'Conservation of an RNA regulatory map between Drosophila and mammals'
-by Brooks et al., Genome Research 2011.")
-    (license license:lgpl2.1+)))
-
-(define-public r-motifdb
-  (package
-   (name "r-motifdb")
-   (version "1.26.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "MotifDb" version))
-            (sha256
-             (base32 "05rxcxdkdpg0qg5qlylf0in9qhi16gpl8c9sfm4j2z3rvfxl0g60"))))
-   (properties `((upstream-name . "MotifDb")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biocgenerics" ,r-biocgenerics)
-      ("r-s4vectors" ,r-s4vectors)
-      ("r-biostrings" ,r-biostrings)
-      ("r-iranges" ,r-iranges)
-      ("r-rtracklayer" ,r-rtracklayer)
-      ("r-splitstackshape" ,r-splitstackshape)))
-   (home-page "http://bioconductor.org/packages/MotifDb")
-   (synopsis "Annotated collection of protein-DNA binding sequence motifs")
-   (description "This package provides more than 2000 annotated position
-frequency matrices from nine public sources, for multiple organisms.")
-   (license license:artistic2.0)))
-
-(define-public r-motifbreakr
-  (package
-   (name "r-motifbreakr")
-   (version "1.14.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "motifbreakR" version))
-            (sha256
-             (base32 "1dwbhkjmdk9syxhymhdsp3bkzcvm70p3nasy1bai9vv86gx57l14"))))
-   (properties `((upstream-name . "motifbreakR")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-grimport" ,r-grimport)
-      ("r-stringr" ,r-stringr)
-      ("r-biocgenerics" ,r-biocgenerics)
-      ("r-s4vectors" ,r-s4vectors)
-      ("r-iranges" ,r-iranges)
-      ("r-genomeinfodb" ,r-genomeinfodb)
-      ("r-genomicranges" ,r-genomicranges)
-      ("r-biostrings" ,r-biostrings)
-      ("r-bsgenome" ,r-bsgenome)
-      ("r-rtracklayer" ,r-rtracklayer)
-      ("r-variantannotation" ,r-variantannotation)
-      ("r-biocparallel" ,r-biocparallel)
-      ("r-motifstack" ,r-motifstack)
-      ("r-gviz" ,r-gviz)
-      ("r-matrixstats" ,r-matrixstats)
-      ("r-tfmpvalue" ,r-tfmpvalue)
-      ("r-motifdb" ,r-motifdb)))
-   (home-page "http://bioconductor.org/packages/motifbreakR")
-   (synopsis "Predicting disruptiveness of single nucleotide polymorphisms on transcription factor binding sites")
-   (description "This package allows biologists to judge in the first place
-whether the sequence surrounding the polymorphism is a good match, and in
-the second place how much information is gained or lost in one allele of
-the polymorphism relative to another.  This package is both flexible and
-extensible over previous offerings; giving a choice of algorithms for
-interrogation of genomes with motifs from public sources that users can choose
-from; these are 1) a weighted-sum probability matrix, 2) log-probabilities,
-and 3) weighted by relative entropy.  This package can predict effects for
-novel or previously described variants in public databases, making it suitable
-for tasks beyond the scope of its original design.  Lastly, it can be used to
-interrogate any genome curated within Bioconductor (currently there are 22).")
-   (license license:gpl3+)))
-
-(define-public r-snplocs.hsapiens.dbsnp144.grch37
-  (package
-    (name "r-snplocs.hsapiens.dbsnp144.grch37")
-    (version "0.99.20")
-    (source (origin
-              (method url-fetch)
-              ;; We cannot use bioconductor-uri here because this tarball is
-              ;; located under "data/annotation/" instead of "bioc/".
-              (uri (string-append "http://bioconductor.org/packages/"
-                                  "release/data/annotation/src/contrib"
-                                  "/SNPlocs.Hsapiens.dbSNP144.GRCh37_"
-                                  version ".tar.gz"))
-              (sha256
-               (base32
-                "1z8kx43ki1jvj7ms7pcybakcdimfwr6zpjvspkjmma97bdz093iz"))))
-    (properties
-     `((upstream-name . "SNPlocs.Hsapiens.dbSNP144.GRCh37")))
-    (build-system r-build-system)
-    ;; As this package provides little more than a very large data file it
-    ;; doesn't make sense to build substitutes.
-    (arguments `(#:substitutable? #f))
-    (propagated-inputs
-     `(("r-biocgenerics" ,r-biocgenerics)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-iranges" ,r-iranges)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-bsgenome" ,r-bsgenome)
-       ("r-biostrings" ,r-biostrings)))
-    (home-page
-     "http://bioconductor.org/packages/SNPlocs.Hsapiens.dbSNP144.GRCh37")
-    (synopsis "SNP locations for Homo sapiens (dbSNP Build 144)")
-    (description "This package provides SNP locations and alleles for Homo
-sapiens extracted from NCBI dbSNP Build 144.  The source data files used for
-this package were created by NCBI on May 29-30, 2015, and contain SNPs mapped
-to reference genome GRCh37.p13.  WARNING: Note that the GRCh37.p13 genome is a
-patched version of GRCh37.  However the patch doesn't alter chromosomes 1-22,
-X, Y, MT. GRCh37 itself is the same as the hg19 genome from UCSC *except* for
-the mitochondrion chromosome.  Therefore, the SNPs in this package can be
-injected in @code{BSgenome.Hsapiens.UCSC.hg19} and they will land at the
-correct position but this injection will exclude chrM (i.e. nothing will be
-injected in that sequence).")
-    (license license:artistic2.0)))
-
-(define r-spp-custom
-  (package
-    (name "r-spp-custom")
-    (version "1.14")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/kundajelab/phantompeakqualtools/raw/master/spp_"
-                    version ".tar.gz"))
-              (sha256
-               (base32 "02sj0482ph0sn9lpmxcmldsrj3sph70r4jp5k0idgbl27qbfcfyh"))))
-    (build-system r-build-system)
-    (inputs
-     `(("boost" ,boost)
-       ("zlib" ,zlib)))
-    (propagated-inputs
-     `(("r-catools" ,r-catools)
+     `(("r-bh" ,r-bh)
+       ("r-catools" ,r-catools)
+       ("r-rcpp" ,r-rcpp)
        ("r-rsamtools" ,r-rsamtools)))
-    (home-page "https://github.com/kundajelab/phantompeakqualtools")
-    (synopsis "")
-    (description "")
-    (license #f)))
+    (home-page "https://cran.r-project.org/web/packages/spp")
+    (synopsis "ChIP-Seq Processing Pipeline")
+    (description "Analysis of ChIP-seq and other functional sequencing
+ data [Kharchenko PV (2008) <DOI:10.1038/nbt.1508>].")
+    (license license:gpl2)))
 
 (define-public r-phantompeakqualtools
   (package
     (name "r-phantompeakqualtools")
-    (version "1.2.1.1")
+    (version "1.2.2")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -310,7 +173,7 @@ injected in that sequence).")
                     "archive/" version ".tar.gz"))
               (sha256
                (base32
-                "0ag881jbhic5x9r87yk1p4687divyzggk7agqrnwh71npvy4a52b"))))
+                "1l8cw6g0z8c9vlw1s0q5rmh7lzasa67i7bkz9pf7psgg9av664mk"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f
@@ -329,7 +192,7 @@ injected in that sequence).")
        ("r-snowfall" ,r-snowfall)
        ("r-bitops" ,r-bitops)
        ("r-rsamtools" ,r-rsamtools)
-       ("r-spp-custom" ,r-spp-custom)
+       ("r-spp" ,r-spp)
        ("gawk" ,gawk)
        ("samtools" ,samtools)
        ("boost" ,boost)
@@ -338,57 +201,6 @@ injected in that sequence).")
     (synopsis "")
     (description "")
     (license #f)))
-
-(define-public r-lsd
-  (package
-   (name "r-lsd")
-   (version "4.0-0")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "LSD" version))
-            (sha256
-             (base32
-              "0fsp3pwrnnic9mzkd6yxa4bnxbvg68712lb20vd42wf6jb39r2h3"))))
-   (properties `((upstream-name . "LSD")))
-   (build-system r-build-system)
-   (home-page "http://cran.r-project.org/web/packages/LSD")
-   (synopsis "Lots of Superior Depictions")
-   (description "Create lots of colorful plots in a plethora of variations
-(try the LSD demotour())")
-   ;; License: "unlimited" -- whatever that means.
-   (license #f)))
-
-(define-public r-fourcseq
-  (package
-   (name "r-fourcseq")
-   (version "1.18.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "FourCSeq" version))
-            (sha256
-             (base32 "15fz9y4v0ddj6qax329g52fa5d7y810yjn3bisqqw8vn92qvjdw3"))))
-   (properties `((upstream-name . "FourCSeq")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-deseq2" ,r-deseq2)
-      ("r-biobase" ,r-biobase)
-      ("r-biostrings" ,r-biostrings)
-      ("r-genomicranges" ,r-genomicranges)
-      ("r-summarizedexperiment" ,r-summarizedexperiment)
-      ("r-rsamtools" ,r-rsamtools)
-      ("r-ggbio" ,r-ggbio)
-      ("r-reshape2" ,r-reshape2)
-      ("r-rtracklayer" ,r-rtracklayer)
-      ("r-fda" ,r-fda)
-      ("r-genomicalignments" ,r-genomicalignments)
-      ("r-gtools" ,r-gtools)
-      ("r-matrix" ,r-matrix)
-      ("r-lsd" ,r-lsd)
-      ("r-ggplot2" ,r-ggplot2)))
-   (home-page "http://bioconductor.org/packages/FourCSeq/")
-   (synopsis "Package analyse 4C sequencing data")
-   (description "FourCSeq is an R package dedicated to the analysis of (multiplexed) 4C sequencing data. The package provides a pipeline to detect specific interactions between DNA elements and identify differential interactions between conditions. The statistical analysis in R starts with individual bam files for each sample as inputs. To obtain these files, the package contains a python script (extdata/python/demultiplex.py) to demultiplex libraries and trim off primer sequences. With a standard alignment software the required bam files can be then be generated.")
-   (license license:gpl3+)))
 
 (define-public r-txdb-dmelanogaster-ucsc-dm3-ensgene
   (package
@@ -421,76 +233,57 @@ injected in that sequence).")
 exposing these as @code{TxDb} objects.")
     (license license:artistic2.0)))
 
-(define-public r-reordercluster
+(define-public r-ecp
   (package
-   (name "r-reordercluster")
-   (version "1.0")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "ReorderCluster" version))
-            (sha256
-             (base32
-              "0ss750frzvj0bm1w7zblmcsjpszhnbffwlkaw31sm003lbx9hy58"))))
-   (properties `((upstream-name . "ReorderCluster")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-gplots" ,r-gplots)
-      ("r-rcpp" ,r-rcpp)))
-   (home-page "http://cran.r-project.org/web/packages/ReorderCluster")
-   (synopsis "Reordering the dendrogram according to the class labels")
-   (description "Tools for performing the leaf reordering for the dendrogram
-that preserves the hierarchical clustering result and at the same time tries
-to group instances from the same class together.")
-   (license license:gpl3+)))
+    (name "r-ecp")
+    (version "3.1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (cran-uri "ecp" version))
+              (sha256
+               (base32
+                "11f9p869xr0zg779i46gmflxlq4xclk9wxbab0nj2fan26pn4sfy"))))
+    (properties `((upstream-name . "ecp")))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
+    (home-page "https://cran.r-project.org/web/packages/ecp")
+    (synopsis
+     "Non-Parametric Multiple Change-Point Analysis of Multivariate Data")
+    (description
+     "This package provies an implementation of various procedures for finding
+multiple change-points.  Two methods make use of dynamic programming and
+pruning, with no distributional assumptions other than the existence of certain
+absolute moments in one method.  Hierarchical and exact search methods are
+included.  All methods return the set of estimated change- points as well as
+other summary information.")
+    (license license:gpl2+)))
 
 (define-public r-aneufinderdata
   (package
    (name "r-aneufinderdata")
-   (version "1.14.0")
+   (version "1.16.0")
    (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "AneuFinderData" version 'experiment))
             (sha256
              (base32
-              "1ar2n45bhns0m651p6xlff5ja56s2a906c01qsyza348pjh5fmi7"))))
+              "19nfx345k8hlllfrhs71bvbnzg3lhr9p9lg4z5lr73kqpxfgx1jc"))))
    (build-system r-build-system)
    (home-page "https://bioconductor.org/packages/AneuFinderData/")
    (synopsis "Data package for AneuFinder")
    (description "This package contains data used by AneuFinder.")
    (license license:artistic2.0)))
 
-(define-public r-ecp
-  (package
-    (name "r-ecp")
-    (version "3.1.1")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "ecp" version))
-              (sha256
-               (base32
-                "0s0286ky1imhhs89bp1ylx8wvii55v7wzg1g49l03az64971kayj"))))
-    (build-system r-build-system)
-    (propagated-inputs `(("r-rcpp" ,r-rcpp)))
-    (home-page "http://cran.r-project.org/web/packages/ecp")
-    (synopsis "Non-Parametric Multiple Change-Point Analysis of Multivariate Data")
-    (description
-     "Implements various procedures for finding multiple change-points.  Two
-methods make use of dynamic programming and pruning, with no distributional
-assumptions other than the existence of certain absolute moments in one method.
-Hierarchical and exact search methods are included.  All methods return the set
-of estimated change- points as well as other summary information.")
-    (license license:gpl2+)))
-
 (define-public r-aneufinder
   (package
     (name "r-aneufinder")
-    (version "1.14.0")
+    (version "1.16.0")
     (source (origin
               (method url-fetch)
               (uri (bioconductor-uri "AneuFinder" version))
               (sha256
                (base32
-                "054m9scwnw0snk9vw3f2a1r1zrd9qqs05khd9n7i7jmivnzx5qrb"))))
+                "0ii085zd244p3v0ai2q7yvf0mynvf5v3n5zxmbznifs9ij7nzsz7"))))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-genomicranges" ,r-genomicranges)
@@ -548,255 +341,6 @@ sequencing data.")
     (description "This package provides the full genome sequences for Bos
 taurus (UCSC version bosTau8).")
     (license license:artistic2.0)))
-
-(define-public r-ideoviz
-  (package
-    (name "r-ideoviz")
-    (version "1.20.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "IdeoViz" version))
-              (sha256
-               (base32
-                "0lgvkahpfmwzvdicavyvsv76pwcadfrsg6i2k5zllpd41jcgfv9z"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biobase" ,r-biobase)
-       ("r-iranges" ,r-iranges)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-rcolorbrewer" ,r-rcolorbrewer)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-genomeinfodb" ,r-genomeinfodb)))
-    (home-page "http://bioconductor.org/packages/IdeoViz")
-    (synopsis "Plots data (continuous/discrete) along chromosomal ideogram")
-    (description "This package provides functions to plot data associated with
-arbitrary genomic intervals along chromosomal ideogram.")
-    (license license:artistic2.0)))
-
-(define-public r-ggpmisc
-  (package
-   (name "r-ggpmisc")
-   (version "0.3.1")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "ggpmisc" version))
-     (sha256
-      (base32
-       "1kcjdpq7xz3609prbcf3ikj87wgcq9rk1pzhb62bh885plczsfz2"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-broom" ,r-broom)
-      ("r-dplyr" ,r-dplyr)
-      ("r-ggplot2" ,r-ggplot2)
-      ("r-gridextra" ,r-gridextra)
-      ("r-lubridate" ,r-lubridate)
-      ("r-mass" ,r-mass)
-      ("r-plyr" ,r-plyr)
-      ("r-polynom" ,r-polynom)
-      ("r-splus2r" ,r-splus2r)
-      ("r-tibble" ,r-tibble)
-      ("r-xts" ,r-xts)
-      ("r-zoo" ,r-zoo)))
-   (home-page "http://www.r4photobiology.info")
-   (synopsis "Miscellaneous Extensions to @code{ggplot2}")
-   (description "This package provides extensions to @code{ggplot2} respecting
-the grammar of graphics paradigm.  Provides new statistics to locate and tag
-peaks and valleys in 2D plots, a statistics to add a label with the equation
-of a polynomial fitted with lm(), or R^2 or adjusted R^2 or information
-criteria for any model fitted with function lm().  Additional statistics give
-access to functions in package 'broom'.  Provides a function for flexibly
-converting time series to data frames suitable for plotting with 
-@code{ggplot()}.  In addition provides statistics and ggplot geometries useful
-for diagnosing what data are passed to compute_group() and 
-@code{compute_panel()} functions and to geometries.")
-   (license license:gpl2+)))
-
-(define-public r-coverageview
-  (package
-    (name "r-coverageview")
-    (version "1.22.0")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "CoverageView" version))
-              (sha256
-               (base32
-                "19va5jyahk6wi3jsvryzqqrxmqxxlzs1vl5nhylsbg9yp4jfa3a1"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-s4vectors" ,r-s4vectors)
-       ("r-iranges" ,r-iranges)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-rsamtools" ,r-rsamtools)))
-    (home-page "http://bioconductor.org/packages/CoverageView")
-    (synopsis "Coverage visualization package for R")
-    (description "This package provides a framework for the visualization of
-genome coverage profiles.  It can be used for ChIP-seq experiments, but it can
-be also used for genome-wide nucleosome positioning experiments or other
-experiment types where it is important to have a framework in order to inspect
-how the coverage distributed across the genome.")
-    (license license:artistic2.0)))
-
-(define-public r-bezier
-  (package
-    (name "r-bezier")
-    (version "1.1.2")
-    (source (origin
-              (method url-fetch)
-              (uri (cran-uri "bezier" version))
-              (sha256
-               (base32
-                "1vw5128v8h973xwa1fdm9cw2jvrldj87nd55lddlp3qsz3ag4br6"))))
-    (build-system r-build-system)
-    (home-page "http://cran.r-project.org/web/packages/bezier")
-    (synopsis "Bezier Curve and Spline Toolkit")
-    (description
-     "This package is a toolkit for working with Bezier curves and splines.
-The package provides functions for point generation, arc length estimation,
-degree elevation and curve fitting.")
-    (license license:gpl2)))
-
-(define-public r-karyoploter
-  (package
-    (name "r-karyoploter")
-    (version "1.10.5")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "karyoploteR" version))
-              (sha256
-               (base32
-                "13nbc618fbbhmiqgih6hcmwqx98k6s8y512yc79x5z7w8f8w6bc0"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-regioner" ,r-regioner)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-iranges" ,r-iranges)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-memoise" ,r-memoise)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-biovizbase" ,r-biovizbase)
-       ("r-digest" ,r-digest)
-       ("r-bamsignals" ,r-bamsignals)
-       ("r-bezier" ,r-bezier)))
-    (home-page "http://bioconductor.org/packages/karyoploteR/")
-    (synopsis "Plot customizable linear genomes displaying arbitrary data")
-    (description "This package creates karyotype plots of arbitrary genomes and
-offers a complete set of functions to plot arbitrary data on them.  It mimicks
-many R base graphics functions coupling them with a coordinate change function
-automatically mapping the chromosome and data coordinates into the plot
-coordinates.  In addition to the provided data plotting functions, it is easy
-to add new ones.")
-    (license license:artistic2.0)))
-
-(define-public r-inum
-  (package
-   (name "r-inum")
-   (version "1.0-1")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "inum" version))
-     (sha256
-      (base32
-       "16d09391l65w557dkzhhx1aqn1ljamcmjj3yh42pwq037k0r8brw"))))
-   (build-system r-build-system)
-   (propagated-inputs `(("r-libcoin" ,r-libcoin)))
-   (home-page
-    "http://cran.r-project.org/web/packages/inum")
-   (synopsis "Interval and enum-type representation of vectors")
-   (description
-    "This package provides an enum-type representation of vectors and
-representation of intervals, including a method of coercing variables
-in data frames.")
-   (license license:gpl2)))
-
-(define-public r-partykit
-  (package
-   (name "r-partykit")
-   (version "1.2-5")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (cran-uri "partykit" version))
-     (sha256
-      (base32
-       "17324y5v65i0va2mvm26gl89s01xwcffg34fwq1mvylk1xwk13pl"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-formula" ,r-formula)
-      ("r-inum" ,r-inum)
-      ("r-libcoin" ,r-libcoin)
-      ("r-mvtnorm" ,r-mvtnorm)
-      ("r-rpart" ,r-rpart)
-      ("r-survival" ,r-survival)))
-   (home-page
-    "http://partykit.R-Forge.R-project.org/partykit")
-   (synopsis "Toolkit for recursive partytioning")
-   (description
-    "This package provides a toolkit with infrastructure for representing,
-summarizing, and visualizing tree-structured regression and classification
-models.  This unified infrastructure can be used for reading/coercing tree
-models from different sources ('rpart', 'RWeka', 'PMML') yielding objects
-that share functionality for print()/plot()/predict() methods.  Furthermore,
-new and improved reimplementations of conditional inference trees
-(@code{ctree()}) and model-based recursive partitioning (@code{mob()}) from
-the @code{party} package are provided based on the new infrastructure.")
-   (license #f)))
-
-(define-public r-stabs
-  (package
-  (name "r-stabs")
-  (version "0.6-3")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (cran-uri "stabs" version))
-      (sha256
-        (base32
-          "17sa0sjxf6h7gx1ga1pxhv17yrz3qisaivbf5cbc3asvshhswqg9"))))
-  (build-system r-build-system)
-  (home-page "https://github.com/hofnerb/stabs")
-  (synopsis "Stability selection with error control")
-  (description
-    "This package provides resampling procedures to assess the stability of
-selected variables with additional finite sample error control for
-high-dimensional variable selection procedures such as Lasso or boosting.
-Both, standard stability selection (Meinshausen & Buhlmann, 2010) and
-complementary pairs stability selection with improved error bounds
-(Shah & Samworth, 2013) are implemented.  The package can be combined with
-arbitrary user specified variable selection approaches.")
-  (license license:gpl2)))
-
-(define-public r-mboost
-  (package
-   (name "r-mboost")
-   (version "2.9-1")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "mboost" version))
-            (sha256
-             (base32
-              "02ia3y0fxfjl02fb1nnl93j640fyl18jm15cgxyybhf27w4jdvb7"))))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-lattice" ,r-lattice)
-      ("r-matrix" ,r-matrix)
-      ("r-nnls" ,r-nnls)
-      ("r-partykit" ,r-partykit)
-      ("r-quadprog" ,r-quadprog)
-      ("r-stabs" ,r-stabs)
-      ("r-survival" ,r-survival)))
-   (home-page "https://github.com/boost-R/mboost")
-   (synopsis "Model-Based Boosting")
-   (description "Functional gradient descent algorithm (boosting) for optimizing
-general risk functions utilizing component-wise (penalised) least squares
-estimates or regression trees as base-learners for fitting generalized linear,
-additive and interaction models to potentially high-dimensional data.")
-   (license license:gpl2)))
 
 (define-public r-glinternet
   (package
@@ -900,26 +444,6 @@ Michael Lim & Trevor Hastie (2015)")
   (description
     "Routines for the polynomial spline fitting routines hazard regression, hazard estimation with flexible tails, logspline, lspec, polyclass, and polymars, by C.  Kooperberg and co-authors.")
   (license license:gpl2+)))
-
-(define-public r-sandwich
-(package
-  (name "r-sandwich")
-  (version "2.4-0")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (cran-uri "sandwich" version))
-      (sha256
-        (base32
-          "1h6c12cfv2x42laxf6ifxfk9hqzagvvvimzak88fv8vnxnf5nc9l"))))
-  (build-system r-build-system)
-  (propagated-inputs `(("r-zoo" ,r-zoo)))
-  (home-page
-    "http://cran.r-project.org/web/packages/sandwich")
-  (synopsis "Robust Covariance Matrix Estimators")
-  (description
-    "Model-robust standard error estimators for cross-sectional, time series, clustered, panel, and longitudinal data.")
-  (license #f)))
 
 (define-public r-th-data
 (package
@@ -1102,14 +626,16 @@ and visualize the results.")
 (define-public r-chipseeker
   (package
   (name "r-chipseeker")
-  (version "1.20.0")
+  (version "1.24.0")
   (source (origin
             (method url-fetch)
             (uri (bioconductor-uri "ChIPseeker" version))
             (sha256
              (base32
-              "0141v87s9hmgfsnkh005ai5fyrxld0y88575xn3qzg38slpdwv0j"))))
+              "04lvw4bglab7vrhz5frn8vvp311dhr19ff2r97l1qharh22bnyq2"))))
   (build-system r-build-system)
+  (inputs
+   `(("r-knitr" ,r-knitr)))
   (propagated-inputs
    `(("r-annotationdbi" ,r-annotationdbi)
      ("r-biocgenerics" ,r-biocgenerics)
@@ -1483,163 +1009,6 @@ visualization tool, see(), that arranges and prints vectorized images.")
 proteomics packages.")
       (license license:artistic2.0))))
 
-(define-public r-mzr-2.19.6
-  (let ((commit "dddbebcea9ab8d1ce09b7bad5f3b9334831bd42b"))
-    (package
-      (name "r-mzr")
-      (version (string-append "2.19.6-" (string-take commit 9)))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/sneumann/mzR.git")
-               (commit commit)))
-         (sha256
-          (base32
-           "0ls50axlcyb3rlyn1j49wk07pk7x59hzddlcznr8mzkpwwh0519k"))
-         (modules '((guix build utils)))
-         (snippet
-          '(begin
-             (delete-file-recursively "src/boost")
-             (delete-file "R/zzz.R")
-             #t))))
-      (properties `((upstream-name . "mzR")))
-      (build-system r-build-system)
-      (arguments
-       `(#:phases
-         (modify-phases %standard-phases
-           (add-after 'unpack 'use-system-boost
-             (lambda _
-               (substitute* "src/Makevars"
-                 (("\\./boost/libs.*") "")
-                 (("ARCH_OBJS=" line)
-                  (string-append line
-                                 "\nARCH_LIBS=-lboost_system -lboost_regex \
--lboost_iostreams -lboost_thread -lboost_filesystem -lboost_chrono\n")))
-               #t)))))
-      (inputs
-       `(;; XXX Boost 1.69 will not work here.
-         ("boost" ,boost-for-mysql) ; use this instead of the bundled boost sources
-         ("zlib" ,zlib)))
-      (propagated-inputs
-       `(("r-biobase" ,r-biobase)
-         ("r-biocgenerics" ,r-biocgenerics)
-         ("r-ncdf4" ,r-ncdf4)
-         ("r-protgenerics" ,r-protgenerics-1.17.4)
-         ("r-rcpp" ,r-rcpp)
-         ("r-rhdf5lib" ,r-rhdf5lib)
-         ("r-zlibbioc" ,r-zlibbioc)))
-      (home-page "https://github.com/sneumann/mzR/")
-      (synopsis "Parser for mass spectrometry data files")
-      (description
-       "The mzR package provides a unified API to the common file formats and
-parsers available for mass spectrometry data.  It comes with a wrapper for the
-ISB random access parser for mass spectrometry mzXML, mzData and mzML files.
-The package contains the original code written by the ISB, and a subset of the
-proteowizard library for mzML and mzIdentML.  The netCDF reading code has
-previously been used in XCMS.")
-      (license license:artistic2.0))))
-
-(define-public r-xcms
-  (let ((commit "2180f6144a615911a53acf66525f50005d2beacc"))
-    (package
-      (name "r-xcms")
-      (version (string-append "3.7.4-" (string-take commit 9)))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/sneumann/xcms.git")
-               (commit commit)))
-         (sha256
-          (base32
-           "0scyjmyhgmrl3x95xpnl5641aidw8s1n7r54pv2q7ibgr42d7hx9"))))
-      (build-system r-build-system)
-      (propagated-inputs
-       `(("r-devtools" ,r-devtools)
-         ("r-biobase" ,r-biobase)
-         ("r-biocgenerics" ,r-biocgenerics)
-         ("r-biocparallel" ,r-biocparallel)
-         ("r-rtracklayer" ,r-rtracklayer)
-         ("r-dplyr" ,r-dplyr)
-         ("r-genomicranges" ,r-genomicranges)
-         ("r-lattice" ,r-lattice)
-         ("r-massspecwavelet" ,r-massspecwavelet)
-         ("r-msnbase" ,r-msnbase)
-         ("r-multtest" ,r-multtest)
-         ("r-variantannotation" ,r-variantannotation)
-         ("r-biostrings" ,r-biostrings)
-         ("r-mzr" ,r-mzr-2.19.6)
-         ("r-plyr" ,r-plyr)
-         ("r-protgenerics" ,r-protgenerics-1.17.4)
-         ("r-rann" ,r-rann)
-         ("r-rcolorbrewer" ,r-rcolorbrewer)
-         ("r-robustbase" ,r-robustbase)
-         ("r-s4vectors" ,r-s4vectors)))
-      (home-page "https://bioconductor.org/packages/xcms/")
-      (synopsis "LC/MS and GC/MS mass spectrometry data analysis")
-      (description
-       "This package provides a framework for processing and visualization of
-chromatographically separated and single-spectra mass spectral data.  It
-imports from AIA/ANDI NetCDF, mzXML, mzData and mzML files.  It preprocesses
-data for high-throughput, untargeted analyte profiling. FIX FOR JOANNA")
-      (license license:gpl2+))))
-
-(define-public r-useful
-  (package
-   (name "r-useful")
-   (version "1.2.6")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "useful" version))
-            (sha256
-             (base32
-              "0n50v1q75k518sq23id14jphwla35q4sasahrnrnllwrachl67v1"))))
-   (properties `((upstream-name . "useful")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-assertthat" ,r-assertthat)
-      ("r-dplyr" ,r-dplyr)
-      ("r-ggplot2" ,r-ggplot2)
-      ("r-magrittr" ,r-magrittr)
-      ("r-matrix" ,r-matrix)
-      ("r-plyr" ,r-plyr)
-      ("r-purrr" ,r-purrr)
-      ("r-scales" ,r-scales)))
-   (home-page "https://github.com/jaredlander/useful")
-   (synopsis "A Collection of Handy, Useful Functions")
-   (description "This package provides a set of little functions that have been
-found useful to do little odds and ends such as plotting the results of K-means
-clustering, substituting special text characters, viewing parts of a
-@code{data.frame}, constructing formulas from text and building design and
-response matrices.")
-   (license license:bsd-3)))
-
-(define-public r-bisquerna
-  (package
-   (name "r-bisquerna")
-   (version "1.0")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "BisqueRNA" version))
-            (sha256
-             (base32
-              "1ks91gjfcnajg540930drcnqcrn4fi3735hywyy3y6i1q0wnq9vb"))))
-   (properties `((upstream-name . "BisqueRNA")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-biobase" ,r-biobase)
-      ("r-lsei" ,r-lsei)))
-   (home-page "https://www.biorxiv.org/content/10.1101/669911v1")
-   (synopsis "Decomposition of Bulk Expression with Single-Cell Sequencing")
-   (description "This package provides tools to accurately estimate cell type
-abundances from heterogeneous bulk expression.  A reference-based method
-utilizes single-cell information to generate a signature matrix and
-transformation of bulk expression for accurate regression based estimates.
-A marker-based method utilizes known cell-specific marker genes to measure
-relative abundances across samples.")
-   (license license:gpl3)))
-
 (define-public r-loomr
   (package
    (name "r-loomr")
@@ -1689,30 +1058,6 @@ loom files.")
    (synopsis "Classification and Regression Trees")
    (description "Classification and regression trees.")
    (license license:gpl2+)))
-
-(define-public r-bsgenome-hsapiens-ucsc-hg38
-  (package
-    (name "r-bsgenome-hsapiens-ucsc-hg38")
-    (version "1.4.1")
-    (source (origin
-              (method url-fetch)
-              (uri (bioconductor-uri "BSgenome.Hsapiens.UCSC.hg38"
-                                     version 'annotation))
-              (sha256
-               (base32
-                "1ql08pvi4vv0ynvg4qs9kysw1c7s3crkgin6zxvgzqk6fray9mvi"))))
-    (properties
-     `((upstream-name . "BSgenome.Hsapiens.UCSC.hg38")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-bsgenome" ,r-bsgenome)))
-    (home-page
-     "https://www.bioconductor.org/packages/BSgenome.Hsapiens.UCSC.hg38/")
-    (synopsis "Full genome sequences for Homo sapiens")
-    (description
-     "This package provides full genome sequences for Homo sapiens (Human)
-as provided by UCSC (hg38, Dec. 2013) and stored in Biostrings objects.")
-    (license license:artistic2.0)))
 
 (define-public r-cummerbund
   (package
@@ -1992,29 +1337,6 @@ The work is fully discussed at Tierney & Cook (2018) <arXiv:1809.02264>.")
     (description
       "Create preliminary exploratory data visualisations of an entire dataset
 to identify problems or unexpected features using 'ggplot2'.")
-    (license expat)))
-
-(define-public r-survival-3.2-3
-  (package
-    (name "r-survival")
-    (version "3.2-3")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (cran-uri "survival" version))
-        (sha256
-          (base32
-            "07h76r2y23w889257krlijcw4n4d7ssx92x7i5qb1xyv5gyvl3rx"))))
-    (properties `((upstream-name . "survival")))
-    (build-system r-build-system)
-    (propagated-inputs `(("r-matrix" ,r-matrix)))
-    (home-page
-      "https://github.com/therneau/survival")
-    (synopsis "Survival Analysis")
-    (description
-      "Contains the core survival analysis routines, including definition of
-Surv objects, Kaplan-Meier and Aalen-Johansen (multi-state) curves, Cox models,
-and parametric accelerated failure time models.")
     (license expat)))
 
 (define-public r-ashr

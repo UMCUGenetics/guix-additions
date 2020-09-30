@@ -339,31 +339,31 @@ contributing code.")
 will submit jobs to SLURM.")
      (license license:gpl3+))))
 
-(define-public slurm-drmaa-1.1.1
-  (package
-    (name "slurm-drmaa")
-    (version "1.1.1")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://github.com/natefoo/slurm-drmaa/releases/download/"
-                    version "/slurm-drmaa-" version ".tar.gz"))
+(define-public qsub-local
+  (let ((commit "cb5ca3604b9036e0030ac6dd2b9e59ed146c767a"))
+    (package
+     (name "qsub-local")
+     (version "0.0.1")
+     (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/roelj/qsub-local.git")
+                    (commit commit)))
               (sha256
                (base32
-                "19r4cm88pcpm3wli4cc61zq7354pg67cg866f3a430p15hm1knrn"))))
-    (build-system gnu-build-system)
-    (arguments `(#:tests? #f)) ; The tests require "bats".
-    (inputs
-     `(("slurm" ,slurm)))
-    (native-inputs
-     `(("which" ,which)))
-    (home-page "https://github.com/natefoo/slurm-drmaa")
-    (synopsis "Distributed resource management application API for SLURM")
-    (description
-     "PSNC DRMAA for Simple Linux Utility for Resource Management (SLURM) is
-an implementation of Open Grid Forum DRMAA 1.0 (Distributed Resource
-Management Application API) specification for submission and control of jobs
-to SLURM.  Using DRMAA, grid applications builders, portal developers and ISVs
-can use the same high-level API to link their software with different
-cluster/resource management systems.")
-    (license license:gpl3+)))
+                "0is6bksnpgadpb5yvi8kav1qyqqbq7ms89n9y8dfzn4lwg6r8632"))))
+     (build-system gnu-build-system)
+     (arguments
+      `(#:tests? #f))
+     (native-inputs
+      `(("autoconf" ,autoconf)
+        ("automake" ,automake)
+        ("pkg-config" ,pkg-config)))
+     (inputs
+      `(("bash" ,bash)
+        ("guile" ,guile-3.0)))
+     (home-page "https://github.com/roelj/qsub-local")
+     (synopsis "Compatibility tool to run SGE pipelines locally.")
+     (description "This package an alternative @code{qsub} command that
+will directory run the script.")
+     (license license:gpl3+))))

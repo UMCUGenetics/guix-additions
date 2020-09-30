@@ -26,6 +26,7 @@
   #:use-module (gnu packages boost)
   #:use-module (gnu packages check)
   #:use-module (gnu packages cmake)
+  #:use-module (gnu packages commencement)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages curl)
@@ -590,62 +591,6 @@ Python 3 support.")
 
 (define-public python2-shellescape
   (package-with-python2 python-shellescape))
-
-(define-public python2-htmlgen-gn ; guix obsolete
-(package
-  (name "python2-htmlgen-gn")
-  (version "2.2.2")
-  (source (origin
-           (method url-fetch)
-           ;; http://files.genenetwork.org/software/contrib/htmlgen-2.2.2-gn.tar.gz
-           (uri (string-append
-                 "http://files.genenetwork.org/software/contrib/htmlgen-"
-version "-gn.tar.gz"))
-           (sha256
-            (base32
-             "1lwsk56rymhrma46cbyh3g64ksmq1vsih3qkrc2vh0lpba825y7r"))
-           ;;(patches (list
-           ;;          (search-patch "python2-htmlgen-Applied-Deb-patch.patch")
-           ;;          (search-patch "python2-htmlgen-Fix-test-for-random.patch")
-            ))
-  (build-system python-build-system)
-  (outputs '("out"))
-  (native-inputs
-   `(("make" ,gnu-make)
-     ))
-  (propagated-inputs
-   `(("python2" ,python-2)))
-  (arguments
-   `(#:phases (modify-phases %standard-phases
-     (replace 'build
-              (lambda _
-                (system* "python2" "-m" "compileall" ".")))
-     (replace 'install
-              (lambda* (#:key outputs #:allow-other-keys)
-                       (let* ((out (assoc-ref outputs "out"))
-                              (include (string-append out "/include"))
-                              (lib2 (string-append out "/lib/htmlgen"))
-                              (lib (string-append (assoc-ref %outputs "out") "/lib/python2.7/site-packages/htmlgen"))
-                              (pkgconfig (string-append out "/lib/pkgconfig"))
-                              (doc (string-append out "/share/doc")))
-                         ;; Install libs and headers.
-                         ;; (copy-file "HTMLgen.pyc" "HTMLgen2.pyc")
-                         (install-file "HTMLgen.pyc" lib)
-                         (install-file "HTMLgen2.pyc" lib)
-                         (install-file "imgsize.pyc" lib)
-                         (install-file "ImageH.pyc" lib)
-                         (install-file "ImagePaletteH.pyc" lib)
-                         (install-file "__init__.pyc" lib)
-              ))) ; install
-     ) ; phases
-     #:tests? #f))
-  (home-page
-    "https://packages.debian.org/unstable/python/python-htmlgen")
-  (synopsis "Genenetwork version of Python2 HTMLgen (defunkt
-project)")
-  (description #f)
-  (license #f)))
-
 
 (define-public python2-parallel ; guix fix number of things
   (package
@@ -1284,52 +1229,6 @@ mappability data (files created by GEM).")
     (description "")
     (license #f)))
 
-(define-public gccount
-  (package
-    (name "gccount")
-    (version "0")
-    (source (origin
-      (method url-fetch)
-      (uri "http://bioinfo-out.curie.fr/projects/freec/src/gccount.tar.gz")
-      (file-name (string-append name "-" version ".tar.gz"))
-      (sha256
-       (base32 "1z9rs1fv29adbkwb2ns76v2j29zm2134916c53jqlpjqf6qzm6sw"))))
-    (build-system gnu-build-system)
-    (native-inputs
-     `(("gcc" ,gcc-5)))
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         ;; There's no configure phase because there are no external
-         ;; dependencies.
-         (delete 'configure)
-         ;; There are no tests.
-         (delete 'check)
-         (replace
-          'unpack
-          (lambda* (#:key source #:allow-other-keys)
-            (and
-             (zero? (system* "mkdir" "source"))
-             (with-directory-excursion "source"
-               (zero? (system* "tar" "xvf" source))))))
-         (replace
-          'build
-          (lambda* (#:key inputs #:allow-other-keys)
-            (with-directory-excursion "source"
-              (substitute* "main.cpp"
-                (("// main.cpp") "#include <unistd.h>"))
-              (zero? (system* "make")))))
-         (replace
-          'install
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
-              (install-file "source/gccount" bin)))))))
-    (home-page "http://bioinfo-out.curie.fr/projects/freec/")
-    (synopsis "Utility to generate a GC-content profile.")
-    (description "This package provides the 'gccount' utility that can be
-used with FREEC.")
-    (license license:gpl2+)))
-
 (define-public maven-bin
   ;; XXX: This package is only a binary inclusion of Maven.  It is different
   ;; from any other Guix package and you should NOT use this package.
@@ -1511,200 +1410,6 @@ capable of taking on projects of any size.")
     ;; There are additional restrictions, so it's nonfree.
     (license license:expat)))
 
-;;
-;; FIXME: This package builds fine, but it doesn't include the R scripts needed by
-;; various GATK and Queue processes.  It will therefore crash at the end of your
-;; computation.  To solve this problem, we need to remove
-;; -Dresource.bundle.skip=true from the compile options, but in that case the
-;; build fails in the build environment because Javadoc seems to hardcode /bin/sh
-;; somewhere, which is not available in the build environment.
-(define-public gatk-full-3.5
-  (package
-    (name "gatk")
-    (version "3.5-e91472d")
-    (source (origin
-              (method url-fetch)
-              (uri "https://github.com/broadgsa/gatk-protected/archive/3.5.tar.gz")
-              (sha256
-               (base32 "0g07h5a7ajsyapgzh7nxz0yjp3d2v4fwhfnkcs0sfnq7s2rpsh9z"))
-              (patches (list (search-patch "gatk-disable-vectorloglesscaching.patch")
-                             (search-patch "gatk-apply-area-51-restrictions.patch")))))
-    (build-system gnu-build-system)
-    (arguments
-      `(#:tests? #f ; Tests are run in the install phase.
-        #:phases
-        (modify-phases %standard-phases
-          (delete 'configure) ; Nothing to configure
-          (replace 'build
-            (lambda* (#:key inputs outputs #:allow-other-keys)
-              (let* ((build-dir (getcwd))
-                     (home-dir (string-append build-dir "/home"))
-                     (settings-dir (string-append build-dir "/mvn"))
-                     (settings (string-append settings-dir "/settings.xml"))
-                     (m2-dir (string-append build-dir "/m2/repository"))
-                     (fakebin (string-append build-dir "/fakebin")))
-
-                ;; Turns out that there's an unused import that breaks the build.
-                ;; Fortunately, we can easily remove it.
-                (substitute* (string-append "public/gatk-tools-public/src/main"
-                                            "/java/org/broadinstitute/gatk"
-                                            "/tools/walkers/varianteval"
-                                            "/VariantEval.java")
-                  (("import oracle.jrockit.jfr.StringConstantPool;")
-                   "//import oracle.jrockit.jfr.StringConstantPool;"))
-
-                ;; Patch hardcoded /bin/sh entries.
-                (substitute* (string-append "public/gatk-queue/src/test/scala"
-                                            "/org/broadinstitute/gatk/queue"
-                                            "/util/ShellUtilsUnitTest.scala")
-                  (("/bin/sh")
-                   (string-append (assoc-ref %build-inputs "bash") "/bin/sh")))
-
-                (mkdir-p settings-dir)
-                (mkdir-p m2-dir)
-
-                ;; Unpack the dependencies downloaded using maven.
-                (with-directory-excursion m2-dir
-                  (zero? (system* "tar" "xvf" (assoc-ref inputs "maven-deps"))))
-
-                ;; Because the build process does not have a home directory in
-                ;; which the 'm2' directory can be created (the directory
-                ;; that will contain all downloaded dependencies for maven),
-                ;; we need to set that directory to some other path.  This is
-                ;; done using an XML configuration file of which a minimal
-                ;; variant can be found below.
-                (with-output-to-file settings
-                  (lambda _
-                    (format #t "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\"
-          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
-          xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\">
-<localRepository>~a</localRepository>
-</settings>" m2-dir)))
-
-                ;; Set JAVA_HOME to help maven find the JDK.
-                (setenv "JAVA_HOME" (string-append (assoc-ref inputs "icedtea") "/jre"))
-                (mkdir-p home-dir)
-                (setenv "HOME" home-dir)
-
-                (mkdir-p m2-dir)
-                (mkdir-p settings-dir)
-
-                ;; Compile using maven's compile command.
-                (let ((compile-options (string-append
-                                        "-fn " ; Javadoc targets fail.
-                                        ;"-Dresource.bundle.skip=true "
-                                        "-Dmaven.tests.skip=true "
-                                        "--offline")))
-                  (system (format #f "mvn compile ~a --global-settings ~s"
-                                  compile-options settings))
-                  (system (format #f "mvn verify ~a --global-settings ~s"
-                                  compile-options settings))
-                  (system (format #f "mvn package ~a --global-settings ~s"
-                                  compile-options settings))))))
-          (replace 'install
-            (lambda _
-              (let ((out (string-append (assoc-ref %outputs "out")
-                                        "/share/java/user-classes/")))
-                (mkdir-p out)
-                (install-file "target/GenomeAnalysisTK.jar" out)
-                (install-file "target/Queue.jar" out)))))))
-    (native-inputs
-     `(("maven-deps"
-        ,(origin
-          (method url-fetch)
-          (uri (string-append "https://raw.githubusercontent.com/"
-                              "UMCUGenetics/guix-additions/master/blobs/"
-                              "gatk-mvn-dependencies.tar.gz"))
-          (sha256
-           (base32
-            "1rrc7clad01mw83zyfgc4bnfn0nqvfc0mabd8wnj61p64xrigny9"))))))
-    (inputs
-     `(("icedtea" ,icedtea-7 "jdk")
-       ("maven" ,maven-bin)
-       ("bash" ,bash)
-       ("perl" ,perl)
-       ("r" ,r)))
-    (propagated-inputs
-     `(("r-gsalib" ,r-gsalib)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gplots" ,r-gplots)
-       ("r-reshape" ,r-reshape)
-       ("r-optparse" ,r-optparse)
-       ("r-dnacopy" ,r-dnacopy)
-       ("r-naturalsort" ,r-naturalsort)
-       ("r-dplyr" ,r-dplyr)
-       ("r-data-table" ,r-data-table)
-       ("r-hmm" ,r-hmm)))
-    (native-search-paths
-     (list (search-path-specification
-            (variable "GUIX_JARPATH")
-            (files (list "share/java/user-classes")))))
-    (home-page "https://github.com/broadgsa/gatk-protected")
-    (synopsis "Package for analysis of high-throughput sequencing")
-   (description "The Genome Analysis Toolkit or GATK is a software package for
-analysis of high-throughput sequencing data, developed by the Data Science and
-Data Engineering group at the Broad Institute.  The toolkit offers a wide
-variety of tools, with a primary focus on variant discovery and genotyping as
-well as strong emphasis on data quality assurance.  Its robust architecture,
-powerful processing engine and high-performance computing features make it
-capable of taking on projects of any size.")
-   ;; There are additional restrictions, so it's nonfree.
-   (license license:expat)))
-
-(define-public gatk-full-3.5-patched-bin
-  (package
-    (name "gatk")
-    (version "3.5-e91472d-patched")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "https://raw.githubusercontent.com/"
-                                  "UMCUGenetics/guix-additions/master/blobs/"
-                                  "gatk-patched-prebuilt.tar.gz"))
-              (sha256
-               (base32
-                "14j9k3jscm278r5scydn9afb5d11yd2iij5km0yddidpxfnpn0r7"))))
-    (build-system gnu-build-system)
-    (arguments
-      `(#:tests? #f ; Tests are run in the install phase.
-        #:phases
-        (modify-phases %standard-phases
-          (delete 'configure) ; Nothing to configure
-          (delete 'build) ; Nothing to build
-          (replace 'install
-            (lambda _
-              (let ((out (string-append (assoc-ref %outputs "out")
-                                        "/share/java/user-classes/")))
-                (mkdir-p out)
-                (install-file "GenomeAnalysisTK.jar" out)
-                (install-file "Queue.jar" out)))))))
-    (propagated-inputs
-     `(("r-gsalib" ,r-gsalib)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-gplots" ,r-gplots)
-       ("r-reshape" ,r-reshape)
-       ("r-optparse" ,r-optparse)
-       ("r-dnacopy" ,r-dnacopy)
-       ("r-naturalsort" ,r-naturalsort)
-       ("r-dplyr" ,r-dplyr)
-       ("r-data-table" ,r-data-table)
-       ("r-hmm" ,r-hmm)))
-    (native-search-paths
-     (list (search-path-specification
-            (variable "GUIX_JARPATH")
-            (files (list "share/java/user-classes")))))
-    (home-page "https://github.com/broadgsa/gatk-protected")
-    (synopsis "Package for analysis of high-throughput sequencing")
-   (description "The Genome Analysis Toolkit or GATK is a software package for
-analysis of high-throughput sequencing data, developed by the Data Science and
-Data Engineering group at the Broad Institute.  The toolkit offers a wide
-variety of tools, with a primary focus on variant discovery and genotyping as
-well as strong emphasis on data quality assurance.  Its robust architecture,
-powerful processing engine and high-performance computing features make it
-capable of taking on projects of any size.")
-   ;; There are additional restrictions, so it's nonfree.
-   (license license:expat)))
-
 (define-public python-theano
   (package
     (name "python-theano")
@@ -1751,49 +1456,6 @@ capable of taking on projects of any size.")
   (description
     "Probabilistic Programming in Python: Bayesian Modeling and Probabilistic Machine Learning with Theano")
   (license license:asl2.0)))
-
-(define-public python-keras-preprocessing
-  (package
-    (name "python-keras-preprocessing")
-    (version "1.0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "Keras_Preprocessing" version))
-       (sha256
-        (base32
-         "152i7k01xd3r7kin2s329ddi23b0ym6rb2ha1shnxh7cfxivljc6"))))
-    (build-system python-build-system)
-    (inputs
-     `(("python-six" ,python-six)
-       ("python-scipy" ,python-scipy)))
-    (home-page
-     "https://github.com/keras-team/keras-preprocessing")
-    (synopsis
-     "Easy data preprocessing and data augmentation for deep learning models")
-    (description
-     "Easy data preprocessing and data augmentation for deep learning models")
-    (license license:expat)))
-
-(define-public python-keras
-  (package
-    (name "python-keras")
-    (version "2.2.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "Keras" version))
-       (sha256
-        (base32
-         "1grl2znv1yssrci3r0vc4qzbqzhjfkkqjdg3bqd7y8dgaz8rk12v"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    ;(propagated-inputs
-    ; `(("python-keras-preprocessing" ,python-keras-preprocessing)))
-    (home-page "https://github.com/keras-team/keras")
-    (synopsis "Deep Learning for humans")
-    (description "Deep Learning for humans")
-    (license license:expat)))
 
 (define-public gatk4
   (package
@@ -1999,15 +1661,15 @@ the cloud environments of ICGC.")
 (define-public igv
   (package
     (name "igv")
-    (version "2.7.2")
+    (version "2.8.10")
     (source
      (origin
        (method url-fetch)
        (uri (string-append
              "http://data.broadinstitute.org/igv/projects/downloads/"
-             "2.7/IGV_Linux_" version ".zip"))
+             "2.8/IGV_Linux_" version ".zip"))
        (sha256
-        (base32 "08h9bzwwykchnqfhz9m60c5vsn2wxik3skj2xmx6afnwlna4786b"))))
+        (base32 "1qrhsvl6z5h1kg3pji08fzqj08c6l2lxj0qv7hbvys3mymz4lfzv"))))
     (build-system gnu-build-system)
     (propagated-inputs
      `(("openjdk11" ,openjdk11)))
@@ -2049,23 +1711,8 @@ datasets.  It supports a wide variety of data types, including array-based and
 next-generation sequence data, and genomic annotations.")
    ;; No license specified.
    (license license:non-copyleft)))
-
-(define-public igv-3.0-beta
-  (package (inherit igv)
-    (name "igv")
-    (version "3.0-beta")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             "http://data.broadinstitute.org/igv/projects/downloads/"
-             "3.0_beta/IGV_3.0_beta.zip"))
-       (sha256
-        (base32 "1vpaj4zpa77pzix2dplrc1lz398bdv8yvg2p48f4i8px14qpdlvn"))))
-    (propagated-inputs
-     `(("icedtea" ,icedtea-8)))))
     
-(define-public igvtools-bin-2.3.71
+(define-public igvtools
   (package
    (name "igvtools")
    (version "2.3.71")
@@ -2109,18 +1756,6 @@ datasets.  It supports a wide variety of data types, including array-based and
 next-generation sequence data, and genomic annotations.")
    ;; No license specified.
    (license license:non-copyleft)))
-
-(define-public igvtools-bin-2.3.60
-  (package (inherit igvtools-bin-2.3.71)
-   (name "igvtools")
-   (version "2.3.60")
-   (source (origin
-     (method url-fetch)
-     (uri (string-append
-           "http://data.broadinstitute.org/igv/projects/downloads/2.3/igvtools_"
-           version ".zip"))
-      (sha256
-        (base32 "11k713nip68j06mzk7zkbsyajwrlprix7j38ybfrxblp666g3jm2"))))))
 
 (define-public metamaps
   (let ((commit "e23f8a8688159ff0d092557a40305dbc7acc2342"))
@@ -2204,65 +1839,6 @@ pedigree error checking, population substructure identification, forensics,
 gene mapping, etc.")
     ;; WARNING: There's no license specified.  This is non-free software.
     (license license:non-copyleft)))
-
-(define-public minimap2
-  (package
-    (name "minimap2")
-    (version "2.17")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append "https://github.com/lh3/minimap2/"
-                           "releases/download/v" version "/"
-                           "minimap2-" version ".tar.bz2"))
-       (sha256
-        (base32
-         "0hi7i9pzxhvjj44khzzzj1lrn5gb5837arr4wgln7k1k5n4ci2mn"))))
-    (build-system gnu-build-system)
-    (arguments
-     `(#:tests? #f                      ; there are none
-       #:make-flags
-       (list "CC=gcc"
-             (let ((system ,(or (%current-target-system)
-                                (%current-system))))
-               (cond
-                ((string-prefix? "x86_64" system)
-                 "all")
-                ((or (string-prefix? "armhf" system)
-                     (string-prefix? "aarch64" system))
-                 "arm_neon=1")
-                (_ "sse2only=1"))))
-       #:phases
-       (modify-phases %standard-phases
-         (delete 'configure)
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let* ((out (assoc-ref outputs "out"))
-                    (bin (string-append out "/bin"))
-                    (man (string-append out "/share/man/man1")))
-               (install-file "minimap2" bin)
-               (mkdir-p man)
-               (install-file "minimap2.1" man))
-             #t)))))
-    (inputs
-     `(("zlib" ,zlib)))
-    (home-page "https://lh3.github.io/minimap2/")
-    (synopsis "Pairwise aligner for genomic and spliced nucleotide sequences")
-    (description "Minimap2 is a versatile sequence alignment program that
-aligns DNA or mRNA sequences against a large reference database.  Typical use
-cases include:
-
-@enumerate
-@item mapping PacBio or Oxford Nanopore genomic reads to the human genome;
-@item finding overlaps between long reads with error rate up to ~15%;
-@item splice-aware alignment of PacBio Iso-Seq or Nanopore cDNA or Direct RNA
-  reads against a reference genome;
-@item aligning Illumina single- or paired-end reads;
-@item assembly-to-assembly alignment;
-@item full-genome alignment between two closely related species with
-  divergence below ~15%.
-@end enumerate\n")
-    (license license:expat)))
 
 (define-public pbgzip
   (let ((commit "2b09f97b5f20b6d83c63a5c6b408d152e3982974"))
@@ -2435,13 +2011,13 @@ manner.")
 (define-public xqilla
   (package
    (name "xqilla")
-   (version "2.3.3")
+   (version "2.3.4")
    (source (origin
             (method url-fetch)
             (uri (string-append "mirror://sourceforge/xqilla/XQilla-"
                                 version ".tar.gz"))
             (sha256
-             (base32 "1mjgcyar3qyizpnb0h9lxaj6p9yq4vj09qd8qan1bwv6z6sbjxlg"))))
+             (base32 "1sq2b43hqzk9jq11sr0xc498z933a0rpfwvjp5z2xzii2rwk29i9"))))
    (build-system gnu-build-system)
    (arguments
     `(#:configure-flags (list (string-append
@@ -2934,7 +2510,7 @@ acid changes).")
     (native-inputs
      `(("bash" ,bash)
        ("python" ,python-2)
-       ("gcc" ,gcc-5)))
+       ("gcc" ,gcc-toolchain-5)))
     (propagated-inputs
      `(("vcftools" ,vcftools)
        ("htslib" ,htslib)))
@@ -3086,146 +2662,6 @@ added to both callers to further improve precision.")
 
 (define-public strelka strelka-2.9.2)
 
-(define-public all-your-base
-  (let ((commit "b44212c66fe95e0b5ca51bfefcbe4eaa2c178fc4"))
-    (package
-     (name "all-your-base")
-     (version (string-append "2-" (string-take commit 7)))
-     (source (origin
-               (method git-fetch)
-               (uri (git-reference
-                     (url "https://github.com/hyeshik/AYB2.git")
-                     (commit commit)))
-               (file-name (git-file-name name version))
-               (sha256
-                (base32 "165ncgmw189qw72kjzg08y704sb0a6fi1wihibl2wr30p5091mcb"))))
-     (build-system gnu-build-system)
-     (arguments
-      `(#:tests? #f
-        #:phases
-        (modify-phases %standard-phases
-          (delete 'configure)
-          (add-before 'build 'move-to-src-directory
-            (lambda _
-              (chdir "src")
-              #t))
-          (replace 'install
-            (lambda* (#:key inputs #:allow-other-keys)
-              (let* ((out (string-append (assoc-ref %outputs "out")))
-                     (bin (string-append out "/bin")))
-                (mkdir-p bin)
-                (install-file "../bin/AYB" bin)))))))
-     (inputs
-      `(("bzip2" ,bzip2)
-        ("zlib" ,zlib)
-        ("lapack" ,lapack)))
-     (home-page "https://github.com/hyeshik/AYB2")
-     (synopsis "Base caller for the Illumina platform")
-     (description "This package contains a fork of the All Your Base base 
-caller, specifically targeting the use for tailseeker2.")
-     (license license:gpl3+))))
-
-(define-public tailseeker2
-  (package
-   (name "tailseeker")
-   (version "2.0")
-   (source (origin
-            (method git-fetch)
-            (uri (git-reference
-                  (url "https://github.com/hyeshik/tailseeker.git")
-                  (commit "0edfa971df6616d3268d25676d2922bc386143a8")))
-            (file-name (git-file-name name version))
-            (sha256
-             (base32 "1767wv5jkhkyqy6z7w2kn4jgkak852yphfppgr8xwf3id30s8bdf"))))
-   (build-system python-build-system)
-   (arguments
-    `(#:tests? #f
-      #:phases
-      (modify-phases %standard-phases
-        (add-after 'unpack 'remove-pythonpath-hack
-          (lambda _
-            (substitute* "tailseeker/snakesupport.py"
-              (("'export PYTHONPATH=\"\\{PYTHONPATH\\}\" '\n") ""))))
-        (add-before 'build 'move-to-src
-          (lambda* (#:key inputs #:allow-other-keys)
-            (chdir "src")
-            (setenv "CFLAGS" (string-append
-                              "-I"
-                              (assoc-ref inputs "python-numpy")
-                              "/lib/python3.7/site-packages/numpy/core/include"))
-            (substitute* "Makefile"
-              (("CFLAGS=	-O3 -Wall -Werror") "CFLAGS=	-O2 -Wall"))
-            (invoke "make")))
-        (add-after 'install 'install-python-modules
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (let* ((out (assoc-ref outputs "out"))
-                   (bin-dir     (string-append out "/bin"))
-                   (python-path (string-append out "/lib/python3.7/site-packages/tailseeker"))
-                   (python-cmd  (string-append (assoc-ref inputs "python-3") "/bin/python3"))
-                   (ayb-cmd     (string-append (assoc-ref inputs "all-your-base") "/bin/AYB"))
-                   (bgzip-cmd   (string-append (assoc-ref inputs "htslib") "/bin/bgzip"))
-                   (tabix-cmd   (string-append (assoc-ref inputs "htslib") "/bin/tabix"))
-                   (snake-cmd   (string-append (assoc-ref inputs "snakemake") "/bin/snakemake"))
-                   (share-dir   (string-append out "/share/tailseeker"))
-                   (conf-dir    (string-append share-dir "/conf")))
-              (for-each mkdir-p (list python-path share-dir conf-dir))
-              (symlink python-path (string-append share-dir "/tailseeker"))
-              (copy-recursively "../tailseeker" python-path)
-              (install-file "../bin/sqi2fq" bin-dir)
-              (install-file "../bin/tailseq-retrieve-signals" bin-dir)
-              (substitute* (string-append out "/bin/tailseeker")
-                (("TAILSEEKER_DIR = ") (string-append "TAILSEEKER_DIR = '" share-dir "' #")))
-              (install-file "../conf/defaults.conf" conf-dir)
-              (install-file "../conf/defaults-hiseq.conf" conf-dir)
-              (install-file "../conf/defaults-miseq.conf" conf-dir)
-
-              ;; XXX: This is a run-time specific setting for which no good default exists.
-              ;;(substitute* (string-append conf-dir "/defaults-miseq.conf")
-              ;;  (("_exp: [73, GTCAG, 1]") "_exp: [72, CCCCCCCCCC, 1]"))
-
-              (call-with-output-file (string-append conf-dir "/paths.conf")
-                (lambda (port)
-                  (for-each (lambda (item) (format port "~a: ~a~%" (car item) (cdr item)))
-                            `(("tailseeker" . ,share-dir)
-                              ("python3"    . ,python-cmd)
-                              ("bgzip"      . ,bgzip-cmd)
-                              ("tabix"      . ,tabix-cmd)
-                              ("AYB"        . ,ayb-cmd)
-                              ("snakemake"  . ,snake-cmd)))))
-
-              ;; Tailseeker doesn't care about UNIX filesystems and expects to find binaries
-              ;; in its own directory.
-              (mkdir-p (string-append share-dir "/bin"))
-              (symlink (string-append bin-dir "/tailseq-retrieve-signals")
-                       (string-append share-dir "/bin/tailseq-retrieve-signals"))
-              (symlink (string-append bin-dir "/sqi2fq")
-                       (string-append share-dir "/bin/sqi2fq"))
-
-              ;; Same for scripts.
-              (mkdir-p (string-append share-dir "/scripts"))
-              (copy-recursively "../scripts" (string-append share-dir "/scripts"))))))))
-   (native-inputs
-    `(("pkg-config" ,pkg-config)))
-   (inputs
-    `(("python-3" ,python-3)
-      ("all-your-base" ,all-your-base)))
-   (propagated-inputs
-    `(("python-biopython" ,python-biopython)
-      ("python-scikit-learn" ,python-scikit-learn)
-      ("python-scipy" ,python-scipy)
-      ("python-numpy" ,python-numpy)
-      ("python-pandas" ,python-pandas)
-      ("python-matplotlib" ,python-matplotlib)
-      ("python-pyyaml" ,python-pyyaml)
-      ("ghmm" ,ghmm)
-      ("snakemake" ,snakemake)
-      ("htslib" ,htslib)))
-   (home-page "https://github.com/hyeshik/tailseeker/tree/tailseeker2")
-   (synopsis "Measure poly-A tail lengths from Illumina sequencers")
-   (description "This package contains software for measuring poly(A) tail
-length and 3′-end modifications using a high-throughput sequencer.")
-   (license license:expat)))
-
 (define (varscan version commit hash)
   (let ((jar-file (string-append "varscan-" version ".jar")))
     (package
@@ -3302,70 +2738,6 @@ length and 3′-end modifications using a high-throughput sequencer.")
   (varscan "2.4.2" "18425ce00e3ced8afc624bd86de142b1cd1e0eb0"
            "14f7fp0yaj3lsif1dpjdci7kz3b2fd9qic3299a2bvgk3rv3lp6n"))
 
-(define-public pindel
-  (package
-   (name "pindel")
-   (version "0.2.5b8")
-   (source (origin
-     (method url-fetch)
-     (uri (string-append "https://github.com/genome/pindel/archive/v"
-                         version ".tar.gz"))
-     (file-name (string-append name "-" version ".tar.gz"))
-     (sha256
-      (base32 "06bsf0psxwf7h5p3j97xkh9k5qrwhxh6xn942y1j1m2inyhgs8bz"))))
-   (build-system gnu-build-system)
-   (inputs
-    `(("samtools" ,samtools)
-      ("htslib" ,htslib)
-      ("zlib" ,zlib)))
-   (native-inputs
-    `(("cppcheck" ,cppcheck)
-      ("python" ,python-2)
-      ("perl" ,perl)))
-   (arguments
-    `(#:phases
-      (modify-phases %standard-phases
-        (delete 'configure) ; There is no configure phase.
-        ;; The build needs to run 'make' twice for the reasons described below.
-        (replace 'build
-          (lambda* (#:key inputs #:allow-other-keys)
-            ;; The first run creates a Makefile.local file.  Make will report
-            ;; the failure to find Makefile.local, but we can ignore this error,
-            ;; since that file is created by this run.
-            (system* "make" (string-append "SAMTOOLS=" (assoc-ref inputs "samtools")))
-            ;; The second run actually compiles the program.  Now Makefile.local
-            ;; is available, and we should treat an exiting make with an error as
-            ;; a true error.
-            (zero? (system* "make"))))
-        (replace 'install
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
-              (install-file "src/pindel" bin)
-              (install-file "src/pindel2vcf" bin)
-              (install-file "src/pindel2vcf4tcga" bin)
-              (install-file "src/sam2pindel" bin))
-            #t))
-        ;; There are multiple test targets, so in order to run all
-        ;; tests, we must run the separate make targets.
-        (replace 'check
-          (lambda* (#:key inputs #:allow-other-keys)
-            (and
-             (zero? (system* "make" "acceptance-tests"))
-             (zero? (system* "make" "cppcheck"))
-             ;; These tests take a _very_ long time.
-             ;(zero? (system* "make" "coverage-tests"))
-             ;;(zero? (system* "make" "functional-tests"))
-             ;;(zero? (system* "make" "regression-tests"))
-             ))))))
-   (home-page "https://github.com/genome/pindel")
-   (synopsis "Structural variants detector for next-gen sequencing data")
-   (description "Pindel can detect breakpoints of large deletions, medium sized
-insertions, inversions, tandem duplications and other structural variants at
-single-based resolution from next-gen sequence data.  It uses a pattern growth
-approach to identify the breakpoints of these variants from paired-end short
-reads.")
-   (license license:gpl3+)))
-
 (define-public manta
   (package
    (name "manta")
@@ -3380,7 +2752,8 @@ reads.")
              (base32 "0d4fp0jq3b3d97jz81hv0kd3av12ycbjk28mirhbmwh32zm2d54k"))
             (patches (list (search-patch "manta-use-system-zlib.patch")
                            (search-patch "manta-use-system-htslib.patch")
-                           (search-patch "manta-use-system-samtools.patch")))))
+                           (search-patch "manta-use-system-samtools.patch")
+                           (search-patch "manta-1.1.0-use-system-boost.patch")))))
    (build-system cmake-build-system)
    (arguments
     `(#:tests? #f
@@ -3667,14 +3040,14 @@ be run from intermediate steps if files are formated appropriately")
 (define-public clinvar
   (package
    (name "clinvar-vcf")
-   (version "GRCh38-20200316")
+   (version "GRCh38-20200919")
    (source (origin
             (method url-fetch)
             (uri (string-append
                   "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"))
             (sha256
              (base32
-	      "0pidjv3bf0ckf8wc3nw7zlvzyrh428xskkhz51y7xbbf6pdw0wdp"))))
+	      "06wdfg6wkksra4if1hil78p9707l9zq8h74cc4mpqrhl1vv8j8sq"))))
    (build-system trivial-build-system)
    (arguments
     `(#:modules ((guix build utils))
@@ -3705,14 +3078,14 @@ as efficiently and effectively as possible.")
 
 (define-public clinvar-grch37
   (package (inherit clinvar)
-    (version "GRCh37-20200520")
+    (version "GRCh37-20200919")
     (source (origin
              (method url-fetch)
              (uri (string-append
                    "ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz"))
              (sha256
               (base32
-               "15vgip02bmkiq86l284as60rpzgqsqyqnkrmjzildgdyvc8d7rv4"))))
+               "0srdr8mwf2wnch8v5gkdj0lqqmm50inzysh9cb4gb7ndrbwhharv"))))
    (arguments
     `(#:modules ((guix build utils))
       #:builder
@@ -3794,7 +3167,7 @@ as efficiently and effectively as possible.")
            (system* java "-jar" igvtools "index" output-file)))))
     (inputs
      `(("icedtea" ,icedtea-7)
-       ("igvtools" ,igvtools-bin-2.3.71)
+       ("igvtools" ,igvtools)
        ("htslib" ,htslib)
        ("gzip" ,gzip)))
     (home-page "http://www.internationalgenome.org/")
@@ -3862,7 +3235,7 @@ as efficiently and effectively as possible.")
            (system* java "-jar" igvtools "index" output-file)))))
     (inputs
      `(("icedtea" ,icedtea-7)
-       ("igvtools" ,igvtools-bin-2.3.71)
+       ("igvtools" ,igvtools)
        ("htslib" ,htslib)
        ("gzip" ,gzip)
        ("bcftools" ,bcftools)
@@ -3915,7 +3288,7 @@ as efficiently and effectively as possible.")
            (system* java "-jar" igvtools "index" output-file)))))
     (inputs
      `(("icedtea" ,icedtea-7)
-       ("igvtools" ,igvtools-bin-2.3.71)
+       ("igvtools" ,igvtools)
        ("htslib" ,htslib)
        ("gzip" ,gzip)))
     (home-page "")
@@ -4053,287 +3426,6 @@ in the human genome.")
    (synopsis "Extra data sets used by snpEff.")
    (description "This package contains extra data sets used by snpEff.")
    (license #f)))
-
-;; Ensembl provides the GRCh37 separated by chromosome.  This function
-;; can be used as a template for each separate file.
-(define (ensembl-grch37-dna-chromosome chromosome hash)
-  (package
-    (name (string-append "ensembl-grch37-dna-chr" chromosome))
-    (version "88")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "ftp://ftp.ensembl.org/pub/grch37/release-" version "/fasta"
-                    "/homo_sapiens/dna/Homo_sapiens.GRCh37.dna.chromosome"
-                    "." chromosome ".fa.gz"))
-              (sha256
-               (base32 hash))))
-    (build-system trivial-build-system)
-   (arguments
-    `(#:modules ((guix build utils))
-      #:builder (begin
-                  (use-modules (guix build utils))
-                  (let ((genomes-dir (string-append
-                                      %output "/share/genomes/ensembl"
-                                      "/per-chromosome"))
-                        (source (assoc-ref %build-inputs "source")))
-                    (mkdir-p genomes-dir)
-                    (copy-file source
-                               (string-append
-                                genomes-dir
-                                "/Homo_sapiens.GRCh37.dna.chromosome."
-                                ,chromosome ".fa.gz"))))))
-   (native-inputs `(("source" ,source)))
-   (home-page "http://www.ensembl.org")
-   (synopsis (string-append
-              "Genome Reference Consortium Human reference genome 37, "
-              "chromosome " chromosome))
-   (description (string-append
-                 "This package contains the data for GRCh37 chromosome "
-                 chromosome "."))
-   ;; I couldn't find licensing information.
-   (license #f)))
-
-(define-public ensembl-grch37-dna-chromosome-1
-  (ensembl-grch37-dna-chromosome
-   "1" "15mbgahavid28ch4n0lnccdndg9dl4mhaq0dv3bmzc3qyag364rg"))
-
-(define-public ensembl-grch37-dna-chromosome-2
-  (ensembl-grch37-dna-chromosome
-   "2" "0kp4d7asgmky8wa7pk9cn2fp49zyznq1zbabwl0hl66pj4gis4y4"))
-
-(define-public ensembl-grch37-dna-chromosome-3
-  (ensembl-grch37-dna-chromosome
-   "3" "1hkffvs1mwlh34jnwnm8is7xaa826fw8zv1hx5mfkbnnn9n92sj0"))
-
-(define-public ensembl-grch37-dna-chromosome-4
-  (ensembl-grch37-dna-chromosome
-   "4" "0c652i45n9bnz7xqhs9in7c08rmi3wy44398zh2d5p9iq13ysk34"))
-
-(define-public ensembl-grch37-dna-chromosome-5
-  (ensembl-grch37-dna-chromosome
-   "5" "0bg86m9igrm744phwgvdmfgihf81jflarbv706vci4nrnqb7gsqi"))
-
-(define-public ensembl-grch37-dna-chromosome-6
-  (ensembl-grch37-dna-chromosome
-   "6" "1zmsnfm9sjc21h4q4j4bjbmmaw3lj5nwzizgma1lwq68yhgm0bx5"))
-
-(define-public ensembl-grch37-dna-chromosome-7
-  (ensembl-grch37-dna-chromosome
-   "7" "1mfjwrb27s6l57abs4cgcl90w7invdm9lg1j2z26ci5k01m0phhq"))
-
-(define-public ensembl-grch37-dna-chromosome-8
-  (ensembl-grch37-dna-chromosome
-   "8" "1l0g83b3z2c1qla04prgcfwb5bcc7k9lwvcssvdg9p9kd5zxxjzq"))
-
-(define-public ensembl-grch37-dna-chromosome-9
-  (ensembl-grch37-dna-chromosome
-   "9" "0k7kjhjasw9lshykdlga30cvc69nxaiah1d9hahhwk9zhdmjxbsx"))
-
-(define-public ensembl-grch37-dna-chromosome-10
-  (ensembl-grch37-dna-chromosome
-   "10" "1420vyjspx3wbjnybz0nrh9aixg89k9xag3y1z5bhcb6s24js10q"))
-
-(define-public ensembl-grch37-dna-chromosome-11
-  (ensembl-grch37-dna-chromosome
-   "11" "0cry7ln0j4k6c8adlxr1dw4x9pgkbi8nv61iysyjnwp2rd1zpbs4"))
-
-(define-public ensembl-grch37-dna-chromosome-12
-  (ensembl-grch37-dna-chromosome
-   "12" "0iflw5c2y826wbb7gdhia94db3kz6n08nbbifihblfrb7181akji"))
-
-(define-public ensembl-grch37-dna-chromosome-13
-  (ensembl-grch37-dna-chromosome
-   "13" "1x21y3arw9i2gm0wdbpv88sgjydrrdwrvrgf4ih4y83z64528iav"))
-
-(define-public ensembl-grch37-dna-chromosome-14
-  (ensembl-grch37-dna-chromosome
-   "14" "0vfnvpbkg3s0b9d3r2bg493wlbiqxaa747zljx5sdsgh8ny8m142"))
-
-(define-public ensembl-grch37-dna-chromosome-15
-  (ensembl-grch37-dna-chromosome
-   "15" "1xki8vz14ia95xf6w3qghybs76n5j0kn21871b9d0gy045lz4xlc"))
-
-(define-public ensembl-grch37-dna-chromosome-16
-  (ensembl-grch37-dna-chromosome
-   "16" "1qn4qys9q945ia90q6g5nv8zhndx7yis692rznf2wyzglyagibhm"))
-
-(define-public ensembl-grch37-dna-chromosome-17
-  (ensembl-grch37-dna-chromosome
-   "17" "0sjw1vj9hliyih7d18iigdfqzylp945aidsnf4h2424zcg7ininf"))
-
-(define-public ensembl-grch37-dna-chromosome-18
-  (ensembl-grch37-dna-chromosome
-   "18" "0fis1pdjz4a996nd4l399d4sgnv7y33xd7i9f7l9vms56bg82i1d"))
-
-(define-public ensembl-grch37-dna-chromosome-19
-  (ensembl-grch37-dna-chromosome
-   "19" "1c6xv1pwknqh48nc5yja5b4sc0b05a32q6hfp2q30zh6xv6y9b3g"))
-
-(define-public ensembl-grch37-dna-chromosome-20
-  (ensembl-grch37-dna-chromosome
-   "20" "1h93w6lh5hgdz8dcfk8slw9khv3gri59dp5dsl2plw5xb4pava37"))
-
-(define-public ensembl-grch37-dna-chromosome-21
-  (ensembl-grch37-dna-chromosome
-   "21" "16j7iqflirlf8kwargarijkmhsb4c9rh7l7agylp4amnvv7rlbir"))
-
-(define-public ensembl-grch37-dna-chromosome-22
-  (ensembl-grch37-dna-chromosome
-   "22" "1xrlwaxig47nrnligasc5yw94yklm22dsg8zdj9kady0yd9dii52"))
-
-(define-public ensembl-grch37-dna-chromosome-x
-  (ensembl-grch37-dna-chromosome
-   "X" "0apg4g2g1qh26f44a2brgcb3cwk59pbl9van5nwqxbkbgnb7m2yr"))
-
-(define-public ensembl-grch37-dna-chromosome-y
-  (ensembl-grch37-dna-chromosome
-   "Y" "16gf1kipmns96dk7hz2mf6q2znd4d8kbjxd2cw45m71l6nirqr8n"))
-
-(define-public ensembl-grch37-dna-chromosome-mt
-  (ensembl-grch37-dna-chromosome
-   "MT" "12pb4nv9nqzrwpbgllqlkl97f8ypawiqddrcnxrr2ziq91z25ngc"))
-
-
-;; Ensembl provides the GRCh38 separated by chromosome.  This function
-;; can be used as a template for each separate file.
-(define (ensembl-grch38-dna-chromosome chromosome hash)
-  (package
-    (name (string-append "ensembl-grch38-dna-chr" chromosome))
-    (version "88")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "ftp://ftp.ensembl.org/pub/release-" version "/fasta"
-                    "/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome"
-                    "." chromosome ".fa.gz"))
-              (sha256
-               (base32 hash))))
-    (build-system trivial-build-system)
-   (arguments
-    `(#:modules ((guix build utils))
-      #:builder (begin
-                  (use-modules (guix build utils))
-                  (let ((genomes-dir (string-append
-                                      %output "/share/genomes/ensembl"
-                                      "/per-chromosome"))
-                        (source (assoc-ref %build-inputs "source")))
-                    (mkdir-p genomes-dir)
-                    (copy-file source
-                               (string-append
-                                genomes-dir
-                                "/Homo_sapiens.GRCh38.dna.chromosome."
-                                ,chromosome ".fa.gz"))))))
-   (native-inputs `(("source" ,source)))
-   (home-page "http://www.ensembl.org")
-   (synopsis (string-append
-              "Genome Reference Consortium Human reference genome 38, "
-              "chromosome " chromosome))
-   (description (string-append
-                 "This package contains the data for GRCh38 chromosome "
-                 chromosome "."))
-   ;; I couldn't find licensing information.
-   (license #f)))
-   
-(define-public ensembl-grch38-dna-chromosome-1
-  (ensembl-grch38-dna-chromosome
-   "1" "1cfc1dlwawhd8g4k8hw6450wibs84zmd8rj81hb5wgbnn06qxck8"))
-
-(define-public ensembl-grch38-dna-chromosome-2
-  (ensembl-grch38-dna-chromosome
-   "2" "14453v8in8kkrhiffygimi15a7ibwzl8c7mkvf5chgh5657x2c7y"))
-
-(define-public ensembl-grch38-dna-chromosome-3
-  (ensembl-grch38-dna-chromosome
-   "3" "03zk59qypqk11gs9masm8nmk23rgj1cggv3m47jhf8rf0qsra6vc"))
-
-(define-public ensembl-grch38-dna-chromosome-4
-  (ensembl-grch38-dna-chromosome
-   "4" "098pvn4anlk9kp902zk6shbqzimqax2qqwyxzikvx2fcgs7aj7nh"))
-
-(define-public ensembl-grch38-dna-chromosome-5
-  (ensembl-grch38-dna-chromosome
-   "5" "0mrmiwb76qpqm7swa6pfdwsqgdfp0kv01jjxwb3rzqv11shfxswv"))
-
-(define-public ensembl-grch38-dna-chromosome-6
-  (ensembl-grch38-dna-chromosome
-   "6" "0wqcm9dpvb8gzjmxl07bg2k8nigq2g05563zyrzh5cv1m3sgc98w"))
-
-(define-public ensembl-grch38-dna-chromosome-7
-  (ensembl-grch38-dna-chromosome
-   "7" "1pwd054bjg9nbnh0lhgw1786nz0j0zx17cz5karjhs4xwbfps0vx"))
-
-(define-public ensembl-grch38-dna-chromosome-8
-  (ensembl-grch38-dna-chromosome
-   "8" "11qh05jsxqm7fcc4r614v81dhi4hx9v4l6wcl67w0hvnhi3qk4fn"))
-
-(define-public ensembl-grch38-dna-chromosome-9
-  (ensembl-grch38-dna-chromosome
-   "9" "1y7hsj6mb50s7997iy8jraf74j799j2vn3pf4xx68x953hf6cgyb"))
-
-(define-public ensembl-grch38-dna-chromosome-10
-  (ensembl-grch38-dna-chromosome
-   "10" "08yxkb7hlv70i6nbm7ndh0rlvxw6fmykxky89cfhnbw82zcnaa2j"))
-
-(define-public ensembl-grch38-dna-chromosome-11
-  (ensembl-grch38-dna-chromosome
-   "11" "0pyh06c85g9yr4xv9m8ckvqv7q0xw3krjw669y006ram05xf9mq8"))
-
-(define-public ensembl-grch38-dna-chromosome-12
-  (ensembl-grch38-dna-chromosome
-   "12" "0hvdlkpsmmxszyza6pi1i13p719rf5cj4rjlmnrjm4fjj86s87w4"))
-
-(define-public ensembl-grch38-dna-chromosome-13
-  (ensembl-grch38-dna-chromosome
-   "13" "0x5fw9x2z87c2c7zs2xhgykqvf2p44p5c5d8aqqqc6x80zjjhvwq"))
-
-(define-public ensembl-grch38-dna-chromosome-14
-  (ensembl-grch38-dna-chromosome
-   "14" "1xq3993zkjkb9jlrpkc8cmxalxkgldaav3jvig3mm6j819b0h4yj"))
-
-(define-public ensembl-grch38-dna-chromosome-15
-  (ensembl-grch38-dna-chromosome
-   "15" "1f4irm483cgxllqck1ax7yfx3a7pnqxqxcald3ja5hmzsxghx4pn"))
-
-(define-public ensembl-grch38-dna-chromosome-16
-  (ensembl-grch38-dna-chromosome
-   "16" "1y0zpjwxvcz7pabi0qwrqi05iipgpdn1rvl1rmynm7idaxrhp5bi"))
-
-(define-public ensembl-grch38-dna-chromosome-17
-  (ensembl-grch38-dna-chromosome
-   "17" "0l73l44b4a44s3qbd6hidvdynmgmhznzc2raffvg172zbl6wnlgq"))
-
-(define-public ensembl-grch38-dna-chromosome-18
-  (ensembl-grch38-dna-chromosome
-   "18" "1yzlr2707qvpv5mhmsiv50kcansfaxnbd4giaars5sk7ilwwai6i"))
-
-(define-public ensembl-grch38-dna-chromosome-19
-  (ensembl-grch38-dna-chromosome
-   "19" "12d8g93y27xhav8mm8gslp48jrkiya9fn36jjq18xkqbj971ilm6"))
-
-(define-public ensembl-grch38-dna-chromosome-20
-  (ensembl-grch38-dna-chromosome
-   "20" "00d8j47i72ii54xjgnpyv2pryyxr69b7rd3sb1h7i7yhwkw3spsa"))
-
-(define-public ensembl-grch38-dna-chromosome-21
-  (ensembl-grch38-dna-chromosome
-   "21" "1rnfhsr81wg9p98mcfk8mqr9frhvir3b787zi0dw20y2iyagabhz"))
-
-(define-public ensembl-grch38-dna-chromosome-22
-  (ensembl-grch38-dna-chromosome
-   "22" "1bqpy3zp2fpwzisrvs31rmjl845sd8n2jimfil2jiz0bzih7k55w"))
-
-(define-public ensembl-grch38-dna-chromosome-x
-  (ensembl-grch38-dna-chromosome
-   "X" "0mdclb5zhl2kcjzrgm4bbpa96wg9h3a5352b6snsck900jdav13s"))
-
-(define-public ensembl-grch38-dna-chromosome-y
-  (ensembl-grch38-dna-chromosome
-   "Y" "0lgddp73jpi6a8bnjnjn5pba4cd01vfrlxkhl5bk62shvl92621x"))
-
-(define-public ensembl-grch38-dna-chromosome-mt
-  (ensembl-grch38-dna-chromosome
-   "MT" "0f9gy1aqracnpqpvdyx99nkkac2gkm3sap5k2naxjpw35r4yms10"))
 
 (define-public libmaus
   (package
@@ -4643,14 +3735,14 @@ copy number estimation.")
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o644)))
          (add-after 'reset-gzip-timestamps 'fix-permissions-after
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
@@ -4728,14 +3820,14 @@ NGS data.")
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o644)))
          (add-after 'reset-gzip-timestamps 'fix-permissions-after
            (lambda* (#:key outputs #:allow-other-keys)
              (chmod (string-append
                      (assoc-ref outputs "out")
-                     "/lib/perl5/site_perl/5.28.0/"
+                     "/lib/perl5/site_perl/5.30.2/"
                      "auto/share/module/Sanger-CGP-Battenberg-Implement"
                      "/battenberg/probloci.txt.gz") #o444))))))
     (propagated-inputs
@@ -4917,10 +4009,10 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
     (license license:gpl2)))
 
 (define-public sharc
-  (let ((commit "f1735d7d780d1a301ada9bb5f28eb488d0e02647"))
+  (let ((commit "e1a26632a4fc3af573d1c2859870a2b0746f0e27"))
     (package
      (name "sharc")
-     (version "1.0")
+     (version "1.0-slurm")
      (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -4929,7 +4021,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
               (file-name (string-append name "-" commit))
               (sha256
                (base32
-                "0zw79sp09ysrdidnayp9li9mg2ycvvmjkix0bjw81r3qshg1kwyl"))))
+                "0rqs6y8lllvsnqp1cawr49hq4a5wda7hbwb4i0hadm0mzkxhw66j"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f ; There are no tests
@@ -4961,7 +4053,10 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (string-append "FILESDIR=" filesdir))
               (("python \\$PON_SCRIPT") "PY2 $PON_SCRIPT")
               (("\\$PRIMER_DESIGN_DIR/primer3/src/primer3_core")
-               (string-append (assoc-ref inputs "primer3") "/bin/primer3_core")))
+               (string-append (assoc-ref inputs "primer3") "/bin/primer3_core"))
+              (("\\$\\{FILESDIR\\}/gnomad_v2.1_sv.sites.vcf")
+               (string-append (assoc-ref inputs "gnomad-sv-sites")
+                              "/share/gnomad/gnomad_v2.1_sv.sites.vcf")))
 
              (substitute* '("steps/bed_annotation.sh"
                             "steps/calculate_coverage.sh"
@@ -4984,7 +4079,20 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (("/hpc/local/CentOS7/cog_bioinf/sambamba_v0.6.5/sambamba")
                 (string-append (assoc-ref inputs "sambamba") "/bin/sambamba"))
                (("#!/bin/bash")
-                (string-append "#!" (assoc-ref inputs "bash") "/bin/bash"))
+                (format #f "#!~a/bin/bash~%~%~{export ~:a~%~}"
+                        (assoc-ref inputs "bash")
+                        `(,(let ((python-inputs
+                                  (delete #f
+                                   (map (lambda (pair)
+                                          (if (string-prefix? "python-" (car pair))
+                                              (format #f "~a/lib/python~a/site-packages"
+                                                      (cdr pair) "3.8")
+                                              #f))
+                                        inputs))))
+                             (format #f "PYTHONPATH=\"~a~{:~a~}\""
+                                     (car python-inputs)
+                                     (cdr python-inputs)))
+                          ,(format #f "R_LIBS_SITE=~s" (getenv "R_LIBS_SITE")))))
                (("Rscript")
                 (string-append (assoc-ref inputs "r") "/bin/Rscript"))
                (("qsub")
@@ -4996,6 +4104,10 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (("NanoSV ")
                 (string-append (assoc-ref inputs "python-nanosv") "/bin/NanoSV "))
                (("module load R") ""))
+
+             (substitute* "steps/create_bed_annotation_jobs.sh"
+              (("bash \\$STEPSDIR")
+               (string-append (assoc-ref inputs "bash") "/bin/bash $STEPSDIR")))
 
              (substitute* "scripts/run_randomForest.R"
                (("/hpc/cog_bioinf/kloosterman/common_scripts/sharc/scripts") scriptsdir)
@@ -5018,6 +4130,12 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                                     (assoc-ref inputs "python")
                                     "/bin/python3")))
 
+             (substitute* '("scripts/primers/primerBATCH1"
+                            "scripts/primers/amplicons3.pl"
+                            "scripts/primers/format_primers1.pl")
+              (("/usr/bin/perl")
+               (string-append (assoc-ref inputs "perl") "/bin/perl")))
+
               (substitute* "scripts/annotate_sv_vcf_file.py"
                 (("/usr/bin/python") (string-append
                                        (assoc-ref inputs "python-2")
@@ -5026,6 +4144,9 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
               (substitute* "scripts/primers/primerBATCH1"
                 (("/hpc/cuppen/projects/TP0001_General/COLO/analysis/jvalleinclan/bin/tools_kloosterman/primer3/primers")
                  primerdir))
+
+              (substitute* "scripts/primers/amplicons3.pl"
+                (("eprimer3 ") (string-append (assoc-ref inputs "emboss") "/bin/eprimer3 ")))
 
               #t)))
 
@@ -5063,22 +4184,17 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                 (install-file "sharc.sh" bin)
                 (with-directory-excursion bin
                   (symlink "sharc.sh" "sharc"))))))))
-     (native-inputs
-      `(("bash" ,bash)))
      (inputs
       `(("awk" ,gawk)
+        ("bash" ,bash)
         ("coreutils" ,coreutils)
+        ("emboss" ,emboss)
         ("grep" ,grep)
         ("grid-engine-core" ,qsub-slurm)
         ("minimap2" ,minimap2)
         ("primer3" ,primer3-1.1.4)
+        ("perl" ,perl)
         ("python" ,python)
-        ("python-2" ,python-2)
-        ("r" ,r-minimal)
-        ("sambamba" ,sambamba)
-        ("sed" ,sed)))
-     (propagated-inputs
-      `(("emboss" ,emboss)
         ("python-aniso8601" ,python-aniso8601)
         ("python-certifi" ,python-certifi)
         ("python-chardet" ,python-chardet)
@@ -5098,13 +4214,18 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
         ("python-six" ,python-six)
         ("python-urllib3" ,python-urllib3)
         ("python-werkzeug" ,python-werkzeug)
-        ("r" ,r)
+        ("python-2" ,python-2)
+        ("r" ,r-minimal)
         ("r-ggplot2" ,r-ggplot2)
         ("r-randomforest", r-randomforest)
-        ("r-rocr" ,r-rocr)))
+        ("r-rocr" ,r-rocr)
+        ("sambamba" ,sambamba)
+        ("sed" ,sed)
+        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))
      (native-search-paths
       (append (package-native-search-paths bash)
               (package-native-search-paths python)
+              (package-native-search-paths perl)
               (package-native-search-paths r)))
      (search-paths native-search-paths)
      (home-page "https://github.com/UMCUGenetics/SHARC")
@@ -5116,3 +4237,131 @@ prioritization, followed by automated primer design for PCR amplicons of
 80-120 bp that are useful to track cancer ctDNA molecules in liquid
 biopsies.")
      (license license:gpl3))))
+
+(define-public sharc-local
+  (package (inherit sharc)
+     (name "sharc")
+     (version "1.0-local")
+     (inputs
+      `(("awk" ,gawk)
+        ("bash" ,bash)
+        ("coreutils" ,coreutils)
+        ("emboss" ,emboss)
+        ("grep" ,grep)
+        ("grid-engine-core" ,qsub-local)
+        ("minimap2" ,minimap2)
+        ("primer3" ,primer3-1.1.4)
+        ("perl" ,perl)
+        ("python" ,python)
+        ("python-aniso8601" ,python-aniso8601)
+        ("python-certifi" ,python-certifi)
+        ("python-chardet" ,python-chardet)
+        ("python-configparser" ,python-configparser)
+        ("python-flask" ,python-flask)
+        ("python-flask-restful" ,python-flask-restful)
+        ("python-idna" ,python-idna)
+        ("python-itsdangerous" ,python-itsdangerous)
+        ("python-jinja2" ,python-jinja2)
+        ("python-markupsafe" ,python-markupsafe)
+        ("python-nanosv" ,python-nanosv)
+        ("python-pymongo" ,python-pymongo)
+        ("python-pysam" ,python-pysam)
+        ("python-pytz" ,python-pytz)
+        ("python-pyvcf" ,python-pyvcf)
+        ("python-requests" ,python-requests)
+        ("python-six" ,python-six)
+        ("python-urllib3" ,python-urllib3)
+        ("python-werkzeug" ,python-werkzeug)
+        ("python-2" ,python-2)
+        ("r" ,r-minimal)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-randomforest", r-randomforest)
+        ("r-rocr" ,r-rocr)
+        ("sambamba" ,sambamba)
+        ("sed" ,sed)
+        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))))
+
+(define-public sharc-sge
+  (package (inherit sharc)
+     (name "sharc")
+     (version "1.0-sge")
+     (inputs
+      `(("awk" ,gawk)
+        ("bash" ,bash)
+        ("coreutils" ,coreutils)
+        ("emboss" ,emboss)
+        ("grep" ,grep)
+        ("grid-engine-core" ,grid-engine-core)
+        ("minimap2" ,minimap2)
+        ("primer3" ,primer3-1.1.4)
+        ("perl" ,perl)
+        ("python" ,python)
+        ("python-aniso8601" ,python-aniso8601)
+        ("python-certifi" ,python-certifi)
+        ("python-chardet" ,python-chardet)
+        ("python-configparser" ,python-configparser)
+        ("python-flask" ,python-flask)
+        ("python-flask-restful" ,python-flask-restful)
+        ("python-idna" ,python-idna)
+        ("python-itsdangerous" ,python-itsdangerous)
+        ("python-jinja2" ,python-jinja2)
+        ("python-markupsafe" ,python-markupsafe)
+        ("python-nanosv" ,python-nanosv)
+        ("python-pymongo" ,python-pymongo)
+        ("python-pysam" ,python-pysam)
+        ("python-pytz" ,python-pytz)
+        ("python-pyvcf" ,python-pyvcf)
+        ("python-requests" ,python-requests)
+        ("python-six" ,python-six)
+        ("python-urllib3" ,python-urllib3)
+        ("python-werkzeug" ,python-werkzeug)
+        ("python-2" ,python-2)
+        ("r" ,r-minimal)
+        ("r-ggplot2" ,r-ggplot2)
+        ("r-randomforest", r-randomforest)
+        ("r-rocr" ,r-rocr)
+        ("sambamba" ,sambamba)
+        ("sed" ,sed)
+        ("gnomad-sv-sites" ,gnomad-sv-sites-2.1)))))
+
+(define-public gnomad-sv-sites-2.1
+  (package
+   (name "gnomad-sv-sites")
+   (version "2.1")
+   (source (origin
+            (method url-fetch)
+            (uri (string-append
+                  "https://storage.googleapis.com/gnomad-public/"
+                  "papers/2019-sv/gnomad_v" version "_sv.sites.vcf.gz"))
+            (sha256
+             (base32
+              "18gxfnar8n5r06mj0ykyq4fkw3q3qqbrfnprgi18db0xzf6lh94k"))))
+   (build-system trivial-build-system)
+   (arguments
+     `(#:modules ((guix build utils))
+       #:builder
+       (begin
+         (use-modules (guix build utils))
+         (let ((gzip     (string-append (assoc-ref %build-inputs "gzip") "/bin/gzip"))
+               (sv-sites (assoc-ref %build-inputs "source"))
+               (out      (string-append %output "/share/gnomad")))
+           (mkdir-p out)
+           (with-directory-excursion out
+             (zero? (system
+                     (string-append
+                      gzip " -d " sv-sites
+                      " -c > gnomad_v2.1_sv.sites.vcf"))))))))
+   (inputs `(("gzip" ,gzip)))
+   (home-page "https://gnomad.broadinstitute.org")
+   (synopsis "gnomAD structural variant sites")
+   (description "This package provides in uncompressed version of the gnomAD
+ structural variant sites.")
+   (license license:cc0)))
+
+(define-public glibc-locales-2.27
+  (package (inherit (make-glibc-locales glibc-2.27))
+           (name "glibc-locales-2.27")))
+
+(define-public glibc-locales-2.28
+  (package (inherit (make-glibc-locales glibc-2.28))
+           (name "glibc-locales-2.28")))
