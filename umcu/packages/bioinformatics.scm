@@ -4009,7 +4009,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
     (license license:gpl2)))
 
 (define-public sharc
-  (let ((commit "e1a26632a4fc3af573d1c2859870a2b0746f0e27"))
+  (let ((commit "1e5f86974e7634457fff5e2b586f09cc2c3e7e74"))
     (package
      (name "sharc")
      (version "1.0-slurm")
@@ -4021,7 +4021,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
               (file-name (string-append name "-" commit))
               (sha256
                (base32
-                "0rqs6y8lllvsnqp1cawr49hq4a5wda7hbwb4i0hadm0mzkxhw66j"))))
+                "1k132z0sd4223fs1lwaj8k16mfyqd91w2kfcv95ixzckrv899kcc"))))
      (build-system gnu-build-system)
      (arguments
       `(#:tests? #f ; There are no tests
@@ -4058,10 +4058,42 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                (string-append (assoc-ref inputs "gnomad-sv-sites")
                               "/share/gnomad/gnomad_v2.1_sv.sites.vcf")))
 
+             (substitute* '("steps/vcf_fasta.sh"
+                            "steps/vcf_primer_filter.sh"
+                            "steps/somatic_ranking.sh"
+                            "steps/top20_report.sh"
+                            "steps/somatic_feature_selection.sh"
+                            "steps/randomForest.sh"
+                            "steps/randomForest.sh"
+                            "steps/randomForest.sh"
+                            "steps/bed_annotation.sh")
+               (("/hpc/cog_bioinf/cuppen/project_data/Jose_SHARC/sharc/scripts")
+                scriptsdir))
+
+             (substitute* '("steps/vcf_fasta.sh"
+                            "steps/nanosv.sh"
+                            "steps/vcf_primer_filter.sh"
+                            "steps/somatic_ranking.sh"
+                            "steps/top20_report.sh"
+                            "steps/somatic_feature_selection.sh"
+                            "steps/randomForest.sh"
+                            "steps/bed_annotation.sh")
+               (("VENV='/hpc/cog_bioinf/cuppen/project_data/Jose_SHARC/sharc/venv/bin/activate'")
+                (string-append venvdir "/activate")))
+
+             (substitute* '("steps/calculate_coverage.sh"
+                            "steps/nanosv.sh"
+                            "steps/somatic_feature_selection.sh")
+               (("/hpc/cog_bioinf/cuppen/project_data/Jose_SHARC/sharc/files")
+                filesdir))
+
+             (substitute* "steps/minimap2.sh"
+              (("/hpc/cog_bioinf/cuppen/personal_data/jvalleinclan/tools_kloosterman/minimap2_v2.12/minimap2")
+               (string-append (assoc-ref inputs "minimap2") "/bin/minimap2")))
+
              (substitute* '("steps/bed_annotation.sh"
                             "steps/calculate_coverage.sh"
                             "steps/create_bed_annotation_jobs.sh"
-                            "steps/database_filter.sh"
                             "steps/minimap2.sh"
                             "steps/nanosv.sh"
                             "steps/primer_design.sh"
@@ -4119,9 +4151,7 @@ Google hits for \"primer3\").  From mispriming libraries to sequence quality
                             "scripts/create_features_table.py"
                             "scripts/get_closest_feature.py"
                             "scripts/primer_ranking.py"
-                            "scripts/somatic_feature_selection_backup.py"
                             "scripts/somatic_feature_selection.py"
-                            "scripts/somatic_ranking_backup.py"
                             "scripts/somatic_ranking.py"
                             "scripts/top20_report.py"
                             "scripts/vcf_primer_filter.py"
