@@ -4392,3 +4392,35 @@ biopsies.")
 (define-public glibc-locales-2.28
   (package (inherit (make-glibc-locales glibc-2.28))
            (name "glibc-locales-2.28")))
+
+(define-public htslib-with-gcs-support
+  (package
+    (name "htslib-with-gcs")
+    (version "1.9")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "https://github.com/samtools/htslib/releases/download/"
+                    version "/htslib-" version ".tar.bz2"))
+              (sha256
+               (base32
+                "16ljv43sc3fxmv63w7b2ff8m1s7h89xhazwmbm1bicz8axq8fjz0"))))
+    (build-system gnu-build-system)
+    (arguments `(#:configure-flags '("--enable-gcs")))
+    (inputs
+     `(("curl" ,curl)
+       ("openssl" ,openssl)))
+    ;; This is referred to in the pkg-config file as a required library.
+    (propagated-inputs
+     `(("zlib" ,zlib)))
+    (native-inputs
+     `(("perl" ,perl)))
+    (home-page "https://www.htslib.org")
+    (synopsis "C library for reading/writing high-throughput sequencing data")
+    (description
+     "HTSlib is a C library for reading/writing high-throughput sequencing
+data.  It also provides the @command{bgzip}, @command{htsfile}, and
+@command{tabix} utilities.")
+    ;; Files under cram/ are released under the modified BSD license;
+    ;; the rest is released under the Expat license
+    (license (list license:expat license:bsd-3))))
