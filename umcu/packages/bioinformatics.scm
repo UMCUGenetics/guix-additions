@@ -4424,3 +4424,32 @@ data.  It also provides the @command{bgzip}, @command{htsfile}, and
     ;; Files under cram/ are released under the modified BSD license;
     ;; the rest is released under the Expat license
     (license (list license:expat license:bsd-3))))
+
+(define-public scan_for_matches
+  (package
+   (name "scan_for_matches")
+   (version "0.0")
+   (source (origin
+            (method url-fetch)
+            (uri "http://www.theseed.org/servers/downloads/scan_for_matches.tgz")
+            (sha256
+             (base32 "13ynw9i6j76884pdi249qhvgpvr6ii7hnfkwnllaryxxxwq7kcf6"))))
+   (build-system gnu-build-system)
+   (arguments
+    `(#:tests? #f
+      #:phases
+      (modify-phases %standard-phases
+        (delete 'configure)
+        (replace 'build
+          (lambda _
+            (invoke "gcc" "-O2" "-o" "scan_for_matches"  "ggpunit.c" "scan_for_matches.c")))
+        (replace 'install
+          (lambda* (#:key outputs #:allow-other-keys)
+            (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+              (install-file "scan_for_matches" bin)))))))
+   (home-page "https://blog.theseed.org/servers/2010/07/scan-for-matches.html")
+   (synopsis "Utility for locating patterns in DNA")
+   (description "This package provides a utility for locating patterns in DNA
+ or protein FASTA files.")
+   (license #f)))
+
