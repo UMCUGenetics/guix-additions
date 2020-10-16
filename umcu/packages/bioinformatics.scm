@@ -1558,14 +1558,14 @@ capable of taking on projects of any size.")
 (define-public google-cloud-sdk
   (package
     (name "google-cloud-sdk")
-    (version "305.0.0")
+    (version "314.0.0")
     (source (origin
               (method url-fetch)
               (uri (string-append
                     "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/"
                     "google-cloud-sdk-" version "-linux-x86_64.tar.gz"))
               (sha256
-               (base32 "1rhd3sq901rr44qa5fa6rx4j4wk334nrfypp899f8xqksww6dvdg"))))
+               (base32 "0p5vbg5s3xsi3y7x4s3v3mxcw87x349h6bz6w7xgc141l4g08vh3"))))
     ;; We use the GNU build system mainly for its patch-shebang phases.
     (build-system gnu-build-system)
     (arguments
@@ -1586,7 +1586,7 @@ capable of taking on projects of any size.")
                (copy-recursively "lib" lib)
                (copy-recursively "platform" platform)))))))
     (propagated-inputs
-     `(("python" ,python-2)
+     `(("python" ,python)
        ("coreutils" ,coreutils)))
     (home-page "https://cloud.google.com/sdk")
     (synopsis "Google Cloud SDK")
