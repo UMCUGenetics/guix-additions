@@ -517,21 +517,48 @@ tree exploration")
 queries.")
     (license license:bsd-3)))
 
+(define-public python-htsget
+  (package
+   (name "python-htsget")
+   (version "0.2.5")
+   (source (origin
+            (method url-fetch)
+            (uri (pypi-uri "htsget" version))
+            (sha256
+             (base32
+              "0ic07q85vhw9djf23k57b21my7i5xp400m8gfqgr5gcryqvdr0yk"))))
+   (build-system python-build-system)
+   (native-inputs
+    `(("python-setuptools-scm" ,python-setuptools-scm)))
+   (propagated-inputs
+    `(("python-humanize" ,python-humanize)
+      ("python-requests" ,python-requests)
+      ("python-six" ,python-six)))
+   (home-page "http://pypi.python.org/pypi/htsget")
+   (synopsis "Python API and command line interface for the GA4GH htsget API.")
+   (description "This package provides the Python API and command line
+interface for the GA4GH htsget API.")
+   (license #f)))
+
 (define-public python-pyega3
   (package
    (name "python-pyega3")
-   (version "3.0.19")
+   (version "3.4.0")
    (source (origin
             (method url-fetch)
             (uri (pypi-uri "pyega3" version))
             (sha256
              (base32
-              "1vky0my8n2ys92km8731y4bhlxb2gf9kzgjjxbpjzj012bbzkz1v"))))
+              "150rrzjv4kbd6q5hg7y7k0zjydnyx8lhvdrdqjciix3wjl0mvl8d"))))
    (build-system python-build-system)
+   (native-inputs
+    `(("python-psutil" ,python-psutil)
+      ("python-htsget" ,python-htsget)))
    (propagated-inputs
     `(("python-requests" ,python-requests)
       ("python-tqdm" ,python-tqdm)
-      ("python-urllib3" ,python-urllib3)))
+      ("python-urllib3" ,python-urllib3)
+      ("python-responses" ,python-responses)))
    (home-page "https://github.com/EGA-archive/ega-download-client")
    (synopsis "EGA python client")
    (description "EGA python client")
