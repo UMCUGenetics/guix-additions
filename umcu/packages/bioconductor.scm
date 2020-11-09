@@ -1736,3 +1736,55 @@ to identify problems or unexpected features using 'ggplot2'.")
     (description
       "tradeSeq provides a flexible method for fitting regression models that can be used to find genes that are differentially expressed along one or multiple lineages in a trajectory.  Based on the fitted models, it uses a variety of tests suited to answer different questions of interest, e.g.  the discovery of genes for which expression is associated with pseudotime, or which are differentially expressed (in a specific region) along the trajectory.  It fits a negative binomial generalized additive model (GAM) for each gene, and performs inference on the parameters of the GAM.")
     (license expat)))
+
+(define-public r-nnlm
+  (package
+  (name "r-nnlm")
+  (version "0.4.3")
+  (source
+    (origin
+      (method url-fetch)
+      (uri "https://cran.r-project.org/src/contrib/Archive/NNLM/NNLM_0.4.3.tar.gz")
+      (sha256
+        (base32
+          "0p7p26070w2j57z5i89pmpgd470yh2z0rrfzpalzdngc8mzp2rkj"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-rcpp",r-rcpp)
+      ("r-rcpparmadillo",r-rcpparmadillo)
+      ("r-rcppprogress",r-rcppprogress)))
+  (home-page "https://github.com/linxihui/NNLM")
+  (synopsis "Nonnegative Linear Models (NNLM)")
+  (description "This is a package for Nonnegative Linear 
+    Models (NNLM). It implements fast sequential 
+    coordinate descent algorithms for nonnegative linear 
+    regression and nonnegative matrix factorization (NMF 
+    or NNMF). It supports mean square error and 
+    Kullback-Leibler divergence loss. Many other features 
+    are also implemented, including missing value 
+    imputation, domain knowledge integration, designable 
+    W and H matrices and multiple forms of regularizations.")
+  (license license:bsd-2)))
+
+(define-public r-rffc
+  (package
+  (name "r-rffc")
+  (version "1.0")
+  (source
+    (origin
+      (method url-fetch)
+      (uri "http://download.r-forge.r-project.org/src/contrib/rfFC_1.0.tar.gz")
+      (sha256
+        (base32
+          "05x9wgzsmx4vb12lmcspymgmpb2xw8bwryb8ysg7vzg2nkh0ma3g"))))
+  (build-system r-build-system)
+  (propagated-inputs
+    `(("r-randomforest",r-randomforest)))
+  (home-page "https://github.com/rforge/rffc/")
+  (synopsis "Random Forest Feature Contributions ")
+  (description "Functions for extracting feature contributions 
+    from a random forest model from package 'randomForest'. Feature 
+    contributions provide detailed information about the relationship 
+    between data variables and the predicted value returned by random 
+    forest model.")
+  (license license:gpl2)))
