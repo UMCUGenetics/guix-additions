@@ -1926,7 +1926,7 @@ supported.")
 (define-public rmblast
   (package (inherit blast+)
     (name "rmblast")
-    (version "2.6.0")
+    (version "2.10.1")
     (source (origin
               (method url-fetch)
               (uri (string-append
@@ -1934,9 +1934,7 @@ supported.")
                     version "/ncbi-blast-" version "+-src.tar.gz"))
               (sha256
                (base32
-                "15n937pw5aqmyfjb6l387d18grqbb96l63d5xj4l7yyh0zbf2405"))
-              (patches (search-patches "rmblast-isb-2.6.0+-changes-vers2.patch"
-                                       "blast+-fix-makefile.patch"))
+                "11kvrrl0mcwww6530r55hccpg3x3msmhr3051fwnjbq8rzg2j1qi"))
               (modules '((guix build utils)))
               (snippet
                '(begin
