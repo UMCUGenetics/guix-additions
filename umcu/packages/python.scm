@@ -54,6 +54,22 @@
   #:use-module (guix utils)
   #:use-module (umcu packages mysql))
 
+(define-public python-crcmod
+  (package
+    (name "python-crcmod")
+    (version "1.7")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "crcmod" version))
+              (sha256
+               (base32
+                "07k0hgr42vw2j92cln3klxka81f33knd7459cn3d8aszvfh52w6w"))))
+    (build-system python-build-system)
+    (home-page "http://crcmod.sourceforge.net/")
+    (synopsis "CRC Generator")
+    (description "CRC Generator")
+    (license license:expat)))
+
 (define-public python-macs2
   (package
     (name "python-macs2")
