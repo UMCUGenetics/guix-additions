@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2016, 2017, 2018, 2019, 2020 Roel Janssen <roel@gnu.org>
+;;; Copyright © 2016, 2017, 2018, 2019, 2020, 2021 Roel Janssen <roel@gnu.org>
 ;;;
 ;;; GNU Guix is free software; you can redistribute it and/or modify it
 ;;; under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@
   #:use-module (gnu packages python-xyz)
   #:use-module (gnu packages rdf)
   #:use-module (gnu packages readline)
+  #:use-module (gnu packages rsync)
   #:use-module (gnu packages serialization)
   #:use-module (gnu packages shells)
   #:use-module (gnu packages sqlite)
@@ -81,6 +82,7 @@
   #:use-module (gnu packages version-control)
   #:use-module (gnu packages vim)
   #:use-module (gnu packages web)
+  #:use-module (gnu packages wget)
   #:use-module (gnu packages xml)
   #:use-module (gnu packages xorg)
   #:use-module (gnu packages)
@@ -4451,3 +4453,62 @@ data.  It also provides the @command{bgzip}, @command{htsfile}, and
  or protein FASTA files.")
    (license #f)))
 
+(define-public kraken2
+  (package
+   (name "kraken2")
+   (version "2.1.1")
+   (source (origin
+	    (method url-fetch)
+	    (uri "https://github.com/DerrickWood/kraken2/archive/v2.1.1.tar.gz")
+	    (file-name (string-append name "-" version ".tar.gz"))
+	    (sha256
+	     (base32 "1r6yh6df2rg42s6kxxih7zyabcjp2lyp0i2vypkfif9jvf694glg"))
+	    (patches (list (search-patch "kraken2-fix-link-error.patch")))))
+   (build-system cmake-build-system)
+   (arguments
+    `(#:tests? #f
+      #:phases
+      (modify-phases %standard-phases
+        (replace 'install
+	  (lambda* (#:key inputs outputs #:allow-other-keys)
+	    (let* ((out           (assoc-ref outputs "out"))
+		   (bin           (string-append out "/bin"))
+		   (wget          (string-append (assoc-ref inputs "wget") "/bin/wget"))
+		   (rsync         (string-append (assoc-ref inputs "rsync") "/bin/rsync"))
+		   (local-scripts (string-append "../" ,name "-" ,version "/scripts")))
+
+	      (with-directory-excursion local-scripts
+	        (substitute* '("download_taxonomy.sh"
+			       "download_genomic_library.sh"
+			       "rsync_from_ncbi.pl")
+		  (("rsync -") (string-append rsync " -")))
+
+		(substitute* '("16S_gg_installation.sh"
+			       "16S_rdp_installation.sh"
+			       "16S_silva_installation.sh"
+			       "download_genomic_library.sh"
+			       "download_taxonomy.sh")
+		  (("wget ") (string-append wget " "))))
+
+	      (copy-recursively local-scripts bin)
+
+	      (with-directory-excursion "src"
+                (lambda _
+		  (for-each (lambda (file) (install-file file bin))
+			    '("build_db"
+			      "classify"
+			      "dump_table"
+			      "estimate_capacity"
+			      "lookup_accession_numbers")))))
+	    #t)))))
+   (native-inputs
+    `(("gcc" ,gcc-10)))
+   (inputs
+    `(("perl" ,perl)
+      ("rsync" ,rsync)
+      ("wget" ,wget)))
+   (home-page "https://github.com/DerrickWood/kraken2")
+   (synopsis "Taxonomic sequence classification system")
+   (description "Kraken is an ultrafast and highly accurate program for
+assigning taxonomic labels to metagenomic DNA sequences.")
+   (license license:expat)))
