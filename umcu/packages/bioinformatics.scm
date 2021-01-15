@@ -4493,13 +4493,12 @@ data.  It also provides the @command{bgzip}, @command{htsfile}, and
 	      (copy-recursively local-scripts bin)
 
 	      (with-directory-excursion "src"
-                (lambda _
-		  (for-each (lambda (file) (install-file file bin))
-			    '("build_db"
-			      "classify"
-			      "dump_table"
-			      "estimate_capacity"
-			      "lookup_accession_numbers")))))
+		(for-each (lambda (file) (install-file file bin))
+			  '("build_db"
+			    "classify"
+			    "dump_table"
+			    "estimate_capacity"
+			    "lookup_accession_numbers"))))
 	    #t)))))
    (native-inputs
     `(("gcc" ,gcc-10)))
