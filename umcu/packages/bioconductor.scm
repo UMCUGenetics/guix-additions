@@ -1790,3 +1790,32 @@ to identify problems or unexpected features using 'ggplot2'.")
     between data variables and the predicted value returned by random 
     forest model.")
   (license license:gpl2)))
+
+(define-public r-sccnvcharacterizationhelper
+  (package
+  (name "r-sccnvcharacterizationhelper")
+  (version "0.0.0.9000")
+  (source
+    (origin
+      (method url-fetch)
+      (uri (string-append
+            "https://github.com/UMCUGenetics/scCnvCharacterizationHelper/"
+            "archive/" version ".tar.gz"))
+      (sha256
+        (base32
+          "0rzmr4z20yy016d2mx3lbjlylidgqwfc1pr657vwzgk1wvvyv1cf"))))
+  (build-system r-build-system)
+  (propagated-inputs
+   `(("r-genomicranges",r-genomicranges)
+     ("r-genomeinfodb",r-genomeinfodb)
+     ("r-iranges",r-iranges)
+     ("r-rcurl",r-rcurl)
+     ("r-jsonlite",r-jsonlite)
+     ("r-ggplot2",r-ggplot2)
+     ("r-rhtslib",r-rhtslib)))
+  (home-page "https://github.com/UMCUGenetics/scCnvCharacterizationHelper/")
+  (synopsis "Single-cell copy-number quantification pipeline helper.")
+  (description "This package provides the basic building blocks for a
+single-cell copy-number quantification pipeline.")
+  (license license:gpl3)))
+
