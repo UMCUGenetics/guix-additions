@@ -316,6 +316,50 @@ calling, plotting, export and analysis from whole-genome single cell
 sequencing data.")
     (license license:artistic2.0)))
 
+(define-public r-aneufinder-umcu
+  (package
+    (name "r-aneufinder")
+    (version "1.17.99-umcu")
+    (source (origin
+             (method git-fetch)
+             (uri (git-reference
+                   (url "https://github.com/UMCUGenetics/aneufinder.git")
+                   (commit "67346eb8597a6328fdf186261f88815fe881271f")))
+             (sha256
+              (base32
+               "0dxpqibmlm01jzjl8kif1077gr20k1ssrzj8b3la41x4s1p96mgl"))))
+    (build-system r-build-system)
+    (native-inputs
+     `(("r-knitr" ,r-knitr)))
+    (propagated-inputs
+     `(("r-genomicranges" ,r-genomicranges)
+       ("r-aneufinderdata" ,r-aneufinderdata)
+       ("r-ecp" ,r-ecp)
+       ("r-foreach" ,r-foreach)
+       ("r-doparallel" ,r-doparallel)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-iranges" ,r-iranges)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-bamsignals" ,r-bamsignals)
+       ("r-dnacopy" ,r-dnacopy)
+       ("r-biostrings" ,r-biostrings)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-reshape2" ,r-reshape2)
+       ("r-ggdendro" ,r-ggdendro)
+       ("r-ggrepel" ,r-ggrepel)
+       ("r-reordercluster" ,r-reordercluster)
+       ("r-mclust" ,r-mclust)
+       ("r-cowplot" ,r-cowplot)))
+    (home-page "https://bioconductor.org/packages/AneuFinder/")
+    (synopsis "Copy number variation analysis in single-cell-sequencing data")
+    (description "This package contains a modified version of Aneufinder that
+includes the GCSC correction method.  When in doubt, use the unmodified version
+instead.")
+    (license license:artistic2.0)))
+
 (define-public r-bsgenome-btaurus-ucsc-bostau8
   (package
     (name "r-bsgenome-btaurus-ucsc-bostau8")
