@@ -1863,3 +1863,105 @@ to identify problems or unexpected features using 'ggplot2'.")
 single-cell copy-number quantification pipeline.")
   (license license:gpl3)))
 
+
+(define-public r-pacman
+  (package
+    (name "r-pacman")
+    (version "0.5.1")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "pacman" version))
+        (sha256
+          (base32
+            "0z7gngd6h83cpjhq1vg75wvzhdjbgjh7gj5d4zvvi9gd2lmagjcy"))))
+    (properties `((upstream-name . "pacman")))
+    (build-system r-build-system)
+    (propagated-inputs `(("r-remotes" ,r-remotes)))
+    (home-page "https://github.com/trinker/pacman")
+    (synopsis "Package Management Tool")
+    (description
+      "Tools to more conveniently perform tasks associated with add-on packages.  pacman conveniently wraps library and package related functions and names them in an intuitive and consistent fashion.  It seeks to combine functionality from lower level functions which can speed up workflow.")
+    (license license:gpl2)))
+
+
+
+
+
+(define-public r-memuse
+  (package
+    (name "r-memuse")
+    (version "4.1-0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "memuse" version))
+        (sha256
+          (base32
+            "1bbjp8y0ji71956fbaxiil7ynq2nkmmgz7i9xps83m3bbp5d3mjq"))))
+    (properties `((upstream-name . "memuse")))
+    (build-system r-build-system)
+    (home-page
+      "https://github.com/shinra-dev/memuse")
+    (synopsis "Memory Estimation Utilities")
+    (description
+      "How much ram do you need to store a 100,000 by 100,000 matrix? How much ram is your current R session using? How much ram do you even have? Learn the scintillating answer to these and many more such questions with the 'memuse' package.")
+    (license #f)))
+
+
+(define-public r-pinfsc50
+  (package
+    (name "r-pinfsc50")
+    (version "1.2.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "pinfsc50" version))
+        (sha256
+          (base32
+            "1547xyxmfb7zi8h9bsm6k67dcw4hpp129xzvmgwfw7r6p4af47zd"))))
+    (properties `((upstream-name . "pinfsc50")))
+    (build-system r-build-system)
+    (home-page
+      "https://cran.r-project.org/web/packages/pinfsc50")
+    (synopsis
+      "Sequence ('FASTA'), Annotation ('GFF') and Variants ('VCF') for 17 Samples of 'P. Infestans\" and 1 'P. Mirabilis'")
+    (description
+      "Genomic data for the plant pathogen \"Phytophthora infestans.\" It includes a variant file ('VCF'), a sequence file ('FASTA') and an annotation file ('GFF').  This package is intended to be used as example data for packages that work with genomic data.")
+    (license (list license:gpl2+ license:gpl3+))))
+
+
+
+
+(define-public r-vcfr
+  (package
+    (name "r-vcfr")
+    (version "1.12.0")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "vcfR" version))
+        (sha256
+          (base32
+            "0lhxb3ac4fafwik9q3cds46svzf0hyca8k54chw3dpk50c0zz1yx"))))
+    (properties `((upstream-name . "vcfR")))
+    (build-system r-build-system)
+    (inputs `(("zlib" ,zlib)))
+    (propagated-inputs
+      `(("r-ape" ,r-ape)
+        ("r-dplyr" ,r-dplyr)
+        ("r-magrittr" ,r-magrittr)
+        ("r-memuse" ,r-memuse)
+        ("r-pinfsc50" ,r-pinfsc50)
+        ("r-rcpp" ,r-rcpp)
+        ("r-stringr" ,r-stringr)
+        ("r-tibble" ,r-tibble)
+        ("r-vegan" ,r-vegan)
+        ("r-viridislite" ,r-viridislite)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://github.com/knausb/vcfR")
+    (synopsis "Manipulate and Visualize VCF Data")
+    (description
+      "Facilitates easy manipulation of variant call format (VCF) data.  Functions are provided to rapidly read from and write to VCF files.  Once VCF data is read into R a parser function extracts matrices of data.  This information can then be used for quality control or other purposes.  Additional functions provide visualization of genomic data.  Once processing is complete data may be written to a VCF file (*.vcf.gz).  It also may be converted into other popular R objects (e.g., genlight, DNAbin).  VcfR provides a link between VCF data and familiar R software.")
+    (license license:gpl3)))
+
