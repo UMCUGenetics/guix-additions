@@ -628,81 +628,6 @@ interface for the GA4GH htsget API.")
    (description "A bash kernel for Jupyter")
    (license license:expat)))
 
-(define-public python-jupyterlab-server
-  (package
-    (name "python-jupyterlab-server")
-    (version "1.0.6")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "jupyterlab_server" version))
-        (sha256
-          (base32
-            "1bax8iqwcc5p02h5ysdc48zvx7ll5jfzfsybhb3lfvyfpwkpb5yh"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (propagated-inputs
-      `(("python-jinja2" ,python-jinja2)
-        ("python-json5" ,python-json5)
-        ("python-jsonschema" ,python-jsonschema)
-        ("python-notebook" ,python-notebook)))
-    (native-inputs
-      `(("python-pytest" ,python-pytest)
-        ("python-requests" ,python-requests)))
-    (home-page "https://jupyter.org")
-    (synopsis "JupyterLab Server")
-    (description "JupyterLab Server")
-    (license license:bsd-3)))
-
-(define-public python-jupyterlab
-  (package
-    (name "python-jupyterlab")
-    (version "1.1.4")
-    (source
-      (origin
-        (method url-fetch)
-        (uri (pypi-uri "jupyterlab" version))
-        (sha256
-          (base32
-            "06n4idmxbbr364hfv8yr3m1b06f4hwv504rbhplm7882y1dyxb17"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (propagated-inputs
-      `(("python-jinja2" ,python-jinja2)
-        ("python-jupyterlab-server"
-         ,python-jupyterlab-server)
-        ("python-notebook" ,python-notebook)
-        ("python-tornado" ,python-tornado)))
-    (native-inputs
-      `(("python-pytest" ,python-pytest)
-        ("python-pytest-check-links"
-         ,python-pytest-check-links)
-        ("python-requests" ,python-requests)))
-    (home-page "http://jupyter.org")
-    (synopsis
-      "The JupyterLab notebook server extension.")
-    (description
-      "The JupyterLab notebook server extension.")
-    (license license:bsd-3)))
-
-(define-public python-boto
-  (package
-    (name "python-boto")
-    (version "2.49.0")
-    (source
-      (origin
-        (method url-fetch)
-	(uri (string-append
-              "https://github.com/boto/boto/archive/" version ".tar.gz"))
-	(sha256
-	  (base32 "051ka4lm1a7469gj8ibrr0pkckgd64gn0m2g7lr5my228m7zvgix"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (home-page "http://docs.pythonboto.org/")
-    (synopsis "Old version of Boto 3")
-    (description "Old version of Boto 3")
-  (license license:asl2.0)))
-
 (define-public python-s3transfer-0.3.3
   (package
     (name "python-s3transfer")
@@ -731,34 +656,6 @@ interface for the GA4GH htsget API.")
 Note
 
 This project is not currently GA. If you are planning to use this code in production, make sure to lock to a minor version as interfaces may break from minor version to minor version. For a basic, stable interface of s3transfer, try the interfaces exposed in boto3")
-    (license license:asl2.0)))
-
-(define-public python-boto3
-  (package
-    (name "python-boto3")
-    (version "1.12.1")
-    (source
-      (origin
-        (method url-fetch)
-	(uri (string-append
-	      "https://github.com/boto/boto3/archive/"
-	      version ".tar.gz"))
-	(sha256
-	  (base32 "1yznwdvr1ijfm7flbrd4pblpdcqyvr3wdnspsmzbzsp54a3jwflk"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f))
-    (inputs
-       `(("python-s3transfer", python-s3transfer)
-	 ("python-jmespath", python-jmespath)
-	 ("python-botocore", python-botocore)
-	 ("python-urllib3", python-urllib3)
-	 ("python-dateutil", python-dateutil)
-	 ("python-docutils", python-docutils)
-	 ("python-mock", python-mock)
-	 ("python-nose", python-nose)))
-    (home-page "https://boto3.amazonaws.com/v1/documentation/api/latest/index.html")
-    (synopsis "AWS SDK for Python http://aws.amazon.com/sdk-for-python/")
-    (description "Boto3 is the Amazon Web Services (AWS) Software Development Kit (SDK) for Python, which allows Python developers to write software that makes use of services like Amazon S3 and Amazon EC2. You can find the latest, most up to date, documentation at our doc site, including a list of services that are supported.")
     (license license:asl2.0)))
 
 (define-public python-smart-open
@@ -1044,29 +941,6 @@ provide mechanisms for runtime configuration of spawners. The inspiration for
 their development was to allow users to select from a range of pre-defined
 batch job profiles, but their operation is completely generic.")
     (license license:bsd-3)))
-
-(define-public python-pyvcf
-  (package
-    (name "python-pyvcf")
-    (version "0.6.8")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "PyVCF" version))
-              (sha256
-               (base32
-                "1ngryr12d3izmhmwplc46xhyj9i7yhrpm90xnsd2578p7m8p5n79"))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #f)) ; The tests cannot find its files.
-    (propagated-inputs
-     `(("python-setuptools" ,python-setuptools)
-       ("python-psutil" ,python-psutil)))
-    (home-page "https://github.com/jamescasbon/PyVCF")
-    (synopsis "Variant Call Format (VCF) parser for Python")
-    (description "Variant Call Format (VCF) parser for Python")
-    (license #f)))
-
-(define-public python2-pyvcf
-  (package-with-python2 python-pyvcf))
 
 (define-public python2-pydp
   (package

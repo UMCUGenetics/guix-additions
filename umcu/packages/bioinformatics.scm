@@ -178,24 +178,6 @@ so whereas general sort algorithms arrange it into a-1.png, a-10.png,
 a-2.png owing to their third and fourth characters.")
    (license license:bsd-3)))
 
-(define-public r-hmm
-  (package
-   (name "r-hmm")
-   (version "1.0")
-   (source (origin
-            (method url-fetch)
-            (uri (cran-uri "HMM" version))
-            (sha256
-             (base32
-              "0z0hcqfixx1l2a6d3lpy5hmh0n4gjgs0jnck441akpp3vh37glzw"))))
-   (properties `((upstream-name . "HMM")))
-   (build-system r-build-system)
-   (home-page "http://cran.r-project.org/web/packages/HMM")
-   (synopsis "Hidden Markov Models (HMM)")
-   (description "Easy to use library to setup, apply and make inference with
-discrete time and discrete space Hidden Markov Models")
-   (license license:gpl2+)))
-
 (define-public gatk-bin-3.8.1-no-intel-deflation
   (package
     (name "gatk")
