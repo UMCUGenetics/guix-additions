@@ -646,52 +646,6 @@ next-generation sequence data, and genomic annotations.")
 of long-read (PacBio/Oxford Nanopore) metagenomic datasets.")
      (license license:public-domain))))
 
-(define-public king-bin-2.1.2
-  (package
-    (name "king")
-    (version "2.1.2")
-    ;; WARNING: There's no source code.  This downloads a tarball with the
-    ;; executable.
-    (source (origin
-      (method url-fetch)
-      (uri "http://people.virginia.edu/~wc9c/KING/Linux-king.tar.gz")
-      (file-name (string-append name "-" version "-bin.tar.gz"))
-      (sha256
-       (base32 "0asrgj4m20mll0psk2238asda4w1brzb5wlqjmaijknhflw60pj0"))))
-    (build-system gnu-build-system)
-    ;; The executable is linked to 64-bit libraries.
-    (supported-systems '("x86_64-linux"))
-    ;; WARNING: The host system's libz.so.1 is used because we only have an
-    ;; executable that is linked already.
-    (native-inputs
-     `(("zlib" ,zlib)))
-    (arguments
-     `(#:tests? #f ; There are no tests to run.
-       #:phases
-       (modify-phases %standard-phases
-         (delete 'configure)
-         (delete 'build)
-         (delete 'validate-runpath) ; It uses the host's libraries anyway.
-         (replace 'unpack
-          (lambda _
-            (mkdir-p "king")
-            (chdir "king")
-            (zero? (system* "tar" "xvf" (assoc-ref %build-inputs "source")))))
-         (replace 'install
-           (lambda _
-             (let ((out (string-append (assoc-ref %outputs "out") "/bin")))
-               (mkdir-p out)
-               (copy-file "king" (string-append out "/king"))))))))
-    (home-page "http://people.virginia.edu/~wc9c/KING/")
-    (synopsis "Program making use of high-throughput SNP data")
-    (description "KING is a toolset making use of high-throughput SNP data
-typically seen in a genome-wide association study (GWAS) or a sequencing
-project.  Applications of KING include family relationship inference and
-pedigree error checking, population substructure identification, forensics,
-gene mapping, etc.")
-    ;; WARNING: There's no license specified.  This is non-free software.
-    (license license:non-copyleft)))
-
 (define-public pbgzip
   (let ((commit "2b09f97b5f20b6d83c63a5c6b408d152e3982974"))
     (package
