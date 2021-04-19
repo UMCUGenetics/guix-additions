@@ -45,7 +45,7 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.14.0")
+    (version "1.15.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
@@ -133,6 +133,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
       # to avoid leaking to hardcoded '/usr/bin'.
       set_output=$(${grep} -h \"^export\" $profiles || echo \"export PATH=\\\"\\\"\")
       sge_variables=$(export -p | ${grep} \"^declare -x SGE\" || echo \"# No SGE variables found.\")
+      slurm_variables=$(export -p | ${grep} \"^declare -x SLURM\" || echo \"# No SLURM variables found.\")
       tmp_variables=$(export -p | ${grep} \"^declare -x TMP\" || echo \"# No TMP variables found.\")
       job_id_variables=$(export -p | ${grep} \"^declare -x JOB_ID\" || echo \"# No JOB_ID variable found.\")
       hostname_variables=$(export -p | ${grep} \"^declare -x HOSTNAME\" || echo \"# No HOSTNAME variable found.\")
@@ -152,6 +153,7 @@ elif [ \"$1\" == \"load-profile\" ]; then
                                                        echo \"$xauth_variables\";
                                                        echo \"$locpath_variables\";
                                                        echo \"$sge_variables\";
+                                                       echo \"$slurm_variables\";
                                                        echo \"$malloc_variables\";
                                                        echo \"$hostname_variables\";
                                                        echo \"$logname_variables\";
