@@ -54,87 +54,6 @@
   #:use-module (guix utils)
   #:use-module (umcu packages mysql))
 
-(define-public python-crcmod
-  (package
-    (name "python-crcmod")
-    (version "1.7")
-    (source (origin
-              (method url-fetch)
-              (uri (pypi-uri "crcmod" version))
-              (sha256
-               (base32
-                "07k0hgr42vw2j92cln3klxka81f33knd7459cn3d8aszvfh52w6w"))))
-    (build-system python-build-system)
-    (home-page "http://crcmod.sourceforge.net/")
-    (synopsis "CRC Generator")
-    (description "CRC Generator")
-    (license license:expat)))
-
-(define-public python-macs2
-  (package
-    (name "python-macs2")
-    (version "2.1.1.20160309")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "MACS2" version))
-       (sha256
-        (base32
-         "09ixspd1vcqmz1c81ih70xs4m7qml2iy5vyx1y74zww3iy1vl210"))))
-    (build-system python-build-system)
-    (arguments `(#:python ,python-2))
-    (propagated-inputs
-     `(("python2-numpy" ,python2-numpy)))
-    (home-page "http://github.com/taoliu/MACS/")
-    (synopsis "Model Based Analysis for ChIP-Seq data")
-    (description "Model Based Analysis for ChIP-Seq data")
-    (license #f)))
-
-(define-public python-pytabix
-  (package
-    (name "python-pytabix")
-    (version "0.1")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             (pypi-uri "pytabix" version)))
-       (sha256
-        (base32
-         "1ldp5r4ggskji6qx4bp2qxy2vrvb3fam03ksn0gq2hdxgrlg2x07"))))
-    (build-system python-build-system)
-    (arguments
-     `(#:tests? #f))
-    (inputs
-     `(("zlib" ,zlib)))
-    (home-page "https://github.com/slowkow/pytabix")
-    (synopsis "Python interface for tabix")
-    (description "Python interface for tabix")
-    (license license:expat)))
-
-(define-public python2-pytabix
-  (package-with-python2 python-pytabix))
-
-(define-public python-logutils
-  (package
-  (name "python-logutils")
-  (version "0.3.4.1")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (pypi-uri "logutils" version))
-      (sha256
-        (base32
-          "0ayycc1988cjdzr3i085gxwrj6l1scamjl79mv7cw4cj6sbn47qh"))))
-  (build-system python-build-system)
-  (home-page "http://code.google.com/p/logutils/")
-  (synopsis "Logging utilities")
-  (description "Logging utilities")
-  (license #f)))
-
-(define-public python2-logutils
-  (package-with-python2 python-logutils))
-
 (define-public python-helper
   (package
     (name "python-helper")
@@ -383,10 +302,10 @@ tree exploration")
     (license #f)))
 
 (define-public phylowgs
-  (let ((commit "18636df520e483d9a4c001ee3f9b3963d75c2bbc"))
+  (let ((commit "681df796d3ea3259b373cf1c558d2b63a0a47fc4"))
     (package
      (name "phylowgs")
-     (version (string-append "smchet5-" (string-take commit 9)))
+     (version (string-append "1.0-rc2-" (string-take commit 9)))
      (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -400,25 +319,25 @@ tree exploration")
       `(#:tests? #f ; No tests.
         #:phases
         (modify-phases %standard-phases
-                       (delete 'configure)
-                       (replace 'build ; These guys didn't even care to use a build system.
-                                (lambda _
-                                  (system "g++ -o mh.o -O3 mh.cpp util.cpp $(gsl-config --cflags --libs)")))
-                       (replace 'install
-                                (lambda* (#:key inputs outputs #:allow-other-keys)
-                                  (let ((out (string-append (assoc-ref outputs "out")
-                                                            "/share/phylowgs")))
-                                    (for-each (lambda (file) (install-file file out))
-                                              (find-files "." "\\.py"))
-                                    (install-file "mh.o" out)))))))
+          (delete 'configure)
+          (replace 'build ; These guys didn't even care to use a build system.
+                   (lambda _
+                     (system "g++ -o mh.o -O3 mh.cpp util.cpp $(gsl-config --cflags --libs)")))
+          (replace 'install
+                   (lambda* (#:key inputs outputs #:allow-other-keys)
+                     (let ((out (string-append (assoc-ref outputs "out")
+                                               "/share/phylowgs")))
+                       (for-each (lambda (file) (install-file file out))
+                                 (find-files "." "\\.py"))
+                       (install-file "mh.o" out)))))))
      (inputs
       `(("gsl" ,gsl)
-        ("python" ,python-2)))
+        ("python" ,python)))
      (propagated-inputs
-      `(("python2-numpy" ,python2-numpy)
-        ("python2-scipy" ,python2-scipy)
-        ("python2-ete2" ,python2-ete2)
-        ("python2-pyvcf" ,python2-pyvcf)))
+      `(("python-numpy" ,python-numpy)
+        ("python-scipy" ,python-scipy)
+        ("python-ete2" ,python-ete2)
+        ("python-pyvcf" ,python-pyvcf)))
      (native-search-paths
       (list (search-path-specification
              (variable "GUIX_PHYLOWGS")
