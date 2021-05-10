@@ -121,27 +121,6 @@ evidence.")
     (name "grep-with-pcre")
     (inputs `(("pcre" ,pcre)))))
 
-(define-public bio-vcf
-  (package
-   (name "bio-vcf")
-   (version "0.9.2")
-   (source (origin
-            (method url-fetch)
-            (uri (rubygems-uri "bio-vcf" version))
-            (sha256
-             (base32
-              "1007bn0w8l11q867lxsyqnk0vgvv12skvk9gyglv7g44knr5vh4j"))))
-   (build-system ruby-build-system)
-   (arguments `(#:tests? #f)) ; There are no tests.
-   (native-search-paths
-    (package-native-search-paths ruby))
-   (synopsis "Smart lazy multi-threaded parser for VCF format with useful
-filtering and output rewriting (JSON, RDF etc.)")
-   (description "Smart lazy multi-threaded parser for VCF format with useful
-filtering and output rewriting (JSON, RDF etc.)")
-   (home-page "http://github.com/pjotrp/bioruby-vcf")
-   (license license:expat)))
-
 (define-public r-qdnaseq-hmf
   (package (inherit r-qdnaseq)
    (name "r-qdnaseq-hmf")
@@ -2393,43 +2372,6 @@ single executable called @code{bam}.")
    (synopsis "")
    (description "")
    (license license:agpl3)))
-
-(define-public r-matrixstats-0.50.2
-  (package
-    (inherit r-matrixstats)
-    (version "0.50.2")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://cran.rstudio.com/src/contrib/Archive/"
-                    "matrixStats/matrixStats_" version ".tar.gz"))
-              (sha256
-               (base32 "0zj27xxx9cyrq16rn4g3l0krqg68p8f2qp18w1w4i767j87amlbj"))))))
-
-(define-public r-qdnaseq-1.9.2
-  (let ((commit "cd622dbc67f22160b821cd9044589954024549ae"))
-    (package (inherit r-qdnaseq)
-      (name "r-qdnaseq")
-      (version "1.9.2")
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/Bioconductor-mirror/QDNAseq")
-                      (commit commit)))
-                (file-name (string-append name "-" version "-checkout"))
-                (sha256
-                 (base32
-                  "1n0vxyvqy47lamr7y3lmpvp0w3z3c8fs7rnfqcyzddpjblm63fkq"))))
-      (propagated-inputs
-       `(("r-matrixstats" ,r-matrixstats-0.50.2)
-         ("r-biobase" ,r-biobase)
-         ("r-cghbase" ,r-cghbase)
-         ("r-cghcall" ,r-cghcall)
-         ("r-dnacopy" ,r-dnacopy)
-         ("r-genomicranges" ,r-genomicranges)
-         ("r-iranges" ,r-iranges)
-         ("r-r-utils" ,r-r-utils)
-         ("r-rsamtools" ,r-rsamtools))))))
 
 ;; ----------------------------------------------------------------------------
 ;; HMF-PIPELINE 4.8
