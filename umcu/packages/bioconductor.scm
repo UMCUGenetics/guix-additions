@@ -1965,3 +1965,25 @@ single-cell copy-number quantification pipeline.")
       "Facilitates easy manipulation of variant call format (VCF) data.  Functions are provided to rapidly read from and write to VCF files.  Once VCF data is read into R a parser function extracts matrices of data.  This information can then be used for quality control or other purposes.  Additional functions provide visualization of genomic data.  Once processing is complete data may be written to a VCF file (*.vcf.gz).  It also may be converted into other popular R objects (e.g., genlight, DNAbin).  VcfR provides a link between VCF data and familiar R software.")
     (license license:gpl3)))
 
+(define-public r-lsa
+  (package
+    (name "r-lsa")
+    (version "0.73.2")
+    (source
+      (origin
+        (method url-fetch)
+        (uri (cran-uri "lsa" version))
+        (sha256
+          (base32
+            "1a33irqa6qvbc02z12rgbgv8kxq2gmahy7j5bg8b23lvvaxif06b"))))
+    (properties `((upstream-name . "lsa")))
+    (build-system r-build-system)
+    (propagated-inputs
+      `(("r-snowballc" ,r-snowballc)))
+    (home-page
+      "https://cran.r-project.org/web/packages/lsa")
+    (synopsis "Latent Semantic Analysis")
+    (description
+      "The basic idea of latent semantic analysis (LSA) is, that text do have a higher order (=latent semantic) structure which, however, is obscured by word usage (e.g.  through the use of synonyms or polysemy).  By using conceptual indices that are derived statistically via a truncated singular value decomposition (a two-mode factor analysis) over a given document-term matrix, this variability problem can be overcome.")
+    (license license:gpl2+)))
+
