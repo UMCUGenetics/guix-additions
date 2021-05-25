@@ -50,38 +50,6 @@
   #:use-module (umcu packages hmf)
   #:use-module (umcu packages perl))
 
-(define-public perl-bio-pipeline-comparison
-  (package
-    (name "perl-bio-pipeline-comparison")
-    (version "1.123050")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append "mirror://cpan/authors/id/A/AJ/AJPAGE/"
-                           "Bio-Pipeline-Comparison-" version ".tar.gz"))
-       (sha256
-        (base32
-         "081kn3zyi7zcwkaxrk5w52nkx7jrp0pwjcr8sai25l45711xli49"))))
-    (build-system perl-build-system)
-    ;; Only one test fails.
-    (arguments `(#:tests? #f))
-    (propagated-inputs
-     `(("htslib" ,htslib)
-       ("which" ,which)))
-    (native-inputs
-     `(("perl-env-path" ,perl-env-path)
-       ("perl-test-most" ,perl-test-most)))
-    (inputs
-     `(("bioperl-minimal" ,bioperl-minimal)
-       ("perl-exception-class" ,perl-exception-class)
-       ("perl-file-which" ,perl-file-which)
-       ("perl-moose" ,perl-moose)
-       ("perl-try-tiny" ,perl-try-tiny)))
-    (home-page "http://search.cpan.org/dist/Bio-Pipeline-Comparison")
-    (synopsis "Comparative assesment of variant calling (CAVar)")
-    (description "")
-    (license #f)))
-
 (define-public perl-term-ui
   (package
     (name "perl-term-ui")
@@ -121,76 +89,6 @@
    (synopsis "BSD process resource limit and priority functions")
    (description "")
    (license #f)))
-
-(define-public perl-acme-damn
-  (package
-  (name "perl-acme-damn")
-  (version "0.08")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (string-append
-             "https://cpan.metacpan.org/authors/id/I/IB/IBB/Acme-Damn-"
-             version
-             ".tar.gz"))
-      (sha256
-        (base32
-          "03kykdsz3fk5ppb9g92pvnif67zlk501finrwi1csbcizw1js39i"))))
-  (build-system perl-build-system)
-  (inputs
-    `(("perl-test-exception" ,perl-test-exception)))
-  (home-page
-    "http://search.cpan.org/dist/Acme-Damn")
-  (synopsis "'Unbless' Perl objects.")
-  (description "")
-  (license #f)))
-
-(define-public perl-sys-sigaction
-  (package
-  (name "perl-sys-sigaction")
-  (version "0.23")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (string-append
-             "mirror://cpan/authors/id/L/LB/LBAXTER/Sys-SigAction-"
-             version
-             ".tar.gz"))
-      (sha256
-        (base32
-          "0lykjlq5dsf7z927lpllzixd953izi3w7bg2pgy32h2k8n9nrvy4"))))
-  (build-system perl-build-system)
-  (home-page
-    "http://search.cpan.org/dist/Sys-SigAction")
-  (synopsis
-    "Perl extension for Consistent Signal Handling")
-  (description "")
-  (license (package-license perl))))
-
-(define-public perl-forks
-  (package
-  (name "perl-forks")
-  (version "0.36")
-  (source
-    (origin
-      (method url-fetch)
-      (uri (string-append
-             "mirror://cpan/authors/id/R/RY/RYBSKEJ/forks-"
-             version
-             ".tar.gz"))
-      (sha256
-        (base32
-          "14srnq51n98aizdlg6lhzpzdqyjvxf5nfm431qiylvsc9zj29gk1"))))
-  (build-system perl-build-system)
-  (propagated-inputs
-    `(("perl-acme-damn" ,perl-acme-damn)
-      ("perl-devel-symdump" ,perl-devel-symdump)
-      ("perl-list-moreutils" ,perl-list-moreutils)
-      ("perl-sys-sigaction" ,perl-sys-sigaction)))
-  (home-page "http://search.cpan.org/dist/forks")
-  (synopsis "forks - emulate threads with fork")
-  (description "")
-  (license (package-license perl))))
 
 (define-public perl-parallel-iterator
   (package
@@ -527,46 +425,6 @@ file the lists the enriched domains and their posterior probabilities.")
 genome annotation.")
    (license license:gpl3)))
 
-(define-public caveman
-  (package
-   (name "caveman")
-   (version "1.9.4")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append "https://github.com/cancerit/CaVEMan/archive/"
-                                version ".tar.gz"))
-            (sha256
-             (base32 "19h631avgknidbchk6997ckgd60072nlbg9hv2zxn6vvq3fpsyb8"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:make-flags (list (string-append
-                          "HTSLOC=" (assoc-ref %build-inputs "htslib")))
-      #:tests? #f ; Tests require a network connection.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure)
-        (add-before 'build 'patch-out-tests
-          (lambda _
-            (substitute* "Makefile"
-             (("copyscript test") "copyscript"))))
-        (replace 'install
-          (lambda* (#:key outputs #:allow-other-keys)
-            (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
-              (install-file "bin/caveman" bin)
-              (install-file "bin/generateCavemanUMNormVCF" bin)
-              (install-file "bin/mergeCavemanResults" bin)))))))
-   (inputs
-    `(("htslib" ,htslib)
-      ("zlib" ,zlib)))
-   (home-page "http://cancerit.github.io/CaVEMan/")
-   (synopsis "Implementation of an SNV expectation maximisation algorithm for
-calling single base substitutions in paired data")
-   (description "A C implementation of the CaVEMan program.  Uses an expectation
-maximisation approach to calling single base substitutions in paired data.  It
-is designed for use with a compute cluster.  Most steps in the program make use
-of an index parameter.  The split step is designed to divide the genome into
-chunks of adjustable size to optimise for runtime/memory usage requirements.")
-   (license license:agpl3+)))
 
 (define-public cgp-cavemanpostprocessing-1.8.9
   (package
