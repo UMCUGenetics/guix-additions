@@ -50,118 +50,6 @@
   #:use-module (umcu packages hmf)
   #:use-module (umcu packages perl))
 
-(define-public perl-set-intervaltree
-  (package
-   (name "perl-set-intervaltree")
-   (version "0.10")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append
-           "mirror://cpan/authors/id/B/BE/BENBOOTH/Set-IntervalTree-"
-           version ".tar.gz"))
-     (sha256
-      (base32 "1g1yam3fwl11wvy489yhhfzrfdlqaj1dh7pgks3myjq71p7rrgg3"))))
-   (build-system perl-build-system)
-   (home-page "http://search.cpan.org/dist/Set-IntervalTree")
-   (synopsis "Perform range-based lookups on sets of ranges.")
-   (description "")
-   (license #f)))
-
-(define-public perl-data-uuid
-  (package
-    (name "perl-data-uuid")
-    (version "1.221")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "mirror://cpan/authors/id/R/RJ/RJBS/"
-                                  "Data-UUID-" version ".tar.gz"))
-              (sha256
-               (base32
-                "0rw60wib0mj5z0v909mplh750y40hzyzf4z0b6h4ajxplyiv5irw"))))
-    (build-system perl-build-system)
-    (home-page "http://search.cpan.org/dist/Data-UUID")
-    (synopsis "Universally Unique Identifiers generator")
-    (description "Data::UUID provides a framework for generating Universally
-Unique Identifiers (UUIDs), also known as Globally Unique Identifiers (GUIDs).
-A UUID is 128 bits long, and is guaranteed to be different from all other
-UUIDs/GUIDs generated until 3400 CE.")
-    (license (package-license perl))))
-
-(define-public perl-const-fast
-  (package
-    (name "perl-const-fast")
-    (version "0.014")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append "mirror://cpan/authors/id/L/LE/LEONT/"
-                           "Const-Fast-" version ".tar.gz"))
-       (sha256
-        (base32
-         "1nwlldgrx86yn7y6a53cqgvzm2ircsvxg1addahlcy6510x9a1gq"))))
-    (inputs
-     `(("perl-module-build-tiny" ,perl-module-build-tiny)
-       ("perl-test-fatal" ,perl-test-fatal)))
-    ;; Needed for tests.
-    (native-inputs
-     `(("perl-sub-exporter-progressive" ,perl-sub-exporter-progressive)))
-    (build-system perl-build-system)
-    (home-page "http://search.cpan.org/dist/Const-Fast")
-    (synopsis "Facility for creating read-only scalars, arrays, and hashes")
-    (description "")
-    (license (package-license perl))))
-
-(define-public perl-bio-db-hts
-  (package
-    (name "perl-bio-db-hts")
-    (version "2.9")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             "https://cpan.metacpan.org/authors/id/R/RI/RISHIDEV/Bio-DB-HTS-"
-             version
-             ".tar.gz"))
-       (sha256
-        (base32
-         "0z5qvs1xx38nwfr2fqk582apj1jxrbabjxcawp38swj8b5lnqrdb"))))
-    (build-system perl-build-system)
-    (arguments
-     `(#:tests? #f))
-    (native-inputs
-     `(("perl-module-build" ,perl-module-build)
-       ("pkg-config" ,pkg-config)))
-    (inputs
-     `(("bioperl-minimal" ,bioperl-minimal)
-       ("htslib" ,htslib)
-       ("zlib" ,zlib)))
-    (home-page "http://search.cpan.org/dist/Bio-DB-HTS")
-    (synopsis "Perl interface to HTS library for DNA sequencing")
-    (description "")
-    (license license:asl2.0)))
-
-(define-public perl-extutils-manifest
-  (package
-    (name "perl-extutils-manifest")
-    (version "1.70")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://cpan.metacpan.org/authors/id/E/ET/ETHER/"
-                    "ExtUtils-Manifest-" version ".tar.gz"))
-              (sha256
-               (base32
-                "159bypwl8xpq1yi39prr49hl7x2xww5aj97nv169c8xja0h0dzzf"))))
-    (build-system perl-build-system)
-    (home-page "http://search.cpan.org/dist/ExtUtils-Manifest")
-    (synopsis "Utilities to write and check a MANIFEST file")
-    (description "This package contains functions to manipulate a MANIFEST
-file.  The package exports no functions by default.  The following are exported
-on request: mkmanifest, manifind, manicheck, filecheck, fullcheck, skipcheck,
-maniread, maniskip, manicopy, maniadd.")
-    (license (package-license perl))))
-
 (define-public perl-bio-pipeline-comparison
   (package
     (name "perl-bio-pipeline-comparison")
@@ -193,45 +81,6 @@ maniread, maniskip, manicopy, maniadd.")
     (synopsis "Comparative assesment of variant calling (CAVar)")
     (description "")
     (license #f)))
-
-(define-public perl-log-message
-  (package
-  (name "perl-log-message")
-  (version "0.08")
-  (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "mirror://cpan/authors/id/B/BI/BINGOS/Log-Message-"
-                  version ".tar.gz"))
-            (sha256
-             (base32
-              "0ipyk7zbvz31kf3mj5ahwi2cbcfy54s8387hx4cd29mg5bb7ssdx"))))
-  (build-system perl-build-system)
-  (home-page "http://search.cpan.org/dist/Log-Message")
-  (synopsis "Powerful and flexible message logging mechanism")
-  (description "")
-  (license (package-license perl))))
-
-(define-public perl-log-message-simple
-  (package
-  (name "perl-log-message-simple")
-  (version "0.10")
-  (source
-   (origin
-     (method url-fetch)
-     (uri (string-append
-           "mirror://cpan/authors/id/B/BI/BINGOS/Log-Message-Simple-"
-           version ".tar.gz"))
-     (sha256
-      (base32
-       "15nxi935nfrf8dkdrgvcrf2qlai4pbz03yj8sja0n9mcq2jd24ma"))))
-  (build-system perl-build-system)
-  (inputs
-   `(("perl-log-message" ,perl-log-message)))
-  (home-page "http://search.cpan.org/dist/Log-Message-Simple")
-  (synopsis "Simplified interface to Log::Message")
-  (description "")
-  (license (package-license perl))))
 
 (define-public perl-term-ui
   (package
@@ -342,32 +191,6 @@ maniread, maniskip, manicopy, maniadd.")
   (synopsis "forks - emulate threads with fork")
   (description "")
   (license (package-license perl))))
-
-(define-public perl-autodie
-  (package
-   (name "perl-autodie")
-   (version "2.29")
-   (source
-    (origin
-     (method url-fetch)
-     (uri (string-append
-           "https://cpan.metacpan.org/authors/id/P/PJ/PJF/autodie-"
-           version ".tar.gz"))
-     (sha256
-      (base32
-       "1gr9ab292xxman5zfyb3vbrrv88y9j51qlgq7z4pjh80wwbpkdzm"))))
-   (build-system perl-build-system)
-   (native-inputs
-    `(("perl-import-into" ,perl-import-into)))
-   (propagated-inputs
-    `(("perl-forks" ,perl-forks)
-      ;("perl-bsd-resource" ,perl-bsd-resource)
-      ;("perl-ipc-system-simple" ,perl-ipc-system-simple)
-      ("perl-sub-identify" ,perl-sub-identify)))
-   (home-page "http://search.cpan.org/dist/autodie")
-   (synopsis "Replace functions with ones that succeed or die with lexical scope")
-   (description "")
-   (license (package-license perl))))
 
 (define-public perl-parallel-iterator
   (package
