@@ -80,64 +80,6 @@
 utility operations.")
   (license license:gpl3)))
 
-(define-public r-funcisnp-data
-  (package
-   (name "r-funcisnp-data")
-   (version "1.20.0")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append "http://bioconductor.org/packages/release/"
-                                "data/experiment/src/contrib/FunciSNP.data_"
-                                version ".tar.gz"))
-            (sha256
-             (base32 "1qj8x39kb6wanlr3zs81qjc9byy2pgrs9g7xbb8lj0125srkvzig"))))
-   (properties `((upstream-name . "FunciSNP.data")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-iranges" ,r-iranges)
-      ("r-rtracklayer" ,r-rtracklayer)))
-   (home-page "http://bioconductor.org/packages/FunciSNP.data")
-   (synopsis "Various data sets for use with the FunciSNP package")
-   (description "This package provides data sets needed for FunciSNP to
-integrate information from GWAS, 1000genomes and chromatin feature, in
-order to identify functional SNP in coding or non-coding regions.")
-   (license license:gpl3+)))
-
-(define-public r-funcisnp
-  (package
-   (name "r-funcisnp")
-   (version "1.28.0")
-   (source (origin
-            (method url-fetch)
-            (uri (bioconductor-uri "FunciSNP" version))
-            (sha256
-             (base32 "0hvmfwyrk3j0ilw1cgy7f72bs94b2yk3lv6yxb7iwz55am6kavmm"))))
-   (properties `((upstream-name . "FunciSNP")))
-   (build-system r-build-system)
-   (propagated-inputs
-    `(("r-ggplot2" ,r-ggplot2)
-      ("r-txdb-hsapiens-ucsc-hg19-knowngene" ,r-txdb-hsapiens-ucsc-hg19-knowngene)
-      ("r-funcisnp-data" ,r-funcisnp-data)
-      ("r-biocgenerics" ,r-biocgenerics)
-      ("r-biobase" ,r-biobase)
-      ("r-s4vectors" ,r-s4vectors)
-      ("r-iranges" ,r-iranges)
-      ("r-genomicranges" ,r-genomicranges)
-      ("r-rsamtools" ,r-rsamtools)
-      ("r-rtracklayer" ,r-rtracklayer)
-      ("r-chippeakanno" ,r-chippeakanno)
-      ("r-variantannotation" ,r-variantannotation)
-      ("r-plyr" ,r-plyr)
-      ("r-snpstats" ,r-snpstats)
-      ("r-reshape" ,r-reshape)
-      ("r-scales" ,r-scales)))
-   (home-page "http://bioconductor.org/packages/FunciSNP")
-   (synopsis "Identification of candidate regulatory SNPs")
-   (description "This package integrates information from GWAS, 1000genomes
-and chromatin feature to identify functional SNP in coding or non-coding
-regions.")
-   (license license:gpl3+)))
-
 (define-public r-spp
   (package
     (name "r-spp")
