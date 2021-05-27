@@ -2036,25 +2036,6 @@ genomics data developed by the Hartwig Medical Foundation.  This
 specific version provides SV-LINX 1.7.")
      (license license:expat))))
 
-(define-public perl-findbin-libs
-  (package
-    (name "perl-findbin-libs")
-    (version "2.15")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             "mirror://cpan/authors/id/L/LE/LEMBARK/FindBin-libs-"
-             version ".tar.gz"))
-       (sha256
-        (base32
-         "0306g1lpxfpv0r6491y6njjc312jx01zh2qqqa4cwkc0ya4jpdpn"))))
-    (build-system perl-build-system)
-    (home-page "http://search.cpan.org/dist/FindBin-libs")
-    (synopsis "")
-    (description "")
-    (license #f)))
-
 (define-public exoncov
   (package
     (name "exoncov")
