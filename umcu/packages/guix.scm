@@ -45,12 +45,11 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.15.0")
+    (version "1.16.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
-     `(("bash-full" ,bash)
-       ("git" ,git)))
+     `(("bash-full" ,bash)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -67,61 +66,39 @@ set -u
 set -e
 
 #Configuration
-guix_root=\"/gnu\"
-guix_additional=\"/gnu/repositories/guix-additions\"
-guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
-guix=\"/gnu/profiles/base/bin/guix\"
-git=\"~a/bin/git\"
+guix=\"guix\"
 coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
-cut=\"${coreutils}/bin/cut\"
 grep=\"~a/bin/grep\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
 
-# Use /gnu as state directory.
-export GUIX_STATE_DIRECTORY=$guix_root
-
-# Ensure the latest Guix packages are used.  Do not override
-# the user's customizations (if any).
-if [ -v HOME ]; then
-  if [ ! -L $HOME/.config/guix/latest ]; then
-    mkdir -p $HOME/.config/guix
-    ln -s /gnu/repositories/guix $HOME/.config/guix/latest > /dev/null 2>&1 ||:
-  # Renew the link as repository updates are managed centrally.
-  # This will avoid the warning of an outdated version of Guix.
-  elif [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
-    rm -f $HOME/.config/guix/latest
-    ln -s /gnu/repositories/guix $HOME/.config/guix/latest > /dev/null 2>&1 ||:
-  fi
-fi
-
-# Include our non-standard package repository
-export GUIX_PACKAGE_PATH=\"${GUIX_PACKAGE_PATH:+$GUIX_PACKAGE_PATH:}$guix_additional\"
-
-# Set the Guile environment for Guix
-export GUILE_LOAD_PATH=\"${guix_profile}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
-export GUILE_LOAD_COMPILED_PATH=\"${guix_profile}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
-
-# Set the X.509 certificates
-export SSL_CERT_DIR=\"${guix_profile}/etc/ssl/certs\"
-export SSL_CERT_FILE=\"${SSL_CERT_DIR}/ca-certificates.crt\"
-
-# Use guix with the given arguments
-export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
 if [ $# -lt 1 ]; then
   ${guix}
-elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
-         [ \"$2\" == \"-i\" ] || [ \"$2\" == \"-u\" ]); then
-  ${guix} $@
-  echo \"\"
-  echo \"The following repositories and versions were used:\";
-  echo -n \" * GNU Guix upstream:         \";
-  ${git} -C /gnu/repositories/guix rev-parse HEAD;
-  echo -n \" * UMCU additional packages:  \";
-  ${git} -C /gnu/repositories/guix-additions rev-parse HEAD;
+elif [ \"$1\" == \"apply-new-configuration\" ]; then
+  if [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
+    echo \"Removing old configuration...\"
+    rm -f $HOME/.config/guix/latest
+  fi
+
+  echo \"Enabling 'guix-science' channel...\"
+  cat >\"$HOME/.config/guix/channels.scm\" <<EOT
+(cons
+ (channel
+  (name 'guix-science)
+  (url \"https://github.com/guix-science/guix-science.git\")
+  (introduction
+   (make-channel-introduction
+        \"b1fe5aaff3ab48e798a4cce02f0212bc91f423dc\"
+        (openpgp-fingerprint
+         \"CA4F 8CF4 37D7 478F DA05  5FD4 4213 7701 1A37 8446\"))))
+ %default-channels)
+EOT
+  echo \"Updating package recipes...\"
+  ${guix} pull
+
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
@@ -173,7 +150,6 @@ elif [ \"$1\" == \"load-profile\" ]; then
 else
   ${guix} $@
 fi~%"
-                         (assoc-ref inputs "git")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
                          (assoc-ref inputs "bash-full"))))))
