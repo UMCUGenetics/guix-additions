@@ -45,12 +45,11 @@
 (define-public guixr
   (package
     (name "guixr")
-    (version "1.15.0")
+    (version "1.16.0")
     (source #f)
     (build-system gnu-build-system)
     (inputs
-     `(("bash-full" ,bash)
-       ("git" ,git)))
+     `(("bash-full" ,bash)))
     (arguments
      `(#:tests? #f
        #:phases
@@ -67,61 +66,39 @@ set -u
 set -e
 
 #Configuration
-guix_root=\"/gnu\"
-guix_additional=\"/gnu/repositories/guix-additions\"
-guix_pin=\"/gnu/repositories/guix\"
 guix_profile=\"/gnu/profiles/base\"
-guix=\"/gnu/profiles/base/bin/guix\"
-git=\"~a/bin/git\"
+guix=\"guix\"
 coreutils=\"~a\"
 readlink=\"${coreutils}/bin/readlink\"
-cut=\"${coreutils}/bin/cut\"
 grep=\"~a/bin/grep\"
 
 # Avoid locale warnings.
 export GUIX_LOCPATH=\"${guix_profile}/lib/locale\"
 
-# Use /gnu as state directory.
-export GUIX_STATE_DIRECTORY=$guix_root
-
-# Ensure the latest Guix packages are used.  Do not override
-# the user's customizations (if any).
-if [ -v HOME ]; then
-  if [ ! -L $HOME/.config/guix/latest ]; then
-    mkdir -p $HOME/.config/guix
-    ln -s /gnu/repositories/guix $HOME/.config/guix/latest > /dev/null 2>&1 ||:
-  # Renew the link as repository updates are managed centrally.
-  # This will avoid the warning of an outdated version of Guix.
-  elif [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
-    rm -f $HOME/.config/guix/latest
-    ln -s /gnu/repositories/guix $HOME/.config/guix/latest > /dev/null 2>&1 ||:
-  fi
-fi
-
-# Include our non-standard package repository
-export GUIX_PACKAGE_PATH=\"${GUIX_PACKAGE_PATH:+$GUIX_PACKAGE_PATH:}$guix_additional\"
-
-# Set the Guile environment for Guix
-export GUILE_LOAD_PATH=\"${guix_profile}/share/guile/site/2.2${GUILE_LOAD_PATH:+:$GUILE_LOAD_PATH}\"
-export GUILE_LOAD_COMPILED_PATH=\"${guix_profile}/lib/guile/2.2/ccache${GUILE_LOAD_COMPILED_PATH:+:$GUILE_LOAD_COMPILED_PATH}\"
-
-# Set the X.509 certificates
-export SSL_CERT_DIR=\"${guix_profile}/etc/ssl/certs\"
-export SSL_CERT_FILE=\"${SSL_CERT_DIR}/ca-certificates.crt\"
-
-# Use guix with the given arguments
-export GUIX_DAEMON_SOCKET=guix://10.100.7.235:9999
 if [ $# -lt 1 ]; then
   ${guix}
-elif [ \"$1\" == \"package\" ] && [ $# -ge 2 ] && ([ \"$2\" == \"--install\" ] || [ \"$2\" == \"--upgrade\" ] ||
-         [ \"$2\" == \"-i\" ] || [ \"$2\" == \"-u\" ]); then
-  ${guix} $@
-  echo \"\"
-  echo \"The following repositories and versions were used:\";
-  echo -n \" * GNU Guix upstream:         \";
-  ${git} -C /gnu/repositories/guix rev-parse HEAD;
-  echo -n \" * UMCU additional packages:  \";
-  ${git} -C /gnu/repositories/guix-additions rev-parse HEAD;
+elif [ \"$1\" == \"apply-new-configuration\" ]; then
+  if [ \"$(${readlink} -f $HOME/.config/guix/latest)\" = \"/gnu/repositories/guix\" ]; then
+    echo \"Removing old configuration...\"
+    rm -f $HOME/.config/guix/latest
+  fi
+
+  echo \"Enabling 'guix-science' channel...\"
+  cat >\"$HOME/.config/guix/channels.scm\" <<EOT
+(cons
+ (channel
+  (name 'guix-science)
+  (url \"https://github.com/guix-science/guix-science.git\")
+  (introduction
+   (make-channel-introduction
+        \"b1fe5aaff3ab48e798a4cce02f0212bc91f423dc\"
+        (openpgp-fingerprint
+         \"CA4F 8CF4 37D7 478F DA05  5FD4 4213 7701 1A37 8446\"))))
+ %default-channels)
+EOT
+  echo \"Updating package recipes...\"
+  ${guix} pull
+
 elif [ \"$1\" == \"load-profile\" ]; then
   if [ $# -gt 1 ]; then
     if [ \"$2\" != \"--help\" ] && [ \"$2\" != \"-h\" ]; then
@@ -173,7 +150,6 @@ elif [ \"$1\" == \"load-profile\" ]; then
 else
   ${guix} $@
 fi~%"
-                         (assoc-ref inputs "git")
                          (assoc-ref inputs "coreutils")
                          (assoc-ref inputs "grep")
                          (assoc-ref inputs "bash-full"))))))
@@ -196,109 +172,3 @@ communication.  It can be used for cluster deployments with a single build
 node.  This script was originally developed by Ricardo Wurmus.  This version
 has been slightly modified to work on the UMC Utrecht cluster set-up.")
     (license #f)))
-
-(define-public iotop-logger
-  (package
-    (name "iotop-logger")
-    (version "1.0")
-    (source #f)
-    (build-system gnu-build-system)
-    (propagated-inputs
-     `(("iotop" ,iotop)
-       ("bash" ,bash)
-       ("grep" ,grep)))
-    (arguments
-     `(#:tests? #f
-       #:phases
-       (modify-phases %standard-phases
-         (delete 'configure)
-         (delete 'build)
-         (replace 'unpack
-           (lambda* (#:key inputs #:allow-other-keys)
-             (with-output-to-file "iotop-logger"
-               (lambda _
-                 (format #t "#!/bin/bash~%")
-                 (format #t "~a/sbin/iotop -Pbot --delay=1 | ~a/bin/egrep -v \"DISK READ|DISK WRITE\"~%"
-                         (assoc-ref inputs "iotop")
-                         (assoc-ref inputs "grep"))))))
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let ((out (string-append (assoc-ref outputs "out") "/bin")))
-               (mkdir-p out)
-               (install-file "iotop-logger" out)
-               (chmod (string-append out "/iotop-logger") #o555)))))))
-    (home-page #f)
-    (synopsis "Script to gather disk reads/writes information")
-    (description "This script is a wrapper around iotop, to gather reads and
-writes to the disk for various processes.")
-    (license #f)))
-
-(define-public collectl
-  (package
-   (name "collectl")
-   (version "4.3.1")
-   (source (origin
-             (method url-fetch)
-             (uri (string-append
-                   "mirror://sourceforge/collectl/collectl/collectl-" version
-                   "/collectl-" version ".src.tar.gz"))
-             (sha256
-              (base32
-               "1wc9k3rmhqzh6cx5dcpqhlc3xcpadsn2ic54r19scdjbjx6jd1r1"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; There are no tests.
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'build) ; There's nothing to build.
-        (replace 'configure
-          (lambda* (#:key outputs #:allow-other-keys)
-            (substitute* "INSTALL"
-              (("DESTDIR:=\"/\"") (format #f "DESTDIR:=~s"
-                                          (assoc-ref outputs "out")))
-              (("DESTDIR/usr") "DESTDIR"))))
-        (replace 'install
-          (lambda* (#:key outputs #:allow-other-keys)
-            (substitute* "collectl"
-             (("\\$configFile='';")
-              (string-append "$configFile='"
-                             (assoc-ref outputs "out")
-                             "/etc';")))
-            (system* "./INSTALL"))))))
-   (inputs
-    `(("perl" ,perl)))
-   (home-page "http://collectl.sourceforge.net")
-   (synopsis "Performance data collector")
-   (description "This package provides a program that collects various
-performance measurement data like CPU, memory, disk and network performance
-numbers.")
-   (license license:artistic2.0)))
-
-(define-public vmtouch
-  (package
-   (name "vmtouch")
-   (version "1.3.1")
-   (source (origin
-            (method url-fetch)
-            (uri (string-append
-                  "https://github.com/hoytech/vmtouch/archive/v"
-                  version ".tar.gz"))
-            (file-name (string-append name "-" version ".tar.gz"))
-            (sha256
-             (base32 "1322r3lq02fimb6xkp8lp0fl08i1dzdxddws88b4av0lw4x7nyym"))))
-   (build-system gnu-build-system)
-   (arguments
-    `(#:tests? #f ; There are no tests.
-      #:make-flags `("CC=gcc"
-                     ,(string-append "PREFIX=" (assoc-ref %outputs "out")))
-      #:phases
-      (modify-phases %standard-phases
-        (delete 'configure))))
-   (inputs
-    `(("perl" ,perl)))
-   (home-page "https://github.com/hoytech/vmtouch")
-   (synopsis "Virtual memory toucher")
-   (description "vmtouch is a tool for learning about and controlling the file
-system cache of unix and unix-like systems.")
-   (license license:bsd-3)))
-
